@@ -288,7 +288,7 @@ def run_review_job(job_id: str, upload_path: Path, original_filename: str, form:
             stage="completed",
             message="审查完成，正在跳转到结果页。",
             run_id=run_id,
-            redirect_url=f"/review/history/{run_id}",
+            redirect_url=f"/review-base/history/{run_id}",
         )
     except Exception as exc:
         update_job(
@@ -346,6 +346,10 @@ def create_app() -> Flask:
         )
 
     @app.route("/review", methods=["GET"])
+    def review_legacy() -> Response:
+        return redirect(url_for("review_page"))
+
+    @app.route("/review-base", methods=["GET"])
     def review_page() -> str:
         return render_template(
             "review.html",
@@ -357,6 +361,10 @@ def create_app() -> Flask:
         )
 
     @app.route("/review/history/<run_id>", methods=["GET"])
+    def review_history_legacy(run_id: str) -> Response:
+        return redirect(url_for("review_history", run_id=run_id))
+
+    @app.route("/review-base/history/<run_id>", methods=["GET"])
     def review_history(run_id: str) -> str:
         result = load_result_by_run_id(run_id, render_markdown)
         if result is None:
@@ -377,7 +385,7 @@ def create_app() -> Flask:
             active_page="review",
         )
 
-    @app.route("/review/run", methods=["POST"])
+    @app.route("/review-base/run", methods=["POST"])
     def review() -> str:
         form = load_config()
 
@@ -458,7 +466,7 @@ def create_app() -> Flask:
                 active_page="review",
             )
 
-    @app.route("/review/start", methods=["POST"])
+    @app.route("/review-base/start", methods=["POST"])
     def review_start() -> Response:
         form = load_config()
         upload = request.files.get("tender_file")
@@ -491,7 +499,7 @@ def create_app() -> Flask:
             }
         )
 
-    @app.route("/review/status/<job_id>", methods=["GET"])
+    @app.route("/review-base/status/<job_id>", methods=["GET"])
     def review_status(job_id: str) -> Response:
         job = get_job(job_id)
         if not job:
