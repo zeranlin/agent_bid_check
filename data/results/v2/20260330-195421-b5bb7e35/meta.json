@@ -1,0 +1,10 @@
+{
+  "run_id": "20260330-195421-b5bb7e35",
+  "created_at": "2026-03-30T19:54:21",
+  "original_filename": "操场跑道、篮球场、小操场维护项目招标文件1.docx",
+  "saved_filename": "20260330-195126-72eec1-1.docx",
+  "base_url": "http://112.111.54.86:10011/v1",
+  "model": "qwen3.5-27b",
+  "config_path": "/Users/linzeran/code/2026-zn/test_getst/data/config/review_v2.json",
+  "pipeline": "v2"
+}

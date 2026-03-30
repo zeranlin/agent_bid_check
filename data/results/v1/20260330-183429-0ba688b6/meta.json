@@ -1,0 +1,9 @@
+{
+  "run_id": "20260330-183429-0ba688b6",
+  "created_at": "2026-03-30T18:34:29",
+  "original_filename": "[BACG2024000513-A]深圳市宝安区中心医院开办医用家具一批采购.docx",
+  "saved_filename": "20260330-183220-abe855-BACG2024000513-A.docx",
+  "base_url": "http://112.111.54.86:10011/v1",
+  "model": "qwen3.5-27b",
+  "config_path": "/Users/linzeran/code/2026-zn/test_getst/data/config/review_v1.json"
+}
