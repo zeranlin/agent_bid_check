@@ -1,0 +1,11 @@
+{
+  "job_id": "job-20260330-134346-45377cde",
+  "filename": "BACG2025000066-A.docx",
+  "status": "completed",
+  "stage": "completed",
+  "message": "审查完成，正在跳转到结果页。",
+  "started_at": 1774849426.52257,
+  "run_id": "20260330-134528-dfa30b7f",
+  "redirect_url": "/review/history/20260330-134528-dfa30b7f",
+  "error": null
+}

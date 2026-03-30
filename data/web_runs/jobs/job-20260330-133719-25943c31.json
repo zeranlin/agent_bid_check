@@ -1,0 +1,11 @@
+{
+  "job_id": "job-20260330-133719-25943c31",
+  "filename": "SZDL2025000495-A.docx",
+  "status": "completed",
+  "stage": "completed",
+  "message": "审查完成，正在跳转到结果页。",
+  "started_at": 1774849039.481814,
+  "run_id": "20260330-133901-6ef126e8",
+  "redirect_url": "/review/history/20260330-133901-6ef126e8",
+  "error": null
+}

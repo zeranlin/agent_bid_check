@@ -1,0 +1,367 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+import textwrap
+import urllib.error
+import urllib.request
+import xml.etree.ElementTree as ET
+import zipfile
+from pathlib import Path
+
+
+DOCX_NS = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+
+
+DEFAULT_SYSTEM_PROMPT = (
+    "你是政府采购招标文件合规审查人，专门审查招标文件是否存在限制竞争、"
+    "不合理条件、评分因素不相关、技术参数倾向性、商务条款失衡等问题。"
+)
+
+
+DEFAULT_USER_PROMPT = textwrap.dedent(
+    """\
+    请基于我提供的招标文件内容，按照以下要求输出所有风险点：
+
+    1. 逐项审查，不要遗漏
+    2. 重点审查资格条件、评分办法、技术参数、商务条款、验收条款、业绩与证书要求
+    3. 对每个问题给出：
+    - 问题标题
+    - 问题定性（高风险/中风险/低风险）
+    - 审查类型
+    - 原文位置
+    - 原文摘录
+    - 风险判断
+    - 法律/政策依据
+    - 整改建议
+
+    审查原则：
+    - 判断“是否与采购标的和合同履约直接相关”
+    - 判断“是否可能限制或排斥潜在供应商”
+    - 判断“是否存在指向特定供应商或特定产品的倾向”
+    - 判断“评分标准是否明确、量化、可操作”
+    - 判断“商务条款是否公平合理”
+
+    注意：
+    - 不能只给笼统意见，必须引用原文
+    - 不能凭空捏造依据
+    - 如依据不完全确定，应明确写“需人工复核”
+    - 同类问题可合并，但不能省略关键原文
+
+    以下是招标文件正文，请基于正文输出完整审查结果：
+    """
+)
+
+
+def maybe_disable_qwen_thinking(prompt: str, model: str) -> str:
+    lower_model = model.lower()
+    if "qwen" in lower_model and not prompt.lstrip().startswith("/no_think"):
+        return "/no_think\n" + prompt
+    return prompt
+
+
+def run_textutil(docx_path: Path) -> str | None:
+    try:
+        proc = subprocess.run(
+            ["textutil", "-convert", "txt", "-stdout", str(docx_path)],
+            capture_output=True,
+            check=True,
+        )
+        return proc.stdout.decode("utf-8", errors="replace")
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+
+
+def extract_docx_via_xml(docx_path: Path) -> str:
+    with zipfile.ZipFile(docx_path) as zf:
+        xml_bytes = zf.read("word/document.xml")
+
+    root = ET.fromstring(xml_bytes)
+    body = root.find("w:body", DOCX_NS)
+    if body is None:
+        return ""
+
+    lines: list[str] = []
+
+    def text_from_paragraph(p: ET.Element) -> str:
+        parts: list[str] = []
+        for node in p.iter():
+            tag = node.tag.rsplit("}", 1)[-1]
+            if tag == "t" and node.text:
+                parts.append(node.text)
+            elif tag == "tab":
+                parts.append("\t")
+            elif tag in {"br", "cr"}:
+                parts.append("\n")
+        return "".join(parts).strip()
+
+    for child in body:
+        tag = child.tag.rsplit("}", 1)[-1]
+        if tag == "p":
+            text = text_from_paragraph(child)
+            if text:
+                lines.append(text)
+            else:
+                lines.append("")
+        elif tag == "tbl":
+            for tr in child.findall("w:tr", DOCX_NS):
+                cells: list[str] = []
+                for tc in tr.findall("w:tc", DOCX_NS):
+                    cell_lines = []
+                    for p in tc.findall("w:p", DOCX_NS):
+                        t = text_from_paragraph(p)
+                        if t:
+                            cell_lines.append(t)
+                    cells.append(" ".join(cell_lines).strip())
+                row = "\t".join(cells).strip()
+                if row:
+                    lines.append(row)
+            lines.append("")
+
+    return "\n".join(lines)
+
+
+def extract_text(input_path: Path) -> str:
+    suffix = input_path.suffix.lower()
+    if suffix in {".txt", ".md"}:
+        return input_path.read_text(encoding="utf-8")
+    if suffix == ".docx":
+        text = run_textutil(input_path)
+        if text:
+            return text
+        return extract_docx_via_xml(input_path)
+    raise ValueError(f"Unsupported input type: {suffix}")
+
+
+def call_chat_completion(
+    base_url: str,
+    model: str,
+    api_key: str | None,
+    system_prompt: str,
+    user_prompt: str,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+) -> dict:
+    url = base_url.rstrip("/") + "/chat/completions"
+    body = {
+        "model": model,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+    }
+    if "qwen" in model.lower():
+        body["chat_template_kwargs"] = {"enable_thinking": False}
+    data = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+    req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        raw = resp.read().decode("utf-8", errors="replace")
+    return json.loads(raw)
+
+
+def build_prompt(document_text: str, prompt_prefix: str) -> str:
+    return f"{prompt_prefix.strip()}\n\n{document_text.strip()}\n"
+
+
+def save_text(path: Path, content: str) -> None:
+    path.write_text(content, encoding="utf-8")
+
+
+def extract_response_text(response: dict) -> str | None:
+    try:
+        message = response["choices"][0]["message"]
+    except Exception:
+        return None
+
+    content = message.get("content")
+    if isinstance(content, str) and content.strip():
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            if isinstance(item, dict) and item.get("type") == "text" and item.get("text"):
+                parts.append(str(item["text"]))
+            elif isinstance(item, str):
+                parts.append(item)
+        text = "".join(parts).strip()
+        if text:
+            return text
+    return None
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="提取招标文件文本并调用 OpenAI 兼容接口生成合规审查 Markdown。"
+    )
+    parser.add_argument("input_file", help="输入文件路径，支持 .docx/.txt/.md")
+    parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="输出 Markdown 路径，例如 result.md",
+    )
+    parser.add_argument(
+        "--base-url",
+        default=os.getenv("LLM_BASE_URL", "http://112.111.54.86:10011/v1"),
+        help="OpenAI 兼容接口地址，默认读取 LLM_BASE_URL 或使用示例地址",
+    )
+    parser.add_argument(
+        "--model",
+        default=os.getenv("LLM_MODEL", "qwen3.5-27b"),
+        help="模型名，默认读取 LLM_MODEL 或 qwen3.5-27b",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=os.getenv("LLM_API_KEY", "121212"),
+        help="接口密钥，默认读取 LLM_API_KEY 或示例值",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.1,
+        help="采样温度，默认 0.1",
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=3200,
+        help="生成最大 token 数，默认 3200",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=180,
+        help="接口超时时间（秒），默认 180",
+    )
+    parser.add_argument(
+        "--prompt-file",
+        help="自定义用户提示词文件；不传则使用内置审查提示词",
+    )
+    parser.add_argument(
+        "--system-prompt-file",
+        help="自定义 system prompt 文件；不传则使用内置 system prompt",
+    )
+    parser.add_argument(
+        "--save-extracted",
+        help="保存提取后的正文文本到指定路径，便于核查",
+    )
+    parser.add_argument(
+        "--save-request-json",
+        help="保存请求体 JSON 到指定路径",
+    )
+    parser.add_argument(
+        "--save-raw-response",
+        help="保存原始接口响应 JSON 到指定路径",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    input_path = Path(args.input_file).expanduser().resolve()
+    output_path = Path(args.output).expanduser().resolve()
+
+    if not input_path.exists():
+        print(f"Input file not found: {input_path}", file=sys.stderr)
+        return 1
+
+    try:
+        extracted = extract_text(input_path)
+    except Exception as exc:
+        print(f"Failed to extract text: {exc}", file=sys.stderr)
+        return 1
+
+    if not extracted.strip():
+        print("No text extracted from input file.", file=sys.stderr)
+        return 1
+
+    if args.save_extracted:
+        save_text(Path(args.save_extracted).expanduser().resolve(), extracted)
+
+    system_prompt = DEFAULT_SYSTEM_PROMPT
+    if args.system_prompt_file:
+        system_prompt = Path(args.system_prompt_file).read_text(encoding="utf-8")
+
+    prompt_prefix = DEFAULT_USER_PROMPT
+    if args.prompt_file:
+        prompt_prefix = Path(args.prompt_file).read_text(encoding="utf-8")
+
+    user_prompt = build_prompt(extracted, prompt_prefix)
+    user_prompt = maybe_disable_qwen_thinking(user_prompt, args.model)
+    request_payload = {
+        "model": args.model,
+        "temperature": args.temperature,
+        "max_tokens": args.max_tokens,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+    }
+    if "qwen" in args.model.lower():
+        request_payload["chat_template_kwargs"] = {"enable_thinking": False}
+
+    if args.save_request_json:
+        save_text(
+            Path(args.save_request_json).expanduser().resolve(),
+            json.dumps(request_payload, ensure_ascii=False, indent=2),
+        )
+
+    try:
+        response = call_chat_completion(
+            base_url=args.base_url,
+            model=args.model,
+            api_key=args.api_key,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+            timeout=args.timeout,
+        )
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        print(f"HTTP error {exc.code}: {body}", file=sys.stderr)
+        return 1
+    except Exception as exc:
+        print(f"LLM request failed: {exc}", file=sys.stderr)
+        return 1
+
+    if args.save_raw_response:
+        save_text(
+            Path(args.save_raw_response).expanduser().resolve(),
+            json.dumps(response, ensure_ascii=False, indent=2),
+        )
+
+    content = extract_response_text(response)
+    if content is None:
+        print("Unexpected response format from LLM.", file=sys.stderr)
+        try:
+            message = response["choices"][0]["message"]
+            if message.get("reasoning") and not message.get("content"):
+                print(
+                    "Model returned reasoning only. For Qwen models, try disabling thinking mode.",
+                    file=sys.stderr,
+                )
+        except Exception:
+            pass
+        if not args.save_raw_response:
+            print(json.dumps(response, ensure_ascii=False, indent=2), file=sys.stderr)
+        return 1
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    save_text(output_path, content)
+    print(f"Saved review result to: {output_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

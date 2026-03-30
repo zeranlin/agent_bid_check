@@ -1,0 +1,35 @@
+{
+  "topic": "scoring",
+  "summary": "模型输出未能解析为结构化 JSON，需人工复核。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "模型返回了非 JSON 结构。",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "第二章 评分办法",
+        "start_line": 4,
+        "end_line": 6,
+        "module": "scoring"
+      },
+      {
+        "title": "第三章 技术要求",
+        "start_line": 7,
+        "end_line": 8,
+        "module": "technical"
+      },
+      {
+        "title": "技术标准：GB/T 1040.2-2006。",
+        "start_line": 9,
+        "end_line": 9,
+        "module": "technical"
+      },
+      {
+        "title": "文档起始",
+        "start_line": 1,
+        "end_line": 3,
+        "module": "qualification"
+      }
+    ]
+  }
+}

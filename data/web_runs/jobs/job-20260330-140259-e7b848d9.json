@@ -1,0 +1,12 @@
+{
+  "job_id": "job-20260330-140259-e7b848d9",
+  "filename": "SZDL2025000495-A.docx",
+  "status": "running",
+  "stage": "smart_review",
+  "message": "正在进行智能审查，逐项比对资格条件、评分办法与商务条款。",
+  "started_at": 1774850579.88139,
+  "partial_text": "",
+  "run_id": null,
+  "redirect_url": null,
+  "error": null
+}

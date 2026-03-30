@@ -1,0 +1,35 @@
+{
+  "topic": "contract",
+  "summary": "提供的证据片段主要涉及评分办法、技术要求、技术标准及资格要求，未包含任何关于付款方式、付款节点、预付款、履约期限、违约责任、保证金、验收方式、验收主体、验收标准以及争议处理等‘商务条款、付款、履约与验收’专题的核心内容。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "当前证据片段缺失商务条款、付款、履约与验收相关章节，无法对该专题进行实质性风险审查。",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "第二章 评分办法",
+        "start_line": 4,
+        "end_line": 6,
+        "module": "scoring"
+      },
+      {
+        "title": "第三章 技术要求",
+        "start_line": 7,
+        "end_line": 8,
+        "module": "technical"
+      },
+      {
+        "title": "技术标准：GB/T 1040.2-2006。",
+        "start_line": 9,
+        "end_line": 9,
+        "module": "technical"
+      },
+      {
+        "title": "文档起始",
+        "start_line": 1,
+        "end_line": 3,
+        "module": "qualification"
+      }
+    ]
+  }
+}

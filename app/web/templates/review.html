@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>招标审查工作台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="review-overlay" id="review-overlay" aria-hidden="true" hidden>
+    <div class="review-overlay__backdrop"></div>
+    <div class="review-overlay__panel">
+      <div class="review-overlay__halo review-overlay__halo--one"></div>
+      <div class="review-overlay__halo review-overlay__halo--two"></div>
+      <div class="review-overlay__scanner"></div>
+      <div class="review-overlay__content">
+        <p class="review-overlay__eyebrow">Bid Review Pipeline</p>
+        <h2>审查进行中</h2>
+        <p class="review-overlay__message" id="review-overlay-message">系统正在读取招标文件并整理文本结构。</p>
+        <div class="review-overlay__meter">
+          <span class="review-overlay__meter-bar"></span>
+        </div>
+        <div class="review-overlay__stages">
+          <div class="review-overlay__stage is-active" data-stage>文件阅读</div>
+          <div class="review-overlay__stage" data-stage>智能审查</div>
+          <div class="review-overlay__stage" data-stage>梳理报告</div>
+        </div>
+        <div class="review-overlay__stream is-hidden" id="review-overlay-stream" aria-hidden="true">
+          <div class="review-overlay__stream-head">
+            <span>模型实时输出</span>
+            <span class="review-overlay__stream-note">仅显示最近 30 行</span>
+          </div>
+          <pre class="review-overlay__stream-body" id="review-overlay-stream-body"></pre>
+        </div>
+        <div class="review-overlay__footer">
+          <span id="review-overlay-elapsed">已等待 0 秒</span>
+          <span>结果返回后会自动展示统一格式审查报告</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell shell--stacked">
+    <section class="hero">
+      <div class="hero__grain"></div>
+      <div class="hero__content">
+        <div class="hero__copy">
+          <p class="eyebrow">Government Procurement Review</p>
+          <h1>招标审查工作台</h1>
+          <p class="hero__subtext">上传招标文件后，系统将自动完成智能审查，并输出统一格式审查报告。</p>
+        </div>
+        <section class="hero__summary" aria-label="工作台说明">
+          <div class="hero__row">
+            <span class="hero__label">流程</span>
+            <p>上传文件 → 自动审查 → 查看结果</p>
+          </div>
+          <div class="hero__row">
+            <span class="hero__label">输出</span>
+            <p>Markdown 结果、请求体、原始响应、提取文本</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <main class="workspace">
+      <section class="workspace-top">
+        <section class="panel panel--form">
+          <div class="panel__head">
+            <div>
+              <p class="kicker">Submit</p>
+              <h2>发起审查</h2>
+            </div>
+            <div class="status-dot"></div>
+          </div>
+
+          {% if error %}
+          <div class="alert alert--error">{{ error }}</div>
+          {% endif %}
+
+        <form method="post" action="{{ url_for('review') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_start') }}">
+            <label class="file-drop" for="tender-file">
+              <input type="file" id="tender-file" name="tender_file" accept=".docx,.txt,.md" required>
+              <span class="file-drop__eyebrow">招标文件</span>
+              <span class="file-drop__title" id="file-drop-title">选择招标文件</span>
+              <span class="file-drop__hint" id="file-drop-hint">支持 .docx / .txt / .md，建议单文件 25MB 以内</span>
+              <div class="file-drop__meta" id="file-drop-meta" hidden>
+                <span class="file-meta-pill" id="file-meta-type">文档</span>
+                <span class="file-meta-pill" id="file-meta-size">0 KB</span>
+              </div>
+            </label>
+
+            <div class="actions">
+              <button type="submit" class="button button--primary" id="submit-btn">开始审查</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel panel--history">
+          <div class="panel__head">
+            <div>
+              <p class="kicker">History</p>
+              <h2>历史审查记录</h2>
+            </div>
+          </div>
+
+          {% if history_runs %}
+          <div class="history-list">
+            {% for run in history_runs %}
+            <a class="history-item{% if result and result.run_id == run.run_id %} is-active{% endif %}" href="{{ run.view_url }}">
+              <div class="history-item__main">
+                <h3>{{ run.original_filename }}</h3>
+                <p>{{ run.created_at|replace('T', ' ') }}</p>
+              </div>
+              <div class="history-item__stats">
+                <span>总 {{ run.total }}</span>
+                <span class="history-pill history-pill--high">高 {{ run.high }}</span>
+                <span class="history-pill history-pill--medium">中 {{ run.medium }}</span>
+                <span class="history-pill history-pill--low">低 {{ run.low }}</span>
+                <span class="history-pill history-pill--manual">复核 {{ run.manual }}</span>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state empty-state--compact">
+            <p>暂时还没有历史审查记录。</p>
+          </div>
+          {% endif %}
+        </section>
+      </section>
+
+      <section class="panel panel--result">
+        <div class="panel__head">
+          <div>
+            <p class="kicker">Result</p>
+            <h2>审查结果</h2>
+          </div>
+        </div>
+
+        {% if result %}
+        <section class="result-hero">
+          <div class="result-hero__main">
+            <div class="result-meta">
+              <span>文件：{{ result.original_filename }}</span>
+              {% if result.created_at %}
+              <span>时间：{{ result.created_at|replace('T', ' ') }}</span>
+              {% endif %}
+              <span>已生成 Markdown 审查结果</span>
+            </div>
+
+            <div class="download-bar">
+              <a class="button button--primary" href="{{ result.download_review }}">下载结果</a>
+            </div>
+          </div>
+          <div class="result-hero__side">
+            <div class="result-badge">RUN {{ result.run_id }}</div>
+          </div>
+        </section>
+
+        <section class="review-board">
+          {% set first_item = result.review_view.all_cards[0] if result.review_view.all_cards else None %}
+          <div class="review-board__summary">
+            <div class="review-stat review-stat--high">
+              <span>高风险</span>
+              <strong>{{ result.review_view.summary_counts["高风险"] }}</strong>
+            </div>
+            <div class="review-stat review-stat--medium">
+              <span>中风险</span>
+              <strong>{{ result.review_view.summary_counts["中风险"] }}</strong>
+            </div>
+            <div class="review-stat review-stat--low">
+              <span>低风险</span>
+              <strong>{{ result.review_view.summary_counts["低风险"] }}</strong>
+            </div>
+            <div class="review-stat review-stat--manual">
+              <span>需复核</span>
+              <strong>{{ result.review_view.summary_counts["需人工复核"] }}</strong>
+            </div>
+            <div class="review-stat review-stat--total">
+              <span>风险点总数</span>
+              <strong>{{ result.review_view.total }}</strong>
+            </div>
+          </div>
+
+          {% if result.review_view.type_items %}
+          <div class="review-types">
+            {% for review_type, count in result.review_view.type_items %}
+            <span class="review-type-chip">{{ review_type }} · {{ count }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="review-board__note">
+            <p>左侧用于快速浏览风险清单，右侧用于查看当前风险点的完整判断、依据与整改建议。</p>
+          </div>
+
+          <div class="review-workbench" data-review-workbench>
+            <aside class="review-sidebar">
+              <div class="review-sidebar__head">
+                <div>
+                  <p class="review-sidebar__eyebrow">Risk Queue</p>
+                  <h3>风险清单</h3>
+                </div>
+                <span>{{ result.review_view.total }} 项</span>
+              </div>
+
+              <div class="review-sidebar__list" role="tablist" aria-label="风险点列表">
+                {% for item in result.review_view.all_cards %}
+                <button
+                  type="button"
+                  class="risk-list-item{% if first_item and item.index == first_item.index %} is-active{% endif %}"
+                  data-risk-trigger="{{ item.index }}"
+                  role="tab"
+                  aria-selected="{% if first_item and item.index == first_item.index %}true{% else %}false{% endif %}"
+                >
+                  <div class="risk-list-item__head">
+                    <span class="risk-list-item__index">风险点{{ item.index }}</span>
+                    <span class="review-badge review-badge--{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }}">{{ item.severity }}</span>
+                  </div>
+                  <h4>{{ item.title }}</h4>
+                  <p class="risk-list-item__summary">{{ item.judgment_preview }}</p>
+                  <div class="risk-list-item__meta">
+                    <span>{{ item.review_type }}</span>
+                    <span>{{ item.source_location_preview }}</span>
+                  </div>
+                </button>
+                {% endfor %}
+              </div>
+            </aside>
+
+            <section class="review-detail-panel">
+              {% for item in result.review_view.all_cards %}
+              <article
+                class="review-detail{% if first_item and item.index == first_item.index %} is-active{% endif %}"
+                data-risk-detail="{{ item.index }}"
+                {% if not first_item or item.index != first_item.index %}hidden{% endif %}
+              >
+                <div class="review-detail__hero">
+                  <div>
+                    <p class="review-card__index">风险点{{ item.index }}</p>
+                    <h3>{{ item.title }}</h3>
+                  </div>
+                  <div class="review-card__tags">
+                    <span class="review-badge review-badge--{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }}">{{ item.severity }}</span>
+                    <span class="review-badge review-badge--type">{{ item.review_type }}</span>
+                  </div>
+                </div>
+
+                <div class="review-detail__intro">
+                  <div class="review-card__lead">
+                    <span class="review-card__lead-label">核心判断</span>
+                    <p>{{ item.judgment_preview|inline_md }}</p>
+                  </div>
+                  <div class="review-card__summary-grid">
+                    <div class="review-glance review-glance--excerpt">
+                      <span>原文摘录预览</span>
+                      <p>{{ item.source_excerpt_preview }}</p>
+                    </div>
+                    <div class="review-glance review-glance--location">
+                      <span>定位路径</span>
+                      <p>{{ item.source_location_preview }}</p>
+                    </div>
+                    <div class="review-glance review-glance--counts">
+                      <span>处理信息</span>
+                      <p>依据 {{ item.legal_basis_count }} 条 · 建议 {{ item.rectification_count }} 条</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="review-card__body">
+                  <div class="review-card__main-flow">
+                    <div class="review-block review-block--main review-block--judgment">
+                      <span>问题判断</span>
+                      <ul>
+                        {% for line in item.risk_judgment %}
+                        <li>{{ line|inline_md }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    <div class="review-block review-block--main review-block--excerpt">
+                      <span>原文摘录</span>
+                      <div class="review-block__content review-block__content--source">{{ item.source_excerpt|field_md }}</div>
+                    </div>
+                    <div class="review-block review-block--main review-block--location">
+                      <span>原文位置</span>
+                      <div class="review-block__content review-block__content--source">{{ item.source_location|field_md }}</div>
+                    </div>
+                    <div class="review-block review-block--main review-block--basis">
+                      <span>法规依据</span>
+                      <ul>
+                        {% for line in item.legal_basis %}
+                        <li>{{ line|inline_md }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    <div class="review-block review-block--main review-block--advice">
+                      <span>修改建议</span>
+                      <ul>
+                        {% for line in item.rectification %}
+                        <li>{{ line|inline_md }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              {% endfor %}
+            </section>
+          </div>
+        </section>
+
+        {% else %}
+        <div class="empty-state">
+          <p>上传文件后，系统会直接使用已保存配置发起审查。</p>
+          <p>审查完成后会按风险等级和审查类型分类展示，也可下载原始结果用于复核。</p>
+        </div>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById('review-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const fileInput = document.getElementById('tender-file');
+    const fileDropTitle = document.getElementById('file-drop-title');
+    const fileDropHint = document.getElementById('file-drop-hint');
+    const fileDropMeta = document.getElementById('file-drop-meta');
+    const fileMetaType = document.getElementById('file-meta-type');
+    const fileMetaSize = document.getElementById('file-meta-size');
+    const overlay = document.getElementById('review-overlay');
+    const overlayMessage = document.getElementById('review-overlay-message');
+    const overlayElapsed = document.getElementById('review-overlay-elapsed');
+    const overlayStages = Array.from(document.querySelectorAll('[data-stage]'));
+    const overlayMeterBar = document.querySelector('.review-overlay__meter-bar');
+    const overlayStream = document.getElementById('review-overlay-stream');
+    const overlayStreamBody = document.getElementById('review-overlay-stream-body');
+    const stageMessages = {
+      file_reading: '系统正在阅读招标文件并整理文本结构。',
+      smart_review: '正在进行智能审查，逐项比对资格条件、评分办法与商务条款。',
+      report_structuring: '正在梳理审查报告，生成统一格式结果。',
+      completed: '审查完成，正在跳转到结果页。',
+      failed: '审查失败，请查看错误信息。'
+    };
+    const stageKeys = ['file_reading', 'smart_review', 'report_structuring'];
+    const stageProgress = {
+      file_reading: '18%',
+      smart_review: '68%',
+      report_structuring: '92%',
+      completed: '100%'
+    };
+    let overlayStartedAt = 0;
+    let overlayTimer = null;
+    let pollTimer = null;
+    let statusMissCount = 0;
+    let latestBackendStage = 'file_reading';
+    let pendingRedirectUrl = '';
+    let forcedReportStructuringUntil = 0;
+    let stageEnteredAt = {
+      file_reading: 0,
+      smart_review: 0,
+      report_structuring: 0
+    };
+    let overlayScrollbarComp = 0;
+    const minFileReadingMs = 30000;
+    const minReportStructuringMs = 10000;
+    const finalDisplayLeadMs = 3000;
+    const maxStreamLines = 30;
+    const riskTriggers = Array.from(document.querySelectorAll('[data-risk-trigger]'));
+    const riskDetails = Array.from(document.querySelectorAll('[data-risk-detail]'));
+
+    function activateRiskItem(riskId) {
+      if (!riskId) return;
+      riskTriggers.forEach((trigger) => {
+        const isActive = trigger.dataset.riskTrigger === riskId;
+        trigger.classList.toggle('is-active', isActive);
+        trigger.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      riskDetails.forEach((detail) => {
+        const isActive = detail.dataset.riskDetail === riskId;
+        detail.classList.toggle('is-active', isActive);
+        detail.hidden = !isActive;
+      });
+    }
+
+    function formatFileSize(bytes) {
+      if (!bytes) return '0 KB';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = bytes;
+      let unitIndex = 0;
+      while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex += 1;
+      }
+      const fixed = size >= 10 || unitIndex === 0 ? 0 : 1;
+      return `${size.toFixed(fixed)} ${units[unitIndex]}`;
+    }
+
+    function updateSelectedFile() {
+      if (!fileInput || !fileDropTitle || !fileDropHint || !fileDropMeta || !fileMetaType || !fileMetaSize) return;
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        fileDropTitle.textContent = '选择招标文件';
+        fileDropHint.textContent = '支持 .docx / .txt / .md，建议单文件 25MB 以内';
+        fileMetaType.textContent = '文档';
+        fileMetaSize.textContent = '0 KB';
+        fileDropMeta.hidden = true;
+        return;
+      }
+      const extension = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'FILE';
+      fileDropTitle.textContent = file.name;
+      fileDropHint.textContent = `已选择文件，可直接开始审查`;
+      fileMetaType.textContent = extension;
+      fileMetaSize.textContent = formatFileSize(file.size);
+      fileDropMeta.hidden = false;
+    }
+
+    function rememberStageTransition(nextStage) {
+      if (!nextStage || nextStage === latestBackendStage) return;
+      if (stageEnteredAt[nextStage] === 0) {
+        stageEnteredAt[nextStage] = Date.now();
+      }
+      latestBackendStage = nextStage;
+    }
+
+    function getEffectiveStage() {
+      const elapsedMs = Math.max(0, Date.now() - overlayStartedAt);
+      if (latestBackendStage !== 'file_reading' && elapsedMs < minFileReadingMs) {
+        return 'file_reading';
+      }
+      if (forcedReportStructuringUntil && Date.now() < forcedReportStructuringUntil) {
+        return 'report_structuring';
+      }
+      if (latestBackendStage === 'completed') {
+        const reportEnteredAt = stageEnteredAt.report_structuring || Date.now();
+        const reportElapsedMs = Math.max(0, Date.now() - reportEnteredAt);
+        if (reportElapsedMs < minReportStructuringMs) {
+          return 'report_structuring';
+        }
+      }
+      return latestBackendStage;
+    }
+
+    function maybeFinishReportStructuring() {
+      if (!pendingRedirectUrl || latestBackendStage !== 'completed') return false;
+      const effectiveStage = getEffectiveStage();
+      if (effectiveStage === 'report_structuring') return false;
+      if (pollTimer) {
+        window.clearInterval(pollTimer);
+      }
+      window.location.href = pendingRedirectUrl;
+      return true;
+    }
+
+    function getOverlayDisplayMessage(effectiveStage, message) {
+      if (effectiveStage === 'report_structuring') {
+        const reportEnteredAt = stageEnteredAt.report_structuring || Date.now();
+        const reportElapsedMs = Math.max(0, Date.now() - reportEnteredAt);
+        if (reportElapsedMs >= (minReportStructuringMs - finalDisplayLeadMs)) {
+          return '正在生成最终展示';
+        }
+      }
+      return effectiveStage === latestBackendStage
+        ? (message || stageMessages[effectiveStage] || stageMessages.file_reading)
+        : (stageMessages[effectiveStage] || stageMessages.file_reading);
+    }
+
+    function setOverlayStage(stageKey, message) {
+      rememberStageTransition(stageKey || latestBackendStage);
+      const effectiveStage = getEffectiveStage();
+      const activeIndex = stageKeys.indexOf(effectiveStage);
+      overlayStages.forEach((stage, index) => {
+        stage.classList.toggle('is-active', index === activeIndex);
+        stage.classList.toggle('is-complete', activeIndex > -1 && index < activeIndex);
+      });
+      const displayMessage = getOverlayDisplayMessage(effectiveStage, message);
+      if (overlayMessage) {
+        overlayMessage.textContent = displayMessage;
+      }
+      if (overlayMeterBar && stageProgress[effectiveStage]) {
+        overlayMeterBar.style.width = stageProgress[effectiveStage];
+      }
+      const shouldShowStream = effectiveStage === 'smart_review' || effectiveStage === 'report_structuring';
+      if (overlayStream) {
+        overlayStream.classList.toggle('is-hidden', !shouldShowStream);
+        overlayStream.setAttribute('aria-hidden', shouldShowStream ? 'false' : 'true');
+      }
+    }
+
+    function showOverlay(startedAtSeconds) {
+      if (!overlay) return;
+      overlayScrollbarComp = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+      document.body.style.paddingRight = overlayScrollbarComp ? `${overlayScrollbarComp}px` : '';
+      overlay.hidden = false;
+      overlay.setAttribute('aria-hidden', 'false');
+      overlay.classList.add('is-visible');
+      document.body.classList.add('is-reviewing');
+      overlayStartedAt = startedAtSeconds ? startedAtSeconds * 1000 : Date.now();
+      latestBackendStage = 'file_reading';
+      pendingRedirectUrl = '';
+      forcedReportStructuringUntil = 0;
+      stageEnteredAt = {
+        file_reading: overlayStartedAt,
+        smart_review: 0,
+        report_structuring: 0
+      };
+      if (overlayStreamBody) {
+        overlayStreamBody.textContent = '';
+      }
+      setOverlayStage('file_reading', stageMessages.file_reading);
+
+      if (overlayTimer) {
+        window.clearInterval(overlayTimer);
+      }
+      overlayTimer = window.setInterval(() => {
+        const elapsedSeconds = Math.max(0, Math.floor((Date.now() - overlayStartedAt) / 1000));
+        if (overlayElapsed) {
+          overlayElapsed.textContent = `已等待 ${elapsedSeconds} 秒`;
+        }
+        setOverlayStage(latestBackendStage);
+        maybeFinishReportStructuring();
+      }, 1000);
+    }
+
+    function renderStreamPreview(text) {
+      if (!overlayStreamBody) return;
+      const lines = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+      const preview = lines.slice(-maxStreamLines).join('\n');
+      overlayStreamBody.textContent = preview;
+      overlayStreamBody.scrollTop = overlayStreamBody.scrollHeight;
+    }
+
+    async function pollReviewStatus(statusUrl) {
+      if (pollTimer) {
+        window.clearInterval(pollTimer);
+      }
+
+      async function fetchStatus() {
+        const response = await fetch(statusUrl, { cache: 'no-store' });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) {
+          if (response.status === 404 && statusMissCount < 3) {
+            statusMissCount += 1;
+            return;
+          }
+          throw new Error(payload.error || '审查任务状态查询失败。');
+        }
+        statusMissCount = 0;
+        if (payload.stage) {
+          setOverlayStage(payload.stage, payload.message);
+        }
+        if (overlayStreamBody && payload.partial_text) {
+          renderStreamPreview(payload.partial_text);
+        }
+        if (payload.status === 'completed' && payload.redirect_url) {
+          pendingRedirectUrl = payload.redirect_url;
+          if (stageEnteredAt.report_structuring === 0) {
+            stageEnteredAt.report_structuring = Date.now();
+          }
+          forcedReportStructuringUntil = stageEnteredAt.report_structuring + minReportStructuringMs;
+          setOverlayStage('completed', payload.message);
+          maybeFinishReportStructuring();
+          return;
+        }
+        if (payload.status === 'failed') {
+          if (pollTimer) {
+            window.clearInterval(pollTimer);
+          }
+          throw new Error(payload.error || '审查失败。');
+        }
+      }
+
+      await fetchStatus();
+      pollTimer = window.setInterval(async () => {
+        try {
+          await fetchStatus();
+        } catch (error) {
+          if (pollTimer) {
+            window.clearInterval(pollTimer);
+          }
+          document.body.style.paddingRight = '';
+          document.body.classList.remove('is-reviewing');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '开始审查';
+          alert(error.message || '审查失败，请稍后重试。');
+        }
+      }, 1000);
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', updateSelectedFile);
+      updateSelectedFile();
+    }
+
+    riskTriggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        activateRiskItem(trigger.dataset.riskTrigger);
+      });
+    });
+
+    if (form && submitBtn) {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = '审查已提交';
+        try {
+          const formData = new FormData(form);
+          const startUrl = form.dataset.startUrl || form.action;
+          const response = await fetch(startUrl, {
+            method: 'POST',
+            body: formData
+          });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.error || '审查启动失败。');
+          }
+          showOverlay(payload.started_at);
+          await pollReviewStatus(payload.status_url);
+        } catch (error) {
+          document.body.style.paddingRight = '';
+          document.body.classList.remove('is-reviewing');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '开始审查';
+          alert(error.message || '审查启动失败，请稍后重试。');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

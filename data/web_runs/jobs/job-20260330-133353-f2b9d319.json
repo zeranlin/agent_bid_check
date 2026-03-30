@@ -1,0 +1,11 @@
+{
+  "job_id": "job-20260330-133353-f2b9d319",
+  "filename": "2025年省级全民健身工程（多功能运动场项目）.docx",
+  "status": "failed",
+  "stage": "failed",
+  "message": "审查失败，请查看错误信息。",
+  "started_at": 1774848833.1686,
+  "run_id": null,
+  "redirect_url": null,
+  "error": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+}

@@ -1,0 +1,11 @@
+{
+  "job_id": "job-20260330-134127-ff23bcf5",
+  "filename": "BACG2025000066-A.docx",
+  "status": "running",
+  "stage": "smart_review",
+  "message": "正在进行智能审查，逐项比对资格条件、评分办法与商务条款。",
+  "started_at": 1774849287.473553,
+  "run_id": null,
+  "redirect_url": null,
+  "error": null
+}

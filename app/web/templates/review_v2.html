@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>招标审查工作台 V2</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --panel: #ffffff;
+      --line: rgba(29, 29, 31, .08);
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --blue: #0071e3;
+      --blue-soft: #eaf3ff;
+      --high: #d92d20;
+      --medium: #f79009;
+      --low: #12b76a;
+      --manual: #667085;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 22px 48px;
+    }
+    .hero {
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 840px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 356px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .layout > * {
+      min-width: 0;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 36px rgba(15, 23, 42, .06);
+      min-width: 0;
+      overflow: hidden;
+    }
+    .sidebar {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+    .panel-body {
+      padding: 18px;
+      min-width: 0;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -.01em;
+    }
+    .upload-box {
+      border: 1px dashed rgba(0, 113, 227, .24);
+      border-radius: 18px;
+      background: #fbfbfd;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .upload-box input[type=file] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+    .file-picker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(29, 29, 31, .12);
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .file-meta {
+      min-height: 44px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .primary-btn {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 18px;
+      cursor: pointer;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .primary-btn:hover { opacity: .92; transform: translateY(-1px); }
+    .primary-btn:disabled { opacity: .55; cursor: wait; transform: none; }
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+    .history-item {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fbfbfd;
+      border: 1px solid transparent;
+    }
+    .history-item.active {
+      background: var(--blue-soft);
+      border-color: rgba(0, 113, 227, .2);
+    }
+    .history-name {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: initial;
+      word-break: break-word;
+      margin-bottom: 6px;
+    }
+    .history-meta, .history-counts {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+    .content {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+    .status-box {
+      display: none;
+      gap: 12px;
+    }
+    .status-box.show { display: grid; }
+    .stage-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .status-detail {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .stream-box {
+      display: none;
+      margin-top: 6px;
+      border-radius: 18px;
+      background: #fbfbfd;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .stream-box.show { display: block; }
+    .stream-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+      background: #fff;
+    }
+    .stream-body {
+      margin: 0;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.75;
+      max-height: 320px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric {
+      border-radius: 18px;
+      background: #fbfbfd;
+      border: 1px solid var(--line);
+      padding: 14px;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+    }
+    .metric.high .metric-value { color: var(--high); }
+    .metric.medium .metric-value { color: var(--medium); }
+    .metric.low .metric-value { color: var(--low); }
+    .metric.manual .metric-value { color: var(--manual); }
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .topic-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fbfbfd;
+      padding: 15px;
+      display: grid;
+      gap: 10px;
+    }
+    .topic-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .topic-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .topic-badge {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .topic-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .topic-risks {
+      display: grid;
+      gap: 8px;
+    }
+    .topic-risk {
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .topic-risk-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .topic-risk-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 2px;
+      min-width: 0;
+    }
+    .links a {
+      font-size: 13px;
+      color: var(--blue);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+    .result-meta {
+      margin-bottom: 14px;
+      min-width: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .result-meta-line {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .report-box {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #fbfbfd;
+      padding: 22px 24px;
+      max-height: 900px;
+      overflow: auto;
+    }
+    .report-box h1,
+    .report-box h2,
+    .report-box h3,
+    .report-box h4 {
+      margin: 0 0 14px;
+      letter-spacing: -.02em;
+      line-height: 1.35;
+    }
+    .report-box h1 { font-size: 28px; }
+    .report-box h2 {
+      margin-top: 22px;
+      font-size: 21px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(29, 29, 31, .08);
+    }
+    .report-box h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+    .report-box h3 { font-size: 17px; margin-top: 18px; }
+    .report-box p,
+    .report-box li,
+    .report-box blockquote {
+      font-size: 14px;
+      line-height: 1.82;
+      color: #2f2f33;
+    }
+    .report-box p { margin: 0 0 12px; }
+    .report-box ul,
+    .report-box ol {
+      margin: 0 0 12px 18px;
+      padding: 0;
+    }
+    .report-box li + li { margin-top: 6px; }
+    .report-box hr {
+      border: 0;
+      height: 1px;
+      background: rgba(29, 29, 31, .08);
+      margin: 18px 0;
+    }
+    .report-box code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: rgba(29, 29, 31, .05);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .report-box pre {
+      margin: 12px 0;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      overflow: auto;
+    }
+    .report-box blockquote {
+      margin: 12px 0;
+      padding: 0 0 0 14px;
+      color: var(--muted);
+      border-left: 3px solid rgba(0, 113, 227, .25);
+    }
+    .report-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .report-box th,
+    .report-box td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .report-box th {
+      background: #f8f8fa;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .error {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fff4f4;
+      border: 1px solid rgba(217, 45, 32, .16);
+      color: #b42318;
+      font-size: 14px;
+    }
+    .empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: #fbfbfd;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .summary-grid, .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .page { padding: 18px 14px 36px; }
+      .summary-grid, .topic-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <h1>招标审查工作台 V2</h1>
+      <p>三层审查链路：全文直审、结构增强、专题深审。当前页面支持上传文件、异步运行、查看历史与分专题结果。</p>
+    </div>
+
+    <div class="layout">
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-body">
+            <h2>发起 V2 审查</h2>
+            <form id="review-form" enctype="multipart/form-data">
+              <div class="upload-box">
+                <label class="file-picker" for="tender-file">选择招标文件</label>
+                <input id="tender-file" type="file" name="tender_file" accept=".docx,.txt,.md">
+                <div id="file-meta" class="file-meta">请选择招标文件，支持 .docx / .txt / .md</div>
+                <button id="start-button" class="primary-btn" type="submit">开始 V2 审查</button>
+                <div class="subtle">V2 Web 默认沿用与 CLI 一致的模型、温度、超时和基础提示词配置。</div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h2>历史记录</h2>
+            <div class="history-list">
+              {% for run in history_runs %}
+              <a class="history-item {% if current_run_id == run.run_id %}active{% endif %}" href="{{ run.view_url }}">
+                <div class="history-name">{{ run.original_filename }}</div>
+                <div class="history-meta">{{ run.created_at or run.run_id }}</div>
+                <div class="history-counts">总计 {{ run.total }} ｜ 高 {{ run.high }} ｜ 中 {{ run.medium }} ｜ 低 {{ run.low }} ｜ 复核 {{ run.manual }}</div>
+              </a>
+              {% else %}
+              <div class="empty">还没有 V2 审查记录，先上传一份文件跑一遍。</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <div id="status-panel" class="panel status-box">
+          <div class="panel-body">
+            <div id="stage-chip" class="stage-chip">文件阅读</div>
+            <div id="status-detail" class="status-detail">系统正在准备任务。</div>
+            <div id="stream-box" class="stream-box">
+              <div class="stream-head">最近 30 行模型输出</div>
+              <pre id="stream-body" class="stream-body"></pre>
+            </div>
+          </div>
+        </div>
+
+        {% if result %}
+        <div class="panel">
+          <div class="panel-body">
+            <h2>运行概览</h2>
+            <div class="result-meta">
+              <div class="result-meta-line">文件：{{ result.original_filename }}</div>
+              <div class="result-meta-line">运行：{{ result.run_id }}{% if result.created_at %} ｜ {{ result.created_at }}{% endif %}</div>
+            </div>
+            <div class="summary-grid">
+              <div class="metric">
+                <div class="metric-label">总风险点</div>
+                <div class="metric-value">{{ result.review_view.total }}</div>
+              </div>
+              <div class="metric high">
+                <div class="metric-label">高风险</div>
+                <div class="metric-value">{{ result.review_view.summary_counts["高风险"] }}</div>
+              </div>
+              <div class="metric medium">
+                <div class="metric-label">中风险</div>
+                <div class="metric-value">{{ result.review_view.summary_counts["中风险"] }}</div>
+              </div>
+              <div class="metric low">
+                <div class="metric-label">低风险</div>
+                <div class="metric-value">{{ result.review_view.summary_counts["低风险"] }}</div>
+              </div>
+              <div class="metric manual">
+                <div class="metric-label">需人工复核</div>
+                <div class="metric-value">{{ result.review_view.summary_counts["需人工复核"] }}</div>
+              </div>
+            </div>
+            <div class="links">
+              <a href="{{ result.downloads.review }}">下载最终报告</a>
+              <a href="{{ result.downloads.baseline }}">下载全文直审结果</a>
+              <a href="{{ result.downloads.document_map }}">下载结构图</a>
+              <a href="{{ result.downloads.overview }}">下载专题概览</a>
+              <a href="{{ result.downloads.extracted }}">下载提取正文</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h2>分专题结果</h2>
+            <div class="topic-grid">
+              {% for topic in result.topics %}
+              <div class="topic-card">
+                <div class="topic-head">
+                  <div class="topic-title">{{ topic.topic }}</div>
+                  <div class="topic-badge">风险 {{ topic.risk_points|length }} ｜ {% if topic.need_manual_review %}需复核{% else %}已完成{% endif %}</div>
+                </div>
+                <div class="topic-text">{{ topic.summary|inline_md }}</div>
+                <div class="topic-text">{{ topic.coverage_note|inline_md }}</div>
+                <div class="topic-risks">
+                  {% for risk in topic.risk_points[:4] %}
+                  <div class="topic-risk">
+                    <div class="topic-risk-title">{{ risk.title|inline_md }}</div>
+                    <div class="topic-risk-meta">{{ risk.severity }} ｜ {{ risk.review_type }}</div>
+                    <div class="topic-risk-meta">{{ risk.source_location|inline_md }}</div>
+                  </div>
+                  {% else %}
+                  <div class="topic-risk">
+                    <div class="topic-risk-meta">该专题当前未生成独立风险点。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+              <div class="empty">暂无专题深审结果。</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h2>最终报告</h2>
+            <div class="report-box">{{ result.review_html }}</div>
+          </div>
+        </div>
+        {% else %}
+        <div class="panel">
+          <div class="panel-body">
+            <h2>当前状态</h2>
+            <div class="empty">上传一份招标文件后，V2 会先做全文直审，再做结构增强和分专题深审，最后在这里展示统一报告和专题结果。</div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('review-form');
+    const fileInput = document.getElementById('tender-file');
+    const fileMeta = document.getElementById('file-meta');
+    const startButton = document.getElementById('start-button');
+    const statusPanel = document.getElementById('status-panel');
+    const stageChip = document.getElementById('stage-chip');
+    const statusDetail = document.getElementById('status-detail');
+    const streamBox = document.getElementById('stream-box');
+    const streamBody = document.getElementById('stream-body');
+
+    const stageLabels = {
+      file_reading: '文件阅读',
+      baseline_review: '全文直审',
+      structure_analysis: '结构增强',
+      topic_review: '专题深审',
+      report_structuring: '统一报告',
+      completed: '已完成'
+    };
+
+    let pollTimer = null;
+
+    function updateFileMeta() {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        fileMeta.textContent = '请选择招标文件，支持 .docx / .txt / .md';
+        return;
+      }
+      fileMeta.textContent = `${file.name} ｜ ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+    }
+
+    function setRunningState(running) {
+      startButton.disabled = running;
+      startButton.textContent = running ? 'V2 审查进行中...' : '开始 V2 审查';
+    }
+
+    function stopPolling() {
+      if (pollTimer) {
+        clearTimeout(pollTimer);
+        pollTimer = null;
+      }
+    }
+
+    async function pollStatus(statusUrl) {
+      try {
+        const resp = await fetch(statusUrl, { cache: 'no-store' });
+        const data = await resp.json();
+        if (!data.ok) {
+          throw new Error(data.error || '状态查询失败');
+        }
+        statusPanel.classList.add('show');
+        stageChip.textContent = stageLabels[data.stage] || data.stage || '运行中';
+        statusDetail.textContent = data.message || '系统正在处理中。';
+        if (data.partial_text) {
+          streamBox.classList.add('show');
+          streamBody.textContent = data.partial_text;
+          streamBody.scrollTop = streamBody.scrollHeight;
+        } else {
+          streamBox.classList.remove('show');
+          streamBody.textContent = '';
+        }
+        if (data.status === 'completed' && data.redirect_url) {
+          stopPolling();
+          window.location.href = data.redirect_url;
+          return;
+        }
+        if (data.status === 'failed') {
+          stopPolling();
+          setRunningState(false);
+          statusDetail.textContent = data.error || data.message || 'V2 审查失败。';
+          return;
+        }
+        pollTimer = setTimeout(() => pollStatus(statusUrl), 1500);
+      } catch (error) {
+        stopPolling();
+        setRunningState(false);
+        statusPanel.classList.add('show');
+        statusDetail.textContent = error.message || '状态查询失败';
+      }
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', updateFileMeta);
+      updateFileMeta();
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) {
+          fileMeta.textContent = '请先选择文件。';
+          return;
+        }
+        stopPolling();
+        setRunningState(true);
+        statusPanel.classList.add('show');
+        stageChip.textContent = '文件阅读';
+        statusDetail.textContent = '系统正在提交 V2 审查任务。';
+        streamBox.classList.remove('show');
+        streamBody.textContent = '';
+
+        const body = new FormData();
+        body.append('tender_file', file);
+
+        try {
+          const resp = await fetch('/review-v2/start', { method: 'POST', body });
+          const data = await resp.json();
+          if (!data.ok) {
+            throw new Error(data.error || '启动失败');
+          }
+          pollStatus(data.status_url);
+        } catch (error) {
+          setRunningState(false);
+          statusDetail.textContent = error.message || '启动失败';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

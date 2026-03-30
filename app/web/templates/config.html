@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>配置中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="shell shell--stacked">
+    <section class="hero">
+      <div class="hero__grain"></div>
+      <div class="hero__content">
+        <div class="hero__copy">
+          <h1>参数配置中心</h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel--form">
+      <div class="panel__head">
+        <div>
+          <h2>模型与提示词</h2>
+        </div>
+        <div class="status-dot"></div>
+      </div>
+
+      {% if error %}
+      <div class="alert alert--error">{{ error }}</div>
+      {% endif %}
+      {% if message %}
+      <div class="alert alert--success">{{ message }}</div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('config_page') }}" class="review-form">
+        <div class="grid grid--two">
+          <label>
+            <span>接口地址</span>
+            <input type="text" name="base_url" value="{{ form.base_url }}" required>
+          </label>
+          <label>
+            <span>模型</span>
+            <input type="text" name="model" value="{{ form.model }}" required>
+          </label>
+        </div>
+
+        <div class="grid grid--two">
+          <label>
+            <span>密钥</span>
+            <input type="password" name="api_key" value="{{ form.api_key }}" required>
+          </label>
+          <label>
+            <span>超时（秒）</span>
+            <input type="number" name="timeout" value="{{ form.timeout }}" min="10" max="1800" required>
+          </label>
+        </div>
+
+        <div class="grid grid--two">
+          <label>
+            <span>温度</span>
+            <input type="number" step="0.1" name="temperature" value="{{ form.temperature }}" min="0" max="2" required>
+          </label>
+          <label>
+            <span>最大输出 Token</span>
+            <input type="number" name="max_tokens" value="{{ form.max_tokens }}" min="256" max="16000" required>
+          </label>
+        </div>
+
+        <label>
+          <span>System Prompt</span>
+          <textarea name="system_prompt" rows="3">{{ form.system_prompt }}</textarea>
+        </label>
+
+        <label>
+          <span>User Prompt</span>
+          <textarea name="user_prompt" rows="10">{{ form.user_prompt }}</textarea>
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="button button--primary">保存配置</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "topic": "contract",
+  "summary": "提供的证据片段主要集中在投标程序、资格审查、文件获取及开标等前期流程，未包含‘商务条款、付款、履约与验收’专题所需的合同条款、付款方式、履约期限、违约责任、验收标准及争议解决等核心内容。无法依据现有片段判断商务条款的公平性、付款验收安排的合理性或是否存在霸王条款。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "当前证据片段仅覆盖招标文件的前言、投标人须知及程序性规定（第34-124行），缺失合同专用条款、付款节点、履约保证金、验收标准及争议处理等关键章节内容。",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "资格审查要求概况",
+        "start_line": 34,
+        "end_line": 94,
+        "module": "procedure"
+      },
+      {
+        "title": "第二章 投标人须知前附表",
+        "start_line": 95,
+        "end_line": 95,
+        "module": "procedure"
+      },
+      {
+        "title": "一、投标人须知前附表1",
+        "start_line": 96,
+        "end_line": 108,
+        "module": "procedure"
+      },
+      {
+        "title": "（1）可读介质（光盘或U盘） 0 份：投标人应将其上传至福建省政府采购网上公开信息系统的电子投标文件在该可读介质中另存 0 份。",
+        "start_line": 109,
+        "end_line": 109,
+        "module": "procedure"
+      },
+      {
+        "title": "（2）电子投标文件：详见投标人须知前附表2《关于电子招标投标活动的专门规定》。",
+        "start_line": 110,
+        "end_line": 113,
+        "module": "procedure"
+      },
+      {
+        "title": "采购包1：不允许合同分包；",
+        "start_line": 114,
+        "end_line": 124,
+        "module": "procedure"
+      }
+    ]
+  }
+}

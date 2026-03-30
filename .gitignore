@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.codex_logs/
+
+data/runs/cli/tmp_*
+
+data/web_runs/uploads/
+data/web_runs/results/
