@@ -77,7 +77,7 @@
           <div class="alert alert--error">{{ error }}</div>
           {% endif %}
 
-          <form method="post" action="{{ url_for('review_v2_start') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_v2_start') }}">
+          <form method="post" action="{{ url_for('review_plus_start') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_plus_start') }}">
             <label class="file-drop" for="tender-file">
               <input type="file" id="tender-file" name="tender_file" accept=".docx,.txt,.md" required>
               <span class="file-drop__eyebrow">招标文件</span>

@@ -515,13 +515,13 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "comparison_view": build_comparison_view(comparison),
         "topics": topics,
         "downloads": {
-            "review": url_for("download_v2_file", run_id=run_id, kind="review"),
-            "extracted": url_for("download_v2_file", run_id=run_id, kind="extracted"),
-            "baseline": url_for("download_v2_file", run_id=run_id, kind="baseline"),
-            "document_map": url_for("download_v2_file", run_id=run_id, kind="document_map"),
-            "evidence_map": url_for("download_v2_file", run_id=run_id, kind="evidence_map"),
-            "comparison": url_for("download_v2_file", run_id=run_id, kind="comparison"),
-            "overview": url_for("download_v2_file", run_id=run_id, kind="overview"),
+            "review": url_for("download_plus_file", run_id=run_id, kind="review"),
+            "extracted": url_for("download_plus_file", run_id=run_id, kind="extracted"),
+            "baseline": url_for("download_plus_file", run_id=run_id, kind="baseline"),
+            "document_map": url_for("download_plus_file", run_id=run_id, kind="document_map"),
+            "evidence_map": url_for("download_plus_file", run_id=run_id, kind="evidence_map"),
+            "comparison": url_for("download_plus_file", run_id=run_id, kind="comparison"),
+            "overview": url_for("download_plus_file", run_id=run_id, kind="overview"),
         },
     }
 
@@ -554,7 +554,7 @@ def list_recent_runs(limit: int = 12) -> list[dict]:
                     "medium": counts["中风险"],
                     "low": counts["低风险"],
                     "manual": counts["需人工复核"],
-                    "view_url": url_for("review_v2_history", run_id=result["run_id"]),
+                    "view_url": url_for("review_plus_history", run_id=result["run_id"]),
                 }
             )
     runs.sort(key=lambda item: (item.get("created_at", ""), item.get("run_id", "")), reverse=True)
@@ -605,7 +605,7 @@ def run_review_job(job_id: str, upload_path: Path, original_filename: str, form:
             stage="completed",
             message=STAGE_TO_MESSAGE["completed"],
             run_id=run_id,
-            redirect_url=f"/review-v2/history/{run_id}",
+            redirect_url=f"/review-plus/history/{run_id}",
         )
     except Exception as exc:
         update_job(job_id, status="failed", error=str(exc), message=str(exc))
@@ -628,54 +628,54 @@ def create_app() -> Flask:
     def field_md_filter(text: str) -> Markup:
         return Markup(render_markdown(preprocess_field_markdown(text or "")))
 
-    @app.route("/review-v2", methods=["GET"])
-    def review_v2_page() -> str:
+    @app.route("/review-plus", methods=["GET"])
+    def review_plus_page() -> str:
         return render_template(
             "review_v2_simple.html",
             result=None,
             history_runs=list_recent_runs(),
             error=None,
-            active_page="review_v2",
+            active_page="review_plus",
             current_run_id=None,
         )
 
-    @app.route("/review-v2/history/<run_id>", methods=["GET"])
-    def review_v2_history(run_id: str) -> str:
+    @app.route("/review-plus/history/<run_id>", methods=["GET"])
+    def review_plus_history(run_id: str) -> str:
         result = load_result_by_run_id(run_id)
         return render_template(
             "review_v2_simple.html",
             result=result,
             history_runs=list_recent_runs(),
             error=None if result else "未找到对应的 V2 审查记录。",
-            active_page="review_v2",
+            active_page="review_plus",
             current_run_id=run_id,
         )
 
-    @app.route("/review-v2/full", methods=["GET"])
-    def review_v2_full_page() -> str:
+    @app.route("/review-max", methods=["GET"])
+    def review_max_page() -> str:
         return render_template(
             "review_v2.html",
             result=None,
             history_runs=list_recent_runs(),
             error=None,
-            active_page="review_v2_full",
+            active_page="review_max",
             current_run_id=None,
         )
 
-    @app.route("/review-v2/full/history/<run_id>", methods=["GET"])
-    def review_v2_full_history(run_id: str) -> str:
+    @app.route("/review-max/history/<run_id>", methods=["GET"])
+    def review_max_history(run_id: str) -> str:
         result = load_result_by_run_id(run_id)
         return render_template(
             "review_v2.html",
             result=result,
             history_runs=list_recent_runs(),
             error=None if result else "未找到对应的 V2 审查记录。",
-            active_page="review_v2_full",
+            active_page="review_max",
             current_run_id=run_id,
         )
 
-    @app.route("/review-v2/start", methods=["POST"])
-    def review_v2_start() -> Response:
+    @app.route("/review-plus/start", methods=["POST"])
+    def review_plus_start() -> Response:
         upload = request.files.get("tender_file")  # type: ignore[name-defined]
         if not upload or not upload.filename:
             return jsonify({"ok": False, "error": "请选择招标文件。"}), 400
@@ -694,22 +694,22 @@ def create_app() -> Flask:
             {
                 "ok": True,
                 "job_id": job_id,
-                "status_url": url_for("review_v2_status", job_id=job_id),
+                "status_url": url_for("review_plus_status", job_id=job_id),
                 "started_at": get_job(job_id)["started_at"],
                 "stage": "file_reading",
                 "message": STAGE_TO_MESSAGE["file_reading"],
             }
         )
 
-    @app.route("/review-v2/status/<job_id>", methods=["GET"])
-    def review_v2_status(job_id: str) -> Response:
+    @app.route("/review-plus/status/<job_id>", methods=["GET"])
+    def review_plus_status(job_id: str) -> Response:
         job = get_job(job_id)
         if not job:
             return jsonify({"ok": False, "error": "未找到对应的 V2 审查任务。"}), 404
         return jsonify({"ok": True, **job})
 
-    @app.route("/review-v2/download/<run_id>/<kind>", methods=["GET"])
-    def download_v2_file(run_id: str, kind: str) -> Response:
+    @app.route("/review-plus/download/<run_id>/<kind>", methods=["GET"])
+    def download_plus_file(run_id: str, kind: str) -> Response:
         run_dir = find_run_dir(run_id)
         mapping = {
             "review": ("review.md", "text/markdown; charset=utf-8"),
@@ -721,12 +721,40 @@ def create_app() -> Flask:
             "overview": ("v2_overview.json", "application/json"),
         }
         if run_dir is None or kind not in mapping:
-            return redirect(url_for("review_v2_page"))
+            return redirect(url_for("review_plus_page"))
         filename, mimetype = mapping[kind]
         target = run_dir / filename
         if not target.exists():
-            return redirect(url_for("review_v2_page"))
+            return redirect(url_for("review_plus_page"))
         return send_file(target, mimetype=mimetype, as_attachment=True, download_name=f"{run_id}-{filename}")
+
+    @app.route("/review-v2", methods=["GET"])
+    def review_v2_page_legacy() -> Response:
+        return redirect(url_for("review_plus_page"), code=302)
+
+    @app.route("/review-v2/history/<run_id>", methods=["GET"])
+    def review_v2_history_legacy(run_id: str) -> Response:
+        return redirect(url_for("review_plus_history", run_id=run_id), code=302)
+
+    @app.route("/review-v2/full", methods=["GET"])
+    def review_v2_full_page_legacy() -> Response:
+        return redirect(url_for("review_max_page"), code=302)
+
+    @app.route("/review-v2/full/history/<run_id>", methods=["GET"])
+    def review_v2_full_history_legacy(run_id: str) -> Response:
+        return redirect(url_for("review_max_history", run_id=run_id), code=302)
+
+    @app.route("/review-v2/start", methods=["POST"])
+    def review_v2_start_legacy() -> Response:
+        return review_plus_start()
+
+    @app.route("/review-v2/status/<job_id>", methods=["GET"])
+    def review_v2_status_legacy(job_id: str) -> Response:
+        return review_plus_status(job_id)
+
+    @app.route("/review-v2/download/<run_id>/<kind>", methods=["GET"])
+    def download_v2_file_legacy(run_id: str, kind: str) -> Response:
+        return download_plus_file(run_id, kind)
 
     return app
 app = create_app()

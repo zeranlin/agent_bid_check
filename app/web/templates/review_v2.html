@@ -1134,7 +1134,7 @@
         body.append('tender_file', file);
 
         try {
-          const resp = await fetch('/review-v2/start', { method: 'POST', body });
+          const resp = await fetch('/review-plus/start', { method: 'POST', body });
           const data = await resp.json();
           if (!data.ok) {
             throw new Error(data.error || '启动失败');
