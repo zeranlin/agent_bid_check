@@ -1,8 +1,8 @@
 # 本地版与接口版对比
 
 对比文件：
-- 本地版：[`result_rsp_01.md`](/Users/linzeran/code/2026-zn/test_getst/result_rsp_01.md)
-- 接口版：[`result_rsp_01_api.md`](/Users/linzeran/code/2026-zn/test_getst/result_rsp_01_api.md)
+- 本地版：[`result_rsp_01.md`](https://github.com/zeranlin/agent_bid_check/blob/main/data/examples/references/result_rsp_01.md)
+- 接口版：[`result_rsp_01_api.md`](https://github.com/zeranlin/agent_bid_check/blob/main/data/examples/references/result_rsp_01_api.md)
 
 说明：
 - `result_rsp_01_api.md` 为显式调用接口 `http://112.111.54.86:10011/v1/chat/completions`、模型 `qwen3.5-27b` 生成的结果文本。
@@ -74,8 +74,8 @@
 ## 5. 结论判断
 
 - 如果目标是：
-  - `对外提交正式审查底稿`：优先使用本地版 [`result_rsp_01.md`](/Users/linzeran/code/2026-zn/test_getst/result_rsp_01.md)。
-  - `给业务或领导快速看重点`：接口版 [`result_rsp_01_api.md`](/Users/linzeran/code/2026-zn/test_getst/result_rsp_01_api.md) 更简洁。
+  - `对外提交正式审查底稿`：优先使用本地版 [`result_rsp_01.md`](https://github.com/zeranlin/agent_bid_check/blob/main/data/examples/references/result_rsp_01.md)。
+  - `给业务或领导快速看重点`：接口版 [`result_rsp_01_api.md`](https://github.com/zeranlin/agent_bid_check/blob/main/data/examples/references/result_rsp_01_api.md) 更简洁。
 
 - 综合建议：
   - 以本地版作为主版本。
@@ -83,4 +83,3 @@
     - `违约金比例过高`
     - `培训人员资质/样品演示/履约担保形式`等补充提醒
   - 如需，我可以继续帮你合并两版优点，输出一份“正式版终稿”。
-

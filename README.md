@@ -1,5 +1,9 @@
 # 招标文件审查工具
 
+仓库地址：
+
+- `GitHub`：`https://github.com/zeranlin/agent_bid_check`
+
 项目已整理为“应用代码、启动脚本、数据目录”三层结构，便于后续继续扩展。
 
 ## 目录结构
@@ -40,21 +44,21 @@ test_getst/
 兼容旧命令：
 
 ```bash
-python3 /Users/linzeran/code/2026-zn/test_getst/web_app.py
-python3 /Users/linzeran/code/2026-zn/test_getst/bid_review.py --help
+python3 web_app.py
+python3 bid_review.py --help
 ```
 
 推荐新命令：
 
 ```bash
-python3 /Users/linzeran/code/2026-zn/test_getst/scripts/run_web.py
-python3 /Users/linzeran/code/2026-zn/test_getst/scripts/run_review.py --help
+python3 scripts/run_web.py
+python3 scripts/run_review.py --help
 ```
 
 安装依赖：
 
 ```bash
-python3 -m pip install -r /Users/linzeran/code/2026-zn/test_getst/requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 Web 地址：
@@ -66,12 +70,12 @@ http://127.0.0.1:5010
 ## CLI 示例
 
 ```bash
-python3 /Users/linzeran/code/2026-zn/test_getst/scripts/run_review.py \
-  '/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/SZDL2025000495-A.docx' \
-  --output /Users/linzeran/code/2026-zn/test_getst/data/runs/cli/SZDL2025000495-A_review.md \
-  --save-extracted /Users/linzeran/code/2026-zn/test_getst/data/runs/cli/SZDL2025000495-A_extracted.txt \
-  --save-request-json /Users/linzeran/code/2026-zn/test_getst/data/runs/cli/SZDL2025000495-A_request.json \
-  --save-raw-response /Users/linzeran/code/2026-zn/test_getst/data/runs/cli/SZDL2025000495-A_response.json
+python3 scripts/run_review.py \
+  '/path/to/SZDL2025000495-A.docx' \
+  --output data/runs/cli/SZDL2025000495-A_review.md \
+  --save-extracted data/runs/cli/SZDL2025000495-A_extracted.txt \
+  --save-request-json data/runs/cli/SZDL2025000495-A_request.json \
+  --save-raw-response data/runs/cli/SZDL2025000495-A_response.json
 ```
 
 ## 数据目录约定

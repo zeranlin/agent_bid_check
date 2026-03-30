@@ -2,7 +2,7 @@
 
 审查对象：`/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZCG2025000300-A].docx`
 
-定位文本：`/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt`
+定位文本：`https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt`
 
 说明：
 - 本审查基于你提供的招标文件文本及可核验的现行公开法律政策进行。
@@ -15,7 +15,7 @@
 
 - 问题定性：高风险
 - 审查类型：资格条件合规性 / 限制竞争
-- 原文位置：第一册 专用条款 第一章 招标公告 申请人的资格要求10，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L454)
+- 原文位置：第一册 专用条款 第一章 招标公告 申请人的资格要求10，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L454)
 - 原文摘录：`10.投标人须为全国科技型中小企业；`
 - 风险判断：
   - 本项目为`货物类`采购，采购标的是教学培训用外科医疗机械人系统。
@@ -33,7 +33,7 @@
 
 - 问题定性：高风险
 - 审查类型：资格条件合规性 / 限制竞争
-- 原文位置：申请人的资格要求11，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L455)
+- 原文位置：申请人的资格要求11，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L455)
 - 原文摘录：`11.投标人须具备高新技术企业证书；`
 - 风险判断：
   - “高新技术企业”属于税收和科技政策认定，不当然等同于具备本项目供货、安装、调试、培训、售后服务能力。
@@ -50,7 +50,7 @@
 
 - 问题定性：高风险
 - 审查类型：资格条件合规性 / 限制竞争
-- 原文位置：申请人的资格要求12，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L456)
+- 原文位置：申请人的资格要求12，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L456)
 - 原文摘录：`12.投标人须提供纳税信用A级证明（提供税务部门出具的证明扫描件）；`
 - 风险判断：
   - 政府采购法定资格条件要求的是“有依法缴纳税收和社会保障资金的良好记录”，并非“纳税信用A级”。
@@ -67,7 +67,7 @@
 
 - 问题定性：高风险
 - 审查类型：资格条件合规性 / 限制竞争
-- 原文位置：申请人的资格要求13，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L457)
+- 原文位置：申请人的资格要求13，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L457)
 - 原文摘录：`13.投标人须成立满5年以上，并提供营业执照复印件；`
 - 风险判断：
   - 企业设立年限并不当然代表项目履约能力。
@@ -84,7 +84,7 @@
 
 - 问题定性：高风险
 - 审查类型：资格条件合规性 / 业绩要求 / 限制竞争
-- 原文位置：申请人的资格要求14，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L458)
+- 原文位置：申请人的资格要求14，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L458)
 - 原文摘录：`14.投标人须具备深圳市医疗器械行业同类项目业绩不少于2个（提供合同扫描件）。`
 - 风险判断：
   - 该条不仅设置了业绩门槛，而且限定为`深圳市`医疗器械行业业绩，属于典型的特定行政区域业绩要求。
@@ -102,7 +102,7 @@
 
 - 问题定性：高风险
 - 审查类型：评分因素相关性 / 评分标准明确性
-- 原文位置：评标信息“供应商认证情况”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L318)
+- 原文位置：评标信息“供应商认证情况”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L318)
 - 原文摘录：
   - `1. 投标人具有 ISO9001 质量管理认证体系证书；`
   - `2. 投标人具有 ISO14001 环境管理体系认证证书；`
@@ -128,7 +128,7 @@
 
 - 问题定性：高风险
 - 审查类型：评分因素相关性 / 公平竞争
-- 原文位置：评标信息“供应商经营情况”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L337)
+- 原文位置：评标信息“供应商经营情况”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L337)
 - 原文摘录：
   - `1.投标人资产总额达到5000万元以上的，得5分；达到1亿元以上；`
   - `2.投标人成立时间满5年的得3分，满10年的得5分，满15年的得8分`
@@ -150,7 +150,7 @@
 
 - 问题定性：高风险
 - 审查类型：评标办法合法性 / 评分标准明确性
-- 原文位置：评标信息 价格分计算方法，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L109)
+- 原文位置：评标信息 价格分计算方法，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L109)
 - 原文摘录：
   - `采用中间价优先法计算，即去掉最高价和最低价后，取剩余投标报价的算术平均值作为评标基准价，其价格分为满分。`
   - `投标报价得分=(评标基准价／投标报价)×100`
@@ -169,7 +169,7 @@
 
 - 问题定性：高风险
 - 审查类型：评标办法合法性 / 商务条款公平性
-- 原文位置：六、其他重要条款，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1236)
+- 原文位置：六、其他重要条款，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1236)
 - 原文摘录：`投标报价不得低于预算金额的80%，低于此价格的投标将被视为无效投标。`
 - 风险判断：
   - 该条实质上设置了最低限价或最低报价淘汰线。
@@ -187,9 +187,9 @@
 - 问题定性：中风险
 - 审查类型：技术参数倾向性 / 品牌限制
 - 原文位置：
-  - 技术要求1.5.2，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L990)
-  - 技术要求1.5.3，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1001)
-  - 技术要求1.5.4，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1008)
+  - 技术要求1.5.2，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L990)
+  - 技术要求1.5.3，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1001)
+  - 技术要求1.5.4，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1008)
 - 原文摘录：
   - `提供与影像处理平台同品牌内窥镜主机`
   - `具备与内窥镜控制单元同品牌30度内窥镜`
@@ -210,7 +210,7 @@
 
 - 问题定性：高风险
 - 审查类型：技术参数证明材料要求 / 限制竞争
-- 原文位置：技术要求说明4，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L858)
+- 原文位置：技术要求说明4，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L858)
 - 原文摘录：`投标人须提供深圳市医疗器械检测中心出具的产品检测报告。`
 - 风险判断：
   - 该表述直接点名具体检测机构，实质上缩小了可接受的证明材料范围。
@@ -227,7 +227,7 @@
 
 - 问题定性：中风险
 - 审查类型：技术标准明确性 / 需人工复核
-- 原文位置：技术要求1.5.2.7附近，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L996)
+- 原文位置：技术要求1.5.2.7附近，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L996)
 - 原文摘录：`产品须符合GB/T 99999-2024《医疗机器人通用技术规范》要求`
 - 风险判断：
   - 依据全国标准信息公共服务平台公开检索结果，未直接检索到该编号标准，反而检索到的是其他医疗机器人/机器人相关标准计划或不同编号标准。
@@ -245,8 +245,8 @@
 - 问题定性：中风险
 - 审查类型：采购需求合理性 / 限制竞争 / 需人工复核
 - 原文位置：
-  - 资格要求2，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L446)
-  - 货物清单“是否接受进口”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L553)
+  - 资格要求2，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L446)
+  - 货物清单“是否接受进口”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L553)
 - 原文摘录：
   - `本项目不接受联合体投标，不接受投标人选用进口产品参与投标`
   - `是否接受进口：拒绝进口`
@@ -266,7 +266,7 @@
 
 - 问题定性：高风险
 - 审查类型：商务条款公平性 / 验收条款
-- 原文位置：五、商务要求（三）4 检测验证，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1227)
+- 原文位置：五、商务要求（三）4 检测验证，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1227)
 - 原文摘录：`验收时产生的第三方检测费用由中标人承担，无论检测结果是否合格。`
 - 风险判断：
   - 若检测结果合格，仍要求中标人承担检测费用，实质上将采购人正常验收成本单方转嫁给供应商。
@@ -283,7 +283,7 @@
 
 - 问题定性：中风险
 - 审查类型：商务条款公平性 / 履约担保
-- 原文位置：第二章 对通用条款的补充内容 46 履约担保，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L517)
+- 原文位置：第二章 对通用条款的补充内容 46 履约担保，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L517)
 - 原文摘录：
   - `合同金额的5%，须以银行转账方式缴纳。`
   - `合同总价的5%作为质量保证金，质保期满后无息退还。`
@@ -295,7 +295,7 @@
 - 法律/政策依据：
   - 财政部令第87号第六条：采购人应加强内部控制，在确定采购需求、履约验收等环节合法合规。
   - 《政府采购需求管理办法》第六条、第七条。
-  - 文件自身通用条款46.2：`允许供应商自主选择以支票、汇票、本票、保函等非现金方式提交履约担保。`[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L3810)
+  - 文件自身通用条款46.2：`允许供应商自主选择以支票、汇票、本票、保函等非现金方式提交履约担保。`[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L3810)
 - 整改建议：
   - 明确履约担保与质量保证金的关系，避免重复担保或长期占压。
   - 允许银行保函等非现金方式提交。
@@ -306,10 +306,10 @@
 - 问题定性：低风险
 - 审查类型：文件一致性 / 评分与合同衔接
 - 原文位置：
-  - 用户需求书商务要求“免费保修期5年”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1113)
-  - 《商务要求偏离表》模板“免费保修期2年”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L3029)
-  - 用户需求书“主机设备45天、配套耗材90天”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L1188)
-  - 《商务要求偏离表》模板“交货期限90天”，[`_szcg2025000300.txt`](/Users/linzeran/code/2026-zn/test_getst/_szcg2025000300.txt#L3122)
+  - 用户需求书商务要求“免费保修期5年”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1113)
+  - 《商务要求偏离表》模板“免费保修期2年”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L3029)
+  - 用户需求书“主机设备45天、配套耗材90天”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1188)
+  - 《商务要求偏离表》模板“交货期限90天”，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L3122)
 - 原文摘录：
   - `★原厂保修，货物免费保修期_5__年`
   - `★原厂保修，货物免费保修期_2__年`
