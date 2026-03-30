@@ -1,0 +1,135 @@
+[
+  {
+    "name": "sample_default_topics",
+    "topic_mode": "default",
+    "text": "第一章 招标公告\n投标人资格要求如下，需提供类似项目业绩和项目经理证书。\n\n第二章 评分办法\n综合评分法，技术评分 40 分，商务评分 20 分，演示 10 分。\n\n第三章 技术要求\n场地材料应符合 GB 36246-2018 标准，需提供检测报告和样品。\n\n第四章 商务条款\n验收合格后 15 个工作日内付款，逾期违约按合同约定执行。",
+    "expected_high_medium_titles": [
+      "业绩要求与项目履约关联不足",
+      "评分标准量化不足",
+      "标准名称与编号不一致",
+      "付款节点明显偏后"
+    ],
+    "expected_technical_titles": [
+      "标准名称与编号不一致"
+    ],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "业绩要求与项目履约关联不足",
+            "severity": "高风险",
+            "review_type": "资格条件/业绩",
+            "source_location": "第一章 招标公告",
+            "source_excerpt": "需提供类似项目业绩和项目经理证书",
+            "risk_judgment": ["业绩要求可能超出必要履约条件。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["结合采购标的重新论证业绩门槛。"]
+          }
+        ]
+      },
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "评分标准量化不足",
+            "severity": "中风险",
+            "review_type": "评分办法",
+            "source_location": "第二章 评分办法",
+            "source_excerpt": "技术评分 40 分，商务评分 20 分，演示 10 分",
+            "risk_judgment": ["评分描述缺少明确量化口径。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["补充分档和量化标准。"]
+          }
+        ]
+      },
+      "contract": {
+        "summary": "合同履约专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖合同章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "付款节点明显偏后",
+            "severity": "中风险",
+            "review_type": "付款条款",
+            "source_location": "第四章 商务条款",
+            "source_excerpt": "验收合格后 15 个工作日内付款",
+            "risk_judgment": ["付款安排对供应商资金占压较大。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["优化付款节点和支付安排。"]
+          }
+        ]
+      },
+      "technical": {
+        "summary": "技术细节专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "标准名称与编号不一致",
+            "severity": "中风险",
+            "review_type": "技术标准",
+            "source_location": "第三章 技术要求",
+            "source_excerpt": "场地材料应符合 GB 36246-2018 标准",
+            "risk_judgment": ["标准引用可能存在名称编号不一致问题。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["核对标准全称、编号与现行版本。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "sample_slim_with_manual_review",
+    "topic_mode": "slim",
+    "text": "第一章 资格条件\n供应商应具备相应资质及信用承诺。\n\n第二章 评分办法\n采用综合评分法。\n\n第三章 技术要求\n要求提供样品，但未说明评审标准。",
+    "expected_high_medium_titles": [
+      "样品要求标准不明确"
+    ],
+    "expected_technical_titles": [
+      "样品要求标准不明确"
+    ],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      },
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "评分章节较短，建议人工复核。",
+        "missing_evidence": ["缺少量化评分细则"],
+        "risk_points": []
+      },
+      "technical": {
+        "summary": "技术细节专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术章节。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "样品要求标准不明确",
+            "severity": "中风险",
+            "review_type": "样品要求",
+            "source_location": "第三章 技术要求",
+            "source_excerpt": "要求提供样品，但未说明评审标准",
+            "risk_judgment": ["样品要求缺少明确评审和处理规则。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["补充样品评审标准和处置规则。"]
+          }
+        ]
+      }
+    }
+  }
+]

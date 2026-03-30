@@ -10,4 +10,4 @@ from app.web.v2_app import app
 
 
 if __name__ == "__main__":
-    app.run(debug=False, use_reloader=False, threaded=True, port=5011)
+    app.run(debug=False, use_reloader=False, threaded=True, host="0.0.0.0", port=5011)

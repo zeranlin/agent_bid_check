@@ -188,6 +188,26 @@ body.is-reviewing {
   margin-top: 26px;
 }
 
+body.page-v2-simple .review-overlay__stages--v2 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.page-v2-simple .review-overlay__stage {
+  min-height: 64px;
+  padding: 0 12px 0 40px;
+  border-radius: 22px;
+  font-size: 13px;
+  line-height: 64px;
+  white-space: nowrap;
+}
+
+body.page-v2-simple .review-overlay__stage::before {
+  left: 16px;
+  width: 14px;
+  height: 14px;
+}
+
 .review-overlay__stream {
   margin-top: 18px;
   min-height: 236px;
@@ -1077,7 +1097,7 @@ textarea:focus {
 .review-detail__hero h3 {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
-  font-size: clamp(26px, 3vw, 34px);
+  font-size: 24px;
   line-height: 1.16;
   letter-spacing: -0.03em;
 }
@@ -1197,13 +1217,10 @@ textarea:focus {
 
 .review-glance p {
   margin: 0;
-  color: #4f4f55;
-  font-size: 14px;
-  line-height: 1.7;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
+  color: #1d1d1f;
+  font-size: 15px;
+  line-height: 1.75;
+  word-break: break-word;
 }
 
 .review-card__details {
@@ -1275,6 +1292,70 @@ textarea:focus {
   color: #1d1d1f;
 }
 
+.review-block--severity-高 {
+  border-left-color: rgba(237, 118, 66, 0.42);
+}
+
+.review-block--severity-高 span {
+  color: #d14a2e;
+}
+
+.review-block--severity-高.review-block--excerpt p,
+.review-block--severity-高.review-block--excerpt li,
+.review-block--severity-高.review-block--excerpt .review-block__content--source p,
+.review-block--severity-高.review-block--excerpt .review-block__content--source li,
+.review-block--severity-高.review-block--excerpt .review-block__content--source blockquote {
+  color: rgba(209, 74, 46, 0.72);
+}
+
+.review-block--severity-中 {
+  border-left-color: rgba(243, 173, 72, 0.42);
+}
+
+.review-block--severity-中 span {
+  color: #b6761d;
+}
+
+.review-block--severity-中.review-block--excerpt p,
+.review-block--severity-中.review-block--excerpt li,
+.review-block--severity-中.review-block--excerpt .review-block__content--source p,
+.review-block--severity-中.review-block--excerpt .review-block__content--source li,
+.review-block--severity-中.review-block--excerpt .review-block__content--source blockquote {
+  color: rgba(182, 118, 29, 0.78);
+}
+
+.review-block--severity-低 {
+  border-left-color: rgba(107, 169, 231, 0.42);
+}
+
+.review-block--severity-低 span {
+  color: #2a6eaf;
+}
+
+.review-block--severity-低.review-block--excerpt p,
+.review-block--severity-低.review-block--excerpt li,
+.review-block--severity-低.review-block--excerpt .review-block__content--source p,
+.review-block--severity-低.review-block--excerpt .review-block__content--source li,
+.review-block--severity-低.review-block--excerpt .review-block__content--source blockquote {
+  color: rgba(42, 110, 175, 0.76);
+}
+
+.review-block--severity-manual {
+  border-left-color: rgba(60, 46, 32, 0.22);
+}
+
+.review-block--severity-manual span {
+  color: #5a5046;
+}
+
+.review-block--severity-manual.review-block--excerpt p,
+.review-block--severity-manual.review-block--excerpt li,
+.review-block--severity-manual.review-block--excerpt .review-block__content--source p,
+.review-block--severity-manual.review-block--excerpt .review-block__content--source li,
+.review-block--severity-manual.review-block--excerpt .review-block__content--source blockquote {
+  color: rgba(90, 80, 70, 0.78);
+}
+
 .review-block p,
 .review-block ul {
   margin: 0;
@@ -1329,6 +1410,12 @@ textarea:focus {
 .review-block__content--source li,
 .review-block__content--source blockquote {
   color: rgba(110, 110, 115, 0.96);
+}
+
+.review-block--location .review-block__content--source p,
+.review-block--location .review-block__content--source li,
+.review-block--location .review-block__content--source blockquote {
+  color: #1d1d1f;
 }
 
 .review-block--excerpt {
@@ -1626,6 +1713,10 @@ textarea:focus {
   }
 
   .review-overlay__stages {
+    grid-template-columns: 1fr;
+  }
+
+  body.page-v2-simple .review-overlay__stages--v2 {
     grid-template-columns: 1fr;
   }
 

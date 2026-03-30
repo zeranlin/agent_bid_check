@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>招标审查工作台</title>
+  <title>招标审查工作台 V2</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
+<body class="page-v2-simple">
   <div class="review-overlay" id="review-overlay" aria-hidden="true" hidden>
     <div class="review-overlay__backdrop"></div>
     <div class="review-overlay__panel">
@@ -14,15 +14,16 @@
       <div class="review-overlay__halo review-overlay__halo--two"></div>
       <div class="review-overlay__scanner"></div>
       <div class="review-overlay__content">
-        <p class="review-overlay__eyebrow">Bid Review Pipeline</p>
         <h2>审查进行中</h2>
-        <p class="review-overlay__message" id="review-overlay-message">系统正在读取招标文件并整理文本结构。</p>
+        <p class="review-overlay__message" id="review-overlay-message">系统正在阅读招标文件并提取正文。</p>
         <div class="review-overlay__meter">
           <span class="review-overlay__meter-bar"></span>
         </div>
-        <div class="review-overlay__stages">
+        <div class="review-overlay__stages review-overlay__stages--v2">
           <div class="review-overlay__stage is-active" data-stage>文件阅读</div>
-          <div class="review-overlay__stage" data-stage>智能审查</div>
+          <div class="review-overlay__stage" data-stage>第一层直审</div>
+          <div class="review-overlay__stage" data-stage>第二层结构</div>
+          <div class="review-overlay__stage" data-stage>第三层专题</div>
           <div class="review-overlay__stage" data-stage>梳理报告</div>
         </div>
         <div class="review-overlay__stream is-hidden" id="review-overlay-stream" aria-hidden="true">
@@ -34,7 +35,7 @@
         </div>
         <div class="review-overlay__footer">
           <span id="review-overlay-elapsed">已等待 0 秒</span>
-          <span>结果返回后会自动展示统一格式审查报告</span>
+          <span>V2 审查完成后将自动展示统一格式报告</span>
         </div>
       </div>
     </div>
@@ -45,18 +46,17 @@
       <div class="hero__grain"></div>
       <div class="hero__content">
         <div class="hero__copy">
-          <p class="eyebrow">Government Procurement Review</p>
-          <h1>招标审查工作台</h1>
-          <p class="hero__subtext">上传招标文件后，系统将自动完成智能审查，并输出统一格式审查报告。</p>
+          <h1>招标审查工作台 V2</h1>
+          <p class="hero__subtext">上传招标文件后，系统将使用 V2 多层审查流程输出统一格式审查报告。</p>
         </div>
         <section class="hero__summary" aria-label="工作台说明">
           <div class="hero__row">
             <span class="hero__label">流程</span>
-            <p>上传文件 → 自动审查 → 查看结果</p>
+            <p>上传文件 → V2 智能审查 → 查看结果</p>
           </div>
           <div class="hero__row">
             <span class="hero__label">输出</span>
-            <p>Markdown 结果、请求体、原始响应、提取文本</p>
+            <p>最终报告、基线审查、结构识别、证据召回、对比汇总</p>
           </div>
         </section>
       </div>
@@ -77,7 +77,7 @@
           <div class="alert alert--error">{{ error }}</div>
           {% endif %}
 
-        <form method="post" action="{{ url_for('review') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_start') }}">
+          <form method="post" action="{{ url_for('review_v2_start') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_v2_start') }}">
             <label class="file-drop" for="tender-file">
               <input type="file" id="tender-file" name="tender_file" accept=".docx,.txt,.md" required>
               <span class="file-drop__eyebrow">招标文件</span>
@@ -145,11 +145,11 @@
               {% if result.created_at %}
               <span>时间：{{ result.created_at|replace('T', ' ') }}</span>
               {% endif %}
-              <span>已生成 Markdown 审查结果</span>
+              <span>已生成 V2 Markdown 审查结果</span>
             </div>
 
             <div class="download-bar">
-              <a class="button button--primary" href="{{ result.download_review }}">下载结果</a>
+              <a class="button button--primary" href="{{ result.downloads.review }}">下载结果</a>
             </div>
           </div>
           <div class="result-hero__side">
@@ -191,7 +191,7 @@
           {% endif %}
 
           <div class="review-board__note">
-            <p>左侧用于快速浏览风险清单，右侧用于查看当前风险点的完整判断、依据与整改建议。</p>
+            <p>左侧用于快速浏览风险清单，右侧查看当前风险点的完整判断、依据与整改建议。</p>
           </div>
 
           <div class="review-workbench" data-review-workbench>
@@ -215,7 +215,7 @@
                 >
                   <div class="risk-list-item__head">
                     <span class="risk-list-item__index">风险点{{ item.index }}</span>
-                    <span class="review-badge review-badge--{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }}">{{ item.severity }}</span>
+                    <span class="review-badge review-badge--{{ item.severity_class }}">{{ item.severity }}</span>
                   </div>
                   <h4>{{ item.title }}</h4>
                   <p class="risk-list-item__summary">{{ item.judgment_preview }}</p>
@@ -241,22 +241,22 @@
                     <h3>{{ item.title }}</h3>
                   </div>
                   <div class="review-card__tags">
-                    <span class="review-badge review-badge--{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }}">{{ item.severity }}</span>
+                    <span class="review-badge review-badge--{{ item.severity_class }}">{{ item.severity }}</span>
                     <span class="review-badge review-badge--type">{{ item.review_type }}</span>
                   </div>
                 </div>
 
                 <div class="review-card__body">
                   <div class="review-card__main-flow">
-                    <div class="review-block review-block--main review-block--severity-{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }} review-block--excerpt">
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--excerpt">
                       <span>原文摘录</span>
                       <div class="review-block__content review-block__content--source">{{ item.source_excerpt|field_md }}</div>
                     </div>
-                    <div class="review-block review-block--main review-block--severity-{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }} review-block--location">
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--location">
                       <span>原文位置</span>
                       <div class="review-block__content review-block__content--source">{{ item.source_location|field_md }}</div>
                     </div>
-                    <div class="review-block review-block--main review-block--severity-{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }} review-block--judgment">
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--judgment">
                       <span>问题判断</span>
                       <ul>
                         {% for line in item.risk_judgment %}
@@ -264,7 +264,7 @@
                         {% endfor %}
                       </ul>
                     </div>
-                    <div class="review-block review-block--main review-block--severity-{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }} review-block--basis">
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--basis">
                       <span>法规依据</span>
                       <ul>
                         {% for line in item.legal_basis %}
@@ -272,7 +272,7 @@
                         {% endfor %}
                       </ul>
                     </div>
-                    <div class="review-block review-block--main review-block--severity-{{ item.severity|replace('风险', '')|replace('需人工复核', 'manual') }} review-block--advice">
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--advice">
                       <span>修改建议</span>
                       <ul>
                         {% for line in item.rectification %}
@@ -287,11 +287,10 @@
             </section>
           </div>
         </section>
-
         {% else %}
         <div class="empty-state">
-          <p>上传文件后，系统会直接使用已保存配置发起审查。</p>
-          <p>审查完成后会按风险等级和审查类型分类展示，也可下载原始结果用于复核。</p>
+          <p>上传文件后，系统会直接使用 V2 流程发起审查。</p>
+          <p>审查完成后会按风险等级和审查类型分类展示，也可下载最终结果进行复核。</p>
         </div>
         {% endif %}
       </section>
@@ -315,16 +314,29 @@
     const overlayStream = document.getElementById('review-overlay-stream');
     const overlayStreamBody = document.getElementById('review-overlay-stream-body');
     const stageMessages = {
-      file_reading: '系统正在阅读招标文件并整理文本结构。',
-      smart_review: '正在进行智能审查，逐项比对资格条件、评分办法与商务条款。',
+      file_reading: '系统正在阅读招标文件并提取正文。',
+      baseline_review: '正在执行第一层全文直审，优先识别通用合规风险。',
+      structure_analysis: '正在执行第二层结构增强，识别章节、模块与证据归属。',
+      topic_review: '正在执行第三层专题深审，核查评分、技术、商务等细节风险。',
       report_structuring: '正在梳理审查报告，生成统一格式结果。',
       completed: '审查完成，正在跳转到结果页。',
       failed: '审查失败，请查看错误信息。'
     };
-    const stageKeys = ['file_reading', 'smart_review', 'report_structuring'];
+    const stageAliases = {
+      file_reading: 'file_reading',
+      baseline_review: 'baseline_review',
+      structure_analysis: 'structure_analysis',
+      topic_review: 'topic_review',
+      report_structuring: 'report_structuring',
+      completed: 'completed',
+      failed: 'failed'
+    };
+    const stageKeys = ['file_reading', 'baseline_review', 'structure_analysis', 'topic_review', 'report_structuring'];
     const stageProgress = {
       file_reading: '18%',
-      smart_review: '68%',
+      baseline_review: '38%',
+      structure_analysis: '56%',
+      topic_review: '78%',
       report_structuring: '92%',
       completed: '100%'
     };
@@ -337,7 +349,9 @@
     let forcedReportStructuringUntil = 0;
     let stageEnteredAt = {
       file_reading: 0,
-      smart_review: 0,
+      baseline_review: 0,
+      structure_analysis: 0,
+      topic_review: 0,
       report_structuring: 0
     };
     let overlayScrollbarComp = 0;
@@ -347,6 +361,10 @@
     const maxStreamLines = 30;
     const riskTriggers = Array.from(document.querySelectorAll('[data-risk-trigger]'));
     const riskDetails = Array.from(document.querySelectorAll('[data-risk-detail]'));
+
+    function normalizeStage(stageKey) {
+      return stageAliases[stageKey] || 'baseline_review';
+    }
 
     function activateRiskItem(riskId) {
       if (!riskId) return;
@@ -388,7 +406,7 @@
       }
       const extension = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'FILE';
       fileDropTitle.textContent = file.name;
-      fileDropHint.textContent = `已选择文件，可直接开始审查`;
+      fileDropHint.textContent = '已选择文件，可直接开始审查';
       fileMetaType.textContent = extension;
       fileMetaSize.textContent = formatFileSize(file.size);
       fileDropMeta.hidden = false;
@@ -445,7 +463,8 @@
     }
 
     function setOverlayStage(stageKey, message) {
-      rememberStageTransition(stageKey || latestBackendStage);
+      const normalized = normalizeStage(stageKey || latestBackendStage);
+      rememberStageTransition(normalized);
       const effectiveStage = getEffectiveStage();
       const activeIndex = stageKeys.indexOf(effectiveStage);
       overlayStages.forEach((stage, index) => {
@@ -459,7 +478,12 @@
       if (overlayMeterBar && stageProgress[effectiveStage]) {
         overlayMeterBar.style.width = stageProgress[effectiveStage];
       }
-      const shouldShowStream = effectiveStage === 'smart_review' || effectiveStage === 'report_structuring';
+      const shouldShowStream = (
+        effectiveStage === 'baseline_review' ||
+        effectiveStage === 'structure_analysis' ||
+        effectiveStage === 'topic_review' ||
+        effectiveStage === 'report_structuring'
+      );
       if (overlayStream) {
         overlayStream.classList.toggle('is-hidden', !shouldShowStream);
         overlayStream.setAttribute('aria-hidden', shouldShowStream ? 'false' : 'true');
@@ -480,7 +504,9 @@
       forcedReportStructuringUntil = 0;
       stageEnteredAt = {
         file_reading: overlayStartedAt,
-        smart_review: 0,
+        baseline_review: 0,
+        structure_analysis: 0,
+        topic_review: 0,
         report_structuring: 0
       };
       if (overlayStreamBody) {
@@ -504,8 +530,7 @@
     function renderStreamPreview(text) {
       if (!overlayStreamBody) return;
       const lines = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-      const preview = lines.slice(-maxStreamLines).join('\n');
-      overlayStreamBody.textContent = preview;
+      overlayStreamBody.textContent = lines.slice(-maxStreamLines).join('\n');
       overlayStreamBody.scrollTop = overlayStreamBody.scrollHeight;
     }
 

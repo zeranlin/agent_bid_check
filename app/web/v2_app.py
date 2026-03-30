@@ -15,6 +15,7 @@ from werkzeug.utils import secure_filename
 
 from app.common.markdown_utils import parse_review_markdown
 from app.config import (
+    LEGACY_WEB_RESULTS_DIR,
     WEB_V2_CONFIG_PATH,
     WEB_V2_JOBS_DIR,
     WEB_V2_RESULTS_DIR,
@@ -28,6 +29,21 @@ from app.pipelines.v2.service import review_document_v2, save_review_artifacts_v
 
 
 SEVERITY_ORDER = ["高风险", "中风险", "低风险", "需人工复核"]
+TOPIC_LABELS = {
+    "qualification": "资格条件",
+    "performance_staff": "业绩与人员",
+    "scoring": "评分办法",
+    "samples_demo": "样品演示答辩",
+    "technical_bias": "技术倾向性",
+    "technical_standard": "技术标准与检测",
+    "contract_payment": "付款与履约",
+    "acceptance": "验收条款",
+    "procedure": "程序条款",
+    "policy": "政策条款",
+    "technical": "技术细节",
+    "contract": "合同履约",
+    "baseline": "全文直审",
+}
 STAGE_TO_MESSAGE = {
     "file_reading": "系统正在阅读招标文件并提取正文。",
     "baseline_review": "正在执行第一层全文直审，优先识别通用合规风险。",
@@ -44,6 +60,7 @@ INLINE_CODE_RE = re.compile(r"`([^`]+)`")
 STRONG_RE = re.compile(r"\*\*(.+?)\*\*")
 EM_RE = re.compile(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)")
 LINK_RE = re.compile(r"\[(.+?)\]\((https?://[^\s)]+)\)")
+INLINE_BULLET_RE = re.compile(r'(?<=[。；;"”])\s*-\s*(?=["“]?\d+[.、])')
 
 
 def ensure_runtime_dirs() -> None:
@@ -229,6 +246,13 @@ def render_markdown(md: str) -> str:
     return "\n".join(out)
 
 
+def preprocess_field_markdown(text: str) -> str:
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n").strip()
+    if not normalized:
+        return normalized
+    return INLINE_BULLET_RE.sub("\n- ", normalized)
+
+
 def job_status_path(job_id: str) -> Path:
     return WEB_V2_JOBS_DIR / f"{job_id}.json"
 
@@ -314,8 +338,14 @@ def make_run_dir() -> tuple[str, Path]:
 
 
 def find_run_dir(run_id: str) -> Path | None:
-    candidate = WEB_V2_RESULTS_DIR / run_id
-    return candidate if candidate.exists() else None
+    roots = [WEB_V2_RESULTS_DIR]
+    if LEGACY_WEB_RESULTS_DIR != WEB_V2_RESULTS_DIR:
+        roots.append(LEGACY_WEB_RESULTS_DIR)
+    for root in roots:
+        candidate = root / run_id
+        if candidate.exists():
+            return candidate
+    return None
 
 
 def load_config() -> dict[str, str]:
@@ -327,38 +357,108 @@ def load_config() -> dict[str, str]:
     return settings.to_form_dict()
 
 
-def build_review_view(report) -> dict:
+def _normalize_compare_key(title: str, review_type: str) -> str:
+    return re.sub(r"\s+", "", f"{title}|{review_type}").lower()
+
+
+def build_review_view(report, comparison: dict | None = None) -> dict:
     summary_counts = {key: 0 for key in SEVERITY_ORDER}
     type_counts: dict[str, int] = {}
     grouped = {key: [] for key in SEVERITY_ORDER}
+    cluster_map: dict[str, dict] = {}
+    if isinstance(comparison, dict):
+        for cluster in comparison.get("clusters", []) or []:
+            if not isinstance(cluster, dict):
+                continue
+            key = _normalize_compare_key(str(cluster.get("title", "")), str(cluster.get("review_type", "")))
+            cluster_map[key] = cluster
+    all_cards: list[dict] = []
     for index, risk in enumerate(report.risk_points, start=1):
         severity = risk.severity if risk.severity in grouped else "需人工复核"
         summary_counts[severity] += 1
         review_type = risk.review_type.strip() or "未分类"
         type_counts[review_type] = type_counts.get(review_type, 0) + 1
-        grouped[severity].append(
-            {
-                "index": index,
-                "title": risk.title,
-                "severity": severity,
-                "review_type": review_type,
-                "source_location": risk.source_location,
-                "source_excerpt": risk.source_excerpt,
-                "risk_judgment": risk.risk_judgment,
-                "legal_basis": risk.legal_basis,
-                "rectification": risk.rectification,
-            }
-        )
+        cluster = cluster_map.get(_normalize_compare_key(risk.title, review_type), {})
+        source_tags = [str(item) for item in cluster.get("source_rules", []) if str(item).strip()]
+        source_topics = [str(item) for item in cluster.get("topics", []) if str(item).strip() and str(item).strip() != "baseline"]
+        manual_reasons = []
+        if cluster.get("need_manual_review"):
+            manual_reasons.extend([str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()])
+        if severity == "需人工复核" and not manual_reasons:
+            manual_reasons.append("当前风险点仍建议人工复核。")
+        card = {
+            "index": index,
+            "title": risk.title,
+            "severity": severity,
+            "severity_class": severity.replace("风险", "") if severity != "需人工复核" else "manual",
+            "review_type": review_type,
+            "source_location": risk.source_location,
+            "source_excerpt": risk.source_excerpt,
+            "risk_judgment": risk.risk_judgment,
+            "legal_basis": risk.legal_basis,
+            "rectification": risk.rectification,
+            "source_tags": source_tags,
+            "source_topics": [TOPIC_LABELS.get(item, item) for item in source_topics],
+            "conflict_notes": [str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()],
+            "manual_reasons": manual_reasons,
+            "judgment_preview": (risk.risk_judgment[0] if risk.risk_judgment else "需人工复核"),
+            "source_location_preview": (risk.source_location or "未发现").splitlines()[0][:48],
+        }
+        grouped[severity].append(card)
+        all_cards.append(card)
     sections = [
         {"severity": severity, "count": len(grouped[severity]), "cards": grouped[severity]}
         for severity in SEVERITY_ORDER
         if grouped[severity]
     ]
+    severity_rank = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
+    all_cards.sort(key=lambda item: (severity_rank.get(item["severity"], len(SEVERITY_ORDER)), item["index"]))
     return {
         "summary_counts": summary_counts,
         "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
         "sections": sections,
         "total": len(report.risk_points),
+        "all_cards": all_cards,
+    }
+
+
+def build_comparison_view(comparison: dict) -> dict:
+    if not isinstance(comparison, dict):
+        return {
+            "available": False,
+            "summary": {},
+            "conflicts": [],
+            "coverage_gaps": [],
+            "baseline_only": [],
+            "topic_only": [],
+        }
+    return {
+        "available": True,
+        "summary": {
+            "cluster_count": int(comparison.get("coverage_summary", {}).get("cluster_count", 0) or 0),
+            "conflict_count": len(comparison.get("conflicts", []) or []),
+            "duplicate_reduction": int(comparison.get("comparison_summary", {}).get("duplicate_reduction", 0) or 0),
+            "manual_review_count": int(comparison.get("comparison_summary", {}).get("manual_review_count", 0) or 0),
+        },
+        "conflicts": [
+            {
+                **item,
+                "topic_labels": [TOPIC_LABELS.get(topic, topic) for topic in (item.get("topics", []) or [])],
+            }
+            for item in (comparison.get("conflicts", []) or [])
+            if isinstance(item, dict)
+        ],
+        "coverage_gaps": comparison.get("coverage_gaps", []) or [],
+        "baseline_only": comparison.get("baseline_only_risks", []) or [],
+        "topic_only": [
+            {
+                **item,
+                "topic_label": TOPIC_LABELS.get(str(item.get("topic", "")), str(item.get("topic", ""))),
+            }
+            for item in (comparison.get("topic_only_risks", []) or [])
+            if isinstance(item, dict)
+        ],
+        "manual_review_items": comparison.get("manual_review_items", []) or [],
     }
 
 
@@ -369,13 +469,16 @@ def load_result_by_run_id(run_id: str) -> dict | None:
     meta_path = run_dir / "meta.json"
     review_path = run_dir / "review.md"
     overview_path = run_dir / "v2_overview.json"
+    comparison_path = run_dir / "comparison.json"
     topic_dir = run_dir / "topic_reviews"
-    if not meta_path.exists() or not review_path.exists():
+    if not review_path.exists():
         return None
-    try:
-        meta = json.loads(meta_path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
+    meta = {}
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception:
+            meta = {}
     final_markdown = review_path.read_text(encoding="utf-8")
     overview = {}
     if overview_path.exists():
@@ -383,11 +486,20 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             overview = json.loads(overview_path.read_text(encoding="utf-8"))
         except Exception:
             overview = {}
+    comparison = {}
+    if comparison_path.exists():
+        try:
+            comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
+        except Exception:
+            comparison = {}
     topics: list[dict] = []
     if topic_dir.exists():
         for path in sorted(topic_dir.glob("*.json")):
             try:
-                topics.append(json.loads(path.read_text(encoding="utf-8")))
+                payload = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(payload, dict):
+                    payload["topic_label"] = TOPIC_LABELS.get(str(payload.get("topic", "")), str(payload.get("topic", "")))
+                topics.append(payload)
             except Exception:
                 continue
     report = parse_review_markdown(final_markdown)
@@ -397,14 +509,18 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "original_filename": meta.get("original_filename", run_id),
         "review_final_markdown": final_markdown,
         "review_html": Markup(render_markdown(final_markdown)),
-        "review_view": build_review_view(report),
+        "review_view": build_review_view(report, comparison),
         "overview": overview,
+        "comparison": comparison,
+        "comparison_view": build_comparison_view(comparison),
         "topics": topics,
         "downloads": {
             "review": url_for("download_v2_file", run_id=run_id, kind="review"),
             "extracted": url_for("download_v2_file", run_id=run_id, kind="extracted"),
             "baseline": url_for("download_v2_file", run_id=run_id, kind="baseline"),
             "document_map": url_for("download_v2_file", run_id=run_id, kind="document_map"),
+            "evidence_map": url_for("download_v2_file", run_id=run_id, kind="evidence_map"),
+            "comparison": url_for("download_v2_file", run_id=run_id, kind="comparison"),
             "overview": url_for("download_v2_file", run_id=run_id, kind="overview"),
         },
     }
@@ -413,26 +529,34 @@ def load_result_by_run_id(run_id: str) -> dict | None:
 def list_recent_runs(limit: int = 12) -> list[dict]:
     ensure_runtime_dirs()
     runs: list[dict] = []
-    for run_dir in WEB_V2_RESULTS_DIR.iterdir():
-        if not run_dir.is_dir():
+    roots = [WEB_V2_RESULTS_DIR]
+    if LEGACY_WEB_RESULTS_DIR != WEB_V2_RESULTS_DIR:
+        roots.append(LEGACY_WEB_RESULTS_DIR)
+    seen_run_ids: set[str] = set()
+    for root in roots:
+        if not root.exists():
             continue
-        result = load_result_by_run_id(run_dir.name)
-        if not result:
-            continue
-        counts = result["review_view"]["summary_counts"]
-        runs.append(
-            {
-                "run_id": result["run_id"],
-                "created_at": result["created_at"],
-                "original_filename": result["original_filename"],
-                "total": result["review_view"]["total"],
-                "high": counts["高风险"],
-                "medium": counts["中风险"],
-                "low": counts["低风险"],
-                "manual": counts["需人工复核"],
-                "view_url": url_for("review_v2_history", run_id=result["run_id"]),
-            }
-        )
+        for run_dir in root.iterdir():
+            if not run_dir.is_dir():
+                continue
+            result = load_result_by_run_id(run_dir.name)
+            if not result or result["run_id"] in seen_run_ids:
+                continue
+            seen_run_ids.add(result["run_id"])
+            counts = result["review_view"]["summary_counts"]
+            runs.append(
+                {
+                    "run_id": result["run_id"],
+                    "created_at": result["created_at"],
+                    "original_filename": result["original_filename"],
+                    "total": result["review_view"]["total"],
+                    "high": counts["高风险"],
+                    "medium": counts["中风险"],
+                    "low": counts["低风险"],
+                    "manual": counts["需人工复核"],
+                    "view_url": url_for("review_v2_history", run_id=result["run_id"]),
+                }
+            )
     runs.sort(key=lambda item: (item.get("created_at", ""), item.get("run_id", "")), reverse=True)
     return runs[:limit]
 
@@ -500,10 +624,14 @@ def create_app() -> Flask:
     def inline_md_filter(text: str) -> Markup:
         return Markup(render_inline_md(text or ""))
 
+    @app.template_filter("field_md")
+    def field_md_filter(text: str) -> Markup:
+        return Markup(render_markdown(preprocess_field_markdown(text or "")))
+
     @app.route("/review-v2", methods=["GET"])
     def review_v2_page() -> str:
         return render_template(
-            "review_v2.html",
+            "review_v2_simple.html",
             result=None,
             history_runs=list_recent_runs(),
             error=None,
@@ -515,11 +643,34 @@ def create_app() -> Flask:
     def review_v2_history(run_id: str) -> str:
         result = load_result_by_run_id(run_id)
         return render_template(
-            "review_v2.html",
+            "review_v2_simple.html",
             result=result,
             history_runs=list_recent_runs(),
             error=None if result else "未找到对应的 V2 审查记录。",
             active_page="review_v2",
+            current_run_id=run_id,
+        )
+
+    @app.route("/review-v2/full", methods=["GET"])
+    def review_v2_full_page() -> str:
+        return render_template(
+            "review_v2.html",
+            result=None,
+            history_runs=list_recent_runs(),
+            error=None,
+            active_page="review_v2_full",
+            current_run_id=None,
+        )
+
+    @app.route("/review-v2/full/history/<run_id>", methods=["GET"])
+    def review_v2_full_history(run_id: str) -> str:
+        result = load_result_by_run_id(run_id)
+        return render_template(
+            "review_v2.html",
+            result=result,
+            history_runs=list_recent_runs(),
+            error=None if result else "未找到对应的 V2 审查记录。",
+            active_page="review_v2_full",
             current_run_id=run_id,
         )
 
@@ -565,6 +716,8 @@ def create_app() -> Flask:
             "extracted": ("extracted_text.md", "text/plain; charset=utf-8"),
             "baseline": ("baseline_review.md", "text/markdown; charset=utf-8"),
             "document_map": ("document_map.json", "application/json"),
+            "evidence_map": ("evidence_map.json", "application/json"),
+            "comparison": ("comparison.json", "application/json"),
             "overview": ("v2_overview.json", "application/json"),
         }
         if run_dir is None or kind not in mapping:

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "sample_qualification_scoring",
+    "text": "第一章 招标公告\n投标人资格要求如下，需提供类似项目业绩、人员证书及社保证明。\n\n第二章 评分办法\n综合评分法，商务评分 20 分，技术评分 40 分，演示 10 分。\n\n第三章 投标须知\n投标文件递交时间和澄清程序详见本章。",
+    "expected_sections": [
+      {
+        "title": "第一章 招标公告",
+        "module": "qualification",
+        "key": true
+      },
+      {
+        "title": "第二章 评分办法",
+        "module": "scoring",
+        "key": true
+      },
+      {
+        "title": "第三章 投标须知",
+        "module": "procedure",
+        "key": false
+      }
+    ]
+  },
+  {
+    "name": "sample_technical_contract",
+    "text": "第一章 技术要求\n场地材料应符合 GB 36246-2018 标准，需提供检测报告和样品。\n\n第二章 验收要求\n验收时应进行现场检测与抽样复核。\n\n第三章 商务条款\n验收合格后 15 个工作日内支付合同价款。",
+    "expected_sections": [
+      {
+        "title": "第一章 技术要求",
+        "module": "technical",
+        "key": true
+      },
+      {
+        "title": "第二章 验收要求",
+        "module": "acceptance",
+        "key": true
+      },
+      {
+        "title": "第三章 商务条款",
+        "module": "contract",
+        "key": true
+      }
+    ]
+  },
+  {
+    "name": "sample_policy_mix",
+    "text": "第一章 政策落实\n本项目落实节能环保和中小企业扶持政策。\n\n第二章 资格审查\n供应商需具备相应资质、信用承诺和项目经理配置。\n\n第三章 合同主要条款\n履约保证金、违约责任及付款节点按合同约定执行。",
+    "expected_sections": [
+      {
+        "title": "第一章 政策落实",
+        "module": "policy",
+        "key": true
+      },
+      {
+        "title": "第二章 资格审查",
+        "module": "qualification",
+        "key": true
+      },
+      {
+        "title": "第三章 合同主要条款",
+        "module": "contract",
+        "key": true
+      }
+    ]
+  }
+]

@@ -6,7 +6,7 @@
   <title>招标审查工作台 V2</title>
   <style>
     :root {
-      --bg: #f5f5f7;
+      --bg: #242424;
       --panel: #ffffff;
       --line: rgba(29, 29, 31, .08);
       --text: #1d1d1f;
@@ -32,18 +32,34 @@
     }
     .hero {
       margin-bottom: 20px;
+      background: #f5f5f7;
+      border-radius: 28px;
+      padding: 24px 28px 22px;
+      border: 1px solid rgba(255, 255, 255, .55);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, .08);
+    }
+    .hero-kicker {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: .18em;
+      color: #7b7b80;
+      font-weight: 600;
     }
     .hero h1 {
       margin: 0 0 8px;
       font-size: 34px;
       font-weight: 700;
       letter-spacing: -.02em;
+      color: #1d1d1f;
+      line-height: 1.15;
     }
     .hero p {
       margin: 0;
-      color: var(--muted);
+      color: #6e6e73;
       line-height: 1.65;
       max-width: 840px;
+      font-size: 14px;
+      font-weight: 400;
     }
     .layout {
       display: grid;
@@ -259,6 +275,198 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
+    .risk-sections {
+      display: grid;
+      gap: 14px;
+    }
+    .risk-section {
+      display: grid;
+      gap: 10px;
+    }
+    .risk-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .risk-section-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .risk-section-count {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fbfbfd;
+      border: 1px solid var(--line);
+    }
+    .risk-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .risk-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fbfbfd;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+    .risk-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .risk-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.55;
+    }
+    .risk-card-index {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .risk-card-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .severity-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(22,20,17,.06);
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+    .severity-pill.high {
+      color: #d14a2e;
+      background: rgba(237, 118, 66, 0.12);
+      border-color: rgba(237, 118, 66, 0.16);
+    }
+    .severity-pill.medium {
+      color: #b6761d;
+      background: rgba(243, 173, 72, 0.16);
+      border-color: rgba(243, 173, 72, 0.18);
+    }
+    .severity-pill.low {
+      color: #2a6eaf;
+      background: rgba(107, 169, 231, 0.16);
+      border-color: rgba(107, 169, 231, 0.18);
+    }
+    .severity-pill.manual {
+      color: #5a5046;
+      background: rgba(60, 46, 32, 0.08);
+      border-color: rgba(60, 46, 32, 0.10);
+    }
+    .risk-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+    }
+    .risk-badge.source { color: var(--blue); border-color: rgba(0,113,227,.18); background: rgba(0,113,227,.06); }
+    .risk-badge.conflict { color: #b54708; border-color: rgba(247,144,9,.22); background: rgba(247,144,9,.08); }
+    .risk-badge.manual { color: #475467; border-color: rgba(102,112,133,.18); background: rgba(102,112,133,.08); }
+    .risk-card-block {
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 11px 12px;
+      display: grid;
+      gap: 6px;
+    }
+    .risk-card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .risk-card-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #2f2f33;
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .compare-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fcfcfd;
+      padding: 15px;
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+    .compare-card.full {
+      grid-column: 1 / -1;
+    }
+    .compare-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .compare-subtle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .compare-list {
+      display: grid;
+      gap: 8px;
+    }
+    .compare-item {
+      border-radius: 14px;
+      padding: 11px 12px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(29,29,31,.07);
+      min-width: 0;
+    }
+    .compare-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+    .compare-item-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .compare-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .compare-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(29,29,31,.08);
+      font-size: 12px;
+      color: var(--muted);
+    }
     .topic-card {
       border-radius: 18px;
       border: 1px solid var(--line);
@@ -447,12 +655,21 @@
     @media (max-width: 1120px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { position: static; }
-      .summary-grid, .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary-grid, .topic-grid, .risk-card-grid, .compare-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
       .page { padding: 18px 14px 36px; }
-      .summary-grid, .topic-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 28px; }
+      .summary-grid, .topic-grid, .risk-card-grid, .compare-grid { grid-template-columns: 1fr; }
+      .hero {
+        padding: 20px 18px 18px;
+        border-radius: 22px;
+      }
+      .hero-kicker {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .hero h1 { font-size: 28px; margin-bottom: 8px; }
+      .hero p { font-size: 14px; }
     }
   </style>
 </head>
@@ -548,8 +765,76 @@
               <a href="{{ result.downloads.review }}">下载最终报告</a>
               <a href="{{ result.downloads.baseline }}">下载全文直审结果</a>
               <a href="{{ result.downloads.document_map }}">下载结构图</a>
+              <a href="{{ result.downloads.evidence_map }}">下载证据图</a>
+              <a href="{{ result.downloads.comparison }}">下载差异汇总</a>
               <a href="{{ result.downloads.overview }}">下载专题概览</a>
               <a href="{{ result.downloads.extracted }}">下载提取正文</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h2>最终风险卡片</h2>
+            <div class="risk-sections">
+              {% for section in result.review_view.sections %}
+              <div class="risk-section">
+                <div class="risk-section-head">
+                  <div class="risk-section-title">{{ section.severity }}</div>
+                  <div class="risk-section-count">{{ section.count }} 项</div>
+                </div>
+                <div class="risk-card-grid">
+                  {% for card in section.cards %}
+                  <div class="risk-card">
+                <div class="risk-card-head">
+                  <div class="risk-card-title">{{ card.title|inline_md }}</div>
+                      <div class="risk-card-index">风险点{{ card.index }}</div>
+                    </div>
+                    <div class="risk-badges">
+                      <div class="severity-pill {{ 'high' if card.severity == '高风险' else 'medium' if card.severity == '中风险' else 'low' if card.severity == '低风险' else 'manual' }}">{{ card.severity }}</div>
+                    </div>
+                    <div class="risk-card-meta">{{ card.review_type }} ｜ {{ card.source_location|inline_md }}</div>
+                    <div class="risk-badges">
+                      {% for tag in card.source_tags %}
+                      <div class="risk-badge source">{{ tag }}</div>
+                      {% endfor %}
+                      {% for tag in card.source_topics %}
+                      <div class="risk-badge source">{{ tag }}</div>
+                      {% endfor %}
+                      {% if card.conflict_notes %}
+                      <div class="risk-badge conflict">冲突标记</div>
+                      {% endif %}
+                      {% if card.manual_reasons %}
+                      <div class="risk-badge manual">人工复核</div>
+                      {% endif %}
+                    </div>
+                    <div class="risk-card-block">
+                      <div class="risk-card-label">原文摘录</div>
+                      <div class="risk-card-text">{{ card.source_excerpt|inline_md }}</div>
+                    </div>
+                    <div class="risk-card-block">
+                      <div class="risk-card-label">风险判断</div>
+                      <div class="risk-card-text">{{ (card.risk_judgment or [])|join('；')|inline_md }}</div>
+                    </div>
+                    {% if card.conflict_notes %}
+                    <div class="risk-card-block">
+                      <div class="risk-card-label">冲突说明</div>
+                      <div class="risk-card-text">{{ (card.conflict_notes or [])|join('；')|inline_md }}</div>
+                    </div>
+                    {% endif %}
+                    {% if card.manual_reasons %}
+                    <div class="risk-card-block">
+                      <div class="risk-card-label">人工复核原因</div>
+                      <div class="risk-card-text">{{ (card.manual_reasons or [])|join('；')|inline_md }}</div>
+                    </div>
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+              <div class="empty">当前未解析到风险点卡片。</div>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -561,16 +846,28 @@
               {% for topic in result.topics %}
               <div class="topic-card">
                 <div class="topic-head">
-                  <div class="topic-title">{{ topic.topic }}</div>
+                  <div class="topic-title">{{ topic.topic_label or topic.topic }}</div>
                   <div class="topic-badge">风险 {{ topic.risk_points|length }} ｜ {% if topic.need_manual_review %}需复核{% else %}已完成{% endif %}</div>
                 </div>
                 <div class="topic-text">{{ topic.summary|inline_md }}</div>
                 <div class="topic-text">{{ topic.coverage_note|inline_md }}</div>
+                {% if topic.metadata and topic.metadata.missing_evidence %}
+                <div class="compare-tags">
+                  {% for item in topic.metadata.missing_evidence %}
+                  {% if item != '未发现' %}
+                  <div class="compare-tag">缺口：{{ item }}</div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+                {% endif %}
                 <div class="topic-risks">
                   {% for risk in topic.risk_points[:4] %}
                   <div class="topic-risk">
                     <div class="topic-risk-title">{{ risk.title|inline_md }}</div>
-                    <div class="topic-risk-meta">{{ risk.severity }} ｜ {{ risk.review_type }}</div>
+                    <div class="compare-tags">
+                      <div class="severity-pill {{ 'high' if risk.severity == '高风险' else 'medium' if risk.severity == '中风险' else 'low' if risk.severity == '低风险' else 'manual' }}">{{ risk.severity }}</div>
+                      <div class="compare-tag">{{ risk.review_type }}</div>
+                    </div>
                     <div class="topic-risk-meta">{{ risk.source_location|inline_md }}</div>
                   </div>
                   {% else %}
@@ -586,6 +883,132 @@
             </div>
           </div>
         </div>
+
+        {% if result.comparison_view and result.comparison_view.available %}
+        <div class="panel">
+          <div class="panel-body">
+            <h2>差异视图</h2>
+            <div class="summary-grid" style="margin-bottom: 12px;">
+              <div class="metric">
+                <div class="metric-label">聚类风险点</div>
+                <div class="metric-value">{{ result.comparison_view.summary.cluster_count }}</div>
+              </div>
+              <div class="metric medium">
+                <div class="metric-label">冲突项</div>
+                <div class="metric-value">{{ result.comparison_view.summary.conflict_count }}</div>
+              </div>
+              <div class="metric low">
+                <div class="metric-label">去重减少</div>
+                <div class="metric-value">{{ result.comparison_view.summary.duplicate_reduction }}</div>
+              </div>
+              <div class="metric manual">
+                <div class="metric-label">人工复核项</div>
+                <div class="metric-value">{{ result.comparison_view.summary.manual_review_count }}</div>
+              </div>
+            </div>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-title">冲突项</div>
+                <div class="compare-subtle">同一问题在不同来源间严重级别或结论存在差异。</div>
+                <div class="compare-list">
+                  {% for item in result.comparison_view.conflicts[:6] %}
+                  <div class="compare-item">
+                    <div class="compare-item-title">{{ item.title|inline_md }}</div>
+                    <div class="compare-tags">
+                      <div class="severity-pill {{ 'high' if item.severity == '高风险' else 'medium' if item.severity == '中风险' else 'low' if item.severity == '低风险' else 'manual' }}">{{ item.severity }}</div>
+                      {% for topic in item.topic_labels or [] %}
+                      <div class="compare-tag">{{ topic }}</div>
+                      {% endfor %}
+                    </div>
+                    <div class="compare-item-meta">{{ (item.conflict_notes or [])|join('；') }}</div>
+                  </div>
+                  {% else %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">当前未发现明显严重级别冲突。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">覆盖缺口</div>
+                <div class="compare-subtle">显示证据缺失、模块未覆盖、未召回章节、基线与专题差异等问题。</div>
+                <div class="compare-list">
+                  {% for item in result.comparison_view.coverage_gaps[:6] %}
+                  <div class="compare-item">
+                    <div class="compare-item-title">{{ item.topic }} ｜ {{ item.type }}</div>
+                    <div class="compare-item-meta">{{ item.message|inline_md }}</div>
+                  </div>
+                  {% else %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">当前未发现明显覆盖缺口。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">基线独有</div>
+                <div class="compare-subtle">全文直审发现，但当前专题层未形成同签名聚类。</div>
+                <div class="compare-list">
+                  {% for item in result.comparison_view.baseline_only[:6] %}
+                  <div class="compare-item">
+                    <div class="compare-item-title">{{ item.title|inline_md }}</div>
+                    <div class="compare-tags">
+                      <div class="severity-pill {{ 'high' if item.severity == '高风险' else 'medium' if item.severity == '中风险' else 'low' if item.severity == '低风险' else 'manual' }}">{{ item.severity }}</div>
+                      <div class="compare-tag">全文直审</div>
+                      <div class="compare-tag">{{ item.review_type }}</div>
+                    </div>
+                    <div class="compare-item-meta">{{ item.source_location|inline_md }}</div>
+                  </div>
+                  {% else %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">当前没有仅基线层发现的风险点。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">专题补充</div>
+                <div class="compare-subtle">专题深审新增发现，基线层未覆盖到同签名问题。</div>
+                <div class="compare-list">
+                  {% for item in result.comparison_view.topic_only[:6] %}
+                  <div class="compare-item">
+                    <div class="compare-item-title">{{ item.title|inline_md }}</div>
+                    <div class="compare-tags">
+                      <div class="severity-pill {{ 'high' if item.severity == '高风险' else 'medium' if item.severity == '中风险' else 'low' if item.severity == '低风险' else 'manual' }}">{{ item.severity }}</div>
+                      <div class="compare-tag">{{ item.topic_label or item.topic }}</div>
+                      <div class="compare-tag">{{ item.review_type }}</div>
+                    </div>
+                    <div class="compare-item-meta">{{ item.source_location|inline_md }}</div>
+                  </div>
+                  {% else %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">当前没有仅专题层新增的风险点。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="compare-card full">
+                <div class="compare-title">人工复核原因</div>
+                <div class="compare-list">
+                  {% for item in result.comparison_view.manual_review_items[:8] %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">{{ item|inline_md }}</div>
+                  </div>
+                  {% else %}
+                  <div class="compare-item">
+                    <div class="compare-item-meta">当前没有额外的人工复核说明。</div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
         <div class="panel">
           <div class="panel-body">

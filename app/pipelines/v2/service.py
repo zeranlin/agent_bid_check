@@ -9,9 +9,16 @@ from app.config import ReviewSettings
 
 from .assembler import assemble_v2_report, build_v2_overview
 from .baseline import run_baseline_review
+from .compare import compare_review_artifacts, comparison_to_json
+from .evidence import build_evidence_map
 from .schemas import V2ReviewArtifacts
 from .structure import build_structure_map
 from .topic_review import run_topic_reviews
+
+
+def _emit_stage_banner(stream_callback: Callable[[str], None] | None, text: str) -> None:
+    if stream_callback:
+        stream_callback(f"\n\n[{text}]\n")
 
 
 def review_document_v2(
@@ -19,6 +26,8 @@ def review_document_v2(
     settings: ReviewSettings,
     progress_callback: Callable[[str, str], None] | None = None,
     stream_callback: Callable[[str], None] | None = None,
+    topic_mode: str = "default",
+    topic_keys: tuple[str, ...] | list[str] | None = None,
 ) -> V2ReviewArtifacts:
     if progress_callback:
         progress_callback("file_reading", "系统正在阅读招标文件并提取正文。")
@@ -28,6 +37,7 @@ def review_document_v2(
 
     if progress_callback:
         progress_callback("baseline_review", "正在执行第一层全文直审，优先识别通用合规风险。")
+    _emit_stage_banner(stream_callback, "第一层全文直审")
     baseline = run_baseline_review(
         input_path=input_path,
         settings=settings,
@@ -37,26 +47,41 @@ def review_document_v2(
 
     if progress_callback:
         progress_callback("structure_analysis", "正在执行第二层结构增强，识别章节与模块归属。")
-    structure = build_structure_map(input_path, extracted_text, settings)
+    _emit_stage_banner(stream_callback, "第二层结构增强")
+    structure = build_structure_map(
+        input_path,
+        extracted_text,
+        settings,
+        stream_callback=stream_callback,
+    )
+    evidence = build_evidence_map(input_path.name, structure, topic_mode=topic_mode, topic_keys=topic_keys)
+    if structure.metadata is not None:
+        structure.metadata["evidence_bundle_count"] = evidence.metadata.get("evidence_bundle_count", 0)
 
     if progress_callback:
         progress_callback("topic_review", "正在执行第三层专题深审，核查标准、评分与商务细节。")
+    _emit_stage_banner(stream_callback, "第三层专题深审")
     topics = run_topic_reviews(
         document_name=input_path.name,
-        extracted_text=extracted_text,
-        structure=structure,
+        evidence=evidence,
         settings=settings,
+        topic_mode=topic_mode,
+        topic_keys=topic_keys,
+        stream_callback=stream_callback,
     )
 
     if progress_callback:
         progress_callback("report_structuring", "正在合并三层结果并生成统一审查报告。")
-    final_markdown = assemble_v2_report(input_path.name, baseline, structure, topics)
+    comparison = compare_review_artifacts(input_path.name, baseline, topics)
+    final_markdown = assemble_v2_report(input_path.name, baseline, structure, topics, comparison=comparison)
     return V2ReviewArtifacts(
         extracted_text=extracted_text,
         baseline=baseline,
         structure=structure,
         topics=topics,
         final_markdown=final_markdown,
+        evidence=evidence,
+        comparison=comparison,
     )
 
 
@@ -65,6 +90,10 @@ def save_review_artifacts_v2(artifacts: V2ReviewArtifacts, output_dir: Path) -> 
     (output_dir / "extracted_text.md").write_text(artifacts.extracted_text, encoding="utf-8")
     (output_dir / "baseline_review.md").write_text(artifacts.baseline.content, encoding="utf-8")
     (output_dir / "document_map.json").write_text(artifacts.structure.content, encoding="utf-8")
+    if artifacts.evidence is not None:
+        (output_dir / "evidence_map.json").write_text(artifacts.evidence.content, encoding="utf-8")
+    if artifacts.comparison is not None:
+        (output_dir / "comparison.json").write_text(comparison_to_json(artifacts.comparison), encoding="utf-8")
     (output_dir / "review.md").write_text(artifacts.final_markdown, encoding="utf-8")
     (output_dir / "final_review.md").write_text(artifacts.final_markdown, encoding="utf-8")
     (output_dir / "v2_overview.json").write_text(
@@ -78,6 +107,8 @@ def save_review_artifacts_v2(artifacts: V2ReviewArtifacts, output_dir: Path) -> 
     raw_dir.mkdir(parents=True, exist_ok=True)
     (raw_dir / "baseline_raw.md").write_text(artifacts.baseline.raw_output, encoding="utf-8")
     (raw_dir / "structure_raw.json").write_text(artifacts.structure.raw_output, encoding="utf-8")
+    if artifacts.evidence is not None:
+        (raw_dir / "evidence_raw.json").write_text(artifacts.evidence.raw_output, encoding="utf-8")
 
     for topic in artifacts.topics:
         topic_payload = {

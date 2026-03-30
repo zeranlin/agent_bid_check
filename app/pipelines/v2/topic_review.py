@@ -2,62 +2,18 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from typing import Callable
 
 from app.common.core import maybe_disable_qwen_thinking
-from app.common.llm_client import call_chat_completion, extract_response_text
+from app.common.llm_client import call_chat_completion, call_chat_completion_stream, extract_response_text
 from app.common.schemas import RiskPoint
 from app.config import ReviewSettings
 
-from .prompts.topic_contract import TOPIC_CONTRACT_PROMPT
-from .prompts.topic_qualification import TOPIC_QUALIFICATION_PROMPT
-from .prompts.topic_scoring import TOPIC_SCORING_PROMPT
-from .prompts.topic_technical import TOPIC_TECHNICAL_PROMPT
 from .schemas import TopicReviewArtifact, V2StageArtifact
+from .topics import TopicDefinition, resolve_topic_definitions, resolve_topic_execution_plan
 
 
 JSON_BLOCK_RE = re.compile(r"```(?:json)?\s*(.+?)\s*```", re.DOTALL)
-
-
-@dataclass(frozen=True)
-class TopicDefinition:
-    key: str
-    label: str
-    prompt: str
-    modules: tuple[str, ...]
-    keywords: tuple[str, ...]
-
-
-TOPIC_DEFINITIONS = (
-    TopicDefinition(
-        key="qualification",
-        label="资格条件",
-        prompt=TOPIC_QUALIFICATION_PROMPT,
-        modules=("qualification", "procedure"),
-        keywords=("资格", "资质", "业绩", "证书", "奖项", "人员", "社保", "信用"),
-    ),
-    TopicDefinition(
-        key="scoring",
-        label="评分办法",
-        prompt=TOPIC_SCORING_PROMPT,
-        modules=("scoring",),
-        keywords=("评分", "评标", "评审", "分值", "样品", "演示", "答辩", "最低评标价"),
-    ),
-    TopicDefinition(
-        key="contract",
-        label="合同履约",
-        prompt=TOPIC_CONTRACT_PROMPT,
-        modules=("contract", "acceptance", "procedure"),
-        keywords=("付款", "支付", "验收", "履约", "违约", "保证金", "质疑", "解释权", "合同", "商务"),
-    ),
-    TopicDefinition(
-        key="technical",
-        label="技术细节",
-        prompt=TOPIC_TECHNICAL_PROMPT,
-        modules=("technical", "acceptance"),
-        keywords=("技术", "参数", "标准", "品牌", "型号", "检测", "CMA", "CNAS", "样品", "GB", "GB/T"),
-    ),
-)
 
 
 def _extract_json_block(text: str) -> str:
@@ -81,6 +37,7 @@ def _parse_topic_json(text: str) -> dict:
             "summary": "模型输出未能解析为结构化 JSON，需人工复核。",
             "need_manual_review": True,
             "coverage_note": "模型返回了非 JSON 结构。",
+            "missing_evidence": ["模型返回了非 JSON 结构。"],
             "risk_points": [],
         }
     if not isinstance(data, dict):
@@ -88,6 +45,7 @@ def _parse_topic_json(text: str) -> dict:
             "summary": "模型输出结构异常，需人工复核。",
             "need_manual_review": True,
             "coverage_note": "模型返回顶层不是对象。",
+            "missing_evidence": ["模型返回顶层不是对象。"],
             "risk_points": [],
         }
     return data
@@ -129,68 +87,38 @@ def _snippet_from_section(section: dict) -> str:
     return "\n".join(lines)
 
 
-def _select_sections(extracted_text: str, structure: V2StageArtifact, definition: TopicDefinition) -> list[dict]:
-    sections = structure.metadata.get("sections", []) if structure.metadata else []
-    ranked: list[tuple[int, dict]] = []
-    for section in sections:
-        title = str(section.get("title", ""))
-        excerpt = str(section.get("excerpt", ""))
-        module = str(section.get("module", ""))
-        haystack = f"{title}\n{excerpt}"
-        keyword_hits = sum(haystack.count(word) for word in definition.keywords)
-        module_bonus = 12 if module in definition.modules else 0
-        confidence_bonus = min(int(section.get("confidence", 0) or 0), 12)
-        length_bonus = min(max(len(excerpt) // 80, 0), 8)
-        line_span = max(int(section.get("end_line", 0) or 0) - int(section.get("start_line", 0) or 0), 0)
-        span_bonus = min(line_span // 3, 6)
-        score = keyword_hits * 4 + module_bonus + confidence_bonus + length_bonus + span_bonus
-        if any(word in title for word in definition.keywords):
-            score += 10
-        if module in definition.modules and line_span >= 3:
-            score += 8
-        if score > 0:
-            ranked.append((score, section))
-    if ranked:
-        ranked.sort(
-            key=lambda item: (
-                item[0],
-                int(item[1].get("end_line", 0) or 0) - int(item[1].get("start_line", 0) or 0),
-                len(str(item[1].get("excerpt", ""))),
-            ),
-            reverse=True,
-        )
-        return [section for _, section in ranked[:6]]
-
-    lines = extracted_text.splitlines()
-    fallback: list[dict] = []
-    for index, line in enumerate(lines):
-        if any(word in line for word in definition.keywords):
-            start = max(0, index - 3)
-            end = min(len(lines), index + 6)
-            fallback.append(
-                {
-                    "title": f"关键词命中片段 {len(fallback) + 1}",
-                    "start_line": start + 1,
-                    "end_line": end,
-                    "module": "fallback",
-                    "keywords": [word for word in definition.keywords if word in line][:5],
-                    "excerpt": "\n".join(lines[start:end]).strip(),
-                }
-            )
-            if len(fallback) >= 5:
-                break
-    return fallback
+def _get_evidence_bundle(evidence: V2StageArtifact, topic_key: str) -> dict:
+    if not evidence.metadata:
+        return {}
+    bundles = evidence.metadata.get("topic_evidence_bundles", {}) or {}
+    bundle = bundles.get(topic_key, {})
+    return bundle if isinstance(bundle, dict) else {}
 
 
-def _build_topic_prompt(document_name: str, topic: TopicDefinition, sections: list[dict]) -> str:
+def _get_topic_coverage(evidence: V2StageArtifact, topic_key: str) -> dict:
+    if not evidence.metadata:
+        return {}
+    coverages = evidence.metadata.get("topic_coverages", {}) or {}
+    coverage = coverages.get(topic_key, {})
+    return coverage if isinstance(coverage, dict) else {}
+
+
+def _build_topic_prompt(document_name: str, topic: TopicDefinition, bundle: dict, coverage: dict) -> str:
+    sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
     evidence_blocks = "\n\n".join(
         [f"[证据{index}]\n{_snippet_from_section(section)}" for index, section in enumerate(sections, start=1)]
     ) or "未发现相关证据片段。"
+    missing_hints = bundle.get("missing_hints", []) if isinstance(bundle, dict) else []
+    recall_query = str(bundle.get("recall_query", "")).strip() if isinstance(bundle, dict) else ""
+    boundary = bundle.get("metadata", {}).get("boundary", {}) if isinstance(bundle, dict) else {}
+    covered_modules = coverage.get("covered_modules", []) if isinstance(coverage, dict) else []
+    missing_modules = coverage.get("missing_modules", []) if isinstance(coverage, dict) else []
 
     schema = {
         "summary": "专题结论摘要",
         "need_manual_review": False,
         "coverage_note": "本专题召回范围说明",
+        "missing_evidence": ["如存在关键证据缺口，在这里列出"],
         "risk_points": [
             {
                 "title": "问题标题",
@@ -211,7 +139,16 @@ def _build_topic_prompt(document_name: str, topic: TopicDefinition, sections: li
         " 如果证据不足，可以保守判断并标记 need_manual_review=true。"
         " 输出必须是 JSON 对象，不要输出 Markdown，不要解释。\n\n"
         f"文档名称：{document_name}\n"
-        f"专题名称：{topic.label}\n\n"
+        f"专题名称：{topic.label}\n"
+        f"专题键：{topic.key}\n"
+        f"专题优先级：{topic.priority}\n\n"
+        f"专题边界-纳入范围：{'；'.join(boundary.get('in_scope', [])) or '未提供'}\n"
+        f"专题边界-排除范围：{'；'.join(boundary.get('out_of_scope', [])) or '未提供'}\n"
+        f"主归属规则：{boundary.get('ownership_rule', '未提供')}\n"
+        f"模块覆盖：{', '.join(covered_modules) or '未发现'}\n"
+        f"缺失模块：{', '.join(missing_modules) or '未发现'}\n"
+        f"证据召回说明：{recall_query or '未提供'}\n"
+        f"召回缺口提示：{'；'.join(missing_hints) if missing_hints else '未发现明显缺口。'}\n\n"
         "JSON 结构示例：\n"
         f"{json.dumps(schema, ensure_ascii=False, indent=2)}\n\n"
         "证据片段如下：\n"
@@ -219,36 +156,85 @@ def _build_topic_prompt(document_name: str, topic: TopicDefinition, sections: li
     )
 
 
+def _build_default_coverage_note(sections: list[dict], coverage: dict) -> str:
+    covered_modules = coverage.get("covered_modules", []) if isinstance(coverage, dict) else []
+    missing_hints = coverage.get("missing_hints", []) if isinstance(coverage, dict) else []
+    return (
+        f"召回 {len(sections)} 个证据片段，覆盖模块：{', '.join(covered_modules) or '未发现'}。"
+        f"{' 缺口：' + '；'.join(missing_hints) if missing_hints else ''}"
+    )
+
+
+def _build_empty_topic_artifact(
+    definition: TopicDefinition,
+    bundle: dict,
+    coverage: dict,
+    topic_mode: str,
+    execution_plan: dict,
+) -> TopicReviewArtifact:
+    sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    return TopicReviewArtifact(
+        topic=definition.key,
+        summary=f"{definition.label}专题未召回到足够证据，需人工复核。",
+        need_manual_review=True,
+        coverage_note=_build_default_coverage_note(sections, coverage),
+        raw_output="",
+        metadata={
+            "topic_label": definition.label,
+            "topic_priority": definition.priority,
+            "topic_mode": topic_mode,
+            "topic_execution_plan": execution_plan,
+            "selected_sections": [],
+            "missing_evidence": coverage.get("missing_hints", []) if isinstance(coverage, dict) else [],
+            "evidence_bundle": bundle,
+            "topic_coverage": coverage,
+        },
+    )
+
+
 def _run_single_topic(
     definition: TopicDefinition,
     document_name: str,
-    extracted_text: str,
-    structure: V2StageArtifact,
+    evidence: V2StageArtifact,
     settings: ReviewSettings,
+    topic_mode: str,
+    execution_plan: dict,
+    stream_callback: Callable[[str], None] | None = None,
 ) -> TopicReviewArtifact:
-    sections = _select_sections(extracted_text, structure, definition)
-    coverage_note = f"召回 {len(sections)} 个相关章节/片段。"
+    bundle = _get_evidence_bundle(evidence, definition.key)
+    coverage = _get_topic_coverage(evidence, definition.key)
+    sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    coverage_note = _build_default_coverage_note(sections, coverage)
     if not sections:
-        return TopicReviewArtifact(
-            topic=definition.key,
-            summary=f"{definition.label}专题未召回到足够证据，需人工复核。",
-            need_manual_review=True,
-            coverage_note=coverage_note,
-            raw_output="",
-            metadata={"selected_sections": []},
-        )
+        return _build_empty_topic_artifact(definition, bundle, coverage, topic_mode, execution_plan)
 
-    prompt = _build_topic_prompt(document_name, definition, sections)
+    prompt = _build_topic_prompt(document_name, definition, bundle, coverage)
     prompt = maybe_disable_qwen_thinking(prompt, settings.model)
-    response = call_chat_completion(
-        base_url=settings.base_url,
-        model=settings.model,
-        api_key=settings.api_key,
-        system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
-        user_prompt=prompt,
-        temperature=settings.temperature,
-        max_tokens=min(settings.max_tokens, 3200),
-        timeout=settings.timeout,
+    if stream_callback:
+        stream_callback(f"\n\n[第三层专题深审·{definition.label}]\n")
+    response = (
+        call_chat_completion_stream(
+            base_url=settings.base_url,
+            model=settings.model,
+            api_key=settings.api_key,
+            system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
+            user_prompt=prompt,
+            temperature=settings.temperature,
+            max_tokens=min(settings.max_tokens, 3200),
+            timeout=settings.timeout,
+            on_text=stream_callback,
+        )
+        if stream_callback
+        else call_chat_completion(
+            base_url=settings.base_url,
+            model=settings.model,
+            api_key=settings.api_key,
+            system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
+            user_prompt=prompt,
+            temperature=settings.temperature,
+            max_tokens=min(settings.max_tokens, 3200),
+            timeout=settings.timeout,
+        )
     )
     raw_output = extract_response_text(response) or ""
     payload = _parse_topic_json(raw_output)
@@ -258,6 +244,7 @@ def _run_single_topic(
         if isinstance(item, dict):
             risk_points.append(_to_risk_point(item, definition.label))
 
+    missing_evidence = _to_list(payload.get("missing_evidence"), "未发现")
     return TopicReviewArtifact(
         topic=definition.key,
         summary=str(payload.get("summary", "")).strip() or f"{definition.label}专题已完成。",
@@ -266,6 +253,10 @@ def _run_single_topic(
         coverage_note=str(payload.get("coverage_note", "")).strip() or coverage_note,
         raw_output=raw_output,
         metadata={
+            "topic_label": definition.label,
+            "topic_priority": definition.priority,
+            "topic_mode": topic_mode,
+            "topic_execution_plan": execution_plan,
             "selected_sections": [
                 {
                     "title": section.get("title", ""),
@@ -274,24 +265,41 @@ def _run_single_topic(
                     "module": section.get("module", ""),
                 }
                 for section in sections
-            ]
+            ],
+            "missing_evidence": missing_evidence,
+            "evidence_bundle": bundle,
+            "topic_coverage": coverage,
         },
     )
 
 
 def run_topic_reviews(
     document_name: str,
-    extracted_text: str,
-    structure: V2StageArtifact,
+    evidence: V2StageArtifact,
     settings: ReviewSettings,
+    topic_mode: str = "default",
+    topic_keys: tuple[str, ...] | list[str] | None = None,
+    stream_callback: Callable[[str], None] | None = None,
 ) -> list[TopicReviewArtifact]:
+    plan = resolve_topic_execution_plan(topic_mode=topic_mode, topic_keys=topic_keys)
+    definitions = resolve_topic_definitions(topic_mode=topic_mode, topic_keys=topic_keys)
+    execution_plan = {
+        "mode": plan.mode,
+        "requested_keys": list(plan.requested_keys),
+        "selected_keys": list(plan.selected_keys),
+        "skipped_keys": list(plan.skipped_keys),
+        "max_topic_calls": plan.max_topic_calls,
+        "reason": plan.reason,
+    }
     return [
         _run_single_topic(
             definition=definition,
             document_name=document_name,
-            extracted_text=extracted_text,
-            structure=structure,
+            evidence=evidence,
             settings=settings,
+            topic_mode=topic_mode,
+            execution_plan=execution_plan,
+            stream_callback=stream_callback,
         )
-        for definition in TOPIC_DEFINITIONS
+        for definition in definitions
     ]

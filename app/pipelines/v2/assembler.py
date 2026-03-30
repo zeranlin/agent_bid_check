@@ -6,7 +6,8 @@ from app.common.normalize import dedupe, infer_basis_summary, infer_summary
 from app.common.parser import parse_review_markdown
 from app.common.schemas import ReviewReport, RiskPoint
 
-from .schemas import TopicReviewArtifact, V2StageArtifact
+from .compare import compare_review_artifacts
+from .schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
 def _render_report(report: ReviewReport) -> str:
@@ -46,39 +47,22 @@ def _render_report(report: ReviewReport) -> str:
     return "\n".join(lines)
 
 
-def _risk_signature(risk: RiskPoint) -> str:
-    excerpt = risk.source_excerpt.strip().replace("`", "").replace(">", "")
-    return "|".join(
-        [
-            risk.title.strip(),
-            risk.review_type.strip(),
-            risk.source_location.strip(),
-            excerpt[:160],
-        ]
+def _cluster_to_risk_point(cluster: MergedRiskCluster) -> RiskPoint:
+    judgment = list(cluster.risk_judgment)
+    if cluster.conflict_notes:
+        judgment.extend(cluster.conflict_notes)
+    risk = RiskPoint(
+        title=cluster.title,
+        severity=cluster.severity,
+        review_type=cluster.review_type,
+        source_location="；".join(cluster.source_locations) if cluster.source_locations else "未发现",
+        source_excerpt="\n\n".join(cluster.source_excerpts[:2]) if cluster.source_excerpts else "未发现",
+        risk_judgment=judgment or ["需人工复核"],
+        legal_basis=cluster.legal_basis or ["需人工复核"],
+        rectification=cluster.rectification or ["未发现"],
     )
-
-
-def _merge_risks(base_risks: list[RiskPoint], topics: list[TopicReviewArtifact]) -> list[RiskPoint]:
-    merged: list[RiskPoint] = []
-    seen: set[str] = set()
-
-    for risk in base_risks:
-        risk.ensure_defaults()
-        signature = _risk_signature(risk)
-        if signature in seen:
-            continue
-        seen.add(signature)
-        merged.append(risk)
-
-    for topic in topics:
-        for risk in topic.risk_points:
-            risk.ensure_defaults()
-            signature = _risk_signature(risk)
-            if signature in seen:
-                continue
-            seen.add(signature)
-            merged.append(risk)
-    return merged
+    risk.ensure_defaults()
+    return risk
 
 
 def _build_description_lines(structure: V2StageArtifact, topics: list[TopicReviewArtifact]) -> list[str]:
@@ -102,22 +86,25 @@ def assemble_v2_report(
     baseline: V2StageArtifact,
     structure: V2StageArtifact,
     topics: list[TopicReviewArtifact],
+    comparison: ComparisonArtifact | None = None,
 ) -> str:
     baseline_report = parse_review_markdown(baseline.content)
+    comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
     report = ReviewReport()
     report.subject = baseline_report.subject or document_name
     report.description_lines = _build_description_lines(structure, topics)
-    report.risk_points = _merge_risks(baseline_report.risk_points, topics)
+    report.risk_points = [_cluster_to_risk_point(cluster) for cluster in comparison.clusters]
     report.summary_high_risk = dedupe(baseline_report.summary_high_risk)
     report.summary_medium_risk = dedupe(baseline_report.summary_medium_risk)
     report.summary_manual_review = dedupe(
-        baseline_report.summary_manual_review + [topic.summary for topic in topics if topic.need_manual_review]
+        baseline_report.summary_manual_review
+        + [topic.summary for topic in topics if topic.need_manual_review]
+        + comparison.manual_review_items
     )
 
     basis_items = list(baseline_report.basis_summary)
-    for topic in topics:
-        for risk in topic.risk_points:
-            basis_items.extend(risk.legal_basis)
+    for cluster in comparison.clusters:
+        basis_items.extend(cluster.legal_basis)
     report.basis_summary = dedupe(basis_items)
     report.ensure_defaults(document_name)
     infer_summary(report)
@@ -128,6 +115,8 @@ def assemble_v2_report(
 def build_v2_overview(structure: V2StageArtifact, topics: list[TopicReviewArtifact]) -> dict:
     return {
         "structure_sections": structure.metadata.get("section_count", 0),
+        "evidence_bundles": structure.metadata.get("evidence_bundle_count", 0) if structure.metadata else 0,
+        "comparison_available": True,
         "topics": [
             {
                 "topic": topic.topic,

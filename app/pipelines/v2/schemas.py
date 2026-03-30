@@ -71,6 +71,71 @@ class TopicCoverage:
 
 
 @dataclass
+class RiskSignature:
+    topic: str
+    title: str
+    review_type: str
+    source_locations: list[str] = field(default_factory=list)
+    source_excerpt_hash: str = ""
+    severity: str = "需人工复核"
+    source_rule: str = "topic"
+    source_excerpt: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class MergedRiskCluster:
+    cluster_id: str
+    title: str
+    severity: str
+    review_type: str
+    source_locations: list[str] = field(default_factory=list)
+    source_excerpts: list[str] = field(default_factory=list)
+    risk_judgment: list[str] = field(default_factory=list)
+    legal_basis: list[str] = field(default_factory=list)
+    rectification: list[str] = field(default_factory=list)
+    topics: list[str] = field(default_factory=list)
+    source_rules: list[str] = field(default_factory=list)
+    conflict_notes: list[str] = field(default_factory=list)
+    need_manual_review: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class ComparisonArtifact:
+    signatures: list[RiskSignature] = field(default_factory=list)
+    clusters: list[MergedRiskCluster] = field(default_factory=list)
+    conflicts: list[dict[str, Any]] = field(default_factory=list)
+    coverage_summary: dict[str, Any] = field(default_factory=dict)
+    comparison_summary: dict[str, Any] = field(default_factory=dict)
+    baseline_only_risks: list[dict[str, Any]] = field(default_factory=list)
+    topic_only_risks: list[dict[str, Any]] = field(default_factory=list)
+    missing_topic_coverage: list[str] = field(default_factory=list)
+    manual_review_items: list[str] = field(default_factory=list)
+    coverage_gaps: list[dict[str, Any]] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "signatures": [item.to_dict() for item in self.signatures],
+            "clusters": [item.to_dict() for item in self.clusters],
+            "conflicts": self.conflicts,
+            "coverage_summary": self.coverage_summary,
+            "comparison_summary": self.comparison_summary,
+            "baseline_only_risks": self.baseline_only_risks,
+            "topic_only_risks": self.topic_only_risks,
+            "missing_topic_coverage": self.missing_topic_coverage,
+            "manual_review_items": self.manual_review_items,
+            "coverage_gaps": self.coverage_gaps,
+            "metadata": self.metadata,
+        }
+
+
+@dataclass
 class V2StageArtifact:
     name: str
     content: str = ""
@@ -96,3 +161,5 @@ class V2ReviewArtifacts:
     structure: V2StageArtifact
     topics: list[TopicReviewArtifact]
     final_markdown: str
+    evidence: V2StageArtifact | None = None
+    comparison: ComparisonArtifact | None = None
