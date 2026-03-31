@@ -209,10 +209,25 @@ def evaluate_sample(sample: dict) -> dict:
     structure_result = compare_structure(gold_structure, actual_sections, actual_bundles)
     risk_result = compare_risks(gold_risks, actual_risks)
     failure_analysis = _build_failure_analysis(structure_result, risk_result)
+    breakpoint = sample.get("breakpoint", {}) if isinstance(sample.get("breakpoint", {}), dict) else {}
 
     return {
         "sample_id": str(sample.get("sample_id", "sample")),
         "document_name": str(sample.get("document_name", "")),
+        "breakpoint": {
+            "current_failure_point": str(breakpoint.get("current_failure_point", "")).strip(),
+            "recalled_sections": [str(item).strip() for item in breakpoint.get("recalled_sections", []) if str(item).strip()]
+            if isinstance(breakpoint.get("recalled_sections", []), list)
+            else [],
+            "expected_topics": [str(item).strip() for item in breakpoint.get("expected_topics", []) if str(item).strip()]
+            if isinstance(breakpoint.get("expected_topics", []), list)
+            else [],
+            "expected_risk_titles": [
+                str(item).strip() for item in breakpoint.get("expected_risk_titles", []) if str(item).strip()
+            ]
+            if isinstance(breakpoint.get("expected_risk_titles", []), list)
+            else [],
+        },
         "structure_required_total": len([item for item in gold_structure.get("required_sections", []) if isinstance(item, dict)])
         if isinstance(gold_structure, dict)
         else 0,
@@ -374,11 +389,21 @@ def build_markdown_report(summary: dict, outputs: dict[str, list[dict]]) -> str:
                 f"- 主阻塞层：`{analysis.get('primary_blocker_layer', 'none')}`",
                 f"- 失败摘要：{analysis.get('summary', '未发现')}",
                 f"- 是否级联失败：`{analysis.get('cascaded_failure', False)}`",
-                "",
-                "#### 分层状态",
-                "",
             ]
         )
+        breakpoint = sample.get("breakpoint", {}) if isinstance(sample.get("breakpoint"), dict) else {}
+        if breakpoint:
+            lines.extend(
+                [
+                    "#### 断点说明",
+                    "",
+                    f"- 当前失败点：`{breakpoint.get('current_failure_point', '未发现') or '未发现'}`",
+                    f"- 已召回章节：`{breakpoint.get('recalled_sections', []) or '未发现'}`",
+                    f"- 应命中专题：`{breakpoint.get('expected_topics', []) or '未发现'}`",
+                    f"- 应命中风险：`{breakpoint.get('expected_risk_titles', []) or '未发现'}`",
+                ]
+            )
+        lines.extend(["", "#### 分层状态", ""])
         for layer in analysis.get("layers", []):
             if not isinstance(layer, dict):
                 continue

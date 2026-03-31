@@ -109,6 +109,30 @@ def test_regression_structure_gap_fixture_marks_structure_as_primary_blocker() -
     assert "risk_not_extracted" in result["failure_analysis"]["root_causes"]
 
 
+def test_regression_breakpoint_samples_separate_coverage_topic_and_manual_review_failures() -> None:
+    samples = {
+        sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_breakpoint_samples.json"))
+    }
+
+    coverage_result = evaluate_sample(samples["regression_coverage_gap_after_section_recall_001"])
+    topic_result = evaluate_sample(samples["regression_topic_miss_after_recall_001"])
+    manual_result = evaluate_sample(samples["regression_manual_review_boundary_after_recall_001"])
+
+    assert coverage_result["failure_analysis"]["primary_blocker_layer"] == "structure"
+    assert "missing_titles" in coverage_result["failure_analysis"]["root_causes"]
+    assert coverage_result["breakpoint"]["current_failure_point"] == "coverage_gap_after_section_recall"
+
+    assert topic_result["failure_analysis"]["primary_blocker_layer"] == "topic"
+    assert topic_result["matched_risk_count"] == 0
+    assert topic_result["missed_risk_count"] == 1
+    assert topic_result["breakpoint"]["expected_topics"] == ["technical_standard"]
+
+    assert manual_result["failure_analysis"]["primary_blocker_layer"] == "topic"
+    assert manual_result["manual_review_gap_count"] == 1
+    assert manual_result["matched_risk_count"] == 1
+    assert manual_result["breakpoint"]["expected_risk_titles"] == ["将注册资本设为资格门槛"]
+
+
 def test_failure_codebook_normalizes_unknown_reason() -> None:
     assert normalize_failure_code("missing_titles") == "missing_titles"
     assert normalize_failure_code("unknown_new_reason") == "unknown_reason"
@@ -154,6 +178,19 @@ def test_regression_markdown_report_contains_layered_failures_and_suggestions(tm
     assert "#### 结构差异" in report
     assert "#### 风险差异" in report
     assert "优先补章节切分与标题识别规则。" in report
+
+
+def test_regression_markdown_report_includes_breakpoint_details() -> None:
+    samples = load_samples(Path("data/examples/v2_regression_breakpoint_samples.json"))
+    sample = next(item for item in samples if item["sample_id"] == "regression_topic_miss_after_recall_001")
+    result = evaluate_sample(sample)
+    outputs = collect_outputs([result])
+    summary = build_summary([result], Path("data/examples/v2_regression_breakpoint_samples.json"))
+    report = build_markdown_report(summary, outputs)
+    assert "#### 断点说明" in report
+    assert "topic_miss_after_recall" in report
+    assert "第三章 技术标准与检测要求" in report
+    assert "technical_standard" in report
 
 
 def test_print_report_defaults_to_markdown(capsys) -> None:

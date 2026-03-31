@@ -1,0 +1,68 @@
+[
+  {
+    "batch_key": "technical_standard",
+    "label": "标准类细节风险批次",
+    "topic": "technical_standard",
+    "sample_ids": [
+      "topic_technical_standard_positive_001",
+      "topic_technical_standard_confusing_001",
+      "topic_technical_standard_negative_001",
+      "topic_technical_standard_manual_001",
+      "topic_technical_standard_recalled_miss_001",
+      "topic_technical_standard_name_mismatch_002",
+      "topic_technical_standard_obsolete_002",
+      "topic_technical_standard_irrelevant_002"
+    ]
+  },
+  {
+    "batch_key": "scoring",
+    "label": "评分类细节风险批次",
+    "topic": "scoring",
+    "sample_ids": [
+      "topic_scoring_positive_001",
+      "topic_scoring_confusing_001",
+      "topic_scoring_negative_001",
+      "topic_scoring_manual_001",
+      "topic_scoring_recalled_miss_001",
+      "topic_scoring_subjective_miss_001",
+      "topic_scoring_partial_miss_001",
+      "topic_scoring_relevance_002",
+      "topic_scoring_inconsistent_002",
+      "topic_scoring_manual_review_002",
+      "topic_scoring_cross_topic_shared_002",
+      "topic_scoring_degraded_manual_002"
+    ]
+  },
+  {
+    "batch_key": "qualification",
+    "label": "资格类细节风险批次",
+    "topic": "qualification",
+    "sample_ids": [
+      "topic_qualification_positive_001",
+      "topic_qualification_confusing_001",
+      "topic_qualification_negative_001",
+      "topic_qualification_manual_001",
+      "topic_qualification_recalled_miss_001",
+      "topic_qualification_partial_miss_001",
+      "topic_qualification_local_service_002",
+      "topic_qualification_personnel_gate_002",
+      "topic_qualification_scoring_overlap_002"
+    ]
+  },
+  {
+    "batch_key": "contract_payment",
+    "label": "付款类细节风险批次",
+    "topic": "contract_payment",
+    "sample_ids": [
+      "topic_contract_payment_positive_001",
+      "topic_contract_payment_confusing_001",
+      "topic_contract_payment_negative_001",
+      "topic_contract_payment_manual_001",
+      "topic_contract_payment_recalled_miss_001",
+      "topic_contract_payment_fiscal_002",
+      "topic_contract_payment_acceptance_002",
+      "topic_contract_payment_manual_review_002",
+      "topic_contract_payment_partial_miss_002"
+    ]
+  }
+]

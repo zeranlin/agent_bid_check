@@ -1,0 +1,218 @@
+[
+  {
+    "sample_id": "regression_coverage_gap_after_section_recall_001",
+    "document_name": "评分章节已识别但专题证据未挂载样本",
+    "breakpoint": {
+      "current_failure_point": "coverage_gap_after_section_recall",
+      "recalled_sections": ["第六章 评分办法"],
+      "expected_topics": ["scoring"],
+      "expected_risk_titles": ["评分口径前后不一致"]
+    },
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-202",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-202",
+          "title": "评分口径前后不一致",
+          "review_type": "评分标准不明确",
+          "severity": "中风险",
+          "source_location": "第六章 评分办法 评分细则",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 88,
+            "end_line": 132,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12,
+              "qualification": 2
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": []
+          }
+        }
+      },
+      "comparison": {
+        "clusters": []
+      }
+    }
+  },
+  {
+    "sample_id": "regression_topic_miss_after_recall_001",
+    "document_name": "技术标准章节已召回但专题漏抽样本",
+    "breakpoint": {
+      "current_failure_point": "topic_miss_after_recall",
+      "recalled_sections": ["第三章 技术标准与检测要求"],
+      "expected_topics": ["technical_standard"],
+      "expected_risk_titles": ["标准名称与编号不一致"]
+    },
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-technical-302",
+            "title": "第三章 技术标准与检测要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第三章 技术标准与检测要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-technical-302",
+          "title": "标准名称与编号不一致",
+          "review_type": "技术标准",
+          "severity": "中风险",
+          "source_location": "第三章 技术标准与检测要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第三章 技术标准与检测要求",
+            "start_line": 45,
+            "end_line": 96,
+            "module": "technical",
+            "module_scores": {
+              "technical": 13,
+              "acceptance": 3
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第三章 技术标准与检测要求",
+                "start_line": 45,
+                "end_line": 96,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": []
+      }
+    }
+  },
+  {
+    "sample_id": "regression_manual_review_boundary_after_recall_001",
+    "document_name": "资格风险已命中但被错误降为人工复核样本",
+    "breakpoint": {
+      "current_failure_point": "manual_review_boundary_after_recall",
+      "recalled_sections": ["第四章 资格审查要求"],
+      "expected_topics": ["qualification"],
+      "expected_risk_titles": ["将注册资本设为资格门槛"]
+    },
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-401",
+            "title": "第四章 资格审查要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": ["第四章 资格审查要求"],
+            "required_modules": ["qualification"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-qualification-401",
+          "title": "将注册资本设为资格门槛",
+          "review_type": "资格条件设置",
+          "severity": "高风险",
+          "source_location": "第四章 资格审查要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第四章 资格审查要求",
+            "start_line": 20,
+            "end_line": 58,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 14,
+              "performance_staff": 4
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第四章 资格审查要求",
+                "start_line": 20,
+                "end_line": 58,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将注册资本设为资格门槛",
+            "review_type": "资格条件设置",
+            "severity": "需人工复核",
+            "source_locations": ["第四章 资格审查要求"],
+            "source_excerpts": ["供应商注册资本不低于人民币 5000 万元。"],
+            "topics": ["qualification"],
+            "need_manual_review": true
+          }
+        ]
+      }
+    }
+  }
+]
