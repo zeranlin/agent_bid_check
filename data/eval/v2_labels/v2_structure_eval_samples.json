@@ -2324,5 +2324,1052 @@
       ]
     },
     "notes": "继续补强 performance_staff 结构监督族，覆盖附录载体与评分共享场景。"
+  },
+  {
+    "sample_id": "structure_policy_preface_mix_003",
+    "document_name": "前言式政策与资格说明样本",
+    "source_file": "inline://structure_policy_preface_mix_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "policy",
+      "qualification",
+      "procedure"
+    ],
+    "text": "项目说明\n本项目专门面向中小企业采购，同时落实节能环保和残疾人福利性单位支持政策。相关声明材料应与资格文件一并提交。\n\n第一章 资格审查与材料递交\n供应商资格证明、政策声明函、授权文件应按要求在投标截止前递交。\n\n第二章 开标与补正程序\n开标顺序、补正时限和平台操作流程按采购文件规定执行。",
+    "expected_sections": [
+      {
+        "title": "文档起始",
+        "module": "policy",
+        "secondary_modules": [
+          "qualification"
+        ],
+        "key": true
+      },
+      {
+        "title": "第一章 资格审查与材料递交",
+        "module": "qualification",
+        "secondary_modules": [
+          "policy",
+          "procedure"
+        ],
+        "key": true
+      },
+      {
+        "title": "第二章 开标与补正程序",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "policy",
+        "required_modules": [
+          "policy"
+        ],
+        "required_section_titles": [
+          "文档起始"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "文档起始"
+        ]
+      },
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第一章 资格审查与材料递交"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第一章 资格审查与材料递交"
+        ],
+        "expected_shared_topics": [
+          "policy"
+        ],
+        "expected_shared_titles": [
+          "第一章 资格审查与材料递交"
+        ]
+      },
+      {
+        "topic": "procedure",
+        "required_modules": [
+          "procedure"
+        ],
+        "required_section_titles": [
+          "第二章 开标与补正程序"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第二章 开标与补正程序"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "文档起始": [
+        "acceptance"
+      ],
+      "第一章 资格审查与材料递交": [
+        "acceptance"
+      ],
+      "第二章 开标与补正程序": [
+        "policy"
+      ]
+    },
+    "notes": "B5：补强前言式政策说明与资格程序混排场景。"
+  },
+  {
+    "sample_id": "structure_policy_table_notice_003",
+    "document_name": "政策适用表与递交流程样本",
+    "source_file": "inline://structure_policy_table_notice_003",
+    "case_type": "format_noise",
+    "focus_modules": [
+      "policy",
+      "procedure",
+      "qualification"
+    ],
+    "text": "第一章 政策适用表\n类别 | 要求 | 说明\n中小企业 | 提供声明函 | 资格审查时核验\n节能环保 | 按清单执行 | 响应文件中说明\n\n第三章 资格审查与材料递交\n供应商应按要求提交资格证明、政策声明及电子投标文件，并完成现场或线上核验。\n\n第四章 开标说明\n开标顺序、澄清及补正程序按交易平台规则执行。",
+    "expected_sections": [
+      {
+        "title": "第一章 政策适用表",
+        "module": "policy",
+        "secondary_modules": [
+          "qualification"
+        ],
+        "key": true
+      },
+      {
+        "title": "第三章 资格审查与材料递交",
+        "module": "qualification",
+        "secondary_modules": [
+          "procedure",
+          "policy"
+        ],
+        "key": true
+      },
+      {
+        "title": "第四章 开标说明",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "policy",
+        "required_modules": [
+          "policy"
+        ],
+        "required_section_titles": [
+          "第一章 政策适用表"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第一章 政策适用表"
+        ]
+      },
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第三章 资格审查与材料递交"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第三章 资格审查与材料递交"
+        ],
+        "expected_shared_topics": [
+          "procedure"
+        ],
+        "expected_shared_titles": [
+          "第三章 资格审查与材料递交"
+        ]
+      },
+      {
+        "topic": "procedure",
+        "required_modules": [
+          "procedure"
+        ],
+        "required_section_titles": [
+          "第三章 资格审查与材料递交",
+          "第四章 开标说明"
+        ],
+        "min_sections": 1,
+        "expected_shared_topics": [
+          "qualification"
+        ],
+        "expected_shared_titles": [
+          "第三章 资格审查与材料递交"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第一章 政策适用表": [
+        "acceptance"
+      ],
+      "第三章 资格审查与材料递交": [
+        "acceptance"
+      ],
+      "第四章 开标说明": [
+        "policy"
+      ]
+    },
+    "notes": "B5：补强表格式政策说明与资格程序共章场景。"
+  },
+  {
+    "sample_id": "structure_policy_appendix_003",
+    "document_name": "附录政策声明与投标说明样本",
+    "source_file": "inline://structure_policy_appendix_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "policy",
+      "procedure",
+      "qualification"
+    ],
+    "text": "附录一\n中小企业声明函、残疾人福利性单位声明函及节能环保承诺格式详见本附录。\n\n第五章 投标文件组成\n资格证明、政策声明、技术商务响应和报价文件应分别装订或上传。\n\n第六章 递交与开启说明\n投标文件递交时间、开启地点和解密程序按公告及系统通知执行。",
+    "expected_sections": [
+      {
+        "title": "附录一",
+        "module": "policy",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "第五章 投标文件组成",
+        "module": "procedure",
+        "secondary_modules": [
+          "qualification",
+          "policy"
+        ],
+        "key": true
+      },
+      {
+        "title": "第六章 递交与开启说明",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "policy",
+        "required_modules": [
+          "policy"
+        ],
+        "required_section_titles": [
+          "附录一"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "附录一"
+        ]
+      },
+      {
+        "topic": "procedure",
+        "required_modules": [
+          "procedure"
+        ],
+        "required_section_titles": [
+          "第五章 投标文件组成",
+          "第六章 递交与开启说明"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第六章 递交与开启说明"
+        ],
+        "expected_shared_topics": [
+          "policy"
+        ],
+        "expected_shared_titles": [
+          "第五章 投标文件组成"
+        ]
+      },
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第五章 投标文件组成"
+        ],
+        "min_sections": 1,
+        "expected_shared_topics": [
+          "procedure"
+        ],
+        "expected_shared_titles": [
+          "第五章 投标文件组成"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附录一": [
+        "acceptance"
+      ],
+      "第五章 投标文件组成": [
+        "acceptance"
+      ],
+      "第六章 递交与开启说明": [
+        "policy"
+      ]
+    },
+    "notes": "B5：补强附录载体下的政策与程序召回场景。"
+  },
+  {
+    "sample_id": "structure_technical_standard_acceptance_003",
+    "document_name": "标准条款与验收复核样本",
+    "source_file": "inline://structure_technical_standard_acceptance_003",
+    "case_type": "mixed",
+    "focus_modules": [
+      "technical",
+      "acceptance",
+      "procedure"
+    ],
+    "text": "第一章 技术标准与检测依据\n跑道面层、人造草和缓冲垫应符合现行国家标准，投标时需逐项响应标准编号、检测项目和检测方法。\n\n第二章 验收抽检要求\n中标后按上述标准进行抽检和验收复核，抽检报告、样品留存和整改记录应归档。\n\n第三章 标准响应材料递交\n标准响应表、检测报告和样品说明应随技术文件一并提交。",
+    "expected_sections": [
+      {
+        "title": "第一章 技术标准与检测依据",
+        "module": "technical",
+        "secondary_modules": [
+          "acceptance"
+        ],
+        "key": true
+      },
+      {
+        "title": "第二章 验收抽检要求",
+        "module": "acceptance",
+        "secondary_modules": [
+          "technical"
+        ],
+        "key": true
+      },
+      {
+        "title": "第三章 标准响应材料递交",
+        "module": "technical",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "technical_standard",
+        "required_modules": [
+          "technical"
+        ],
+        "required_section_titles": [
+          "第一章 技术标准与检测依据",
+          "第三章 标准响应材料递交"
+        ],
+        "min_sections": 2,
+        "expected_primary_titles": [
+          "第一章 技术标准与检测依据",
+          "第三章 标准响应材料递交"
+        ],
+        "expected_secondary_titles": [
+          "第二章 验收抽检要求"
+        ]
+      },
+      {
+        "topic": "acceptance",
+        "required_modules": [
+          "acceptance"
+        ],
+        "required_section_titles": [
+          "第二章 验收抽检要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第二章 验收抽检要求"
+        ],
+        "expected_shared_topics": [
+          "technical_standard"
+        ],
+        "expected_shared_titles": [
+          "第二章 验收抽检要求"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第一章 技术标准与检测依据": [
+        "policy",
+        "qualification"
+      ],
+      "第二章 验收抽检要求": [
+        "policy",
+        "qualification"
+      ],
+      "第三章 标准响应材料递交": [
+        "acceptance"
+      ]
+    },
+    "notes": "B6：补强标准条款与验收复核共现的复杂召回场景。"
+  },
+  {
+    "sample_id": "structure_technical_standard_scoring_003",
+    "document_name": "标准响应表与评分共享样本",
+    "source_file": "inline://structure_technical_standard_scoring_003",
+    "case_type": "format_noise",
+    "focus_modules": [
+      "technical",
+      "scoring",
+      "acceptance"
+    ],
+    "text": "附表一 标准响应与评审表\n标准编号 | 评审口径\nGB 36246-2018 | 响应完整得基础分\n检测报告 | 未提供对应证明材料不得进入后续评审\n\n第八章 验收与复核要求\n中标后按响应标准条款和检测报告进行验收抽检。",
+    "expected_sections": [
+      {
+        "title": "附表一 标准响应与评审表",
+        "module": "scoring",
+        "secondary_modules": [
+          "technical"
+        ],
+        "key": true
+      },
+      {
+        "title": "第八章 验收与复核要求",
+        "module": "acceptance",
+        "secondary_modules": [
+          "technical"
+        ],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "technical_standard",
+        "required_modules": [
+          "technical",
+          "acceptance"
+        ],
+        "required_section_titles": [
+          "附表一 标准响应与评审表",
+          "第八章 验收与复核要求"
+        ],
+        "min_sections": 2,
+        "expected_shared_topics": [
+          "scoring"
+        ],
+        "expected_shared_titles": [
+          "附表一 标准响应与评审表"
+        ]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring"
+        ],
+        "required_section_titles": [
+          "附表一 标准响应与评审表"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "附表一 标准响应与评审表"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附表一 标准响应与评审表": [
+        "policy",
+        "qualification"
+      ],
+      "第八章 验收与复核要求": [
+        "policy",
+        "qualification"
+      ]
+    },
+    "notes": "B6：补强标准响应附表与评分共享的结构召回场景。"
+  },
+  {
+    "sample_id": "structure_technical_standard_contract_003",
+    "document_name": "标准验收付款联动样本",
+    "source_file": "inline://structure_technical_standard_contract_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "technical",
+      "acceptance",
+      "contract"
+    ],
+    "text": "第四章 标准与检测要求\n标准名称、编号、检测方法和样品取样方式应逐项对应，不得仅承诺满足。\n\n第五章 验收及付款条件\n验收时按上述标准抽检，抽检不合格的应整改，整改完成后方可进入后续付款流程。\n\n第六章 材料补充说明\n投标阶段需同步提交标准响应表、样品说明和检测依据文件。",
+    "expected_sections": [
+      {
+        "title": "第四章 标准与检测要求",
+        "module": "technical",
+        "secondary_modules": [
+          "acceptance"
+        ],
+        "key": true
+      },
+      {
+        "title": "第五章 验收及付款条件",
+        "module": "contract",
+        "secondary_modules": [
+          "technical",
+          "acceptance"
+        ],
+        "key": true
+      },
+      {
+        "title": "第六章 材料补充说明",
+        "module": "technical",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "technical_standard",
+        "required_modules": [
+          "technical"
+        ],
+        "required_section_titles": [
+          "第四章 标准与检测要求",
+          "第六章 材料补充说明"
+        ],
+        "min_sections": 2,
+        "expected_primary_titles": [
+          "第四章 标准与检测要求",
+          "第六章 材料补充说明"
+        ]
+      },
+      {
+        "topic": "contract_payment",
+        "required_modules": [
+          "contract"
+        ],
+        "required_section_titles": [
+          "第五章 验收及付款条件"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第五章 验收及付款条件"
+        ],
+        "expected_shared_topics": [
+          "technical_standard"
+        ],
+        "expected_shared_titles": [
+          "第五章 验收及付款条件"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第四章 标准与检测要求": [
+        "policy",
+        "qualification"
+      ],
+      "第五章 验收及付款条件": [
+        "policy"
+      ],
+      "第六章 材料补充说明": [
+        "acceptance"
+      ]
+    },
+    "notes": "B6：补强标准条款与付款验收联动的复杂召回场景。"
+  },
+  {
+    "sample_id": "structure_performance_staff_split_003",
+    "document_name": "人员业绩分章与评分样本",
+    "source_file": "inline://structure_performance_staff_split_003",
+    "case_type": "standard",
+    "focus_modules": [
+      "qualification",
+      "performance_staff",
+      "scoring"
+    ],
+    "text": "第一章 项目团队要求\n项目经理须具备相关执业资格和连续社保证明，核心成员需具备对应岗位证书。\n\n第二章 类似业绩要求\n投标人近三年须提供同类项目合同关键页和验收证明。\n\n第三章 评分办法\n项目团队配置和类似业绩分别计分，未按要求提供证明材料的不计分。",
+    "expected_sections": [
+      {
+        "title": "第一章 项目团队要求",
+        "module": "qualification",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "第二章 类似业绩要求",
+        "module": "qualification",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "第三章 评分办法",
+        "module": "scoring",
+        "secondary_modules": [
+          "qualification"
+        ],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第一章 项目团队要求",
+          "第二章 类似业绩要求"
+        ],
+        "min_sections": 2,
+        "expected_primary_titles": [
+          "第一章 项目团队要求"
+        ]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring",
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第三章 评分办法",
+          "第一章 项目团队要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第三章 评分办法"
+        ],
+        "expected_shared_topics": [
+          "qualification"
+        ],
+        "expected_shared_titles": [
+          "第一章 项目团队要求",
+          "第二章 类似业绩要求"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第一章 项目团队要求": [
+        "policy",
+        "acceptance"
+      ],
+      "第二章 类似业绩要求": [
+        "policy",
+        "acceptance"
+      ],
+      "第三章 评分办法": [
+        "policy",
+        "acceptance"
+      ]
+    },
+    "notes": "B7：补强人员与业绩分章出现时的结构监督。"
+  },
+  {
+    "sample_id": "structure_performance_staff_appendix_003",
+    "document_name": "附表团队业绩与评分说明样本",
+    "source_file": "inline://structure_performance_staff_appendix_003",
+    "case_type": "format_noise",
+    "focus_modules": [
+      "qualification",
+      "performance_staff",
+      "scoring"
+    ],
+    "text": "附表一 评审用团队与业绩响应表\n项目经理资质 | 提供证书与社保证明\n核心成员 | 提供岗位资格证明\n类似项目业绩 | 提供合同关键页\n\n第七章 评审说明\n项目团队、类似业绩和履约经验纳入综合评分。",
+    "expected_sections": [
+      {
+        "title": "附表一 评审用团队与业绩响应表",
+        "module": "scoring",
+        "secondary_modules": [
+          "qualification"
+        ],
+        "key": true
+      },
+      {
+        "title": "第七章 评审说明",
+        "module": "scoring",
+        "secondary_modules": [
+          "qualification"
+        ],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "附表一 评审用团队与业绩响应表"
+        ],
+        "min_sections": 1,
+        "expected_shared_topics": [
+          "scoring"
+        ],
+        "expected_shared_titles": [
+          "附表一 评审用团队与业绩响应表"
+        ]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring"
+        ],
+        "required_section_titles": [
+          "附表一 评审用团队与业绩响应表",
+          "第七章 评审说明"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "附表一 评审用团队与业绩响应表",
+          "第七章 评审说明"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附表一 评审用团队与业绩响应表": [
+        "policy",
+        "acceptance"
+      ],
+      "第七章 评审说明": [
+        "policy",
+        "acceptance"
+      ]
+    },
+    "notes": "B7：补强附表载体下的人员业绩结构关注点。"
+  },
+  {
+    "sample_id": "structure_performance_staff_mix_003",
+    "document_name": "资格评分混排的人业绩样本",
+    "source_file": "inline://structure_performance_staff_mix_003",
+    "case_type": "mixed",
+    "focus_modules": [
+      "qualification",
+      "performance_staff",
+      "scoring"
+    ],
+    "text": "第一章 团队及业绩要求\n项目负责人须具备相应资格和社保证明，投标人近三年应提供同类项目业绩。项目团队、类似业绩在评审中分别计分。\n\n第二章 评标因素说明\n团队能力、项目经验和履约保障纳入综合评分。",
+    "expected_sections": [
+      {
+        "title": "第一章 团队及业绩要求",
+        "module": "qualification",
+        "secondary_modules": [
+          "scoring"
+        ],
+        "key": true
+      },
+      {
+        "title": "第二章 评标因素说明",
+        "module": "scoring",
+        "secondary_modules": [],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第一章 团队及业绩要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第一章 团队及业绩要求"
+        ]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring",
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第二章 评标因素说明",
+          "第一章 团队及业绩要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第二章 评标因素说明"
+        ],
+        "expected_shared_topics": [
+          "qualification"
+        ],
+        "expected_shared_titles": [
+          "第一章 团队及业绩要求"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第一章 团队及业绩要求": [
+        "policy",
+        "acceptance"
+      ],
+      "第二章 评标因素说明": [
+        "policy",
+        "acceptance"
+      ]
+    },
+    "notes": "B7：补强人员与业绩条件和评分条款共享章节场景。"
+  },
+  {
+    "sample_id": "structure_strong_noise_crosspage_003",
+    "document_name": "跨页技术验收付款强噪声样本",
+    "source_file": "inline://structure_strong_noise_crosspage_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "technical",
+      "acceptance",
+      "contract"
+    ],
+    "text": "第四章 技术及检测要求\n应按现行国家标准逐项响应技术参数、检测项目和取样方式。\n续页说明\n标准名称、标准编号及检测报告应保持一致。\n\n第五章 验收与支付安排\n验收时按前述标准抽检，抽检通过后进入后续支付流程。\n\n第六章 补充材料递交\n标准响应表、检测依据和样品说明应随技术文件提交。",
+    "expected_sections": [
+      {
+        "title": "第四章 技术及检测要求",
+        "module": "technical",
+        "secondary_modules": [
+          "acceptance"
+        ],
+        "key": true
+      },
+      {
+        "title": "第五章 验收与支付安排",
+        "module": "contract",
+        "secondary_modules": [
+          "technical",
+          "acceptance"
+        ],
+        "key": true
+      },
+      {
+        "title": "第六章 补充材料递交",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "technical_standard",
+        "required_modules": [
+          "technical"
+        ],
+        "required_section_titles": [
+          "第四章 技术及检测要求",
+          "第六章 补充材料递交"
+        ],
+        "min_sections": 2,
+        "expected_primary_titles": [
+          "第四章 技术及检测要求",
+          "第六章 补充材料递交"
+        ]
+      },
+      {
+        "topic": "contract_payment",
+        "required_modules": [
+          "contract"
+        ],
+        "required_section_titles": [
+          "第五章 验收与支付安排"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第五章 验收与支付安排"
+        ],
+        "expected_shared_topics": [
+          "technical_standard"
+        ],
+        "expected_shared_titles": [
+          "第五章 验收与支付安排"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第四章 技术及检测要求": [
+        "policy",
+        "qualification"
+      ],
+      "第五章 验收与支付安排": [
+        "policy"
+      ],
+      "第六章 补充材料递交": [
+        "acceptance"
+      ]
+    },
+    "notes": "B8：补强跨页续写下的技术、验收、付款强噪声场景。"
+  },
+  {
+    "sample_id": "structure_strong_noise_catalog_mix_003",
+    "document_name": "目录错乱的资格评分程序样本",
+    "source_file": "inline://structure_strong_noise_catalog_mix_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "qualification",
+      "scoring",
+      "procedure"
+    ],
+    "text": "一、补充说明\n资格材料、评分附件和样品说明应按要求同步提交。\n（二）评审与递交\n类似业绩、项目团队和演示材料纳入评审。\n第二部分 开标及资格复核\n开标后进行资格复核，未按要求递交材料的不得进入下一环节。",
+    "expected_sections": [
+      {
+        "title": "一、补充说明",
+        "module": "qualification",
+        "secondary_modules": [
+          "scoring"
+        ],
+        "key": true
+      },
+      {
+        "title": "第二部分 开标及资格复核",
+        "module": "qualification",
+        "secondary_modules": [
+          "procedure"
+        ],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "qualification",
+        "required_modules": [
+          "qualification"
+        ],
+        "required_section_titles": [
+          "第二部分 开标及资格复核"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第二部分 开标及资格复核"
+        ],
+        "expected_shared_topics": [
+          "procedure"
+        ],
+        "expected_shared_titles": [
+          "第二部分 开标及资格复核"
+        ]
+      },
+      {
+        "topic": "procedure",
+        "required_modules": [
+          "procedure"
+        ],
+        "required_section_titles": [
+          "（二）评审与递交",
+          "第二部分 开标及资格复核"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第二部分 开标及资格复核"
+        ]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring"
+        ],
+        "required_section_titles": [
+          "（二）评审与递交"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "（二）评审与递交"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "一、补充说明": [
+        "policy",
+        "acceptance"
+      ],
+      "第二部分 开标及资格复核": [
+        "policy"
+      ]
+    },
+    "notes": "B8：补强目录样式漂移下的资格评分程序混排场景。"
+  },
+  {
+    "sample_id": "structure_strong_noise_attachment_mix_003",
+    "document_name": "附录样品评分技术混排样本",
+    "source_file": "inline://structure_strong_noise_attachment_mix_003",
+    "case_type": "strong_noise",
+    "focus_modules": [
+      "scoring",
+      "technical",
+      "procedure"
+    ],
+    "text": "附表二 样品演示与评分说明\n样品、演示内容和技术参数响应情况纳入评审，未按要求递交样品的对应项不得分。\n\n第九章 技术及样品补充要求\n样品规格、技术参数、检测依据和递交时间按本章要求执行。\n\n第十章 开标补充说明\n样品开启、展示顺序和补正程序按现场通知执行。",
+    "expected_sections": [
+      {
+        "title": "附表二 样品演示与评分说明",
+        "module": "scoring",
+        "secondary_modules": [
+          "technical"
+        ],
+        "key": true
+      },
+      {
+        "title": "第九章 技术及样品补充要求",
+        "module": "technical",
+        "secondary_modules": [
+          "procedure"
+        ],
+        "key": true
+      },
+      {
+        "title": "第十章 开标补充说明",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "scoring",
+        "required_modules": [
+          "scoring",
+          "technical"
+        ],
+        "required_section_titles": [
+          "附表二 样品演示与评分说明",
+          "第九章 技术及样品补充要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "附表二 样品演示与评分说明"
+        ],
+        "expected_shared_topics": [
+          "samples_demo"
+        ],
+        "expected_shared_titles": [
+          "附表二 样品演示与评分说明",
+          "第九章 技术及样品补充要求"
+        ]
+      },
+      {
+        "topic": "samples_demo",
+        "required_modules": [
+          "technical",
+          "scoring"
+        ],
+        "required_section_titles": [
+          "附表二 样品演示与评分说明",
+          "第九章 技术及样品补充要求"
+        ],
+        "min_sections": 1,
+        "expected_primary_titles": [
+          "第九章 技术及样品补充要求"
+        ],
+        "expected_shared_topics": [
+          "scoring"
+        ],
+        "expected_shared_titles": [
+          "附表二 样品演示与评分说明"
+        ]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附表二 样品演示与评分说明": [
+        "policy",
+        "qualification"
+      ],
+      "第九章 技术及样品补充要求": [
+        "policy"
+      ],
+      "第十章 开标补充说明": [
+        "qualification"
+      ]
+    },
+    "notes": "B8：补强附录、样品、评分、技术多模块强噪声场景。"
   }
 ]

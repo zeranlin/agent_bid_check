@@ -5,6 +5,8 @@ import json
 from .schemas import EvidenceBundle, ModuleHit, SectionCandidate, TopicCoverage, V2StageArtifact
 from .topics import TOPIC_TAXONOMY, TopicDefinition, resolve_topic_definitions, resolve_topic_execution_plan
 
+SCORING_PRIMARY_TITLE_SIGNALS = ("评分办法", "评标办法", "评审办法", "综合评分表", "评分细则", "评审因素表", "评分标准")
+
 
 def _section_id(section: SectionCandidate) -> str:
     return f"{section.start_line}-{section.end_line}"
@@ -86,6 +88,10 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
     if definition.key == "scoring":
         if raw_scores.get("qualification", 0) >= 3:
             special_bonus += 4
+        if any(signal in section.title for signal in ("评分表", "综合评分表", "评分细则", "评审因素表")):
+            special_bonus += 8
+        if raw_scores.get("technical", 0) >= 3 or raw_scores.get("procedure", 0) >= 3:
+            special_bonus += 3
 
     total_score = (
         title_hits * 8
@@ -163,16 +169,21 @@ def _build_bundle(
         reverse=True,
     )
 
-    max_primary = 2 if len(primary_modules) >= 2 else 1
+    max_primary = 2 if len(primary_modules) >= 2 or definition.key == "scoring" else 1
     primary_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
     fallback_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
     for item in ranked:
         section = item[2]
+        primary_signal_threshold = 6 if definition.key == "scoring" and section.module not in primary_modules else 3
         has_primary_signal = (
             (definition.key == "contract_payment" and _has_joint_signal(section, primary_modules, secondary_modules))
             or section.module in primary_modules
+            or (
+                definition.key == "scoring"
+                and any(signal in section.title for signal in SCORING_PRIMARY_TITLE_SIGNALS)
+            )
             or any(
-            int((section.module_scores or {}).get(module, 0) or 0) >= 3 for module in primary_modules
+            int((section.module_scores or {}).get(module, 0) or 0) >= primary_signal_threshold for module in primary_modules
             )
         )
         if has_primary_signal and len(primary_ranked) < max_primary:
@@ -190,6 +201,10 @@ def _build_bundle(
     secondary_ranked = sorted(
         fallback_ranked,
         key=lambda item: (
+            (
+                definition.key == "scoring"
+                and any(signal in item[2].title for signal in ("评分表", "综合评分表", "评分细则", "评审因素表"))
+            ),
             item[2].module in secondary_modules,
             any((item[2].module_scores or {}).get(module, 0) > 0 for module in secondary_modules),
             item[0],
