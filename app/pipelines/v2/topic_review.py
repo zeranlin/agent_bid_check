@@ -27,6 +27,23 @@ TECHNICAL_STANDARD_METHOD_MISMATCH_RE = re.compile(
 CONTRACT_PAYMENT_FISCAL_RE = re.compile(r"财政资金.{0,10}(到位|拨付)")
 CONTRACT_PAYMENT_ACCEPTANCE_RE = re.compile(r"((终验|最终验收|审计).{0,12}(后|通过后)|验收.{0,8}(后|通过后).{0,8}(60|90|120)个工作日).{0,12}(支付|付款)")
 CONTRACT_PAYMENT_DELAY_RE = re.compile(r"(60|90|120)个工作日内(支付|付款)")
+IMPORT_REJECT_RE = re.compile(
+    r"(不接受.{0,12}进口产品|拒绝进口|不允许选用进口产品|本项目不允许选用进口产品|仅接受国产|只接受国产)"
+)
+IMPORT_ACCEPT_RE = re.compile(
+    r"((?<!不)(?<!拒绝)接受进口产品参与投标|允许进口产品参与投标|可采购进口产品|允许选用进口产品|(?<!不)(?<!拒绝)接受进口)"
+)
+FOREIGN_STANDARD_REF_RE = re.compile(
+    r"\b(?:BS\s*EN|EN|IEC|ISO|ANSI|UL|DIN|ASTM|JIS|CISPR)\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?",
+    re.IGNORECASE,
+)
+CN_STANDARD_REF_RE = re.compile(
+    r"\b(?:GB/T|GB|YY/T|YY|HJ/T|HJ|GA/T|GA|JB/T|JB|SJ/T|SJ|DL/T|DL|HG/T|HG|CJ/T|CJ|QB/T|QB|JGJ|JT/T|JT)\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?",
+    re.IGNORECASE,
+)
+EQUIVALENT_STANDARD_RE = re.compile(
+    r"(等效标准.{0,8}(可接受|均可接受)|满足同等技术要求的等效标准均可接受|同等标准均可接受|或同等标准|等同或优于上述标准)"
+)
 TOPIC_FAILURE_REASON_LABELS = {
     "missing_evidence": "证据不足",
     "topic_not_triggered": "专题未触发",
@@ -36,6 +53,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "topic_triggered_but_partial_miss": "专题已触发但只抽出部分风险",
     "risk_degraded_to_manual_review": "存在风险但被降级为人工复核",
     "cross_topic_shared_but_single_topic_hit": "共享证据场景下仅命中单专题",
+    "foreign_standard_conflict": "拒绝进口与外标直引存在潜在冲突",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -115,6 +133,51 @@ def _collect_section_text(sections: list[dict]) -> tuple[str, dict]:
     combined_text = "\n".join(fragment for fragment in fragments if fragment)
     source_section = next((section for section in sections if isinstance(section, dict)), {})
     return combined_text, source_section
+
+
+def _dedupe_preserve(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(item for item in items if str(item).strip()))
+
+
+def _extract_import_policy_signals(sections: list[dict]) -> dict[str, object]:
+    combined_text, _ = _collect_section_text(sections)
+    reject_matches = _dedupe_preserve([match.group(0).strip() for match in IMPORT_REJECT_RE.finditer(combined_text)])
+    accept_matches = _dedupe_preserve([match.group(0).strip() for match in IMPORT_ACCEPT_RE.finditer(combined_text)])
+    if reject_matches and accept_matches:
+        policy = "mixed_or_unclear"
+    elif reject_matches:
+        policy = "reject_import"
+    elif accept_matches:
+        policy = "accept_import"
+    else:
+        policy = "mixed_or_unclear"
+    return {
+        "import_policy": policy,
+        "import_policy_reject_phrases": reject_matches,
+        "import_policy_accept_phrases": accept_matches,
+    }
+
+
+def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, object]:
+    combined_text, _ = _collect_section_text(sections)
+    foreign_refs = _dedupe_preserve([match.group(0).strip() for match in FOREIGN_STANDARD_REF_RE.finditer(combined_text)])
+    cn_refs = _dedupe_preserve([match.group(0).strip() for match in CN_STANDARD_REF_RE.finditer(combined_text)])
+    has_equivalent_standard_clause = bool(EQUIVALENT_STANDARD_RE.search(combined_text))
+    if foreign_refs and cn_refs:
+        standard_system_mix = "mixed_cn_foreign"
+    elif foreign_refs:
+        standard_system_mix = "foreign_only"
+    elif cn_refs:
+        standard_system_mix = "cn_only"
+    else:
+        standard_system_mix = "none"
+    return {
+        "foreign_standard_refs": foreign_refs,
+        "cn_standard_refs": cn_refs,
+        "has_equivalent_standard_clause": has_equivalent_standard_clause,
+        "standard_system_mix": standard_system_mix,
+        "foreign_standard_has_version": any(re.search(r"[:\-]\d{4}$", ref) for ref in foreign_refs),
+    }
 
 
 def _build_risk_point(
@@ -464,6 +527,7 @@ def _build_empty_topic_artifact(
     error_type: str = "missing_evidence",
 ) -> TopicReviewArtifact:
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    structured_signals = _build_structured_signals(definition, sections)
     missing_items = list(missing_evidence or (coverage.get("missing_hints", []) if isinstance(coverage, dict) else []))
     selected_sections = [
         {
@@ -501,6 +565,7 @@ def _build_empty_topic_artifact(
             "topic_coverage": coverage,
             "degraded": True,
             "degrade_reason": error_type,
+            "structured_signals": structured_signals,
         },
     )
 
@@ -560,6 +625,15 @@ def _postprocess_topic_payload(
         payload["missing_evidence"] = ["未发现"]
 
     return payload, risk_points, failure_reasons
+
+
+def _build_structured_signals(definition: TopicDefinition, sections: list[dict]) -> dict[str, object]:
+    signals: dict[str, object] = {}
+    if definition.key in {"policy", "qualification", "procedure"}:
+        signals.update(_extract_import_policy_signals(sections))
+    if definition.key == "technical_standard":
+        signals.update(_extract_standard_reference_signals(sections))
+    return signals
 
 
 def _run_single_topic(
@@ -667,6 +741,7 @@ def _run_single_topic(
         }
         for section in sections
     ]
+    structured_signals = _build_structured_signals(definition, sections)
     failure_reasons = _build_topic_failure_reasons(
         selected_sections=selected_sections,
         missing_evidence=normalized_missing_evidence,
@@ -674,6 +749,12 @@ def _run_single_topic(
         degraded=False,
         recovered_reason_codes=postprocess_failure_reasons,
     )
+    if (
+        definition.key == "technical_standard"
+        and structured_signals.get("foreign_standard_refs")
+        and not structured_signals.get("has_equivalent_standard_clause", False)
+    ):
+        failure_reasons = list(dict.fromkeys(failure_reasons + ["foreign_standard_conflict"]))
     return TopicReviewArtifact(
         topic=definition.key,
         summary=str(payload.get("summary", "")).strip() or f"{definition.label}专题已完成。",
@@ -692,6 +773,7 @@ def _run_single_topic(
             "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
             "evidence_bundle": bundle,
             "topic_coverage": coverage,
+            "structured_signals": structured_signals,
         },
     )
 

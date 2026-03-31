@@ -100,6 +100,57 @@ def _build_cluster(cluster_id: str, items: list[tuple[RiskPoint, str, str]]) -> 
     )
 
 
+def _build_cross_topic_policy_technical_cluster(
+    *,
+    import_policy: str,
+    reject_phrases: list[str],
+    foreign_refs: list[str],
+    cn_refs: list[str],
+    has_equivalent_standard_clause: bool,
+    policy_locations: list[str],
+    technical_locations: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if policy_locations:
+        source_location_parts.append("政策条款：" + "；".join(policy_locations))
+    if technical_locations:
+        source_location_parts.append("技术条款：" + "；".join(technical_locations))
+    source_excerpt_parts = []
+    if reject_phrases:
+        source_excerpt_parts.append("政策口径：" + "；".join(reject_phrases))
+    if foreign_refs:
+        source_excerpt_parts.append("外标引用：" + "、".join(foreign_refs[:4]))
+    if cn_refs:
+        source_excerpt_parts.append("国标/行标：" + "、".join(cn_refs[:4]))
+    if has_equivalent_standard_clause:
+        source_excerpt_parts.append("等效说明：已发现等效标准可接受表述")
+
+    judgments = [
+        "引用外标本身不当然违法，但在明确拒绝进口的项目中，如直接绑定外标体系且未说明等效标准可接受，容易造成采购政策口径与技术标准引用口径不一致。",
+        "该类表述可能引发供应商对技术标准适用范围、可投产品边界和竞争条件的理解冲突，存在潜在倾向性与限制竞争风险。",
+    ]
+    if foreign_refs and not cn_refs:
+        judgments.append("当前条款仅见外标体系，未见对应国标、行标或国内映射标准，风险程度进一步上升。")
+
+    rectification = [
+        "补充说明对应国标、行标或满足同等技术要求的等效标准均可接受。",
+        "如确需引用外标，请明确其与采购标的技术需求的对应关系，并避免与拒绝进口政策口径形成理解冲突。",
+    ]
+
+    risk = RiskPoint(
+        title="技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+        severity="中风险",
+        review_type="技术标准引用一致性 / 潜在限制竞争",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=judgments,
+        legal_basis=["需人工复核"],
+        rectification=rectification,
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -112,6 +163,15 @@ def compare_review_artifacts(
     topic_signature_keys: set[str] = set()
     baseline_only_risks: list[dict[str, str]] = []
     topic_only_risks: list[dict[str, str]] = []
+    policy_signal_topics = {"policy", "qualification", "procedure"}
+    import_policy_values: list[str] = []
+    reject_phrases: list[str] = []
+    accept_phrases: list[str] = []
+    policy_locations: list[str] = []
+    foreign_refs: list[str] = []
+    cn_refs: list[str] = []
+    has_equivalent_standard_clause = False
+    technical_locations: list[str] = []
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -127,6 +187,57 @@ def compare_review_artifacts(
             signatures.append(signature)
             grouped.setdefault(key, []).append((risk, topic.topic, "topic"))
             topic_signature_keys.add(key)
+        metadata = topic.metadata if isinstance(topic.metadata, dict) else {}
+        structured_signals = metadata.get("structured_signals", {}) if isinstance(metadata.get("structured_signals", {}), dict) else {}
+        selected_sections = metadata.get("selected_sections", []) if isinstance(metadata.get("selected_sections", []), list) else []
+        section_titles = [str(section.get("title", "")).strip() for section in selected_sections if isinstance(section, dict) and str(section.get("title", "")).strip()]
+        if topic.topic in policy_signal_topics:
+            policy_value = str(structured_signals.get("import_policy", "")).strip()
+            if policy_value:
+                import_policy_values.append(policy_value)
+            reject_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_reject_phrases", []) if str(item).strip()])
+            accept_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_accept_phrases", []) if str(item).strip()])
+            policy_locations.extend(section_titles)
+        if topic.topic == "technical_standard":
+            foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
+            cn_refs.extend([str(item).strip() for item in structured_signals.get("cn_standard_refs", []) if str(item).strip()])
+            has_equivalent_standard_clause = has_equivalent_standard_clause or bool(
+                structured_signals.get("has_equivalent_standard_clause", False)
+            )
+            technical_locations.extend(section_titles)
+
+    import_policy_values = dedupe(import_policy_values)
+    reject_phrases = dedupe(reject_phrases)
+    accept_phrases = dedupe(accept_phrases)
+    policy_locations = dedupe(policy_locations)
+    foreign_refs = dedupe(foreign_refs)
+    cn_refs = dedupe(cn_refs)
+    technical_locations = dedupe(technical_locations)
+    if "reject_import" in import_policy_values and "accept_import" in import_policy_values:
+        import_policy = "mixed_or_unclear"
+    elif "reject_import" in import_policy_values:
+        import_policy = "reject_import"
+    elif "accept_import" in import_policy_values:
+        import_policy = "accept_import"
+    else:
+        import_policy = "mixed_or_unclear"
+
+    triggered_rule_codes: list[str] = []
+    if import_policy == "reject_import" and foreign_refs and not has_equivalent_standard_clause:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_policy_technical_cluster(
+            import_policy=import_policy,
+            reject_phrases=reject_phrases,
+            foreign_refs=foreign_refs,
+            cn_refs=cn_refs,
+            has_equivalent_standard_clause=has_equivalent_standard_clause,
+            policy_locations=policy_locations,
+            technical_locations=technical_locations,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("policy_technical_inconsistency")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -238,6 +349,7 @@ def compare_review_artifacts(
         "conflict_count": len(conflicts),
         "manual_review_count": len(dedupe(manual_review_items)),
         "duplicate_reduction": max(len(signatures) - len(clusters), 0),
+        "triggered_rule_codes": triggered_rule_codes,
     }
 
     return ComparisonArtifact(
@@ -251,7 +363,14 @@ def compare_review_artifacts(
         missing_topic_coverage=dedupe(missing_topic_coverage),
         manual_review_items=dedupe(manual_review_items),
         coverage_gaps=coverage_gaps,
-        metadata={"document_name": document_name},
+        metadata={
+            "document_name": document_name,
+            "failure_reason_codes": triggered_rule_codes,
+            "import_policy": import_policy,
+            "foreign_standard_refs": foreign_refs,
+            "cn_standard_refs": cn_refs,
+            "has_equivalent_standard_clause": has_equivalent_standard_clause,
+        },
     )
 
 

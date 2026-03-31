@@ -65,6 +65,9 @@ def evaluate_sample(sample: dict) -> dict:
         "baseline_only_count": len(comparison.baseline_only_risks),
         "topic_only_count": len(comparison.topic_only_risks),
         "coverage_gap_count": len(comparison.coverage_gaps),
+        "failure_reason_code_count": len(comparison.metadata.get("failure_reason_codes", []))
+        if isinstance(comparison.metadata.get("failure_reason_codes", []), list)
+        else 0,
     }
     matched_metrics = 0
     total_metrics = 0

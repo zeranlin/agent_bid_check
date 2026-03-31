@@ -83,5 +83,101 @@
       "topic_only_count": 1,
       "coverage_gap_count": 3
     }
+  },
+  {
+    "name": "sample_policy_technical_import_conflict",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "policy",
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口政策条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第一章 政策条款"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "import_policy": "reject_import",
+            "import_policy_reject_phrases": ["不接受投标人选用进口产品参与投标"],
+            "import_policy_accept_phrases": []
+          }
+        }
+      },
+      {
+        "topic": "technical_standard",
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第二章 技术标准要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "foreign_standard_refs": ["BS EN 61000", "EN55011"],
+            "cn_standard_refs": [],
+            "has_equivalent_standard_clause": false,
+            "standard_system_mix": "foreign_only"
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 1
+    }
+  },
+  {
+    "name": "sample_policy_technical_import_negative",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "policy",
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口政策条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第一章 政策条款"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "import_policy": "accept_import",
+            "import_policy_reject_phrases": [],
+            "import_policy_accept_phrases": ["允许进口产品参与投标"]
+          }
+        }
+      },
+      {
+        "topic": "technical_standard",
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第二章 技术标准要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "foreign_standard_refs": ["BS EN 61000:2018", "IEC 61000:2018"],
+            "cn_standard_refs": ["GB/T 17626.1-2018"],
+            "has_equivalent_standard_clause": true,
+            "standard_system_mix": "mixed_cn_foreign"
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 0,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 0
+    }
   }
 ]

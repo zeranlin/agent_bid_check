@@ -19,7 +19,7 @@ from scripts.eval_v2_regression import (
 def test_load_samples_and_evaluate_regression_fixture() -> None:
     sample_path = Path("data/examples/v2_regression_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 5
+    assert len(samples) >= 9
 
     result = evaluate_sample(samples[0])
     assert result["sample_id"] == samples[0]["sample_id"]
@@ -70,6 +70,7 @@ def test_build_summary_aggregates_regression_metrics() -> None:
                     {"layer": "topic", "failed": True},
                 ],
             },
+            "comparison_failure_reason_codes": ["policy_technical_inconsistency"],
         },
     ]
     summary = build_summary(results, Path("samples.json"))
@@ -87,6 +88,7 @@ def test_build_summary_aggregates_regression_metrics() -> None:
     assert summary["standardized_failure_summary"]["risk_not_extracted"]["layer"] == "topic"
     assert summary["standardized_failure_summary"]["false_positive_risk"]["category"] == "false_positive"
     assert summary["layer_failure_summary"] == {"topic": 2, "compare": 1}
+    assert summary["comparison_failure_reason_summary"] == {"policy_technical_inconsistency": 1}
 
 
 def test_collect_outputs_contains_risk_and_structure_gaps() -> None:
@@ -191,6 +193,18 @@ def test_regression_markdown_report_includes_breakpoint_details() -> None:
     assert "topic_miss_after_recall" in report
     assert "第三章 技术标准与检测要求" in report
     assert "technical_standard" in report
+
+
+def test_regression_cross_topic_import_conflict_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_policy_technical_import_conflict_a_003"])
+    negative = evaluate_sample(samples["regression_policy_technical_import_negative_c_003"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
 
 
 def test_print_report_defaults_to_markdown(capsys) -> None:

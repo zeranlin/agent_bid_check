@@ -135,6 +135,16 @@ def evaluate_sample(sample: dict) -> dict:
     high_medium_hits = sum(1 for title in expected_high_medium_titles if _match_title(title, actual_high_medium_titles))
     technical_hits = sum(1 for title in expected_technical_titles if _match_title(title, actual_technical_titles))
     manual_review_count = sum(1 for topic in topics if topic.need_manual_review)
+    target_failure_reasons = (
+        [str(item).strip() for item in (target_topic_result.metadata or {}).get("failure_reasons", []) if str(item).strip()]
+        if target_topic_result and target_topic_result.metadata
+        else []
+    )
+    target_structured_signals = (
+        dict((target_topic_result.metadata or {}).get("structured_signals", {}))
+        if target_topic_result and isinstance((target_topic_result.metadata or {}).get("structured_signals", {}), dict)
+        else {}
+    )
 
     return {
         "name": name,
@@ -169,6 +179,8 @@ def evaluate_sample(sample: dict) -> dict:
             "risk_titles": target_risk_titles,
             "need_manual_review": bool(target_topic_result.need_manual_review) if target_topic_result else False,
             "expected_titles": expected_topic_titles,
+            "failure_reasons": target_failure_reasons,
+            "structured_signals": target_structured_signals,
         },
         "topic_execution_plan": evidence.metadata.get("topic_execution_plan", {}),
         "details": [
@@ -177,6 +189,14 @@ def evaluate_sample(sample: dict) -> dict:
                 "summary": topic.summary,
                 "risk_titles": [risk.title for risk in topic.risk_points],
                 "need_manual_review": topic.need_manual_review,
+                "failure_reasons": [
+                    str(item).strip()
+                    for item in (topic.metadata or {}).get("failure_reasons", [])
+                    if str(item).strip()
+                ],
+                "structured_signals": dict((topic.metadata or {}).get("structured_signals", {}))
+                if isinstance((topic.metadata or {}).get("structured_signals", {}), dict)
+                else {},
             }
             for topic in topics
         ],
@@ -199,6 +219,7 @@ def build_summary(results: list[dict], sample_path: Path) -> dict:
     manual_review_expected_total = sum(int(result.get("manual_review_expected_total", 0)) for result in results)
     manual_review_hit = sum(int(result.get("manual_review_hit", 0)) for result in results)
     manual_review_false_positive_count = sum(int(result.get("manual_review_false_positive_count", 0)) for result in results)
+    failure_reason_summary: dict[str, int] = {}
     by_topic: dict[str, dict[str, int]] = {}
     for result in results:
         topic = str(result.get("topic", "")).strip() or "unknown"
@@ -223,6 +244,11 @@ def build_summary(results: list[dict], sample_path: Path) -> dict:
         bucket["false_positive_count"] += int(result.get("false_positive_count", 0))
         bucket["manual_review_expected_total"] += int(result.get("manual_review_expected_total", 0))
         bucket["manual_review_hit"] += int(result.get("manual_review_hit", 0))
+        for detail in result.get("details", []):
+            if not isinstance(detail, dict):
+                continue
+            for reason in detail.get("failure_reasons", []):
+                failure_reason_summary[str(reason)] = failure_reason_summary.get(str(reason), 0) + 1
     return {
         "sample_path": str(sample_path),
         "sample_count": sample_count,
@@ -249,6 +275,7 @@ def build_summary(results: list[dict], sample_path: Path) -> dict:
             manual_review_hit / manual_review_expected_total if manual_review_expected_total else 1.0
         ),
         "manual_review_false_positive_count": manual_review_false_positive_count,
+        "failure_reason_summary": failure_reason_summary,
         "by_topic": {
             topic: {
                 **bucket,
@@ -306,6 +333,8 @@ def print_report(summary: dict) -> None:
         f"{summary['manual_review_expected_rate']:.2%}"
     )
     print(f"人工复核误报数: {summary['manual_review_false_positive_count']}")
+    if summary.get("failure_reason_summary"):
+        print(f"专题失败原因分布: {summary['failure_reason_summary']}")
     if summary.get("by_topic"):
         print(f"按专题汇总: {summary['by_topic']}")
     print("")
@@ -339,7 +368,7 @@ def print_report(summary: dict) -> None:
         for detail in sample["details"]:
             print(
                 f"  - {detail['topic']} | need_manual_review={detail['need_manual_review']} | "
-                f"risk_titles={detail['risk_titles']}"
+                f"risk_titles={detail['risk_titles']} | failure_reasons={detail.get('failure_reasons', [])}"
             )
         print("")
 
@@ -357,6 +386,7 @@ def build_markdown_report(summary: dict) -> str:
         f"- 专题漏检率：`{summary['topic_miss_count']}/{summary['topic_expected_total']} = {summary['topic_miss_rate']:.2%}`",
         f"- 专题误报率：`{summary['false_positive_count']}/{summary['false_positive_total']} = {summary['false_positive_rate']:.2%}`",
         f"- 人工复核合理率：`{summary['manual_review_hit']}/{summary['manual_review_expected_total']} = {summary['manual_review_expected_rate']:.2%}`",
+        f"- 专题失败原因分布：`{summary.get('failure_reason_summary', {})}`",
         "",
         "## 按专题汇总",
         "",
@@ -382,6 +412,7 @@ def build_markdown_report(summary: dict) -> str:
                 f"- 类型：`{case_type}`",
                 f"- 专题命中率：`{hit_count}/{expected_total} = {topic_hit_rate:.2%}`",
                 f"- 专题漏检率：`{miss_count}/{expected_total} = {topic_miss_rate:.2%}`",
+                f"- 失败原因：`{sample.get('target_topic_detail', {}).get('failure_reasons', [])}`",
                 "",
             ]
         )

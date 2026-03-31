@@ -1287,6 +1287,146 @@
     }
   },
   {
+    "sample_id": "topic_policy_technical_import_conflict_a_003",
+    "name": "topic_policy_technical_import_conflict_a_003",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "拒绝进口且直接引用 BS EN / EN 外标、无等效说明的样本 A。",
+    "text": "第一章 政策条款\n本项目不接受投标人选用进口产品参与投标。\n\n第二章 技术标准要求\n设备电磁兼容性能应符合 BS EN 61000、EN55011 的要求。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口政策条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_policy_technical_import_conflict_b_003",
+    "name": "topic_policy_technical_import_conflict_b_003",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "拒绝进口且仅引用 IEC / EN / UL 外标、无国标和等效说明的样本 B。",
+    "text": "第一章 采购政策\n拒绝进口。\n\n第二章 技术要求\n产品安全与兼容要求满足 IEC 61000、EN 60601 及 UL 60601 标准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口限制条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_policy_technical_import_conflict_c_003",
+    "name": "topic_policy_technical_import_conflict_c_003",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "拒绝进口但同时提供 GB/T 与 IEC 且允许等效标准的负样本 C。",
+    "text": "第一章 政策条款\n本项目不接受进口产品参与投标。\n\n第二章 技术标准要求\n电磁兼容性能应满足 GB/T 17626 和 IEC 61000，满足同等技术要求的等效标准均可接受。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口限制条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_policy_technical_import_conflict_d_003",
+    "name": "topic_policy_technical_import_conflict_d_003",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "允许进口且引用外标并写明等效说明的负样本 D。",
+    "text": "第一章 政策条款\n允许进口产品参与投标。\n\n第二章 技术标准要求\n设备性能应符合 BS EN 61000:2018 或 IEC 61000:2018，满足同等技术要求的等效标准均可接受。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口政策条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
     "sample_id": "topic_contract_payment_fiscal_002",
     "name": "topic_contract_payment_fiscal_002",
     "topic_mode": "enhanced",

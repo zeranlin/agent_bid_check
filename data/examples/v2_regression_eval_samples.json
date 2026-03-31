@@ -431,5 +431,395 @@
         ]
       }
     }
+  },
+  {
+    "sample_id": "regression_policy_technical_import_conflict_a_003",
+    "document_name": "拒绝进口与外标直引冲突样本A",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-501",
+            "title": "第一章 政策条款",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-501",
+            "title": "第二章 技术标准要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 政策条款"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第二章 技术标准要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-policy-tech-501",
+          "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+          "review_type": "技术标准引用一致性 / 潜在限制竞争",
+          "severity": "中风险",
+          "source_location": "政策条款；技术标准要求",
+          "manual_review": false,
+          "aliases": ["技术标准引用与采购政策口径不一致", "拒绝进口项目仍优先绑定外标体系"]
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 政策条款",
+            "start_line": 1,
+            "end_line": 8,
+            "module": "policy",
+            "module_scores": {
+              "policy": 12,
+              "procedure": 2
+            }
+          },
+          {
+            "title": "第二章 技术标准要求",
+            "start_line": 9,
+            "end_line": 24,
+            "module": "technical",
+            "module_scores": {
+              "technical": 16,
+              "acceptance": 2
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 政策条款",
+                "start_line": 1,
+                "end_line": 8,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第二章 技术标准要求",
+                "start_line": 9,
+                "end_line": 24,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+            "review_type": "技术标准引用一致性 / 潜在限制竞争",
+            "severity": "中风险",
+            "source_locations": ["第一章 政策条款", "第二章 技术标准要求"],
+            "source_excerpts": ["政策口径：不接受投标人选用进口产品参与投标", "外标引用：BS EN 61000、EN55011"],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["policy_technical_inconsistency"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_policy_technical_import_conflict_b_003",
+    "document_name": "拒绝进口与外标直引冲突样本B",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-502",
+            "title": "第一章 采购政策",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-502",
+            "title": "第二章 技术要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 采购政策"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第二章 技术要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-policy-tech-502",
+          "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+          "review_type": "技术标准引用一致性 / 潜在限制竞争",
+          "severity": "中风险",
+          "source_location": "采购政策；技术要求",
+          "manual_review": false,
+          "aliases": ["技术标准引用与采购政策口径不一致", "拒绝进口项目仍优先绑定外标体系"]
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 采购政策",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "policy",
+            "module_scores": {
+              "policy": 11
+            }
+          },
+          {
+            "title": "第二章 技术要求",
+            "start_line": 7,
+            "end_line": 21,
+            "module": "technical",
+            "module_scores": {
+              "technical": 15
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 采购政策",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第二章 技术要求",
+                "start_line": 7,
+                "end_line": 21,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+            "review_type": "技术标准引用一致性 / 潜在限制竞争",
+            "severity": "中风险",
+            "source_locations": ["第一章 采购政策", "第二章 技术要求"],
+            "source_excerpts": ["政策口径：拒绝进口", "外标引用：IEC 61000、EN 60601、UL 60601"],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["policy_technical_inconsistency"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_policy_technical_import_negative_c_003",
+    "document_name": "拒绝进口但允许等效标准负样本C",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-503",
+            "title": "第一章 政策条款",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-503",
+            "title": "第二章 技术标准要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 政策条款"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第二章 技术标准要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 政策条款",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "policy",
+            "module_scores": {
+              "policy": 12
+            }
+          },
+          {
+            "title": "第二章 技术标准要求",
+            "start_line": 7,
+            "end_line": 20,
+            "module": "technical",
+            "module_scores": {
+              "technical": 15
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 政策条款",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第二章 技术标准要求",
+                "start_line": 7,
+                "end_line": 20,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_policy_technical_import_negative_d_003",
+    "document_name": "允许进口且写明等效标准负样本D",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-504",
+            "title": "第一章 政策条款",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-504",
+            "title": "第二章 技术标准要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 政策条款"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第二章 技术标准要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 政策条款",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "policy",
+            "module_scores": {
+              "policy": 12
+            }
+          },
+          {
+            "title": "第二章 技术标准要求",
+            "start_line": 7,
+            "end_line": 20,
+            "module": "technical",
+            "module_scores": {
+              "technical": 14
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 政策条款",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第二章 技术标准要求",
+                "start_line": 7,
+                "end_line": 20,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

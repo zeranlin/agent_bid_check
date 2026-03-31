@@ -210,6 +210,13 @@ def evaluate_sample(sample: dict) -> dict:
     risk_result = compare_risks(gold_risks, actual_risks)
     failure_analysis = _build_failure_analysis(structure_result, risk_result)
     breakpoint = sample.get("breakpoint", {}) if isinstance(sample.get("breakpoint", {}), dict) else {}
+    comparison = system.get("comparison", {}) if isinstance(system.get("comparison", {}), dict) else {}
+    comparison_metadata = comparison.get("metadata", {}) if isinstance(comparison.get("metadata", {}), dict) else {}
+    comparison_failure_reason_codes = [
+        str(item).strip()
+        for item in comparison_metadata.get("failure_reason_codes", [])
+        if str(item).strip()
+    ] if isinstance(comparison_metadata.get("failure_reason_codes", []), list) else []
 
     return {
         "sample_id": str(sample.get("sample_id", "sample")),
@@ -244,6 +251,7 @@ def evaluate_sample(sample: dict) -> dict:
         "false_positive_risk_count": len(risk_result["false_positive_risks"]),
         "manual_review_gap_count": len(risk_result["manual_review_gaps"]),
         "failure_analysis": failure_analysis,
+        "comparison_failure_reason_codes": comparison_failure_reason_codes,
         "structure": structure_result,
         "risks": risk_result,
     }
@@ -262,6 +270,7 @@ def build_summary(results: list[dict], sample_path: Path | None = None) -> dict:
     root_cause_summary: dict[str, int] = {}
     standardized_failure_summary: dict[str, dict[str, object]] = {}
     layer_failure_summary: dict[str, int] = {}
+    comparison_failure_reason_summary: dict[str, int] = {}
     for item in results:
         failure_analysis = item.get("failure_analysis", {}) if isinstance(item.get("failure_analysis", {}), dict) else {}
         for reason in failure_analysis.get("root_causes", []):
@@ -283,6 +292,10 @@ def build_summary(results: list[dict], sample_path: Path | None = None) -> dict:
             if not layer_name:
                 continue
             layer_failure_summary[layer_name] = layer_failure_summary.get(layer_name, 0) + 1
+        for code in item.get("comparison_failure_reason_codes", []):
+            normalized = str(code).strip()
+            if normalized:
+                comparison_failure_reason_summary[normalized] = comparison_failure_reason_summary.get(normalized, 0) + 1
 
     return {
         "sample_path": str(sample_path) if sample_path else "",
@@ -305,6 +318,7 @@ def build_summary(results: list[dict], sample_path: Path | None = None) -> dict:
         "root_cause_summary": root_cause_summary,
         "standardized_failure_summary": standardized_failure_summary,
         "layer_failure_summary": layer_failure_summary,
+        "comparison_failure_reason_summary": comparison_failure_reason_summary,
         "samples": results,
     }
 
@@ -378,6 +392,14 @@ def build_markdown_report(summary: dict, outputs: dict[str, list[dict]]) -> str:
     else:
         lines.extend(["- `未发现`", ""])
 
+    lines.extend(["## 跨专题规则原因码", ""])
+    if summary.get("comparison_failure_reason_summary"):
+        for code, count in sorted(summary["comparison_failure_reason_summary"].items()):
+            lines.append(f"- `{code}`：`{count}`")
+        lines.append("")
+    else:
+        lines.extend(["- `未发现`", ""])
+
     lines.extend(["## 样本明细", ""])
     for sample in summary.get("samples", []):
         analysis = sample.get("failure_analysis", {}) if isinstance(sample.get("failure_analysis"), dict) else {}
@@ -401,6 +423,14 @@ def build_markdown_report(summary: dict, outputs: dict[str, list[dict]]) -> str:
                     f"- 已召回章节：`{breakpoint.get('recalled_sections', []) or '未发现'}`",
                     f"- 应命中专题：`{breakpoint.get('expected_topics', []) or '未发现'}`",
                     f"- 应命中风险：`{breakpoint.get('expected_risk_titles', []) or '未发现'}`",
+                ]
+            )
+        if sample.get("comparison_failure_reason_codes"):
+            lines.extend(
+                [
+                    "#### 跨专题规则原因码",
+                    "",
+                    f"- `{sample.get('comparison_failure_reason_codes', [])}`",
                 ]
             )
         lines.extend(["", "#### 分层状态", ""])

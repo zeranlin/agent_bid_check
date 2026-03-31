@@ -8,7 +8,7 @@ from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluat
 def test_load_samples_and_evaluate_topic_fixture() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 43
+    assert len(samples) >= 47
 
     result = evaluate_sample(samples[0])
     assert result["topic_count"] >= 1
@@ -91,6 +91,25 @@ def test_performance_staff_samples_enter_by_topic_summary() -> None:
     assert summary["by_topic"]["performance_staff"]["topic_hit_count"] == 2
     assert summary["by_topic"]["performance_staff"]["false_positive_count"] == 0
     assert summary["by_topic"]["performance_staff"]["manual_review_hit"] == 1
+
+
+def test_policy_and_technical_standard_samples_capture_import_policy_and_foreign_standard_signals() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_policy_technical_import_conflict_a_003"])
+    positive_details = {detail["topic"]: detail for detail in positive["details"]}
+    assert positive_details["policy"]["structured_signals"]["import_policy"] == "reject_import"
+    assert positive["target_topic_detail"]["structured_signals"]["foreign_standard_refs"] == ["BS EN 61000", "EN55011"]
+    assert positive["target_topic_detail"]["structured_signals"]["has_equivalent_standard_clause"] is False
+    assert "foreign_standard_conflict" in positive["target_topic_detail"]["failure_reasons"]
+
+    negative = evaluate_sample(samples["topic_policy_technical_import_conflict_c_003"])
+    negative_details = {detail["topic"]: detail for detail in negative["details"]}
+    assert negative_details["policy"]["structured_signals"]["import_policy"] == "reject_import"
+    assert "GB/T 17626" in negative["target_topic_detail"]["structured_signals"]["cn_standard_refs"][0]
+    assert negative["target_topic_detail"]["structured_signals"]["has_equivalent_standard_clause"] is True
+    assert "foreign_standard_conflict" not in negative["target_topic_detail"]["failure_reasons"]
 
 
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:

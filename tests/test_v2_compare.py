@@ -156,3 +156,88 @@ def test_compare_review_artifacts_enriches_coverage_analysis() -> None:
     assert comparison.coverage_gaps
     assert comparison.coverage_summary["coverage_gap_count"] >= 2
     assert comparison.manual_review_items
+
+
+def test_compare_review_artifacts_adds_policy_technical_inconsistency_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [{"title": "第一章 政策条款"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品参与投标"],
+                    "import_policy_accept_phrases": [],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "第二章 技术标准要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_standard_refs": ["BS EN 61000", "EN55011"],
+                    "cn_standard_refs": [],
+                    "has_equivalent_standard_clause": False,
+                    "standard_system_mix": "foreign_only",
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突" in titles
+    assert comparison.metadata["failure_reason_codes"] == ["policy_technical_inconsistency"]
+
+
+def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [{"title": "第一章 政策条款"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受进口产品参与投标"],
+                    "import_policy_accept_phrases": [],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "第二章 技术标准要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_standard_refs": ["IEC 61000"],
+                    "cn_standard_refs": ["GB/T 17626"],
+                    "has_equivalent_standard_clause": True,
+                    "standard_system_mix": "mixed_cn_foreign",
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert not comparison.clusters
+    assert comparison.metadata["failure_reason_codes"] == []
