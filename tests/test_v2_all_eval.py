@@ -24,10 +24,12 @@ def test_build_overall_summary_aggregates_stage_status() -> None:
     )
     summary = build_overall_summary([structure_stage, regression_stage], Path("data/eval"))
     assert summary["stage_count"] == 2
-    assert summary["passed_stage_count"] == 1
+    assert summary["passed_delivery_stage_count"] == 2
+    assert summary["passed_quality_stage_count"] == 1
     assert summary["total_checks"] == 3
     assert summary["passed_checks"] == 2
-    assert summary["status"] == "failed"
+    assert summary["p2_delivery_status"] == "passed"
+    assert summary["quality_gate_status"] == "failed"
 
 
 def test_write_outputs_emits_json_and_markdown(tmp_path: Path) -> None:

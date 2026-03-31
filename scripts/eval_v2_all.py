@@ -68,6 +68,11 @@ def _make_check(metric: str, actual: float, target: float, *, comparator: str = 
     }
 
 
+def _delivery_ready(summary: dict) -> bool:
+    sample_count = int(summary.get("sample_count", 0) or 0)
+    return sample_count > 0
+
+
 def run_structure_stage(dataset_root: Path | None) -> dict:
     sample_path = resolve_structure_sample_path("structure", dataset_root=dataset_root)
     results = [evaluate_structure_sample(sample) for sample in load_structure_samples(sample_path)]
@@ -155,12 +160,15 @@ def run_regression_stage(dataset_root: Path | None) -> dict:
 def build_stage_result(stage: str, summary: dict, checks: list[dict]) -> dict:
     passed_checks = sum(1 for item in checks if item["passed"])
     total_checks = len(checks)
+    delivery_ready = _delivery_ready(summary)
     return {
         "stage": stage,
-        "status": "passed" if passed_checks == total_checks else "failed",
+        "delivery_status": "passed" if delivery_ready else "failed",
+        "quality_status": "passed" if passed_checks == total_checks else "failed",
         "passed_checks": passed_checks,
         "total_checks": total_checks,
         "check_pass_rate": (passed_checks / total_checks) if total_checks else 1.0,
+        "delivery_ready": delivery_ready,
         "checks": checks,
         "summary": summary,
     }
@@ -168,18 +176,22 @@ def build_stage_result(stage: str, summary: dict, checks: list[dict]) -> dict:
 
 def build_overall_summary(stage_results: list[dict], dataset_root: Path | None = None) -> dict:
     stage_count = len(stage_results)
-    passed_stage_count = sum(1 for item in stage_results if item["status"] == "passed")
+    passed_delivery_stage_count = sum(1 for item in stage_results if item["delivery_status"] == "passed")
+    passed_quality_stage_count = sum(1 for item in stage_results if item["quality_status"] == "passed")
     total_checks = sum(int(item["total_checks"]) for item in stage_results)
     passed_checks = sum(int(item["passed_checks"]) for item in stage_results)
     return {
         "dataset_root": str(dataset_root or DEFAULT_EVAL_ROOT),
         "stage_count": stage_count,
-        "passed_stage_count": passed_stage_count,
-        "stage_pass_rate": (passed_stage_count / stage_count) if stage_count else 1.0,
+        "passed_delivery_stage_count": passed_delivery_stage_count,
+        "delivery_stage_pass_rate": (passed_delivery_stage_count / stage_count) if stage_count else 1.0,
+        "passed_quality_stage_count": passed_quality_stage_count,
+        "quality_stage_pass_rate": (passed_quality_stage_count / stage_count) if stage_count else 1.0,
         "total_checks": total_checks,
         "passed_checks": passed_checks,
         "check_pass_rate": (passed_checks / total_checks) if total_checks else 1.0,
-        "status": "passed" if passed_stage_count == stage_count else "failed",
+        "p2_delivery_status": "passed" if passed_delivery_stage_count == stage_count else "failed",
+        "quality_gate_status": "passed" if passed_quality_stage_count == stage_count else "failed",
         "stages": stage_results,
     }
 
@@ -189,9 +201,11 @@ def build_markdown_report(summary: dict) -> str:
         "# V2 总评估报告",
         "",
         f"- 数据集目录：`{summary['dataset_root']}`",
-        f"- 阶段通过率：`{summary['passed_stage_count']}/{summary['stage_count']} = {summary['stage_pass_rate']:.2%}`",
+        f"- P2交付状态：`{summary['p2_delivery_status']}`",
+        f"- P2阶段完成率：`{summary['passed_delivery_stage_count']}/{summary['stage_count']} = {summary['delivery_stage_pass_rate']:.2%}`",
+        f"- 质量门禁状态：`{summary['quality_gate_status']}`",
+        f"- 质量阶段通过率：`{summary['passed_quality_stage_count']}/{summary['stage_count']} = {summary['quality_stage_pass_rate']:.2%}`",
         f"- 检查项通过率：`{summary['passed_checks']}/{summary['total_checks']} = {summary['check_pass_rate']:.2%}`",
-        f"- 总体状态：`{summary['status']}`",
         "",
         "## 分阶段结果",
         "",
@@ -201,7 +215,8 @@ def build_markdown_report(summary: dict) -> str:
             [
                 f"### {stage['stage']}",
                 "",
-                f"- 状态：`{stage['status']}`",
+                f"- 交付状态：`{stage['delivery_status']}`",
+                f"- 质量状态：`{stage['quality_status']}`",
                 f"- 检查项通过率：`{stage['passed_checks']}/{stage['total_checks']} = {stage['check_pass_rate']:.2%}`",
                 f"- 样本数：`{stage['summary'].get('sample_count', 0)}`",
                 "",
