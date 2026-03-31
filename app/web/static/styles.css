@@ -654,6 +654,38 @@ textarea:focus {
   text-align: center;
 }
 
+.file-drop__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 4px;
+  border-radius: 999px;
+  background: rgba(0, 113, 227, 0.08);
+  border: 1px solid rgba(0, 113, 227, 0.12);
+}
+
+.file-drop__icon::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(0, 113, 227, 0.88);
+}
+
+.file-drop__icon-arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 20px;
+  background: rgba(0, 113, 227, 0.88);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
 .file-drop input {
   position: absolute;
   inset: 0;
@@ -678,7 +710,7 @@ textarea:focus {
 
 .file-drop__title {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
-  font-size: 24px;
+  font-size: 42px;
   font-weight: 800;
   color: var(--ink);
   line-height: 1.25;
@@ -696,6 +728,12 @@ textarea:focus {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 4px;
+}
+
+.file-drop__eyebrow,
+.file-drop__hint,
+.file-drop__meta {
+  display: none;
 }
 
 .file-meta-pill {

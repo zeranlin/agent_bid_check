@@ -80,8 +80,11 @@
         <form method="post" action="{{ url_for('review') }}" enctype="multipart/form-data" class="review-form" id="review-form" data-start-url="{{ url_for('review_start') }}">
             <label class="file-drop" for="tender-file">
               <input type="file" id="tender-file" name="tender_file" accept=".docx,.txt,.md" required>
-              <span class="file-drop__eyebrow">招标文件</span>
-              <span class="file-drop__title" id="file-drop-title">选择招标文件</span>
+              <span class="file-drop__icon" aria-hidden="true">
+                <span class="file-drop__icon-arrow"></span>
+              </span>
+              <span class="file-drop__eyebrow">上传文件</span>
+              <span class="file-drop__title" id="file-drop-title">上传文件</span>
               <span class="file-drop__hint" id="file-drop-hint">支持 .docx / .txt / .md，建议单文件 25MB 以内</span>
               <div class="file-drop__meta" id="file-drop-meta" hidden>
                 <span class="file-meta-pill" id="file-meta-type">文档</span>
@@ -379,7 +382,7 @@
       if (!fileInput || !fileDropTitle || !fileDropHint || !fileDropMeta || !fileMetaType || !fileMetaSize) return;
       const file = fileInput.files && fileInput.files[0];
       if (!file) {
-        fileDropTitle.textContent = '选择招标文件';
+        fileDropTitle.textContent = '上传文件';
         fileDropHint.textContent = '支持 .docx / .txt / .md，建议单文件 25MB 以内';
         fileMetaType.textContent = '文档';
         fileMetaSize.textContent = '0 KB';
