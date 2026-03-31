@@ -54,6 +54,48 @@ DEFAULT_THRESHOLDS = {
 }
 
 
+def _normalize_threshold_snapshot() -> dict[str, dict[str, dict[str, float | str]]]:
+    return {
+        "structure": {
+            "module_accuracy": {"target": DEFAULT_THRESHOLDS["structure"]["module_accuracy"], "comparator": ">="},
+            "key_recall": {"target": DEFAULT_THRESHOLDS["structure"]["key_recall"], "comparator": ">="},
+            "coverage_recall_rate": {
+                "target": DEFAULT_THRESHOLDS["structure"]["coverage_recall_rate"],
+                "comparator": ">=",
+            },
+            "negative_pass_rate": {
+                "target": DEFAULT_THRESHOLDS["structure"]["negative_pass_rate"],
+                "comparator": ">=",
+            },
+            "mixed_section_secondary_recall_rate": {
+                "target": DEFAULT_THRESHOLDS["structure"]["mixed_section_secondary_recall_rate"],
+                "comparator": ">=",
+            },
+        },
+        "topics": {
+            "high_medium_hit_rate": {"target": DEFAULT_THRESHOLDS["topics"]["high_medium_hit_rate"], "comparator": ">="},
+            "topic_hit_rate": {"target": DEFAULT_THRESHOLDS["topics"]["topic_hit_rate"], "comparator": ">="},
+            "false_positive_rate": {"target": DEFAULT_THRESHOLDS["topics"]["false_positive_rate_max"], "comparator": "<="},
+            "manual_review_expected_rate": {
+                "target": DEFAULT_THRESHOLDS["topics"]["manual_review_expected_rate"],
+                "comparator": ">=",
+            },
+        },
+        "compare": {
+            "accuracy": {"target": DEFAULT_THRESHOLDS["compare"]["accuracy"], "comparator": ">="},
+        },
+        "regression": {
+            "structure_hit_rate": {"target": DEFAULT_THRESHOLDS["regression"]["structure_hit_rate"], "comparator": ">="},
+            "topic_coverage_hit_rate": {
+                "target": DEFAULT_THRESHOLDS["regression"]["topic_coverage_hit_rate"],
+                "comparator": ">=",
+            },
+            "risk_hit_rate": {"target": DEFAULT_THRESHOLDS["regression"]["risk_hit_rate"], "comparator": ">="},
+            "miss_rate": {"target": DEFAULT_THRESHOLDS["regression"]["miss_rate_max"], "comparator": "<="},
+        },
+    }
+
+
 def _make_check(metric: str, actual: float, target: float, *, comparator: str = ">=") -> dict:
     if comparator == "<=":
         passed = actual <= target
@@ -161,6 +203,7 @@ def build_stage_result(stage: str, summary: dict, checks: list[dict]) -> dict:
     passed_checks = sum(1 for item in checks if item["passed"])
     total_checks = len(checks)
     delivery_ready = _delivery_ready(summary)
+    failed_checks = [item for item in checks if not item["passed"]]
     return {
         "stage": stage,
         "delivery_status": "passed" if delivery_ready else "failed",
@@ -170,6 +213,7 @@ def build_stage_result(stage: str, summary: dict, checks: list[dict]) -> dict:
         "check_pass_rate": (passed_checks / total_checks) if total_checks else 1.0,
         "delivery_ready": delivery_ready,
         "checks": checks,
+        "failed_checks": failed_checks,
         "summary": summary,
     }
 
@@ -180,8 +224,22 @@ def build_overall_summary(stage_results: list[dict], dataset_root: Path | None =
     passed_quality_stage_count = sum(1 for item in stage_results if item["quality_status"] == "passed")
     total_checks = sum(int(item["total_checks"]) for item in stage_results)
     passed_checks = sum(int(item["passed_checks"]) for item in stage_results)
+    threshold_snapshot = _normalize_threshold_snapshot()
+    gate_blockers: list[dict] = []
+    for stage in stage_results:
+        for check in stage.get("failed_checks", []):
+            gate_blockers.append(
+                {
+                    "stage": stage["stage"],
+                    "metric": check["metric"],
+                    "actual": check["actual"],
+                    "target": check["target"],
+                    "comparator": check["comparator"],
+                }
+            )
     return {
         "dataset_root": str(dataset_root or DEFAULT_EVAL_ROOT),
+        "gate_thresholds": threshold_snapshot,
         "stage_count": stage_count,
         "passed_delivery_stage_count": passed_delivery_stage_count,
         "delivery_stage_pass_rate": (passed_delivery_stage_count / stage_count) if stage_count else 1.0,
@@ -192,6 +250,9 @@ def build_overall_summary(stage_results: list[dict], dataset_root: Path | None =
         "check_pass_rate": (passed_checks / total_checks) if total_checks else 1.0,
         "p2_delivery_status": "passed" if passed_delivery_stage_count == stage_count else "failed",
         "quality_gate_status": "passed" if passed_quality_stage_count == stage_count else "failed",
+        "quality_gate_passed": passed_quality_stage_count == stage_count,
+        "gate_blocker_count": len(gate_blockers),
+        "gate_blockers": gate_blockers,
         "stages": stage_results,
     }
 
@@ -207,9 +268,38 @@ def build_markdown_report(summary: dict) -> str:
         f"- 质量阶段通过率：`{summary['passed_quality_stage_count']}/{summary['stage_count']} = {summary['quality_stage_pass_rate']:.2%}`",
         f"- 检查项通过率：`{summary['passed_checks']}/{summary['total_checks']} = {summary['check_pass_rate']:.2%}`",
         "",
-        "## 分阶段结果",
+        "## 门禁阈值",
         "",
     ]
+    for stage, metrics in summary.get("gate_thresholds", {}).items():
+        lines.append(f"### {stage}")
+        lines.append("")
+        for metric, config in metrics.items():
+            comparator_label = "≤" if config["comparator"] == "<=" else "≥"
+            lines.append(f"- `{metric}`：`{comparator_label} {float(config['target']):.2%}`")
+        lines.append("")
+
+    lines.extend(
+        [
+            "## 门禁阻塞项",
+            "",
+        ]
+    )
+    if summary.get("gate_blockers"):
+        for blocker in summary["gate_blockers"]:
+            comparator_label = "≤" if blocker["comparator"] == "<=" else "≥"
+            lines.append(
+                f"- `{blocker['stage']}.{blocker['metric']}`：实际 `{float(blocker['actual']):.2%}`，目标 `{comparator_label} {float(blocker['target']):.2%}`"
+            )
+    else:
+        lines.append("- `未发现`")
+    lines.extend(
+        [
+            "",
+        "## 分阶段结果",
+        "",
+        ]
+    )
     for stage in summary.get("stages", []):
         lines.extend(
             [

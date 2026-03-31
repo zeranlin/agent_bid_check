@@ -450,5 +450,47 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_recalled_miss_001",
+    "name": "topic_scoring_recalled_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "positive",
+    "topic": "scoring",
+    "description": "章节已召回但模型未抽出风险，依赖 scoring 后处理兜底的样本。",
+    "text": "第一章 评分办法\n技术方案优得40分，良得30分，一般得20分。价格分最高得30分，由评委综合打分。",
+    "expected_high_medium_titles": ["评分档次缺少量化口径"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分办法条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_subjective_miss_001",
+    "name": "topic_scoring_subjective_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "positive",
+    "topic": "scoring",
+    "description": "章节已召回但模型未抽出主观评分风险的样本。",
+    "text": "第一章 评分办法\n企业荣誉和服务方案由评标委员会结合项目实际确定，按优、良、中三个档次分别计10分、6分、2分。",
+    "expected_high_medium_titles": ["主观分值裁量空间过大"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分档次条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
   }
 ]

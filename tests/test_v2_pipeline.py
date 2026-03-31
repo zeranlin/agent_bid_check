@@ -55,6 +55,45 @@ def test_build_structure_map_identifies_modules() -> None:
     assert artifact.metadata["section_candidates"][0]["body"]
 
 
+def test_build_structure_map_recognizes_scoring_title_variants() -> None:
+    text = """
+附表1 综合评分表
+价格分最高得30分，技术分最高得40分，商务分最高得20分。
+
+第六章 评审办法
+采用综合评分法，按评分细则计算总分。
+""".strip()
+    artifact = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    sections = artifact.metadata["sections"]
+    assert any(section["title"] == "附表1 综合评分表" and section["module"] == "scoring" for section in sections)
+    assert any(section["title"] == "第六章 评审办法" and section["module"] == "scoring" for section in sections)
+
+
+def test_build_structure_map_merges_attachment_heading_with_next_scoring_title() -> None:
+    text = """
+附表1
+综合评分表
+价格分最高得30分，技术分最高得40分，商务分最高得20分。
+
+第七章 投标须知
+递交时间和开标程序见本章。
+""".strip()
+    artifact = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    sections = artifact.metadata["sections"]
+    assert sections[0]["title"] == "附表1 综合评分表"
+    assert sections[0]["module"] == "scoring"
+
+
 def test_build_evidence_map_groups_sections_by_topic() -> None:
     text = """
 第一章 招标公告
@@ -117,6 +156,32 @@ def test_topic_taxonomy_and_active_topics_contract() -> None:
     assert default_plan.per_topic_timeout > 0
     assert default_plan.per_topic_max_tokens > 0
     assert default_plan.allow_degrade_on_error is True
+
+
+def test_build_evidence_map_includes_scoring_main_section_and_score_table() -> None:
+    text = """
+第六章 评分办法
+采用综合评分法，技术分40分，商务分20分，价格分30分。
+
+附表1 综合评分表
+评审因素、分值构成和打分档次详见本表。
+
+第七章 投标须知
+递交时间、澄清程序和开标安排按本章执行。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["scoring"])
+    scoring_bundle = evidence.metadata["topic_evidence_bundles"]["scoring"]
+    scoring_titles = [section["title"] for section in scoring_bundle["sections"]]
+    assert "第六章 评分办法" in scoring_titles
+    assert "附表1 综合评分表" in scoring_titles
+    assert scoring_bundle["primary_section_ids"]
+    assert evidence.metadata["topic_coverages"]["scoring"]["covered_modules"]
 
 
 def test_run_topic_reviews_supports_topic_sets(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -209,6 +274,160 @@ def test_run_topic_reviews_degrades_when_topic_call_fails(monkeypatch: pytest.Mo
     assert topics[0].metadata["degraded"] is True
     assert topics[0].metadata["degrade_reason"] == "topic_call_failed"
     assert "专题调用失败" in topics[0].summary
+
+
+def test_run_topic_reviews_scoring_postprocess_adds_quantization_risk(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 评分办法
+技术方案优得40分，良得30分，一般得20分。演示效果优得10分，良得6分，一般得3分，由评委综合打分。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["scoring"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"评分办法专题完成。\", "
+                            "\"need_manual_review\": false, "
+                            "\"coverage_note\": \"已覆盖评分条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["scoring"],
+    )
+    assert len(topics) == 1
+    assert topics[0].topic == "scoring"
+    assert topics[0].risk_points
+    assert topics[0].risk_points[0].title == "评分档次缺少量化口径"
+    assert topics[0].risk_points[0].review_type == "评分标准不明确"
+    assert "risk_not_extracted" in topics[0].metadata["failure_reasons"]
+
+
+def test_run_topic_reviews_records_topic_failure_reasons(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 评分办法
+综合评分法，技术评分 40 分，商务评分 20 分。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["scoring"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"评分办法专题完成。\", "
+                            "\"need_manual_review\": true, "
+                            "\"coverage_note\": \"证据不足。\", "
+                            "\"missing_evidence\": [\"缺少量化评分细则\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["scoring"],
+    )
+    assert len(topics) == 1
+    assert "missing_evidence" in topics[0].metadata["failure_reasons"]
+    assert "degraded_to_manual_review" in topics[0].metadata["failure_reasons"]
+
+
+def test_run_topic_reviews_tightens_manual_review_when_explicit_risk_exists(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    text = """
+第一章 评分办法
+技术方案优得40分，良得30分，一般得20分。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["scoring"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"评分办法专题完成。\", "
+                            "\"need_manual_review\": true, "
+                            "\"coverage_note\": \"已覆盖评分条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": [{"
+                            "\"title\": \"评分档次缺少量化口径\", "
+                            "\"severity\": \"中风险\", "
+                            "\"review_type\": \"评分标准不明确\", "
+                            "\"source_location\": \"第一章 评分办法\", "
+                            "\"source_excerpt\": \"技术方案优得40分，良得30分，一般得20分。\", "
+                            "\"risk_judgment\": [\"评分档次缺少量化口径。\"], "
+                            "\"legal_basis\": [\"需人工复核\"], "
+                            "\"rectification\": [\"补充各档次量化标准。\"]"
+                            "}]"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["scoring"],
+    )
+    assert len(topics) == 1
+    assert topics[0].risk_points[0].title == "评分档次缺少量化口径"
+    assert topics[0].need_manual_review is False
+    assert topics[0].metadata["missing_evidence"] == ["未发现"]
+    assert "degraded_to_manual_review" not in topics[0].metadata["failure_reasons"]
 
 
 def test_build_structure_map_uses_llm_refine_for_low_confidence_sections(monkeypatch: pytest.MonkeyPatch) -> None:

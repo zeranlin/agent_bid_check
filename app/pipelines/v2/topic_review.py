@@ -14,6 +14,14 @@ from .topics import TopicDefinition, resolve_topic_definitions, resolve_topic_ex
 
 
 JSON_BLOCK_RE = re.compile(r"```(?:json)?\s*(.+?)\s*```", re.DOTALL)
+SCORING_TIER_RE = re.compile(r"(优|良|中|差|一般)\s*(得|计)?\s*\d+\s*分")
+SCORING_SUBJECTIVE_SIGNALS = ("综合打分", "综合印象打分", "由评委综合打分", "酌情计分", "结合项目实际确定")
+TOPIC_FAILURE_REASON_LABELS = {
+    "missing_evidence": "证据不足",
+    "topic_not_triggered": "专题未触发",
+    "risk_not_extracted": "专题未抽出风险",
+    "degraded_to_manual_review": "已降级为人工复核",
+}
 
 
 def _extract_json_block(text: str) -> str:
@@ -73,6 +81,89 @@ def _to_risk_point(item: dict, topic_label: str) -> RiskPoint:
     )
     risk.ensure_defaults()
     return risk
+
+
+def _build_scoring_fallback_risk(sections: list[dict]) -> RiskPoint | None:
+    fragments: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        fragments.extend(
+            [
+                str(section.get("title", "")).strip(),
+                str(section.get("excerpt", "")).strip(),
+                str(section.get("body", "")).strip(),
+            ]
+        )
+    combined_text = "\n".join(fragment for fragment in fragments if fragment)
+    if not combined_text.strip():
+        return None
+
+    has_tier_signal = bool(SCORING_TIER_RE.search(combined_text))
+    has_subjective_signal = any(signal in combined_text for signal in SCORING_SUBJECTIVE_SIGNALS)
+    if not has_tier_signal and not has_subjective_signal:
+        return None
+
+    source_section = next((section for section in sections if isinstance(section, dict)), {})
+    source_location = (
+        f"{source_section.get('title', '未发现')} 第{source_section.get('start_line', '?')}-{source_section.get('end_line', '?')}行"
+        if source_section
+        else "未发现"
+    )
+    source_excerpt = str(source_section.get("excerpt", "")).strip() or "未发现"
+    title = "评分档次缺少量化口径" if has_tier_signal else "主观分值裁量空间过大"
+    judgments = []
+    if has_tier_signal:
+        judgments.append("评分分档存在“优、良、中、差”或类似档次，但缺少与各档对应的量化判定标准。")
+    if has_subjective_signal:
+        judgments.append("条款包含“综合打分”“酌情计分”等表述，评委自由裁量空间较大。")
+    return RiskPoint(
+        title=title,
+        severity="中风险",
+        review_type="评分标准不明确",
+        source_location=source_location,
+        source_excerpt=source_excerpt,
+        risk_judgment=judgments or ["评分标准不够明确，需补充量化口径。"],
+        legal_basis=["需人工复核"],
+        rectification=["补充各评分档次对应的量化标准，并压缩主观裁量空间。"],
+    )
+
+
+def _normalize_missing_evidence_items(value: object) -> list[str]:
+    items = _to_list(value, "未发现")
+    return [item for item in items if item.strip() and item.strip() != "未发现"]
+
+
+def _should_tighten_manual_review(payload: dict, risk_points: list[RiskPoint]) -> bool:
+    if not bool(payload.get("need_manual_review", False)):
+        return False
+    if not risk_points:
+        return False
+    if _normalize_missing_evidence_items(payload.get("missing_evidence")):
+        return False
+    if any(risk.severity == "需人工复核" for risk in risk_points):
+        return False
+    return True
+
+
+def _build_topic_failure_reasons(
+    *,
+    selected_sections: list[dict],
+    missing_evidence: list[str],
+    need_manual_review: bool,
+    degraded: bool,
+    recovered_by_fallback: bool,
+) -> list[str]:
+    reasons: list[str] = []
+    if not selected_sections:
+        reasons.append("topic_not_triggered")
+    if missing_evidence:
+        reasons.append("missing_evidence")
+    if degraded or (need_manual_review and missing_evidence):
+        reasons.append("degraded_to_manual_review")
+    if recovered_by_fallback:
+        reasons.append("risk_not_extracted")
+    return list(dict.fromkeys(reasons))
 
 
 def _snippet_from_section(section: dict) -> str:
@@ -178,6 +269,13 @@ def _build_empty_topic_artifact(
 ) -> TopicReviewArtifact:
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
     missing_items = list(missing_evidence or (coverage.get("missing_hints", []) if isinstance(coverage, dict) else []))
+    failure_reasons = _build_topic_failure_reasons(
+        selected_sections=[],
+        missing_evidence=[item for item in missing_items if item and item != "未发现"],
+        need_manual_review=True,
+        degraded=True,
+        recovered_by_fallback=False,
+    )
     return TopicReviewArtifact(
         topic=definition.key,
         summary=summary or f"{definition.label}专题未召回到足够证据，需人工复核。",
@@ -191,12 +289,44 @@ def _build_empty_topic_artifact(
             "topic_execution_plan": execution_plan,
             "selected_sections": [],
             "missing_evidence": missing_items,
+            "failure_reasons": failure_reasons,
+            "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
             "evidence_bundle": bundle,
             "topic_coverage": coverage,
             "degraded": True,
             "degrade_reason": error_type,
         },
     )
+
+
+def _postprocess_topic_payload(
+    definition: TopicDefinition,
+    payload: dict,
+    bundle: dict,
+) -> tuple[dict, list[RiskPoint], list[str]]:
+    risk_points: list[RiskPoint] = []
+    failure_reasons: list[str] = []
+    for item in payload.get("risk_points", []):
+        if isinstance(item, dict):
+            risk_points.append(_to_risk_point(item, definition.label))
+
+    sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    if definition.key == "scoring" and not risk_points and not bool(payload.get("need_manual_review", False)):
+        fallback = _build_scoring_fallback_risk(sections)
+        if fallback:
+            risk_points.append(fallback)
+            failure_reasons.append("risk_not_extracted")
+            summary = str(payload.get("summary", "")).strip()
+            payload["summary"] = summary or "评分办法专题完成，并根据评分分档表述补出明确风险。"
+            payload["coverage_note"] = str(payload.get("coverage_note", "")).strip() or "已覆盖评分分档与主观评分条款。"
+            payload["need_manual_review"] = False
+            payload["missing_evidence"] = ["未发现"]
+
+    if _should_tighten_manual_review(payload, risk_points):
+        payload["need_manual_review"] = False
+        payload["missing_evidence"] = ["未发现"]
+
+    return payload, risk_points, failure_reasons
 
 
 def _run_single_topic(
@@ -260,13 +390,26 @@ def _run_single_topic(
         )
     raw_output = extract_response_text(response) or ""
     payload = _parse_topic_json(raw_output)
-
-    risk_points: list[RiskPoint] = []
-    for item in payload.get("risk_points", []):
-        if isinstance(item, dict):
-            risk_points.append(_to_risk_point(item, definition.label))
+    payload, risk_points, postprocess_failure_reasons = _postprocess_topic_payload(definition, payload, bundle)
 
     missing_evidence = _to_list(payload.get("missing_evidence"), "未发现")
+    normalized_missing_evidence = _normalize_missing_evidence_items(payload.get("missing_evidence"))
+    selected_sections = [
+        {
+            "title": section.get("title", ""),
+            "start_line": section.get("start_line"),
+            "end_line": section.get("end_line"),
+            "module": section.get("module", ""),
+        }
+        for section in sections
+    ]
+    failure_reasons = _build_topic_failure_reasons(
+        selected_sections=selected_sections,
+        missing_evidence=normalized_missing_evidence,
+        need_manual_review=bool(payload.get("need_manual_review", False)),
+        degraded=False,
+        recovered_by_fallback=bool(postprocess_failure_reasons),
+    )
     return TopicReviewArtifact(
         topic=definition.key,
         summary=str(payload.get("summary", "")).strip() or f"{definition.label}专题已完成。",
@@ -279,16 +422,10 @@ def _run_single_topic(
             "topic_priority": definition.priority,
             "topic_mode": topic_mode,
             "topic_execution_plan": execution_plan,
-            "selected_sections": [
-                {
-                    "title": section.get("title", ""),
-                    "start_line": section.get("start_line"),
-                    "end_line": section.get("end_line"),
-                    "module": section.get("module", ""),
-                }
-                for section in sections
-            ],
+            "selected_sections": selected_sections,
             "missing_evidence": missing_evidence,
+            "failure_reasons": failure_reasons,
+            "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
             "evidence_bundle": bundle,
             "topic_coverage": coverage,
         },

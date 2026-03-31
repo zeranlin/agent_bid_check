@@ -173,5 +173,263 @@
         "clusters": []
       }
     }
+  },
+  {
+    "sample_id": "regression_scoring_chain_001",
+    "document_name": "评分链路综合样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-101",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-101",
+          "title": "评分档次缺少量化口径",
+          "review_type": "评分标准不明确",
+          "severity": "中风险",
+          "source_location": "第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 120,
+            "end_line": 165,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 14,
+              "qualification": 3
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 120,
+                "end_line": 165,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "评分档次缺少量化口径",
+            "review_type": "评分标准不明确",
+            "severity": "中风险",
+            "source_locations": ["第六章 评分办法"],
+            "source_excerpts": ["技术方案优得40分，良得30分，一般得20分。"],
+            "topics": ["scoring"],
+            "need_manual_review": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "regression_technical_standard_chain_001",
+    "document_name": "技术标准链路综合样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-technical-201",
+            "title": "第三章 技术标准及检测要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第三章 技术标准及检测要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-technical-201",
+          "title": "引用已废止标准",
+          "review_type": "技术标准",
+          "severity": "中风险",
+          "source_location": "第三章 技术标准及检测要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第三章 技术标准及检测要求",
+            "start_line": 66,
+            "end_line": 108,
+            "module": "technical",
+            "module_scores": {
+              "technical": 16,
+              "acceptance": 4
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第三章 技术标准及检测要求",
+                "start_line": 66,
+                "end_line": 108,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "引用已废止标准",
+            "review_type": "技术标准",
+            "severity": "中风险",
+            "source_locations": ["第三章 技术标准及检测要求"],
+            "source_excerpts": ["塑料拉伸性能的测定 第2部分 GB/T 1040.2-2006。"],
+            "topics": ["technical_standard"],
+            "need_manual_review": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "regression_contract_acceptance_chain_001",
+    "document_name": "合同付款与验收交叉样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-contract-301",
+            "title": "第五章 合同付款与验收",
+            "module": "contract",
+            "secondary_modules": ["acceptance"]
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "contract",
+            "required_titles": ["第五章 合同付款与验收"],
+            "required_modules": ["contract"]
+          },
+          {
+            "topic": "acceptance",
+            "required_titles": ["第五章 合同付款与验收"],
+            "required_modules": ["contract"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-contract-301",
+          "title": "付款条件与验收结果双重挂钩",
+          "review_type": "商务条款失衡",
+          "severity": "高风险",
+          "source_location": "第五章 合同付款与验收 付款条款",
+          "manual_review": false
+        },
+        {
+          "id": "risk-acceptance-301",
+          "title": "验收标准缺少明确指标",
+          "review_type": "验收条款不明确",
+          "severity": "需人工复核",
+          "source_location": "第五章 合同付款与验收 验收条款",
+          "manual_review": true
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第五章 合同付款与验收",
+            "start_line": 200,
+            "end_line": 255,
+            "module": "contract",
+            "module_scores": {
+              "contract": 15,
+              "acceptance": 8
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "contract": {
+            "sections": [
+              {
+                "title": "第五章 合同付款与验收",
+                "start_line": 200,
+                "end_line": 255,
+                "module": "contract"
+              }
+            ]
+          },
+          "acceptance": {
+            "sections": [
+              {
+                "title": "第五章 合同付款与验收",
+                "start_line": 200,
+                "end_line": 255,
+                "module": "contract"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "付款条件与验收结果双重挂钩",
+            "review_type": "商务条款失衡",
+            "severity": "高风险",
+            "source_locations": ["第五章 合同付款与验收 付款条款"],
+            "source_excerpts": ["项目终验合格且财政资金到位后支付剩余合同款。"],
+            "topics": ["contract"],
+            "need_manual_review": false
+          },
+          {
+            "title": "验收标准缺少明确指标",
+            "review_type": "验收条款不明确",
+            "severity": "需人工复核",
+            "source_locations": ["第五章 合同付款与验收 验收条款"],
+            "source_excerpts": ["验收标准详见有关规范，采购人有最终解释权。"],
+            "topics": ["acceptance"],
+            "need_manual_review": true
+          }
+        ]
+      }
+    }
   }
 ]
