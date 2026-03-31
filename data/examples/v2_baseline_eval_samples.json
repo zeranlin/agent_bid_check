@@ -1,0 +1,1163 @@
+[
+  {
+    "sample_id": "baseline_positive_scoring_001",
+    "document_name": "评分办法量化不足样本",
+    "source_file": "inline://baseline_positive_scoring_001",
+    "case_type": "positive",
+    "risk_family": ["scoring"],
+    "priority": "must_hit",
+    "description": "全文直审应能直接命中评分标准不明确、样品演示评分主观性过强等明显评分风险。",
+    "text": "第一章 采购公告\n本项目采用公开招标方式采购。\n\n第二章 评分办法\n采用综合评分法。技术方案优得40分，良得30分，一般得20分，差得10分。样品展示优得10分，良得6分，一般得3分，差得1分。评分时由评标委员会综合判断。\n\n第三章 技术要求\n投标人需提供样品用于现场展示。",
+    "expected_risks": [
+      {
+        "title_keywords": ["评分标准", "量化", "主观"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["评分", "评标"]
+      },
+      {
+        "title_keywords": ["样品", "演示", "主观"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["评分", "样品", "演示"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["评分标准", "量化"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [
+      {
+        "title_keywords": ["付款", "验收"]
+      }
+    ],
+    "notes": "第一层应稳定命中的评分类样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_scoring_002",
+    "document_name": "评分因素与履约能力关联不足样本",
+    "source_file": "inline://baseline_positive_scoring_002",
+    "case_type": "positive",
+    "risk_family": ["scoring"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对评分因素与采购标的关联不足的命中能力。",
+    "text": "第一章 评分办法\n供应商企业荣誉最高可得15分，获得市级奖项得5分，省级奖项得10分，国家级奖项得15分。企业宣传视频制作精美程度最高得10分。项目实施方案最高得20分。",
+    "expected_risks": [
+      {
+        "title_keywords": ["评分因素", "关联", "奖项", "荣誉"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["评分"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["奖项", "荣誉", "评分"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "应检验第一层对不相关评分因素的识别。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_contract_001",
+    "document_name": "付款验收失衡样本",
+    "source_file": "inline://baseline_positive_contract_001",
+    "case_type": "positive",
+    "risk_family": ["contract_payment", "acceptance", "procedure"],
+    "priority": "must_hit",
+    "description": "全文直审应能看出付款节点明显偏后、单方解释权过强等典型商务风险。",
+    "text": "第一章 商务条款\n项目全部完成并经采购人最终验收合格、审计结束后90个工作日内一次性支付合同总价款。采购人对合同条款拥有最终解释权。\n\n第二章 验收要求\n是否验收合格由采购人根据实际使用情况综合判定。",
+    "expected_risks": [
+      {
+        "title_keywords": ["付款", "支付", "偏后", "失衡"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["商务", "付款", "合同"]
+      },
+      {
+        "title_keywords": ["最终解释权", "单方"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["程序", "合同", "商务"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["付款", "支付"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [
+      {
+        "title_keywords": ["中小企业", "节能环保"]
+      }
+    ],
+    "notes": "第一层应较稳定抓出的全文性商务风险。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_contract_002",
+    "document_name": "违约责任明显失衡样本",
+    "source_file": "inline://baseline_positive_contract_002",
+    "case_type": "positive",
+    "risk_family": ["contract_payment"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对违约责任明显单边失衡的识别能力。",
+    "text": "第一章 合同主要条款\n供应商逾期一天按合同总价的5%支付违约金，逾期超过三天采购人有权解除合同并不承担任何责任。采购人延期付款、延期验收或延期提供场地的，不承担任何违约责任。",
+    "expected_risks": [
+      {
+        "title_keywords": ["违约责任", "失衡", "单方"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["合同", "商务", "违约"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["违约", "失衡"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "应能抓出明显单边责任失衡问题。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_procedure_001",
+    "document_name": "程序条款单方裁量样本",
+    "source_file": "inline://baseline_positive_procedure_001",
+    "case_type": "positive",
+    "risk_family": ["procedure"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对最终解释权、废标裁量等程序性明显风险的识别能力。",
+    "text": "第一章 投标须知\n采购人有权根据项目需要随时调整采购要求，投标人不得提出异议。评审过程中如采购人认为有必要，可直接决定废标并重新组织采购。所有条款最终解释权归采购人所有。",
+    "expected_risks": [
+      {
+        "title_keywords": ["最终解释权", "采购人"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["程序", "投标", "解释权"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["最终解释权"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "这是第一层应稳定识别的程序型风险。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_technical_bias_001",
+    "document_name": "品牌型号倾向样本",
+    "source_file": "inline://baseline_positive_technical_bias_001",
+    "case_type": "positive",
+    "risk_family": ["technical_bias"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对明显品牌、型号和原厂要求的识别能力。",
+    "text": "第一章 技术要求\n投标产品须为某国际品牌原厂生产，指定型号ZX-500系列，须提供原厂授权书和原厂售后服务承诺函，不接受兼容替代产品。",
+    "expected_risks": [
+      {
+        "title_keywords": ["品牌", "型号", "原厂", "授权"],
+        "severity_allowed": ["高风险", "中风险"],
+        "review_type_keywords": ["技术", "品牌", "型号"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["品牌", "原厂"],
+        "severity_allowed": ["高风险", "中风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "应稳定命中的明显技术倾向样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_high_risk_qualification_001",
+    "document_name": "资格门槛过严高风险样本",
+    "source_file": "inline://baseline_high_risk_qualification_001",
+    "case_type": "high_risk",
+    "risk_family": ["qualification", "performance_staff"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对明显资格限制竞争问题的高风险漏检率。",
+    "text": "第一章 投标人资格要求\n投标人须具有本市范围内近三年承接过不少于20个同类项目且单项合同金额不低于1000万元的业绩；须获得国家级奖项不少于3项；项目经理须具有高级职称并在本市连续缴纳社保满36个月。\n\n第二章 说明\n以上条件均为投标资格条件，不满足任一项即否决投标。",
+    "expected_risks": [
+      {
+        "title_keywords": ["资格", "门槛", "业绩", "奖项", "人员"],
+        "severity_allowed": ["高风险"],
+        "review_type_keywords": ["资格", "业绩", "人员"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["资格", "门槛", "限制竞争"],
+        "severity_allowed": ["高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "主要用于衡量第一层高风险漏检情况。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_high_risk_scoring_001",
+    "document_name": "评分项重复设置高风险样本",
+    "source_file": "inline://baseline_high_risk_scoring_001",
+    "case_type": "high_risk",
+    "risk_family": ["scoring", "qualification"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对资格条件重复作为高分评分项的高风险识别能力。",
+    "text": "第一章 资格条件\n投标人须具备特定资质证书和近三年同类业绩。\n\n第二章 评分办法\n资质证书最高得20分，同类业绩最高得25分，项目团队职称最高得20分，其余技术方案得35分。",
+    "expected_risks": [
+      {
+        "title_keywords": ["资格", "重复", "评分"],
+        "severity_allowed": ["高风险", "中风险"],
+        "review_type_keywords": ["评分", "资格"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["资格", "重复", "评分"],
+        "severity_allowed": ["高风险", "中风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "高风险样本，用于约束第一层不能漏掉明显重复评分。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_high_risk_contract_001",
+    "document_name": "付款及验收双重失衡高风险样本",
+    "source_file": "inline://baseline_high_risk_contract_001",
+    "case_type": "high_risk",
+    "risk_family": ["contract_payment", "acceptance"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对明显付款压款和验收单方裁量叠加场景的高风险识别能力。",
+    "text": "第一章 商务条款\n验收合格且质保期满后180日内支付全部合同款。验收是否通过由采购人根据使用效果单方决定，供应商不得提出异议。",
+    "expected_risks": [
+      {
+        "title_keywords": ["付款", "质保期", "验收", "单方"],
+        "severity_allowed": ["高风险"],
+        "review_type_keywords": ["付款", "验收", "商务"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["付款", "验收"],
+        "severity_allowed": ["高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "第一层应尽量抓出的高风险商务条款。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_high_risk_technical_bias_001",
+    "document_name": "唯一性排他技术条件高风险样本",
+    "source_file": "inline://baseline_high_risk_technical_bias_001",
+    "case_type": "high_risk",
+    "risk_family": ["technical_bias"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对唯一性、排他性技术条件的高风险识别能力。",
+    "text": "第一章 技术参数\n设备必须采用专有接口协议，仅限与某品牌自有系统无缝兼容，须使用指定配件和原厂耗材，否则视为无效投标。",
+    "expected_risks": [
+      {
+        "title_keywords": ["唯一", "专有", "兼容", "指定配件"],
+        "severity_allowed": ["高风险", "中风险"],
+        "review_type_keywords": ["技术", "兼容", "品牌"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["兼容", "原厂", "指定"],
+        "severity_allowed": ["高风险", "中风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "用于衡量第一层高风险技术倾向问题的漏检情况。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_scoring_001",
+    "document_name": "评分办法正常负样本",
+    "source_file": "inline://baseline_negative_scoring_001",
+    "case_type": "negative",
+    "risk_family": ["scoring"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要把量化清楚、与履约能力相关的评分办法误报为风险。",
+    "text": "第一章 评分办法\n项目实施方案最高得30分，其中方案完整性得10分、技术路线可行性得10分、实施计划合理性得10分。项目团队配置最高得20分，其中项目负责人具备相关注册资格得10分，核心成员具备相应专业背景得10分。价格分50分，按照评标办法统一计算。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["评分标准", "量化不足", "主观", "重复评分"]
+      }
+    ],
+    "notes": "补齐 scoring 明确负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_scoring_002",
+    "document_name": "评分因素相关且量化明确负样本",
+    "source_file": "inline://baseline_negative_scoring_002",
+    "case_type": "negative",
+    "risk_family": ["scoring"],
+    "priority": "must_not_hit",
+    "description": "用于进一步约束第一层不要把与履约能力直接相关、分档清晰的评分标准误报为评分风险。",
+    "text": "第一章 评分办法\n项目团队配置最高得25分，其中项目负责人具有相关注册资格得10分，核心实施人员专业匹配度得10分，驻场服务安排合理性得5分。实施方案最高得25分，按照需求理解、实施路径、进度安排分别评分。价格分50分，按统一公式计算。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["评分标准", "量化不足", "主观", "不相关"]
+      },
+      {
+        "title_keywords": ["重复评分", "资格重复"]
+      }
+    ],
+    "notes": "补强 scoring 明确负样本，避免把正常评分办法误判为风险。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "forbid_summary_only": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_policy_001",
+    "document_name": "政策条款负样本",
+    "source_file": "inline://baseline_negative_policy_001",
+    "case_type": "negative",
+    "risk_family": ["policy"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要对合规的政策落实条款误报风险。",
+    "text": "第一章 政策落实\n本项目专门面向中小企业采购，按照政府采购促进中小企业发展管理办法执行。节能、环保产品按照国家现行政策执行。\n\n第二章 其他说明\n未尽事项按照现行政府采购法律法规执行。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["政策", "中小企业", "节能", "环保"]
+      },
+      {
+        "title_keywords": ["限制竞争", "失衡"]
+      }
+    ],
+    "notes": "该样本应输出未发现或不产生实质性风险点，用于约束第一层误报。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_policy_001",
+    "document_name": "政策条款适用错误正样本",
+    "source_file": "inline://baseline_positive_policy_001",
+    "case_type": "positive",
+    "risk_family": ["policy"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对政策条款表述明显错误或政策适用混乱的识别能力。",
+    "text": "第一章 政策条款\n本项目不属于专门面向中小企业采购，但投标人为大型企业的，可按中小企业享受价格扣除。节能环保政策仅适用于进口产品。",
+    "expected_risks": [
+      {
+        "title_keywords": ["政策", "适用", "错误", "中小企业"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["政策"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["中小企业", "政策", "错误"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补齐 policy 正样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "forbid_summary_only": true
+    }
+  },
+  {
+    "sample_id": "baseline_gray_policy_001",
+    "document_name": "政策适用边界灰区样本",
+    "source_file": "inline://baseline_gray_policy_001",
+    "case_type": "gray_area",
+    "risk_family": ["policy"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对政策适用边界不清、表述不完整场景的审慎判断能力，允许落在需人工复核。",
+    "text": "第一章 政策落实\n本项目原则上预留部分采购份额给中小企业，具体执行比例详见后续合同约定。监狱企业、残疾人福利性单位优惠政策参照国家有关规定执行，但采购文件未进一步说明适用方式。",
+    "expected_risks": [
+      {
+        "title_keywords": ["政策", "适用", "不清", "需人工复核"],
+        "severity_allowed": ["需人工复核", "低风险", "中风险"],
+        "review_type_keywords": ["政策"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["高风险", "明显违法", "限制竞争"]
+      }
+    ],
+    "notes": "补强 policy 边界样本，避免该类问题只剩正负两端。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "forbid_summary_only": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_contract_001",
+    "document_name": "常规付款条款负样本",
+    "source_file": "inline://baseline_negative_contract_001",
+    "case_type": "negative",
+    "risk_family": ["contract_payment"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要对合理的付款安排误报风险。",
+    "text": "第一章 商务条款\n合同签订后支付30%预付款，项目验收合格后支付65%，剩余5%作为质保金，质保期满后无息支付。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["付款", "失衡", "偏后"]
+      }
+    ],
+    "notes": "合理付款结构负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_acceptance_001",
+    "document_name": "常规验收条款负样本",
+    "source_file": "inline://baseline_negative_acceptance_001",
+    "case_type": "negative",
+    "risk_family": ["acceptance"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要对明确、可操作的验收条款误报。",
+    "text": "第一章 验收要求\n项目完成后由采购人、使用单位和供应商共同组织验收。验收依据招标文件、投标文件、合同约定和国家现行标准进行。发现问题的，限期整改后复验。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["验收", "裁量", "模糊"]
+      }
+    ],
+    "notes": "合理验收流程负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_qualification_001",
+    "document_name": "基本资格条件负样本",
+    "source_file": "inline://baseline_negative_qualification_001",
+    "case_type": "negative",
+    "risk_family": ["qualification"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要对基础法定资格和必要资质误报。",
+    "text": "第一章 资格条件\n供应商应具备独立法人资格，具有履行合同所必需的设备和专业技术能力，参加政府采购活动前三年内在经营活动中没有重大违法记录。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["资格", "限制竞争", "过严"]
+      }
+    ],
+    "notes": "基础法定资格负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_acceptance_001",
+    "document_name": "验收标准模糊正样本",
+    "source_file": "inline://baseline_positive_acceptance_001",
+    "case_type": "positive",
+    "risk_family": ["acceptance"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对验收主体单方裁量和验收标准模糊问题的识别能力。",
+    "text": "第一章 验收要求\n项目完成后由采购人自行组织验收。验收是否通过以采购人实际使用满意度为准，招标文件、投标文件及合同不作为刚性验收依据。",
+    "expected_risks": [
+      {
+        "title_keywords": ["验收", "标准", "模糊", "单方"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["验收"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["验收", "模糊"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补齐 acceptance 主风险族正样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_technical_bias_001",
+    "document_name": "通用技术参数负样本",
+    "source_file": "inline://baseline_negative_technical_bias_001",
+    "case_type": "negative",
+    "risk_family": ["technical_bias"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要把一般性性能参数误判成品牌型号倾向。",
+    "text": "第一章 技术要求\n设备应支持远程管理、日志查询、故障报警、权限控制等功能；接口应符合现行国家通用数据交换规范；不限定品牌、型号和产地。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["品牌", "型号", "原厂", "倾向"]
+      }
+    ],
+    "notes": "补齐 technical_bias 负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_gray_technical_bias_001",
+    "document_name": "兼容性要求灰区样本",
+    "source_file": "inline://baseline_gray_technical_bias_001",
+    "case_type": "gray_area",
+    "risk_family": ["technical_bias"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对兼容性和原系统衔接要求的审慎判断能力，不应轻易强判高风险。",
+    "text": "第一章 技术要求\n新建系统需与现有平台实现无缝对接，并兼容采购人当前数据库结构和接口协议。投标人应提供兼容性说明材料。",
+    "expected_risks": [
+      {
+        "title_keywords": ["兼容", "对接", "说明"],
+        "severity_allowed": ["低风险", "需人工复核", "中风险"],
+        "review_type_keywords": ["技术", "兼容"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["唯一", "指定品牌", "原厂授权"]
+      }
+    ],
+    "notes": "technical_bias 灰区样本，主要看是否过度定性。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_technical_standard_001",
+    "document_name": "标准引用正常负样本",
+    "source_file": "inline://baseline_negative_technical_standard_001",
+    "case_type": "negative",
+    "risk_family": ["technical_standard"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要把正常、相关的标准引用误报为标准风险。",
+    "text": "第一章 技术要求\n投标产品应符合现行国家和行业标准，关键材料应按现行国家标准进行检测并提供检测报告。验收时按招标文件和合同约定执行。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["标准", "编号不一致", "废止", "错引"]
+      }
+    ],
+    "notes": "补齐 technical_standard 负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_gray_technical_standard_001",
+    "document_name": "标准有效性灰区样本",
+    "source_file": "inline://baseline_gray_technical_standard_001",
+    "case_type": "gray_area",
+    "risk_family": ["technical_standard"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对标准版本和有效性疑点的边界判断，允许倾向需人工复核。",
+    "text": "第一章 技术要求\n产品检测应符合 GB/T 0000-2010 相关要求，并参照现行行业规范执行。采购文件未写明标准全称和是否为现行有效版本。",
+    "expected_risks": [
+      {
+        "title_keywords": ["标准", "有效性", "需人工复核"],
+        "severity_allowed": ["需人工复核", "低风险", "中风险"],
+        "review_type_keywords": ["技术标准"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["高风险", "明确废止"]
+      }
+    ],
+    "notes": "technical_standard 灰区样本，观察第一层是否保守判断。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_positive_samples_demo_001",
+    "document_name": "样品演示负担过重正样本",
+    "source_file": "inline://baseline_positive_samples_demo_001",
+    "case_type": "positive",
+    "risk_family": ["samples_demo"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对样品、演示、答辩要求明显增加投标负担的识别能力。",
+    "text": "第一章 样品与演示要求\n投标人须在开标前提交完整成品样机3套，并安排不少于5名技术人员进行现场演示和答辩。样品运输、布展、拆除费用均由投标人承担，样品不予退还。",
+    "expected_risks": [
+      {
+        "title_keywords": ["样品", "演示", "答辩", "负担"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["样品", "演示", "答辩"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["样品", "不予退还"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补齐 samples_demo 正样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_samples_demo_001",
+    "document_name": "必要演示安排负样本",
+    "source_file": "inline://baseline_negative_samples_demo_001",
+    "case_type": "negative",
+    "risk_family": ["samples_demo"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要把合理、轻量的演示安排误报为风险。",
+    "text": "第一章 演示要求\n中标候选供应商需在评审后根据评标委员会通知进行一次现场功能演示，演示时长不超过15分钟，不要求提交样品，不作为额外投标门槛。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["样品", "演示", "答辩", "负担"]
+      }
+    ],
+    "notes": "补齐 samples_demo 负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_gray_samples_demo_001",
+    "document_name": "演示评分灰区样本",
+    "source_file": "inline://baseline_gray_samples_demo_001",
+    "case_type": "gray_area",
+    "risk_family": ["samples_demo", "scoring"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对演示环节是否必要、是否量化不足的边界判断。",
+    "text": "第一章 评分办法\n投标人需进行现场演示，演示效果纳入评审因素。演示评分由评标委员会综合判断，采购文件未进一步说明分档标准。",
+    "expected_risks": [
+      {
+        "title_keywords": ["演示", "评分", "标准不明确"],
+        "severity_allowed": ["需人工复核", "中风险", "低风险"],
+        "review_type_keywords": ["演示", "评分"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "samples_demo 灰区样本，考察第一层审慎性。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_negative_procedure_001",
+    "document_name": "程序安排正常负样本",
+    "source_file": "inline://baseline_negative_procedure_001",
+    "case_type": "negative",
+    "risk_family": ["procedure"],
+    "priority": "must_not_hit",
+    "description": "用于检验第一层不要把常规质疑、澄清和递交要求误判为程序风险。",
+    "text": "第一章 投标须知\n供应商应在规定时间内递交投标文件。对采购文件有疑问的，可在法定期限内提出澄清申请。采购人将在法定期限内统一答复。",
+    "expected_risks": [],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["最终解释权", "废标裁量", "程序门槛"]
+      }
+    ],
+    "notes": "补齐 procedure 负样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_gray_procedure_001",
+    "document_name": "程序裁量灰区样本",
+    "source_file": "inline://baseline_gray_procedure_001",
+    "case_type": "gray_area",
+    "risk_family": ["procedure"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对程序弹性表述的边界判断，不宜轻易一律高风险。",
+    "text": "第一章 投标须知\n评标过程中如有需要，采购人可视情况要求投标人补充说明。采购人保留根据实际情况调整评审安排的权利。",
+    "expected_risks": [
+      {
+        "title_keywords": ["程序", "裁量", "说明"],
+        "severity_allowed": ["需人工复核", "低风险", "中风险"],
+        "review_type_keywords": ["程序"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [
+      {
+        "title_keywords": ["最终解释权归采购人"]
+      }
+    ],
+    "notes": "procedure 灰区样本。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_hard_to_find_technical_standard_001",
+    "document_name": "技术标准细节易漏样本",
+    "source_file": "inline://baseline_hard_to_find_technical_standard_001",
+    "case_type": "hard_miss",
+    "risk_family": ["technical_standard"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对标准名称编号不一致、标准有效性等细节型问题的天然能力边界。",
+    "text": "第一章 技术要求\n投标产品应符合人工材料体育场地使用要求及检验方法（GB/T20033-2006）以及塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件 GB/T 1040.2-2006。另要求满足人造草GB36246-2018标准。\n\n第二章 检测要求\n投标人应提供检测报告。",
+    "expected_risks": [
+      {
+        "title_keywords": ["标准", "名称", "编号", "一致"],
+        "severity_allowed": ["中风险", "需人工复核"],
+        "review_type_keywords": ["技术标准", "技术要求"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "该样本用于观察第一层在技术标准细节问题上的天然短板。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_conflict_payment_acceptance_001",
+    "document_name": "付款与验收前后矛盾样本",
+    "source_file": "inline://baseline_conflict_payment_acceptance_001",
+    "case_type": "hard_miss",
+    "risk_family": ["contract_payment", "acceptance"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对付款节点和验收安排前后矛盾的识别能力。",
+    "text": "第一章 商务条款\n项目验收合格后15个工作日内支付合同价款。\n\n第二章 验收要求\n最终验收和结算审计全部完成后90个工作日内方可办理付款手续。",
+    "expected_risks": [
+      {
+        "title_keywords": ["付款", "验收", "矛盾", "前后不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["付款", "验收", "商务"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["付款", "验收", "不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补齐前后矛盾型样本之一。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "require_location_or_excerpt": true
+    }
+  },
+  {
+    "sample_id": "baseline_conflict_technical_acceptance_001",
+    "document_name": "技术标准与验收标准矛盾样本",
+    "source_file": "inline://baseline_conflict_technical_acceptance_001",
+    "case_type": "hard_miss",
+    "risk_family": ["technical_standard", "acceptance"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对技术要求与验收要求前后矛盾问题的识别能力。",
+    "text": "第一章 技术要求\n投标产品应满足GB36246-2018标准。\n\n第二章 验收要求\n验收时按GB/T20033-2006作为唯一验收标准，不再适用其他标准。",
+    "expected_risks": [
+      {
+        "title_keywords": ["标准", "验收", "矛盾", "不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["技术标准", "验收"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["标准", "矛盾", "不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补齐前后矛盾型样本之二。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "require_location_or_excerpt": true
+    }
+  },
+  {
+    "sample_id": "baseline_conflict_scoring_qualification_001",
+    "document_name": "资格与评分口径前后矛盾样本",
+    "source_file": "inline://baseline_conflict_scoring_qualification_001",
+    "case_type": "hard_miss",
+    "risk_family": ["qualification", "scoring"],
+    "priority": "must_hit",
+    "description": "用于检验第一层对资格条款和评分条款前后口径不一致问题的识别能力。",
+    "text": "第一章 资格条件\n投标人提供近三年2项同类业绩即可满足资格审查。\n\n第二章 评分办法\n同类业绩不足5项的不得分，且视为不满足项目实施能力要求。评标委员会可据此否决投标。",
+    "expected_risks": [
+      {
+        "title_keywords": ["资格", "评分", "矛盾", "不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["资格", "评分"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["资格", "评分", "不一致"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "补强前后矛盾型样本，覆盖资格与评分之间的冲突。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true,
+      "prefer_fixed_fields": true,
+      "require_location_or_excerpt": true,
+      "forbid_summary_only": true
+    }
+  },
+  {
+    "sample_id": "baseline_multi_risk_001",
+    "document_name": "资格与评分复合风险样本",
+    "source_file": "inline://baseline_multi_risk_001",
+    "case_type": "multi_risk",
+    "risk_family": ["qualification", "scoring", "performance_staff"],
+    "priority": "must_hit",
+    "description": "用于检验第一层在同一文件中同时识别资格门槛与重复评分问题的能力。",
+    "text": "第一章 投标人资格要求\n投标人须具备近三年不少于8项同类业绩，项目负责人须具备高级职称并连续缴纳社保24个月。\n\n第二章 评分办法\n同类业绩最高得20分，项目负责人职称最高得15分，企业荣誉最高得10分。",
+    "expected_risks": [
+      {
+        "title_keywords": ["资格", "业绩", "人员", "门槛"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["资格", "业绩", "人员"]
+      },
+      {
+        "title_keywords": ["重复", "评分", "业绩", "人员"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["评分"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["资格", "门槛"],
+        "severity_allowed": ["中风险", "高风险"]
+      },
+      {
+        "title_keywords": ["评分", "重复"],
+        "severity_allowed": ["中风险", "高风险"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "多风险综合样本之一。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_multi_risk_002",
+    "document_name": "技术、验收、付款复合风险样本",
+    "source_file": "inline://baseline_multi_risk_002",
+    "case_type": "multi_risk",
+    "risk_family": ["technical_standard", "acceptance", "contract_payment"],
+    "priority": "must_hit",
+    "description": "用于检验第一层在同一文件中同时感知技术标准、验收裁量和付款偏后的能力。",
+    "text": "第一章 技术要求\n材料应满足 GB0000-2010 相关标准，文件未注明标准全称。\n\n第二章 验收要求\n是否验收通过由采购人根据使用效果决定。\n\n第三章 商务条款\n最终验收通过并审计结束后90个工作日内支付全部合同价款。",
+    "expected_risks": [
+      {
+        "title_keywords": ["标准", "全称", "编号"],
+        "severity_allowed": ["需人工复核", "中风险"],
+        "review_type_keywords": ["技术标准"]
+      },
+      {
+        "title_keywords": ["验收", "单方"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["验收"]
+      },
+      {
+        "title_keywords": ["付款", "偏后"],
+        "severity_allowed": ["中风险", "高风险"],
+        "review_type_keywords": ["付款", "商务"]
+      }
+    ],
+    "must_hit": [
+      {
+        "title_keywords": ["验收", "付款"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"]
+      }
+    ],
+    "must_not_hit": [],
+    "notes": "多风险综合样本之二。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_hard_to_find_mixed_clause_001",
+    "document_name": "混合章节易漏样本",
+    "source_file": "inline://baseline_hard_to_find_mixed_clause_001",
+    "case_type": "hard_miss",
+    "risk_family": ["contract_payment", "acceptance"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对分散在混合章节中的付款与验收联动问题的感知能力。",
+    "text": "第一章 商务及验收要求\n供应商完成全部安装调试后提交验收申请。采购人根据试运行情况确定是否组织最终验收。最终验收通过并完成结算审计后60个工作日内支付合同尾款。\n\n第二章 质保要求\n质保期为两年。",
+    "expected_risks": [
+      {
+        "title_keywords": ["付款", "验收", "联动", "偏后"],
+        "severity_allowed": ["中风险", "需人工复核"],
+        "review_type_keywords": ["付款", "验收", "商务"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "第一层不强制命中，用于观察跨条款联动问题的识别能力。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_format_noise_table_001",
+    "document_name": "表格干扰格式样本",
+    "source_file": "inline://baseline_format_noise_table_001",
+    "case_type": "format_noise",
+    "risk_family": ["qualification", "scoring"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层在表格型章节中的风险感知能力。",
+    "text": "第一章 资格与评分表\n序号\t项目\t内容\n1\t资格\t近三年同类业绩不少于6项\n2\t资格\t项目经理需高级职称并驻场\n3\t评分\t业绩最高得20分\n4\t评分\t人员职称最高得15分",
+    "expected_risks": [
+      {
+        "title_keywords": ["业绩", "人员", "门槛"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["资格", "评分"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "格式干扰样本之一，重点覆盖表格结构。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_hard_to_find_table_like_001",
+    "document_name": "表格型限制条件易漏样本",
+    "source_file": "inline://baseline_hard_to_find_table_like_001",
+    "case_type": "hard_miss",
+    "risk_family": ["qualification", "performance_staff"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对表格型业绩、人员门槛问题的感知能力。",
+    "text": "第一章 资格及评分要求\n序号\t项目\t要求\n1\t业绩\t近三年同类项目不少于10项\n2\t奖项\t国家级奖项不少于2项\n3\t人员\t项目负责人须具备高级职称并提供连续24个月社保证明\n4\t评分\t满足上述条件可分别计分。",
+    "expected_risks": [
+      {
+        "title_keywords": ["业绩", "奖项", "人员", "门槛"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["资格", "业绩", "人员"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "该样本更适合检验第一层对表格型限制条件的感知边界。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_format_noise_list_001",
+    "document_name": "列表混合章节干扰样本",
+    "source_file": "inline://baseline_format_noise_list_001",
+    "case_type": "format_noise",
+    "risk_family": ["procedure", "samples_demo", "scoring"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层在列表型、混合章节中对程序和演示评分风险的感知能力。",
+    "text": "第一章 评审与程序说明\n（一）投标人须按通知参加现场演示；\n（二）演示表现纳入评分，由评委综合打分；\n（三）如采购人认为有必要，可调整演示顺序和评审安排；\n（四）供应商不得提出异议。",
+    "expected_risks": [
+      {
+        "title_keywords": ["演示", "评分", "标准不明确"],
+        "severity_allowed": ["需人工复核", "中风险"],
+        "review_type_keywords": ["演示", "评分"]
+      },
+      {
+        "title_keywords": ["程序", "裁量"],
+        "severity_allowed": ["需人工复核", "中风险"],
+        "review_type_keywords": ["程序"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "格式干扰样本之二，重点覆盖列表+混合章节。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  },
+  {
+    "sample_id": "baseline_hard_to_find_samples_demo_001",
+    "document_name": "样品答辩综合要求易漏样本",
+    "source_file": "inline://baseline_hard_to_find_samples_demo_001",
+    "case_type": "hard_miss",
+    "risk_family": ["samples_demo", "scoring"],
+    "priority": "observe_boundary",
+    "description": "用于观察第一层对样品、演示、答辩与评分混合问题的识别能力。",
+    "text": "第一章 评审安排\n投标人须提交完整样品并进行现场演示和答辩。评审委员会根据样品做工、演示效果、陈述表现和综合印象打分，但未规定具体分档标准。样品不予退还。",
+    "expected_risks": [
+      {
+        "title_keywords": ["样品", "演示", "答辩", "标准不明确"],
+        "severity_allowed": ["中风险", "高风险", "需人工复核"],
+        "review_type_keywords": ["样品", "演示", "评分"]
+      }
+    ],
+    "must_hit": [],
+    "must_not_hit": [],
+    "notes": "用于观察第一层在样品演示场景中的边界。",
+    "report_quality": {
+      "require_structured_risk_points": true,
+      "require_title": true,
+      "require_severity": true,
+      "require_review_type": true
+    }
+  }
+]
