@@ -449,7 +449,11 @@ def write_outputs(output_dir: Path, summary: dict, outputs: dict[str, list[dict]
     (output_dir / "regression_report.md").write_text(build_markdown_report(summary, outputs), encoding="utf-8")
 
 
-def print_report(summary: dict) -> None:
+def print_report(summary: dict, outputs: dict[str, list[dict]], *, as_markdown: bool = True) -> None:
+    if as_markdown:
+        print(build_markdown_report(summary, outputs))
+        return
+
     print("V2 埋点回归评估结果")
     if summary.get("sample_path"):
         print(f"样本文件: {summary['sample_path']}")
@@ -498,6 +502,7 @@ def main() -> int:
     parser.add_argument("--result-dir", type=Path, help="单个真实案例的 V2 结果目录")
     parser.add_argument("--output-dir", type=Path, help="回归差异输出目录")
     parser.add_argument("--json", action="store_true", help="仅输出 JSON 汇总结果")
+    parser.add_argument("--text", action="store_true", help="输出精简文本摘要，默认输出 Markdown 报告")
     args = parser.parse_args()
 
     if args.gold and args.result_dir:
@@ -516,7 +521,7 @@ def main() -> int:
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:
-        print_report(summary)
+        print_report(summary, outputs, as_markdown=not args.text)
     return 0
 
 

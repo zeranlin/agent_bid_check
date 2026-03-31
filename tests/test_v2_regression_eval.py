@@ -12,6 +12,7 @@ from scripts.eval_v2_regression import (
     evaluate_sample,
     load_samples,
     normalize_failure_code,
+    print_report,
 )
 
 
@@ -153,3 +154,23 @@ def test_regression_markdown_report_contains_layered_failures_and_suggestions(tm
     assert "#### 结构差异" in report
     assert "#### 风险差异" in report
     assert "优先补章节切分与标题识别规则。" in report
+
+
+def test_print_report_defaults_to_markdown(capsys) -> None:
+    result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
+    outputs = collect_outputs([result])
+    summary = build_summary([result], Path("data/examples/v2_regression_eval_samples.json"))
+    print_report(summary, outputs)
+    captured = capsys.readouterr()
+    assert "# V2 埋点回归失败报告" in captured.out
+    assert "## 样本明细" in captured.out
+
+
+def test_print_report_supports_text_mode(capsys) -> None:
+    result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[0])
+    outputs = collect_outputs([result])
+    summary = build_summary([result], Path("data/examples/v2_regression_eval_samples.json"))
+    print_report(summary, outputs, as_markdown=False)
+    captured = capsys.readouterr()
+    assert "V2 埋点回归评估结果" in captured.out
+    assert "# V2 埋点回归失败报告" not in captured.out
