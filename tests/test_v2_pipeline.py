@@ -274,6 +274,98 @@ def test_run_topic_reviews_degrades_when_topic_call_fails(monkeypatch: pytest.Mo
     assert topics[0].metadata["degraded"] is True
     assert topics[0].metadata["degrade_reason"] == "topic_call_failed"
     assert "专题调用失败" in topics[0].summary
+    assert topics[0].metadata["selected_sections"]
+    assert "degraded_to_manual_review" in topics[0].metadata["failure_reasons"]
+    assert "risk_degraded_to_manual_review" in topics[0].metadata["failure_reasons"]
+
+
+def test_run_topic_reviews_degrades_when_response_extract_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 评分办法
+综合评分法，技术评分 40 分，商务评分 20 分。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["scoring"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {"choices": [{"message": {"content": "{\"summary\":\"ok\"}"}}]}
+
+    def fake_extract_response_text(_: object) -> str:
+        raise ValueError("bad response payload")
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+    monkeypatch.setattr("app.pipelines.v2.topic_review.extract_response_text", fake_extract_response_text)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["scoring"],
+    )
+    assert len(topics) == 1
+    assert topics[0].need_manual_review is True
+    assert topics[0].metadata["degraded"] is True
+    assert topics[0].metadata["degrade_reason"] == "topic_response_parse_failed"
+    assert "专题响应解析失败" in topics[0].summary
+
+
+def test_run_topic_reviews_degrades_when_postprocess_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 技术标准
+本项目采购内容为操场跑道维护材料，但要求按塑料薄膜和薄片透水率试验方法出具检测报告。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["technical_standard"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"技术标准专题完成。\", "
+                            "\"need_manual_review\": false, "
+                            "\"coverage_note\": \"已覆盖技术标准条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    def fake_postprocess(*args, **kwargs):
+        raise RuntimeError("postprocess exploded")
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+    monkeypatch.setattr("app.pipelines.v2.topic_review._postprocess_topic_payload", fake_postprocess)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["technical_standard"],
+    )
+    assert len(topics) == 1
+    assert topics[0].need_manual_review is True
+    assert topics[0].metadata["degraded"] is True
+    assert topics[0].metadata["degrade_reason"] == "topic_postprocess_failed"
+    assert "专题后处理失败" in topics[0].summary
+    assert topics[0].raw_output
 
 
 def test_run_topic_reviews_scoring_postprocess_adds_quantization_risk(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -465,12 +465,22 @@ def _build_empty_topic_artifact(
 ) -> TopicReviewArtifact:
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
     missing_items = list(missing_evidence or (coverage.get("missing_hints", []) if isinstance(coverage, dict) else []))
+    selected_sections = [
+        {
+            "title": section.get("title", ""),
+            "start_line": section.get("start_line"),
+            "end_line": section.get("end_line"),
+            "module": section.get("module", ""),
+        }
+        for section in sections
+        if isinstance(section, dict)
+    ]
     failure_reasons = _build_topic_failure_reasons(
-        selected_sections=[],
+        selected_sections=selected_sections,
         missing_evidence=[item for item in missing_items if item and item != "未发现"],
         need_manual_review=True,
         degraded=True,
-        recovered_by_fallback=False,
+        recovered_reason_codes=[],
     )
     return TopicReviewArtifact(
         topic=definition.key,
@@ -483,7 +493,7 @@ def _build_empty_topic_artifact(
             "topic_priority": definition.priority,
             "topic_mode": topic_mode,
             "topic_execution_plan": execution_plan,
-            "selected_sections": [],
+            "selected_sections": selected_sections,
             "missing_evidence": missing_items,
             "failure_reasons": failure_reasons,
             "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
@@ -611,9 +621,40 @@ def _run_single_topic(
             raw_output="",
             error_type="topic_call_failed",
         )
-    raw_output = extract_response_text(response) or ""
-    payload = _parse_topic_json(raw_output)
-    payload, risk_points, postprocess_failure_reasons = _postprocess_topic_payload(definition, payload, bundle)
+    try:
+        raw_output = extract_response_text(response) or ""
+    except Exception as exc:
+        if not execution_plan.get("allow_degrade_on_error", True):
+            raise
+        return _build_empty_topic_artifact(
+            definition,
+            bundle,
+            coverage,
+            topic_mode,
+            execution_plan,
+            summary=f"{definition.label}专题响应解析失败，已自动降级为人工复核。",
+            missing_evidence=[f"专题响应解析失败：{exc}"],
+            raw_output="",
+            error_type="topic_response_parse_failed",
+        )
+
+    try:
+        payload = _parse_topic_json(raw_output)
+        payload, risk_points, postprocess_failure_reasons = _postprocess_topic_payload(definition, payload, bundle)
+    except Exception as exc:
+        if not execution_plan.get("allow_degrade_on_error", True):
+            raise
+        return _build_empty_topic_artifact(
+            definition,
+            bundle,
+            coverage,
+            topic_mode,
+            execution_plan,
+            summary=f"{definition.label}专题后处理失败，已自动降级为人工复核。",
+            missing_evidence=[f"专题后处理失败：{exc}"],
+            raw_output=raw_output,
+            error_type="topic_postprocess_failed",
+        )
 
     missing_evidence = _to_list(payload.get("missing_evidence"), "未发现")
     normalized_missing_evidence = _normalize_missing_evidence_items(payload.get("missing_evidence"))
