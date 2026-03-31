@@ -1139,6 +1139,154 @@
     }
   },
   {
+    "sample_id": "topic_performance_staff_positive_002",
+    "name": "topic_performance_staff_positive_002",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "performance_staff"
+    ],
+    "case_type": "positive",
+    "topic": "performance_staff",
+    "description": "业绩数量与人员证书要求过高的正样本。",
+    "text": "第一章 业绩与人员要求\n投标人近三年须承担不少于5项同类项目业绩，项目负责人须具备一级注册建造师证书并连续缴纳社保24个月。",
+    "expected_high_medium_titles": [
+      "业绩数量与人员证书要求过高"
+    ],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "performance_staff": {
+        "summary": "业绩与人员专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖业绩数量与人员证书要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": [
+          {
+            "title": "业绩数量与人员证书要求过高",
+            "severity": "中风险",
+            "review_type": "业绩与人员要求",
+            "source_location": "第一章 业绩与人员要求",
+            "source_excerpt": "投标人近三年须承担不少于5项同类项目业绩，项目负责人须具备一级注册建造师证书并连续缴纳社保24个月。",
+            "risk_judgment": [
+              "业绩数量和人员证书条件较高，需核查是否与采购标的和履约直接相关。"
+            ],
+            "legal_basis": [
+              "需人工复核"
+            ],
+            "rectification": [
+              "结合项目实际下调业绩数量和人员证书门槛。"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_performance_staff_negative_002",
+    "name": "topic_performance_staff_negative_002",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "performance_staff"
+    ],
+    "case_type": "negative",
+    "topic": "performance_staff",
+    "description": "一般项目团队配置说明的负样本。",
+    "text": "第一章 项目团队配置\n成交后按合同约定配备项目经理、技术负责人和现场维护人员，并建立日常联络机制。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "performance_staff": {
+        "summary": "业绩与人员专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖一般团队配置说明。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_performance_staff_manual_002",
+    "name": "topic_performance_staff_manual_002",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "performance_staff"
+    ],
+    "case_type": "manual_review",
+    "topic": "performance_staff",
+    "description": "业绩与人员要求可能偏高，但需结合采购规模进一步复核的样本。",
+    "text": "第一章 人员及业绩要求\n项目负责人须具备相关注册资格，团队成员需提供近12个月社保证明，类似业绩要求详见缺失附表。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "performance_staff": {
+        "summary": "业绩与人员专题需人工复核。",
+        "need_manual_review": true,
+        "coverage_note": "已覆盖人员和业绩要求。",
+        "missing_evidence": [
+          "缺少完整业绩附表和项目规模说明。"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_performance_staff_scoring_overlap_002",
+    "name": "topic_performance_staff_scoring_overlap_002",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "performance_staff",
+      "scoring"
+    ],
+    "case_type": "positive",
+    "topic": "performance_staff",
+    "description": "业绩条件与评分叠加的主专题样本。",
+    "text": "第一章 业绩与评分要求\n类似项目业绩不少于3项方可参与投标，同时同类业绩每增加1项在评分中加2分，最高加10分。",
+    "expected_high_medium_titles": [
+      "业绩条件与评分重复叠加"
+    ],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "performance_staff": {
+        "summary": "业绩与人员专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖业绩门槛与评分叠加条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": [
+          {
+            "title": "业绩条件与评分重复叠加",
+            "severity": "中风险",
+            "review_type": "业绩与人员要求",
+            "source_location": "第一章 业绩与评分要求",
+            "source_excerpt": "类似项目业绩不少于3项方可参与投标，同时同类业绩每增加1项在评分中加2分。",
+            "risk_judgment": [
+              "同类业绩既被设置为参与门槛，又在评分中重复加分，存在重复叠加风险。"
+            ],
+            "legal_basis": [
+              "需人工复核"
+            ],
+            "rectification": [
+              "核对业绩条款边界，避免门槛和评分重复叠加。"
+            ]
+          }
+        ]
+      },
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖业绩加分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
     "sample_id": "topic_contract_payment_fiscal_002",
     "name": "topic_contract_payment_fiscal_002",
     "topic_mode": "enhanced",

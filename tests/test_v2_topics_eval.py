@@ -8,7 +8,7 @@ from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluat
 def test_load_samples_and_evaluate_topic_fixture() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 39
+    assert len(samples) >= 43
 
     result = evaluate_sample(samples[0])
     assert result["topic_count"] >= 1
@@ -68,6 +68,29 @@ def test_technical_standard_detail_samples_cover_explicit_standard_risk_variants
         assert result["topic_miss_count"] == 0
         assert expected_title in result["target_topic_detail"]["risk_titles"]
         assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
+
+
+def test_performance_staff_samples_enter_by_topic_summary() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = load_samples(sample_path)
+    selected = [
+        sample
+        for sample in samples
+        if sample["sample_id"] in {
+            "topic_performance_staff_positive_002",
+            "topic_performance_staff_negative_002",
+            "topic_performance_staff_manual_002",
+            "topic_performance_staff_scoring_overlap_002",
+        }
+    ]
+    results = [evaluate_sample(sample) for sample in selected]
+    summary = build_summary(results, sample_path)
+
+    assert "performance_staff" in summary["by_topic"]
+    assert summary["by_topic"]["performance_staff"]["sample_count"] == 4
+    assert summary["by_topic"]["performance_staff"]["topic_hit_count"] == 2
+    assert summary["by_topic"]["performance_staff"]["false_positive_count"] == 0
+    assert summary["by_topic"]["performance_staff"]["manual_review_hit"] == 1
 
 
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
