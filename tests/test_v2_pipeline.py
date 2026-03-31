@@ -325,6 +325,103 @@ def test_run_topic_reviews_scoring_postprocess_adds_quantization_risk(monkeypatc
     assert "risk_not_extracted" in topics[0].metadata["failure_reasons"]
 
 
+def test_run_topic_reviews_qualification_postprocess_recovers_local_service_risk(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    text = """
+第一章 资格条件
+投标人须具备独立法人资格，并在本市设有常设服务机构，否则资格审查不通过。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["qualification"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"资格条件专题完成。\", "
+                            "\"need_manual_review\": false, "
+                            "\"coverage_note\": \"已覆盖资格条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["qualification"],
+    )
+    assert len(topics) == 1
+    assert "设立常设服务机构的资格限制" in [risk.title for risk in topics[0].risk_points]
+    assert "risk_not_extracted" in topics[0].metadata["failure_reasons"]
+
+
+def test_run_topic_reviews_contract_postprocess_recovers_payment_risks(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 商务条款
+项目终验合格且财政资金到位后90个工作日内支付剩余合同价款。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["contract_payment"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"付款履约专题完成。\", "
+                            "\"need_manual_review\": false, "
+                            "\"coverage_note\": \"已覆盖付款条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="slim",
+        topic_keys=["contract_payment"],
+    )
+    assert len(topics) == 1
+    titles = [risk.title for risk in topics[0].risk_points]
+    assert "付款节点与财政资金到位挂钩" in titles
+    assert "付款安排以验收裁量为前置条件" in titles
+    assert "付款节点明显偏后" in titles
+    assert "risk_not_extracted" in topics[0].metadata["failure_reasons"]
+
+
 def test_run_topic_reviews_records_topic_failure_reasons(monkeypatch: pytest.MonkeyPatch) -> None:
     text = """
 第一章 评分办法

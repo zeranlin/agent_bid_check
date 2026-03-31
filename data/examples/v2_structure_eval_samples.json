@@ -880,5 +880,291 @@
       "第二章 评审说明": ["policy", "acceptance"]
     },
     "notes": "补强 performance_staff 强监督样本。"
+  },
+  {
+    "sample_id": "structure_scoring_table_variant_001",
+    "document_name": "评分附表变体样本",
+    "source_file": "inline://structure_scoring_table_variant_001",
+    "case_type": "strong_noise",
+    "focus_modules": ["scoring", "procedure"],
+    "text": "附表1\n综合评分表\n价格分最高得30分，技术分最高得40分，商务分最高得20分，按评分细则计算总分。\n\n第七章 投标须知\n投标文件递交时间、开标安排和澄清程序详见本章。",
+    "expected_sections": [
+      {
+        "title": "附表1 综合评分表",
+        "module": "scoring",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "第七章 投标须知",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "scoring",
+        "required_modules": ["scoring"],
+        "required_section_titles": ["附表1 综合评分表"],
+        "min_sections": 1,
+        "expected_primary_titles": ["附表1 综合评分表"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附表1 综合评分表": ["policy", "acceptance"],
+      "第七章 投标须知": ["qualification", "technical"]
+    },
+    "notes": "补强附表类评分标题的结构识别与召回。"
+  },
+  {
+    "sample_id": "structure_scoring_embedded_technical_001",
+    "document_name": "技术章节内嵌评分说明样本",
+    "source_file": "inline://structure_scoring_embedded_technical_001",
+    "case_type": "mixed",
+    "focus_modules": ["technical", "scoring"],
+    "text": "第四章 技术参数及评分说明\n地面材料应符合 GB 36246-2018 标准，并提供检测报告。技术响应按优、良、中分别计 15 分、10 分、5 分，偏离项按评分细则扣分。\n\n第五章 验收要求\n项目完工后按招标文件、合同和检测结果组织验收。",
+    "expected_sections": [
+      {
+        "title": "第四章 技术参数及评分说明",
+        "module": "technical",
+        "secondary_modules": ["scoring"],
+        "key": true
+      },
+      {
+        "title": "第五章 验收要求",
+        "module": "acceptance",
+        "secondary_modules": ["technical"],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "technical_standard",
+        "required_modules": ["technical"],
+        "required_section_titles": ["第四章 技术参数及评分说明", "第五章 验收要求"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第四章 技术参数及评分说明"],
+        "expected_shared_topics": ["scoring"],
+        "expected_shared_titles": ["第四章 技术参数及评分说明"]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": ["technical", "scoring"],
+        "required_section_titles": ["第四章 技术参数及评分说明"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第四章 技术参数及评分说明"],
+        "expected_shared_topics": ["technical_standard"],
+        "expected_shared_titles": ["第四章 技术参数及评分说明"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第四章 技术参数及评分说明": ["policy", "qualification"],
+      "第五章 验收要求": ["policy", "qualification"]
+    },
+    "notes": "补强评分说明嵌入技术章节时的主次模块与共享召回。"
+  },
+  {
+    "sample_id": "structure_scoring_embedded_contract_001",
+    "document_name": "商务章节内嵌评分说明样本",
+    "source_file": "inline://structure_scoring_embedded_contract_001",
+    "case_type": "mixed",
+    "focus_modules": ["contract", "scoring"],
+    "text": "第五章 商务要求及评审细则\n合同签订后支付30%预付款，最终验收合格后支付尾款。商务响应按优、良、中分别计 10 分、6 分、2 分，未响应关键条款的不得分。\n\n第六章 投标须知\n响应文件递交、澄清与开评标流程按本章执行。",
+    "expected_sections": [
+      {
+        "title": "第五章 商务要求及评审细则",
+        "module": "contract",
+        "secondary_modules": ["scoring"],
+        "key": true
+      },
+      {
+        "title": "第六章 投标须知",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "contract_payment",
+        "required_modules": ["contract"],
+        "required_section_titles": ["第五章 商务要求及评审细则"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第五章 商务要求及评审细则"],
+        "expected_shared_topics": ["scoring"],
+        "expected_shared_titles": ["第五章 商务要求及评审细则"]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": ["contract", "scoring"],
+        "required_section_titles": ["第五章 商务要求及评审细则"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第五章 商务要求及评审细则"],
+        "expected_shared_topics": ["contract_payment"],
+        "expected_shared_titles": ["第五章 商务要求及评审细则"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第五章 商务要求及评审细则": ["policy", "acceptance"],
+      "第六章 投标须知": ["qualification", "technical"]
+    },
+    "notes": "补强评分说明嵌入商务章节时的共享召回稳定性。"
+  },
+  {
+    "sample_id": "structure_scoring_title_variant_002",
+    "document_name": "评标办法标题变体样本",
+    "source_file": "inline://structure_scoring_title_variant_002",
+    "case_type": "standard",
+    "focus_modules": ["scoring", "procedure"],
+    "text": "第六章 评标办法\n采用综合评分法。价格分最高得30分，技术分最高得40分，商务分最高得20分，按评审细则汇总得分。\n\n第七章 投标须知\n投标文件递交截止时间、答疑和开标程序详见本章。",
+    "expected_sections": [
+      {
+        "title": "第六章 评标办法",
+        "module": "scoring",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "第七章 投标须知",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "scoring",
+        "required_modules": ["scoring"],
+        "required_section_titles": ["第六章 评标办法"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第六章 评标办法"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第六章 评标办法": ["policy", "acceptance"],
+      "第七章 投标须知": ["qualification", "technical"]
+    },
+    "notes": "继续补强评分章节标题从“评分办法”到“评标办法”的变体识别。"
+  },
+  {
+    "sample_id": "structure_scoring_appendix_variant_002",
+    "document_name": "附录评审因素表样本",
+    "source_file": "inline://structure_scoring_appendix_variant_002",
+    "case_type": "format_noise",
+    "focus_modules": ["scoring", "procedure"],
+    "text": "附录二\n评审因素表\n项目理解最高得15分，实施组织最高得20分，价格分最高得30分，综合实力最高得10分。\n\n投标文件递交说明\n响应文件应于截止时间前密封递交。",
+    "expected_sections": [
+      {
+        "title": "附录二 评审因素表",
+        "module": "scoring",
+        "secondary_modules": [],
+        "key": true
+      },
+      {
+        "title": "投标文件递交说明",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "scoring",
+        "required_modules": ["scoring"],
+        "required_section_titles": ["附录二 评审因素表"],
+        "min_sections": 1,
+        "expected_primary_titles": ["附录二 评审因素表"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "附录二 评审因素表": ["policy", "acceptance"],
+      "投标文件递交说明": ["qualification", "technical"]
+    },
+    "notes": "继续补强附录/附表类评审因素表在格式噪声下的稳定切分。"
+  },
+  {
+    "sample_id": "structure_scoring_hidden_in_business_002",
+    "document_name": "商务章节藏评分条款样本",
+    "source_file": "inline://structure_scoring_hidden_in_business_002",
+    "case_type": "mixed",
+    "focus_modules": ["contract", "scoring", "procedure"],
+    "text": "第五章 商务要求\n合同签订后支付30%预付款，最终验收合格后支付尾款。商务响应按优、良、中分别计10分、6分、2分，未响应关键条款的不得分。\n\n第六章 开标说明\n开标时间、地点及澄清程序按本章执行。",
+    "expected_sections": [
+      {
+        "title": "第五章 商务要求",
+        "module": "contract",
+        "secondary_modules": ["scoring"],
+        "key": true
+      },
+      {
+        "title": "第六章 开标说明",
+        "module": "procedure",
+        "secondary_modules": [],
+        "key": false
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "contract_payment",
+        "required_modules": ["contract"],
+        "required_section_titles": ["第五章 商务要求"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第五章 商务要求"],
+        "expected_shared_topics": ["scoring"],
+        "expected_shared_titles": ["第五章 商务要求"]
+      },
+      {
+        "topic": "scoring",
+        "required_modules": ["contract", "scoring"],
+        "required_section_titles": ["第五章 商务要求"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第五章 商务要求"],
+        "expected_shared_topics": ["contract_payment"],
+        "expected_shared_titles": ["第五章 商务要求"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第五章 商务要求": ["policy", "acceptance"],
+      "第六章 开标说明": ["qualification", "technical"]
+    },
+    "notes": "继续补强评分条款藏在商务章节时的共享召回能力。"
+  },
+  {
+    "sample_id": "structure_scoring_demo_noise_002",
+    "document_name": "样品演示评分强噪声样本",
+    "source_file": "inline://structure_scoring_demo_noise_002",
+    "case_type": "strong_noise",
+    "focus_modules": ["scoring", "technical", "procedure"],
+    "text": "第八章 演示、样品及评审说明\n投标人须按要求递交样品并进行现场演示。样品做工、功能实现和演示效果分别计分，由评委按优良中三个档次打分。样品递交时间与地点另行通知。\n续页说明\n演示顺序、签到和现场纪律按通知执行。",
+    "expected_sections": [
+      {
+        "title": "第八章 演示、样品及评审说明",
+        "module": "scoring",
+        "secondary_modules": ["technical", "procedure"],
+        "key": true
+      }
+    ],
+    "coverage_expectations": [
+      {
+        "topic": "scoring",
+        "required_modules": ["scoring", "technical"],
+        "required_section_titles": ["第八章 演示、样品及评审说明"],
+        "min_sections": 1,
+        "expected_primary_titles": ["第八章 演示、样品及评审说明"]
+      },
+      {
+        "topic": "samples_demo",
+        "required_modules": ["technical", "scoring"],
+        "required_section_titles": ["第八章 演示、样品及评审说明"],
+        "min_sections": 1,
+        "expected_shared_topics": ["scoring"],
+        "expected_shared_titles": ["第八章 演示、样品及评审说明"]
+      }
+    ],
+    "must_not_primary_modules": {
+      "第八章 演示、样品及评审说明": ["policy", "qualification"]
+    },
+    "notes": "继续补强样品、演示、评分混排且带程序噪声时的结构召回稳定性。"
   }
 ]

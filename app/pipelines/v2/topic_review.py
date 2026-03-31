@@ -16,6 +16,13 @@ from .topics import TopicDefinition, resolve_topic_definitions, resolve_topic_ex
 JSON_BLOCK_RE = re.compile(r"```(?:json)?\s*(.+?)\s*```", re.DOTALL)
 SCORING_TIER_RE = re.compile(r"(优|良|中|差|一般)\s*(得|计)?\s*\d+\s*分")
 SCORING_SUBJECTIVE_SIGNALS = ("综合打分", "综合印象打分", "由评委综合打分", "酌情计分", "结合项目实际确定")
+QUALIFICATION_LOCAL_SERVICE_RE = re.compile(r"(本市|当地|项目所在地).{0,8}(常设服务机构|服务机构|驻点|驻场)")
+QUALIFICATION_PERFORMANCE_RE = re.compile(r"(同类项目业绩不少于\d+项|近三年同类业绩不少于\d+项|项目负责人须具备.+(职称|社保|证书))")
+TECHNICAL_STANDARD_MISMATCH_RE = re.compile(r"(人造草\s*GB\s*36246-2018|人工材料体育场地使用要求及检验方法（?GB/T\s*20033-2006）?)")
+TECHNICAL_STANDARD_OBSOLETE_RE = re.compile(r"GB/T\s*1040\.2-2006")
+CONTRACT_PAYMENT_FISCAL_RE = re.compile(r"财政资金.{0,10}(到位|拨付)")
+CONTRACT_PAYMENT_ACCEPTANCE_RE = re.compile(r"((终验|最终验收|审计).{0,12}(后|通过后)|验收.{0,8}(后|通过后).{0,8}(60|90|120)个工作日).{0,12}(支付|付款)")
+CONTRACT_PAYMENT_DELAY_RE = re.compile(r"(60|90|120)个工作日内(支付|付款)")
 TOPIC_FAILURE_REASON_LABELS = {
     "missing_evidence": "证据不足",
     "topic_not_triggered": "专题未触发",
@@ -83,7 +90,7 @@ def _to_risk_point(item: dict, topic_label: str) -> RiskPoint:
     return risk
 
 
-def _build_scoring_fallback_risk(sections: list[dict]) -> RiskPoint | None:
+def _collect_section_text(sections: list[dict]) -> tuple[str, dict]:
     fragments: list[str] = []
     for section in sections:
         if not isinstance(section, dict):
@@ -96,37 +103,176 @@ def _build_scoring_fallback_risk(sections: list[dict]) -> RiskPoint | None:
             ]
         )
     combined_text = "\n".join(fragment for fragment in fragments if fragment)
-    if not combined_text.strip():
-        return None
-
-    has_tier_signal = bool(SCORING_TIER_RE.search(combined_text))
-    has_subjective_signal = any(signal in combined_text for signal in SCORING_SUBJECTIVE_SIGNALS)
-    if not has_tier_signal and not has_subjective_signal:
-        return None
-
     source_section = next((section for section in sections if isinstance(section, dict)), {})
+    return combined_text, source_section
+
+
+def _build_risk_point(
+    *,
+    source_section: dict,
+    title: str,
+    review_type: str,
+    judgments: list[str],
+    rectification: list[str],
+    severity: str = "中风险",
+) -> RiskPoint:
     source_location = (
         f"{source_section.get('title', '未发现')} 第{source_section.get('start_line', '?')}-{source_section.get('end_line', '?')}行"
         if source_section
         else "未发现"
     )
     source_excerpt = str(source_section.get("excerpt", "")).strip() or "未发现"
-    title = "评分档次缺少量化口径" if has_tier_signal else "主观分值裁量空间过大"
-    judgments = []
-    if has_tier_signal:
-        judgments.append("评分分档存在“优、良、中、差”或类似档次，但缺少与各档对应的量化判定标准。")
-    if has_subjective_signal:
-        judgments.append("条款包含“综合打分”“酌情计分”等表述，评委自由裁量空间较大。")
     return RiskPoint(
         title=title,
-        severity="中风险",
-        review_type="评分标准不明确",
+        severity=severity,
+        review_type=review_type,
         source_location=source_location,
         source_excerpt=source_excerpt,
-        risk_judgment=judgments or ["评分标准不够明确，需补充量化口径。"],
+        risk_judgment=judgments or ["需人工复核"],
         legal_basis=["需人工复核"],
-        rectification=["补充各评分档次对应的量化标准，并压缩主观裁量空间。"],
+        rectification=rectification or ["未发现"],
     )
+
+
+def _build_scoring_fallback_risks(sections: list[dict], existing_titles: set[str]) -> list[RiskPoint]:
+    combined_text, source_section = _collect_section_text(sections)
+    if not combined_text.strip():
+        return []
+    has_tier_signal = bool(SCORING_TIER_RE.search(combined_text))
+    has_subjective_signal = any(signal in combined_text for signal in SCORING_SUBJECTIVE_SIGNALS)
+    risks: list[RiskPoint] = []
+    if has_tier_signal:
+        title = "评分档次缺少量化口径"
+        if title not in existing_titles:
+            risks.append(
+                _build_risk_point(
+                    source_section=source_section,
+                    title=title,
+                    review_type="评分标准不明确",
+                    judgments=["评分分档存在“优、良、中、差”或类似档次，但缺少与各档对应的量化判定标准。"],
+                    rectification=["补充各评分档次对应的量化标准，并压缩主观裁量空间。"],
+                )
+            )
+    if has_subjective_signal:
+        title = "主观分值裁量空间过大"
+        if title not in existing_titles:
+            risks.append(
+                _build_risk_point(
+                    source_section=source_section,
+                    title=title,
+                    review_type="评分标准不明确",
+                    judgments=["条款包含“综合打分”“酌情计分”等表述，评委自由裁量空间较大。"],
+                    rectification=["删除纯主观评分表述，改为可操作的量化评分标准。"],
+                )
+            )
+    return risks
+
+
+def _build_topic_rule_fallback_risks(
+    definition: TopicDefinition,
+    sections: list[dict],
+    existing_titles: set[str],
+) -> list[RiskPoint]:
+    combined_text, source_section = _collect_section_text(sections)
+    if not combined_text.strip():
+        return []
+
+    risks: list[RiskPoint] = []
+    if definition.key == "scoring":
+        return _build_scoring_fallback_risks(sections, existing_titles)
+
+    if definition.key == "qualification":
+        if QUALIFICATION_LOCAL_SERVICE_RE.search(combined_text):
+            title = "设立常设服务机构的资格限制"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="资格条件",
+                        judgments=["资格条件要求供应商在本地设立常设服务机构，可能形成地域性准入限制。"],
+                        rectification=["删除本地常设机构准入门槛，改为履约阶段服务响应要求。"],
+                        severity="高风险",
+                    )
+                )
+        if QUALIFICATION_PERFORMANCE_RE.search(combined_text) and ("资格" in combined_text or "须具备" in combined_text):
+            title = "业绩与人员要求被设置为资格门槛"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="资格条件/业绩人员",
+                        judgments=["业绩或人员条件直接并入资格门槛，需审查是否与主体准入及履约直接相关。"],
+                        rectification=["将与主体准入无直接关系的业绩、人员条件从资格门槛中剥离。"],
+                    )
+                )
+
+    if definition.key == "technical_standard":
+        if TECHNICAL_STANDARD_OBSOLETE_RE.search(combined_text):
+            title = "引用已废止标准"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="技术标准",
+                        judgments=["技术条款引用的标准版本较旧，存在已废止或被替代的风险。"],
+                        rectification=["核对标准现行有效版本，并统一更新标准引用。"],
+                    )
+                )
+        if TECHNICAL_STANDARD_MISMATCH_RE.search(combined_text):
+            title = "标准名称与编号不一致"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="技术标准",
+                        judgments=["标准名称、编号或引用方式可能存在不一致，需核对标准全称与适用范围。"],
+                        rectification=["统一标准名称、编号和适用对象的表述。"],
+                    )
+                )
+
+    if definition.key == "contract_payment":
+        if CONTRACT_PAYMENT_FISCAL_RE.search(combined_text):
+            title = "付款节点与财政资金到位挂钩"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="商务条款失衡",
+                        judgments=["付款节点与财政资金到位挂钩，供应商回款时间存在较大不确定性。"],
+                        rectification=["删除以财政资金到位作为付款前提的表述，改为明确付款时间节点。"],
+                        severity="高风险",
+                    )
+                )
+        if CONTRACT_PAYMENT_ACCEPTANCE_RE.search(combined_text):
+            title = "付款安排以验收裁量为前置条件"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="付款条款/验收联动",
+                        judgments=["付款触发条件与验收裁量高度耦合，可能放大采购人单方控制空间。"],
+                        rectification=["明确验收标准和支付触发条件，避免付款完全受验收裁量控制。"],
+                    )
+                )
+        if CONTRACT_PAYMENT_DELAY_RE.search(combined_text):
+            title = "付款节点明显偏后"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="付款条款",
+                        judgments=["付款时间设置偏后，可能对供应商形成较大资金占压。"],
+                        rectification=["结合履约进度优化付款比例和付款时点。"],
+                    )
+                )
+    return risks
 
 
 def _normalize_missing_evidence_items(value: object) -> list[str]:
@@ -311,16 +457,21 @@ def _postprocess_topic_payload(
             risk_points.append(_to_risk_point(item, definition.label))
 
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
-    if definition.key == "scoring" and not risk_points and not bool(payload.get("need_manual_review", False)):
-        fallback = _build_scoring_fallback_risk(sections)
-        if fallback:
-            risk_points.append(fallback)
-            failure_reasons.append("risk_not_extracted")
-            summary = str(payload.get("summary", "")).strip()
-            payload["summary"] = summary or "评分办法专题完成，并根据评分分档表述补出明确风险。"
-            payload["coverage_note"] = str(payload.get("coverage_note", "")).strip() or "已覆盖评分分档与主观评分条款。"
-            payload["need_manual_review"] = False
-            payload["missing_evidence"] = ["未发现"]
+    existing_titles = {risk.title for risk in risk_points if risk.title.strip()}
+    normalized_missing_evidence = _normalize_missing_evidence_items(payload.get("missing_evidence"))
+    fallback_risks = (
+        _build_topic_rule_fallback_risks(definition, sections, existing_titles)
+        if not normalized_missing_evidence
+        else []
+    )
+    if fallback_risks:
+        risk_points.extend(fallback_risks)
+        failure_reasons.append("risk_not_extracted")
+        summary = str(payload.get("summary", "")).strip()
+        payload["summary"] = summary or f"{definition.label}专题完成，并根据已召回证据补出明确风险。"
+        payload["coverage_note"] = str(payload.get("coverage_note", "")).strip() or "已覆盖专题关键条款。"
+        payload["need_manual_review"] = False
+        payload["missing_evidence"] = ["未发现"]
 
     if _should_tighten_manual_review(payload, risk_points):
         payload["need_manual_review"] = False

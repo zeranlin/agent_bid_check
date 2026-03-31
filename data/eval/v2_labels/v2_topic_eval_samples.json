@@ -492,5 +492,132 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_qualification_recalled_miss_001",
+    "name": "topic_qualification_recalled_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification"],
+    "case_type": "positive",
+    "topic": "qualification",
+    "description": "资格章节已召回但模型漏抽地域性资格限制的样本。",
+    "text": "第一章 资格条件\n投标人须具备独立法人资格，并在本市设有常设服务机构，否则资格审查不通过。",
+    "expected_high_medium_titles": ["设立常设服务机构的资格限制"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格准入条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_partial_miss_001",
+    "name": "topic_qualification_partial_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification"],
+    "case_type": "positive",
+    "topic": "qualification",
+    "description": "资格章节已召回但只抽出一条风险，遗漏业绩人员门槛的样本。",
+    "text": "第一章 资格及业绩要求\n投标人须在本市设有常设服务机构。近三年同类项目业绩不少于5项，项目负责人须具备高级职称并提供社保证明，否则资格审查不通过。",
+    "expected_high_medium_titles": ["设立常设服务机构的资格限制", "业绩与人员要求被设置为资格门槛"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格准入条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "设立常设服务机构的资格限制",
+            "severity": "高风险",
+            "review_type": "资格条件",
+            "source_location": "第一章 资格及业绩要求",
+            "source_excerpt": "投标人须在本市设有常设服务机构。",
+            "risk_judgment": ["存在地域性准入限制。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["删除地域性资格门槛。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_recalled_miss_001",
+    "name": "topic_technical_standard_recalled_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["technical_standard"],
+    "case_type": "positive",
+    "topic": "technical_standard",
+    "description": "技术标准章节已召回但模型未抽出标准细节风险的样本。",
+    "text": "第一章 技术要求\n投标产品应符合人工材料体育场地使用要求及检验方法（GB/T20033-2006），并采用塑料拉伸性能的测定 第2部分 GB/T 1040.2-2006 进行检测。",
+    "expected_high_medium_titles": ["标准名称与编号不一致", "引用已废止标准"],
+    "expected_technical_titles": ["标准名称与编号不一致", "引用已废止标准"],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖标准引用条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_contract_payment_recalled_miss_001",
+    "name": "topic_contract_payment_recalled_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["contract_payment"],
+    "case_type": "positive",
+    "topic": "contract_payment",
+    "description": "付款章节已召回但模型未抽出财政资金挂钩和付款偏后的样本。",
+    "text": "第一章 商务条款\n项目终验合格且财政资金到位后90个工作日内支付剩余合同价款。",
+    "expected_high_medium_titles": ["付款节点与财政资金到位挂钩", "付款安排以验收裁量为前置条件", "付款节点明显偏后"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "contract_payment": {
+        "summary": "付款履约专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖付款节点条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_partial_miss_001",
+    "name": "topic_scoring_partial_miss_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "positive",
+    "topic": "scoring",
+    "description": "评分章节已召回但模型只抽出一半风险的样本。",
+    "text": "第一章 评分办法\n企业荣誉和服务方案由评标委员会结合项目实际确定，按优、良、中三个档次分别计10分、6分、2分。",
+    "expected_high_medium_titles": ["评分档次缺少量化口径", "主观分值裁量空间过大"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分档次条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "评分档次缺少量化口径",
+            "severity": "中风险",
+            "review_type": "评分标准不明确",
+            "source_location": "第一章 评分办法",
+            "source_excerpt": "按优、良、中三个档次分别计10分、6分、2分。",
+            "risk_judgment": ["评分档次缺少量化口径。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["补充分档量化标准。"]
+          }
+        ]
+      }
+    }
   }
 ]

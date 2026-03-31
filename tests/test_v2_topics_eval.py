@@ -8,7 +8,7 @@ from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluat
 def test_load_samples_and_evaluate_topic_fixture() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 18
+    assert len(samples) >= 23
 
     result = evaluate_sample(samples[0])
     assert result["topic_count"] >= 1
@@ -34,6 +34,23 @@ def test_scoring_recalled_but_missed_samples_are_recovered_by_postprocess() -> N
         assert result["topic_hit_count"] == 1
         assert result["topic_miss_count"] == 0
         assert expected_title in result["target_topic_detail"]["risk_titles"]
+        assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
+
+
+def test_multi_topic_recalled_but_missed_samples_are_recovered_by_postprocess() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+    expected_titles = {
+        "topic_qualification_recalled_miss_001": ["设立常设服务机构的资格限制"],
+        "topic_qualification_partial_miss_001": ["设立常设服务机构的资格限制", "业绩与人员要求被设置为资格门槛"],
+        "topic_technical_standard_recalled_miss_001": ["标准名称与编号不一致", "引用已废止标准"],
+        "topic_contract_payment_recalled_miss_001": ["付款节点与财政资金到位挂钩", "付款安排以验收裁量为前置条件", "付款节点明显偏后"],
+        "topic_scoring_partial_miss_001": ["评分档次缺少量化口径", "主观分值裁量空间过大"],
+    }
+    for sample_id, titles in expected_titles.items():
+        result = evaluate_sample(samples[sample_id])
+        for title in titles:
+            assert title in result["target_topic_detail"]["risk_titles"]
         assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
 
 

@@ -10,7 +10,7 @@ from scripts.eval_v2_structure import build_markdown_report, build_summary, eval
 def test_load_samples_and_evaluate_structure_fixture() -> None:
     sample_path = Path("data/examples/v2_structure_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 19
+    assert len(samples) >= 27
 
     result = evaluate_sample(samples[0], use_llm=False)
     assert result["module_total"] >= 2
