@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.eval_v2_topics import build_summary, evaluate_sample, load_samples
+from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluate_sample, load_samples, write_outputs
 
 
 def test_load_samples_and_evaluate_topic_fixture() -> None:
@@ -78,3 +78,36 @@ def test_build_topic_summary_aggregates_metrics() -> None:
     assert summary["manual_review_false_positive_count"] == 1
     assert summary["by_topic"]["qualification"]["topic_miss_rate"] == 1 / 2
     assert summary["by_topic"]["scoring"]["false_positive_rate"] == 1.0
+
+
+def test_write_outputs_emits_json_and_markdown(tmp_path: Path) -> None:
+    summary = build_summary(
+        [
+            {
+                "name": "a",
+                "topic_mode": "default",
+                "topic_count": 1,
+                "high_medium_expected": 1,
+                "high_medium_hit": 1,
+                "technical_expected": 0,
+                "technical_hit": 0,
+                "manual_review_count": 0,
+                "topic": "qualification",
+                "topic_expected_total": 1,
+                "topic_hit_count": 1,
+                "topic_miss_count": 0,
+                "false_positive_total": 0,
+                "false_positive_count": 0,
+                "manual_review_expected_total": 0,
+                "manual_review_hit": 0,
+                "manual_review_false_positive_count": 0,
+                "topic_execution_plan": {},
+                "details": [],
+            }
+        ],
+        Path("samples.json"),
+    )
+    write_outputs(tmp_path, summary)
+    assert (tmp_path / "topics_eval.json").exists()
+    assert (tmp_path / "topics_eval.md").exists()
+    assert "# V2 专题层评估结果" in build_markdown_report(summary)

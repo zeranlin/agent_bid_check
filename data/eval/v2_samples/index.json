@@ -1,0 +1,30 @@
+{
+  "version": "v2",
+  "datasets": [
+    {
+      "stage": "baseline",
+      "source": "data/examples/v2_baseline_eval_samples.json",
+      "label_file": "data/eval/v2_labels/v2_baseline_eval_samples.json"
+    },
+    {
+      "stage": "structure",
+      "source": "data/examples/v2_structure_eval_samples.json",
+      "label_file": "data/eval/v2_labels/v2_structure_eval_samples.json"
+    },
+    {
+      "stage": "topics",
+      "source": "data/examples/v2_topic_eval_samples.json",
+      "label_file": "data/eval/v2_labels/v2_topic_eval_samples.json"
+    },
+    {
+      "stage": "compare",
+      "source": "data/examples/v2_compare_eval_samples.json",
+      "label_file": "data/eval/v2_labels/v2_compare_eval_samples.json"
+    },
+    {
+      "stage": "regression",
+      "source": "data/examples/v2_regression_eval_samples.json",
+      "label_file": "data/eval/v2_labels/v2_regression_eval_samples.json"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT, ReviewSettings
+from app.common.eval_dataset import DEFAULT_EVAL_ROOT, resolve_v2_eval_sample_path
 from app.pipelines.v2.evidence import build_evidence_map
 from app.pipelines.v2.structure import build_structure_map
 
@@ -434,15 +435,72 @@ def print_report(summary: dict) -> None:
         print("")
 
 
+def build_markdown_report(summary: dict) -> str:
+    lines = [
+        "# V2 结构层评估结果",
+        "",
+        f"- 样本文件：`{summary['sample_path']}`",
+        f"- 样本数：`{summary['sample_count']}`",
+        f"- 是否启用 LLM 二次识别：`{'是' if summary['use_llm'] else '否'}`",
+        f"- 模块主归属一致率：`{summary['module_correct']}/{summary['module_total']} = {summary['module_accuracy']:.2%}`",
+        f"- 关键章节召回率：`{summary['key_hit']}/{summary['key_total']} = {summary['key_recall']:.2%}`",
+        f"- 负向主模块约束通过率：`{summary['negative_pass_count']}/{summary['negative_total']} = {summary['negative_pass_rate']:.2%}`",
+        f"- coverage 召回通过率：`{summary['coverage_pass_count']}/{summary['coverage_total']} = {summary['coverage_recall_rate']:.2%}`",
+        f"- 混合章节副召回覆盖率：`{summary['secondary_hit']}/{summary['secondary_total']} = {summary['mixed_section_secondary_recall_rate']:.2%}`",
+        "",
+        "## 失败分布",
+        "",
+        f"- 专题失败分布：`{summary.get('topic_failure_summary', {})}`",
+        f"- 失败原因分布：`{summary.get('failure_reason_summary', {})}`",
+        "",
+        "## 样本明细",
+        "",
+    ]
+    for sample in summary["samples"]:
+        module_accuracy = sample.get("module_accuracy", (sample["module_correct"] / sample["module_total"]) if sample["module_total"] else 0.0)
+        key_recall = sample.get("key_recall", (sample["key_hit"] / sample["key_total"]) if sample["key_total"] else 0.0)
+        coverage_recall_rate = sample.get(
+            "coverage_recall_rate",
+            (sample["coverage_pass_count"] / sample["coverage_total"]) if sample["coverage_total"] else 0.0,
+        )
+        secondary_recall_rate = sample.get(
+            "secondary_recall_rate",
+            (sample["secondary_hit"] / sample["secondary_total"]) if sample["secondary_total"] else 0.0,
+        )
+        lines.extend(
+            [
+                f"### {sample['name']}",
+                "",
+                f"- 模块一致率：`{sample['module_correct']}/{sample['module_total']} = {module_accuracy:.2%}`",
+                f"- 关键章节召回率：`{sample['key_hit']}/{sample['key_total']} = {key_recall:.2%}`",
+                f"- coverage：`{sample['coverage_pass_count']}/{sample['coverage_total']} = {coverage_recall_rate:.2%}`",
+                f"- secondary：`{sample['secondary_hit']}/{sample['secondary_total']} = {secondary_recall_rate:.2%}`",
+                "",
+            ]
+        )
+    return "\n".join(lines) + "\n"
+
+
+def write_outputs(output_dir: Path, summary: dict) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "structure_eval.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_dir / "structure_eval.md").write_text(build_markdown_report(summary), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="评估 V2 结构层的模块识别与关键章节召回表现。")
     parser.add_argument("--samples", type=Path, default=DEFAULT_SAMPLE_PATH, help="评估样本 JSON 路径")
+    parser.add_argument("--dataset-root", type=Path, default=None, help=f"固定评估数据集目录，默认 {DEFAULT_EVAL_ROOT}")
     parser.add_argument("--use-llm", action="store_true", help="启用结构层 LLM 二次识别进行评估")
+    parser.add_argument("--output-dir", type=Path, default=None, help="将评估结果写入指定目录")
     parser.add_argument("--json", action="store_true", help="仅输出 JSON 汇总结果")
     args = parser.parse_args()
 
-    results = [evaluate_sample(sample, use_llm=args.use_llm) for sample in load_samples(args.samples)]
-    summary = build_summary(results, args.samples, args.use_llm)
+    sample_path = resolve_v2_eval_sample_path("structure", samples_path=args.samples, dataset_root=args.dataset_root)
+    results = [evaluate_sample(sample, use_llm=args.use_llm) for sample in load_samples(sample_path)]
+    summary = build_summary(results, sample_path, args.use_llm)
+    if args.output_dir:
+        write_outputs(args.output_dir, summary)
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:

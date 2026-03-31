@@ -1,0 +1,26 @@
+{
+  "version": "v2",
+  "description": "成熟版 V2 固定评估数据集入口",
+  "stages": {
+    "baseline": {
+      "labels_file": "v2_labels/v2_baseline_eval_samples.json",
+      "sample_index": "v2_samples/index.json"
+    },
+    "structure": {
+      "labels_file": "v2_labels/v2_structure_eval_samples.json",
+      "sample_index": "v2_samples/index.json"
+    },
+    "topics": {
+      "labels_file": "v2_labels/v2_topic_eval_samples.json",
+      "sample_index": "v2_samples/index.json"
+    },
+    "compare": {
+      "labels_file": "v2_labels/v2_compare_eval_samples.json",
+      "sample_index": "v2_samples/index.json"
+    },
+    "regression": {
+      "labels_file": "v2_labels/v2_regression_eval_samples.json",
+      "sample_index": "v2_samples/index.json"
+    }
+  }
+}

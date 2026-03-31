@@ -11,6 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT, ReviewSettings
+from app.common.eval_dataset import DEFAULT_EVAL_ROOT, resolve_v2_eval_sample_path
 from app.common.markdown_utils import parse_review_markdown
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.baseline import run_baseline_review
@@ -324,6 +325,7 @@ def print_report(summary: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="评估 V2 第一层全文直审的命中率、漏检率和误报率。")
     parser.add_argument("--samples", type=Path, default=DEFAULT_SAMPLE_PATH, help="baseline 评估样本 JSON 路径")
+    parser.add_argument("--dataset-root", type=Path, default=None, help=f"固定评估数据集目录，默认 {DEFAULT_EVAL_ROOT}")
     parser.add_argument("--base-url", default=None)
     parser.add_argument("--model", default=None)
     parser.add_argument("--api-key", default=None)
@@ -344,8 +346,9 @@ def main() -> int:
     settings.max_tokens = args.max_tokens
     settings.timeout = args.timeout
 
-    results = [evaluate_sample(sample, settings) for sample in load_samples(args.samples)]
-    summary = build_summary(results, args.samples)
+    sample_path = resolve_v2_eval_sample_path("baseline", samples_path=args.samples, dataset_root=args.dataset_root)
+    results = [evaluate_sample(sample, settings) for sample in load_samples(sample_path)]
+    summary = build_summary(results, sample_path)
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:

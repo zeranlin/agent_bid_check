@@ -1,0 +1,177 @@
+[
+  {
+    "sample_id": "regression_hit_fp_manual_001",
+    "document_name": "付款验收综合样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-contract-001",
+            "title": "第五章 商务及验收要求",
+            "module": "contract",
+            "secondary_modules": ["acceptance"]
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "contract",
+            "required_titles": ["第五章 商务及验收要求"],
+            "required_modules": ["contract"]
+          },
+          {
+            "topic": "acceptance",
+            "required_titles": ["第五章 商务及验收要求"],
+            "required_modules": ["contract"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-contract-001",
+          "title": "付款节点与财政资金到位挂钩",
+          "aliases": ["付款以财政资金到位为前提"],
+          "review_type": "商务条款失衡",
+          "severity": "高风险",
+          "source_location": "第五章 商务及验收要求 付款方式",
+          "manual_review": false
+        },
+        {
+          "id": "risk-acceptance-001",
+          "title": "验收标准描述不完整",
+          "review_type": "验收条款不明确",
+          "severity": "需人工复核",
+          "source_location": "第五章 商务及验收要求 验收条款",
+          "manual_review": true
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第五章 商务及验收要求",
+            "start_line": 10,
+            "end_line": 40,
+            "module": "contract",
+            "module_scores": {
+              "contract": 10,
+              "acceptance": 6
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "contract": {
+            "sections": [
+              {
+                "title": "第五章 商务及验收要求",
+                "start_line": 10,
+                "end_line": 40,
+                "module": "contract"
+              }
+            ]
+          },
+          "acceptance": {
+            "sections": [
+              {
+                "title": "第五章 商务及验收要求",
+                "start_line": 10,
+                "end_line": 40,
+                "module": "contract"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "付款以财政资金到位为前提",
+            "review_type": "商务条款失衡",
+            "severity": "高风险",
+            "source_locations": ["第五章 商务及验收要求 付款方式"],
+            "source_excerpts": ["收到财政资金后再支付合同款"],
+            "topics": ["contract"],
+            "need_manual_review": false
+          },
+          {
+            "title": "验收标准描述不完整",
+            "review_type": "验收条款不明确",
+            "severity": "中风险",
+            "source_locations": ["第五章 商务及验收要求 验收条款"],
+            "source_excerpts": ["验收标准详见相关规范"],
+            "topics": ["acceptance"],
+            "need_manual_review": false
+          },
+          {
+            "title": "报价页盖章要求不够明确",
+            "review_type": "程序条款",
+            "severity": "低风险",
+            "source_locations": ["第八章 投标文件格式"],
+            "source_excerpts": ["报价页须按要求盖章"],
+            "topics": ["procedure"],
+            "need_manual_review": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "regression_structure_gap_001",
+    "document_name": "评分章节漏召回样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-001",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-001",
+          "title": "评分档次缺少量化口径",
+          "review_type": "评分标准不明确",
+          "severity": "中风险",
+          "source_location": "第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第五章 商务要求",
+            "start_line": 50,
+            "end_line": 80,
+            "module": "contract",
+            "module_scores": {
+              "contract": 8
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": []
+          }
+        }
+      },
+      "comparison": {
+        "clusters": []
+      }
+    }
+  }
+]

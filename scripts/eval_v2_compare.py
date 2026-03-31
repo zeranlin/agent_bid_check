@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.common.schemas import RiskPoint
+from app.common.eval_dataset import DEFAULT_EVAL_ROOT, resolve_v2_eval_sample_path
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT
 from app.pipelines.v2.compare import compare_review_artifacts
 from app.pipelines.v2.schemas import TopicReviewArtifact, V2StageArtifact
@@ -114,14 +115,53 @@ def print_report(summary: dict) -> None:
         print("")
 
 
+def build_markdown_report(summary: dict) -> str:
+    lines = [
+        "# V2 汇总层评估结果",
+        "",
+        f"- 样本文件：`{summary['sample_path']}`",
+        f"- 样本数：`{summary['sample_count']}`",
+        f"- 指标命中率：`{summary['matched_metrics']}/{summary['total_metrics']} = {summary['accuracy']:.2%}`",
+        "",
+        "## 样本明细",
+        "",
+    ]
+    for sample in summary["samples"]:
+        lines.extend(
+            [
+                f"### {sample['name']}",
+                "",
+                f"- 指标命中率：`{sample['matched_metrics']}/{sample['total_metrics']} = {sample['accuracy']:.2%}`",
+                "",
+            ]
+        )
+        for detail in sample.get("details", []):
+            lines.append(
+                f"- `{detail['metric']}`：期望 `{detail['expected']}`，实际 `{detail['actual']}`，命中 `{detail['matched']}`"
+            )
+        lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def write_outputs(output_dir: Path, summary: dict) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "compare_eval.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_dir / "compare_eval.md").write_text(build_markdown_report(summary), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="评估 V2 汇总层的聚类、冲突和覆盖分析表现。")
     parser.add_argument("--samples", type=Path, default=DEFAULT_SAMPLE_PATH, help="评估样本 JSON 路径")
+    parser.add_argument("--dataset-root", type=Path, default=None, help=f"固定评估数据集目录，默认 {DEFAULT_EVAL_ROOT}")
+    parser.add_argument("--output-dir", type=Path, default=None, help="将评估结果写入指定目录")
     parser.add_argument("--json", action="store_true", help="仅输出 JSON 汇总结果")
     args = parser.parse_args()
 
-    results = [evaluate_sample(sample) for sample in load_samples(args.samples)]
-    summary = build_summary(results, args.samples)
+    sample_path = resolve_v2_eval_sample_path("compare", samples_path=args.samples, dataset_root=args.dataset_root)
+    results = [evaluate_sample(sample) for sample in load_samples(sample_path)]
+    summary = build_summary(results, sample_path)
+    if args.output_dir:
+        write_outputs(args.output_dir, summary)
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:

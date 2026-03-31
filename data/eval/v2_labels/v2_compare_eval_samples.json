@@ -1,0 +1,87 @@
+[
+  {
+    "name": "sample_duplicate_and_conflict",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n\n## 风险点1：标准名称与编号不一致\n\n- 问题定性：中风险\n- 审查类型：技术标准\n- 原文位置：第三章 技术要求\n- 原文摘录：满足人造草 GB36246-2018 标准\n- 风险判断：\n  - 标准名称与编号对应关系不清。\n- 法律/政策依据：\n  - 需人工复核\n- 整改建议：\n  - 核对标准全称并统一表述。\n",
+    "topics": [
+      {
+        "topic": "technical",
+        "summary": "技术专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术章节。",
+        "risk_points": [
+          {
+            "title": "标准名称与编号不一致",
+            "severity": "高风险",
+            "review_type": "技术标准",
+            "source_location": "第三章 技术要求",
+            "source_excerpt": "满足人造草 GB36246-2018 标准",
+            "risk_judgment": ["技术专题认为标准存在明显错引。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["统一标准名称和编号。"]
+          }
+        ],
+        "metadata": {
+          "selected_sections": [{"title": "第三章 技术要求"}],
+          "missing_evidence": []
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 1,
+      "duplicate_reduction": 1,
+      "baseline_only_count": 0,
+      "topic_only_count": 0
+    }
+  },
+  {
+    "name": "sample_coverage_gap",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题需人工复核。",
+        "need_manual_review": true,
+        "coverage_note": "评分章节较短，建议人工复核。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [],
+          "missing_evidence": ["缺少量化评分细则"],
+          "topic_coverage": {
+            "missing_modules": ["scoring"]
+          }
+        }
+      },
+      {
+        "topic": "technical",
+        "summary": "技术专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术章节。",
+        "risk_points": [
+          {
+            "title": "样品要求标准不明确",
+            "severity": "中风险",
+            "review_type": "样品要求",
+            "source_location": "第三章 技术要求",
+            "source_excerpt": "要求提供样品，但未说明评审标准",
+            "risk_judgment": ["样品要求缺少明确标准。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["补充样品评审规则。"]
+          }
+        ],
+        "metadata": {
+          "selected_sections": [{"title": "第三章 技术要求"}],
+          "missing_evidence": []
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 1,
+      "coverage_gap_count": 3
+    }
+  }
+]

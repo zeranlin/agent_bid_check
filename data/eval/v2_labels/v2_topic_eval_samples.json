@@ -1,0 +1,454 @@
+[
+  {
+    "sample_id": "topic_qualification_positive_001",
+    "name": "topic_qualification_positive_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification"],
+    "case_type": "positive",
+    "topic": "qualification",
+    "description": "资格条件专题明确命中样本。",
+    "text": "第一章 资格条件\n投标人须具备独立法人资格。供应商在经营活动中没有重大违法记录。投标人还须在本市设有常设服务机构，否则资格审查不通过。",
+    "expected_high_medium_titles": ["设立常设服务机构的资格限制"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格准入条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "设立常设服务机构的资格限制",
+            "severity": "高风险",
+            "review_type": "资格条件",
+            "source_location": "第一章 资格条件",
+            "source_excerpt": "投标人还须在本市设有常设服务机构，否则资格审查不通过。",
+            "risk_judgment": ["该资格条件可能与主体准入直接挂钩，存在限制竞争风险。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["删除地域性常设机构资格门槛或改为履约阶段要求。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_confusing_001",
+    "name": "topic_qualification_confusing_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification", "performance_staff"],
+    "case_type": "confusing",
+    "topic": "qualification",
+    "description": "资格与业绩人员边界易混淆样本。",
+    "text": "第一章 资格及业绩要求\n投标人须具有独立法人资格。近三年同类业绩不少于5项，项目负责人须具备高级职称并提供连续12个月社保。",
+    "expected_high_medium_titles": ["业绩与人员要求被设置为资格门槛"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格与附加门槛条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "业绩与人员要求被设置为资格门槛",
+            "severity": "中风险",
+            "review_type": "资格条件/业绩人员",
+            "source_location": "第一章 资格及业绩要求",
+            "source_excerpt": "近三年同类业绩不少于5项，项目负责人须具备高级职称并提供连续12个月社保。",
+            "risk_judgment": ["业绩、人员条件直接并入资格门槛，需审查与履约是否直接相关。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["将与主体准入无直接关系的条件从资格门槛中剥离。"]
+          }
+        ]
+      },
+      "performance_staff": {
+        "summary": "业绩与人员专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "业绩人员要求与资格条款重叠，建议人工复核边界。",
+        "missing_evidence": ["需判断是否同时参与评分。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_negative_001",
+    "name": "topic_qualification_negative_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification"],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "资格条件负样本。",
+    "text": "第一章 资格条件\n供应商应具备独立法人资格，具有履行合同所必需的设备和专业技术能力，参加政府采购活动前三年内在经营活动中没有重大违法记录。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "仅发现法定资格条件。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_manual_001",
+    "name": "topic_qualification_manual_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["qualification"],
+    "case_type": "manual_review",
+    "topic": "qualification",
+    "description": "资格条件人工复核样本。",
+    "text": "第一章 资格条件\n投标人应当具备与项目特点相适应的本地化服务能力，并提供相关说明材料。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "本地化服务能力是否可作为准入条件需要结合采购标的复核。",
+        "missing_evidence": ["缺少采购人对本地化服务必要性的论证。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_positive_001",
+    "name": "topic_scoring_positive_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "positive",
+    "topic": "scoring",
+    "description": "评分办法明确命中样本。",
+    "text": "第一章 评分办法\n技术方案优得40分，良得30分，一般得20分。演示效果优得10分，良得6分，一般得3分，由评委综合打分。",
+    "expected_high_medium_titles": ["评分标准量化不足"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分分档条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "评分标准量化不足",
+            "severity": "中风险",
+            "review_type": "评分办法",
+            "source_location": "第一章 评分办法",
+            "source_excerpt": "技术方案优得40分，良得30分，一般得20分。演示效果由评委综合打分。",
+            "risk_judgment": ["评分分档缺少明确量化口径，主观裁量空间较大。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["补充分档标准与可操作的量化指标。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_confusing_001",
+    "name": "topic_scoring_confusing_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring", "samples_demo"],
+    "case_type": "confusing",
+    "topic": "scoring",
+    "description": "评分与样品演示边界样本。",
+    "text": "第一章 演示与评分要求\n投标人须进行现场演示。演示表现纳入评分，由评标委员会根据样品做工、功能实现和综合印象打分。",
+    "expected_high_medium_titles": ["演示评分标准不明确"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "演示评分逻辑已覆盖。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "演示评分标准不明确",
+            "severity": "中风险",
+            "review_type": "评分办法/演示评分",
+            "source_location": "第一章 演示与评分要求",
+            "source_excerpt": "由评标委员会根据样品做工、功能实现和综合印象打分。",
+            "risk_judgment": ["演示评分缺少明确分值口径与量化规则。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["明确演示评分项及各项分值标准。"]
+          }
+        ]
+      },
+      "samples_demo": {
+        "summary": "样品演示专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "样品义务与评分逻辑交叉，边界需人工复核。",
+        "missing_evidence": ["未明确样品是否退还。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_negative_001",
+    "name": "topic_scoring_negative_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分办法负样本。",
+    "text": "第一章 评分办法\n项目实施方案最高得30分，其中需求理解10分、实施路径10分、进度安排10分。价格分50分，按统一公式计算。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "评分项较为明确。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_manual_001",
+    "name": "topic_scoring_manual_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["scoring"],
+    "case_type": "manual_review",
+    "topic": "scoring",
+    "description": "评分办法人工复核样本。",
+    "text": "第一章 评分办法\n企业荣誉和社会评价可酌情计分，具体由评标委员会结合项目实际确定。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分办法专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "荣誉类评分与采购标的相关性不足，需进一步复核。",
+        "missing_evidence": ["缺少评分因素与履约能力关联说明。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_positive_001",
+    "name": "topic_technical_standard_positive_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["technical_standard"],
+    "case_type": "positive",
+    "topic": "technical_standard",
+    "description": "技术标准专题明确命中样本。",
+    "text": "第一章 技术要求\n投标产品应符合人工材料体育场地使用要求及检验方法（GB/T20033-2006），并满足人造草GB36246-2018标准。",
+    "expected_high_medium_titles": ["标准名称与编号不一致"],
+    "expected_technical_titles": ["标准名称与编号不一致"],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖标准引用条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "标准名称与编号不一致",
+            "severity": "中风险",
+            "review_type": "技术标准",
+            "source_location": "第一章 技术要求",
+            "source_excerpt": "并满足人造草GB36246-2018标准。",
+            "risk_judgment": ["标准名称、编号或引用方式可能存在不一致。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["核对标准全称、编号与适用范围。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_confusing_001",
+    "name": "topic_technical_standard_confusing_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["technical_standard", "acceptance"],
+    "case_type": "confusing",
+    "topic": "technical_standard",
+    "description": "技术标准与验收边界样本。",
+    "text": "第一章 技术及验收要求\n产品应满足GB 36246-2018标准。验收时采购人可依据检测结果决定是否通过。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": ["标准与验收条款交叉需复核"],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖标准适用条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "标准与验收条款交叉需复核",
+            "severity": "需人工复核",
+            "review_type": "技术标准/验收",
+            "source_location": "第一章 技术及验收要求",
+            "source_excerpt": "验收时采购人可依据检测结果决定是否通过。",
+            "risk_judgment": ["标准引用与验收机制交叉，需区分标准有效性与验收裁量问题。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["分别明确标准要求与验收判断规则。"]
+          }
+        ]
+      },
+      "acceptance": {
+        "summary": "验收专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "验收机制与标准适用交叉。",
+        "missing_evidence": ["需确认验收主体和标准的对应关系。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_negative_001",
+    "name": "topic_technical_standard_negative_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["technical_standard"],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "技术标准负样本。",
+    "text": "第一章 技术要求\n投标产品应符合现行国家和行业标准，并提供相应检测报告。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "标准引用较为原则性。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_manual_001",
+    "name": "topic_technical_standard_manual_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["technical_standard"],
+    "case_type": "manual_review",
+    "topic": "technical_standard",
+    "description": "技术标准人工复核样本。",
+    "text": "第一章 技术要求\n产品检测应符合 GB/T 0000-2010 相关要求，采购文件未写明标准全称和现行版本。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "标准有效性不足以直接定性。",
+        "missing_evidence": ["缺少标准全称和现行版本信息。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_contract_payment_positive_001",
+    "name": "topic_contract_payment_positive_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["contract_payment"],
+    "case_type": "positive",
+    "topic": "contract_payment",
+    "description": "付款履约专题明确命中样本。",
+    "text": "第一章 商务条款\n最终验收合格且审计结束后90个工作日内支付全部合同价款。",
+    "expected_high_medium_titles": ["付款节点明显偏后"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "contract_payment": {
+        "summary": "付款履约专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖付款节点条款。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "付款节点明显偏后",
+            "severity": "中风险",
+            "review_type": "付款条款",
+            "source_location": "第一章 商务条款",
+            "source_excerpt": "最终验收合格且审计结束后90个工作日内支付全部合同价款。",
+            "risk_judgment": ["付款安排可能导致供应商回款周期过长。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["结合履约进度优化付款节点。"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "sample_id": "topic_contract_payment_confusing_001",
+    "name": "topic_contract_payment_confusing_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["contract_payment", "acceptance"],
+    "case_type": "confusing",
+    "topic": "contract_payment",
+    "description": "付款与验收边界样本。",
+    "text": "第一章 商务及验收要求\n采购人根据试运行情况组织最终验收，验收通过后60个工作日内支付合同尾款。",
+    "expected_high_medium_titles": ["付款安排以验收裁量为前置条件"],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "contract_payment": {
+        "summary": "付款履约专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "付款条款已覆盖。",
+        "missing_evidence": ["未发现"],
+        "risk_points": [
+          {
+            "title": "付款安排以验收裁量为前置条件",
+            "severity": "中风险",
+            "review_type": "付款条款/验收联动",
+            "source_location": "第一章 商务及验收要求",
+            "source_excerpt": "验收通过后60个工作日内支付合同尾款。",
+            "risk_judgment": ["付款节点与验收裁量高度耦合，需关注支付风险。"],
+            "legal_basis": ["需人工复核"],
+            "rectification": ["明确验收触发条件并优化付款安排。"]
+          }
+        ]
+      },
+      "acceptance": {
+        "summary": "验收专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "验收机制与付款节点高度耦合。",
+        "missing_evidence": ["需区分验收裁量与支付安排的归属。"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_contract_payment_negative_001",
+    "name": "topic_contract_payment_negative_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["contract_payment"],
+    "case_type": "negative",
+    "topic": "contract_payment",
+    "description": "付款履约负样本。",
+    "text": "第一章 商务条款\n合同签订后支付30%预付款，项目验收合格后支付65%，剩余5%质保期满后支付。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "contract_payment": {
+        "summary": "付款履约专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "付款安排相对常规。",
+        "missing_evidence": ["未发现"],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_contract_payment_manual_001",
+    "name": "topic_contract_payment_manual_001",
+    "topic_mode": "enhanced",
+    "topic_keys": ["contract_payment"],
+    "case_type": "manual_review",
+    "topic": "contract_payment",
+    "description": "付款履约人工复核样本。",
+    "text": "第一章 商务条款\n付款节点按合同另行约定，采购文件未细化预付款、进度款和尾款比例。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "contract_payment": {
+        "summary": "付款履约专题完成。",
+        "need_manual_review": true,
+        "coverage_note": "付款条款过于原则，需人工复核。",
+        "missing_evidence": ["缺少具体付款节点和比例。"],
+        "risk_points": []
+      }
+    }
+  }
+]

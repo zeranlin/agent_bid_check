@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from app.pipelines.v2.schemas import V2StageArtifact
-from scripts.eval_v2_structure import build_summary, evaluate_sample, load_samples
+from scripts.eval_v2_structure import build_markdown_report, build_summary, evaluate_sample, load_samples, write_outputs
 
 
 def test_load_samples_and_evaluate_structure_fixture() -> None:
@@ -164,3 +164,34 @@ def test_evaluate_sample_emits_negative_and_coverage_failures() -> None:
         "shared_topic_unstable",
     }
     assert result["secondary_details"][0]["passed"] is False
+
+
+def test_write_outputs_emits_json_and_markdown(tmp_path: Path) -> None:
+    summary = build_summary(
+        [
+            {
+                "name": "a",
+                "module_total": 1,
+                "module_correct": 1,
+                "key_total": 1,
+                "key_hit": 1,
+                "negative_total": 0,
+                "negative_pass_count": 0,
+                "coverage_total": 1,
+                "coverage_pass_count": 1,
+                "secondary_total": 0,
+                "secondary_hit": 0,
+                "structure_llm_used": False,
+                "structure_fallback_used": False,
+                "coverage_details": [],
+                "details": [],
+            }
+        ],
+        Path("samples.json"),
+        use_llm=False,
+    )
+    write_outputs(tmp_path, summary)
+    assert (tmp_path / "structure_eval.json").exists()
+    assert (tmp_path / "structure_eval.md").exists()
+    markdown = build_markdown_report(summary)
+    assert "# V2 结构层评估结果" in markdown

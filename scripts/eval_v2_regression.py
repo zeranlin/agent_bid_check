@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT
+from app.common.eval_dataset import DEFAULT_EVAL_ROOT, resolve_v2_eval_sample_path
 from app.pipelines.v2.regression import compare_risks, compare_structure, extract_actual_risks, extract_actual_structure, load_result_payload
 
 
@@ -170,6 +171,7 @@ def _evaluate_real_case(gold_path: Path, result_dir: Path) -> tuple[list[dict], 
 def main() -> int:
     parser = argparse.ArgumentParser(description="对 V2 结构层、专题层、汇总层结果执行埋点回归比对。")
     parser.add_argument("--samples", type=Path, default=DEFAULT_SAMPLE_PATH, help="回归样本 JSON 路径")
+    parser.add_argument("--dataset-root", type=Path, default=None, help=f"固定评估数据集目录，默认 {DEFAULT_EVAL_ROOT}")
     parser.add_argument("--gold", type=Path, help="单个真实案例的金标 JSON 路径")
     parser.add_argument("--result-dir", type=Path, help="单个真实案例的 V2 结果目录")
     parser.add_argument("--output-dir", type=Path, help="回归差异输出目录")
@@ -179,8 +181,9 @@ def main() -> int:
     if args.gold and args.result_dir:
         results, summary_path = _evaluate_real_case(args.gold, args.result_dir)
     else:
-        results = [evaluate_sample(sample) for sample in load_samples(args.samples)]
-        summary_path = args.samples
+        sample_path = resolve_v2_eval_sample_path("regression", samples_path=args.samples, dataset_root=args.dataset_root)
+        results = [evaluate_sample(sample) for sample in load_samples(sample_path)]
+        summary_path = sample_path
 
     summary = build_summary(results, summary_path)
     outputs = collect_outputs(results)

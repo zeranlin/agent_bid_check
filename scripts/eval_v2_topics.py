@@ -11,6 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT, ReviewSettings
+from app.common.eval_dataset import DEFAULT_EVAL_ROOT, resolve_v2_eval_sample_path
 from app.pipelines.v2.evidence import build_evidence_map
 from app.pipelines.v2.structure import build_structure_map
 from app.pipelines.v2.topic_review import run_topic_reviews
@@ -343,14 +344,69 @@ def print_report(summary: dict) -> None:
         print("")
 
 
+def build_markdown_report(summary: dict) -> str:
+    lines = [
+        "# V2 专题层评估结果",
+        "",
+        f"- 样本文件：`{summary['sample_path']}`",
+        f"- 样本数：`{summary['sample_count']}`",
+        f"- 高中风险命中率：`{summary['high_medium_hit']}/{summary['high_medium_expected']} = {summary['high_medium_hit_rate']:.2%}`",
+        f"- 技术细节命中率：`{summary['technical_hit']}/{summary['technical_expected']} = {summary['technical_hit_rate']:.2%}`",
+        f"- 人工复核比例：`{summary['manual_review_count']}/{summary['topic_count']} = {summary['manual_review_ratio']:.2%}`",
+        f"- 专题命中率：`{summary['topic_hit_count']}/{summary['topic_expected_total']} = {summary['topic_hit_rate']:.2%}`",
+        f"- 专题漏检率：`{summary['topic_miss_count']}/{summary['topic_expected_total']} = {summary['topic_miss_rate']:.2%}`",
+        f"- 专题误报率：`{summary['false_positive_count']}/{summary['false_positive_total']} = {summary['false_positive_rate']:.2%}`",
+        f"- 人工复核合理率：`{summary['manual_review_hit']}/{summary['manual_review_expected_total']} = {summary['manual_review_expected_rate']:.2%}`",
+        "",
+        "## 按专题汇总",
+        "",
+    ]
+    for topic, bucket in summary.get("by_topic", {}).items():
+        lines.append(
+            f"- `{topic}`：命中率 `{bucket['topic_hit_rate']:.2%}`，漏检率 `{bucket['topic_miss_rate']:.2%}`，误报率 `{bucket['false_positive_rate']:.2%}`"
+        )
+    lines.extend(["", "## 样本明细", ""])
+    for sample in summary["samples"]:
+        case_type = sample.get("case_type", "unknown")
+        expected_total = sample.get("topic_expected_total", 0)
+        hit_count = sample.get("topic_hit_count", 0)
+        miss_count = sample.get("topic_miss_count", 0)
+        topic_hit_rate = sample.get("topic_hit_rate", (hit_count / expected_total) if expected_total else 1.0)
+        topic_miss_rate = sample.get("topic_miss_rate", (miss_count / expected_total) if expected_total else 0.0)
+        lines.extend(
+            [
+                f"### {sample['name']}",
+                "",
+                f"- 模式：`{sample['topic_mode']}`",
+                f"- 专题：`{sample['topic']}`",
+                f"- 类型：`{case_type}`",
+                f"- 专题命中率：`{hit_count}/{expected_total} = {topic_hit_rate:.2%}`",
+                f"- 专题漏检率：`{miss_count}/{expected_total} = {topic_miss_rate:.2%}`",
+                "",
+            ]
+        )
+    return "\n".join(lines) + "\n"
+
+
+def write_outputs(output_dir: Path, summary: dict) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "topics_eval.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_dir / "topics_eval.md").write_text(build_markdown_report(summary), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="评估 V2 专题层的命中率与人工复核比例。")
     parser.add_argument("--samples", type=Path, default=DEFAULT_SAMPLE_PATH, help="评估样本 JSON 路径")
+    parser.add_argument("--dataset-root", type=Path, default=None, help=f"固定评估数据集目录，默认 {DEFAULT_EVAL_ROOT}")
+    parser.add_argument("--output-dir", type=Path, default=None, help="将评估结果写入指定目录")
     parser.add_argument("--json", action="store_true", help="仅输出 JSON 汇总结果")
     args = parser.parse_args()
 
-    results = [evaluate_sample(sample) for sample in load_samples(args.samples)]
-    summary = build_summary(results, args.samples)
+    sample_path = resolve_v2_eval_sample_path("topics", samples_path=args.samples, dataset_root=args.dataset_root)
+    results = [evaluate_sample(sample) for sample in load_samples(sample_path)]
+    summary = build_summary(results, sample_path)
+    if args.output_dir:
+        write_outputs(args.output_dir, summary)
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:
