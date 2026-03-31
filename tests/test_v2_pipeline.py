@@ -422,6 +422,107 @@ def test_run_topic_reviews_contract_postprocess_recovers_payment_risks(monkeypat
     assert "risk_not_extracted" in topics[0].metadata["failure_reasons"]
 
 
+def test_run_topic_reviews_marks_partial_and_shared_failure_reasons(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 商务条款
+项目终验合格且财政资金到位后90个工作日内支付尾款。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="enhanced", topic_keys=["contract_payment"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"付款履约专题完成。\", "
+                            "\"need_manual_review\": false, "
+                            "\"coverage_note\": \"已覆盖付款节点条款。\", "
+                            "\"missing_evidence\": [\"未发现\"], "
+                            "\"risk_points\": ["
+                            "{"
+                            "\"title\": \"付款节点与财政资金到位挂钩\", "
+                            "\"severity\": \"高风险\", "
+                            "\"review_type\": \"商务条款失衡\", "
+                            "\"source_location\": \"第一章 商务条款\", "
+                            "\"source_excerpt\": \"财政资金到位后支付尾款。\", "
+                            "\"risk_judgment\": [\"付款以前置资金条件为前提。\"], "
+                            "\"legal_basis\": [\"需人工复核\"], "
+                            "\"rectification\": [\"删除财政资金到位前提。\"]"
+                            "}"
+                            "]"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="enhanced",
+        topic_keys=["contract_payment"],
+    )
+    reasons = topics[0].metadata["failure_reasons"]
+    assert "risk_not_extracted" in reasons
+    assert "topic_triggered_but_partial_miss" in reasons
+
+
+def test_run_topic_reviews_marks_degraded_manual_reason(monkeypatch: pytest.MonkeyPatch) -> None:
+    text = """
+第一章 评分说明
+按优良中差分档评分，具体量化标准详见缺失附表。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="enhanced", topic_keys=["scoring"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"评分办法专题需人工复核。\", "
+                            "\"need_manual_review\": true, "
+                            "\"coverage_note\": \"仅覆盖分档描述。\", "
+                            "\"missing_evidence\": [\"缺少完整评分附表。\"], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="enhanced",
+        topic_keys=["scoring"],
+    )
+    reasons = topics[0].metadata["failure_reasons"]
+    assert "degraded_to_manual_review" in reasons
+    assert "risk_degraded_to_manual_review" in reasons
+
+
 def test_run_topic_reviews_records_topic_failure_reasons(monkeypatch: pytest.MonkeyPatch) -> None:
     text = """
 第一章 评分办法

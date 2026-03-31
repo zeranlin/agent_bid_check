@@ -8,7 +8,7 @@ from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluat
 def test_load_samples_and_evaluate_topic_fixture() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 23
+    assert len(samples) >= 38
 
     result = evaluate_sample(samples[0])
     assert result["topic_count"] >= 1
@@ -52,6 +52,24 @@ def test_multi_topic_recalled_but_missed_samples_are_recovered_by_postprocess() 
         for title in titles:
             assert title in result["target_topic_detail"]["risk_titles"]
         assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
+
+
+def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    partial = evaluate_sample(samples["topic_contract_payment_partial_miss_002"])
+    assert "risk_not_extracted" in partial["target_topic_detail"]["failure_reasons"]
+    assert "topic_triggered_but_partial_miss" in partial["target_topic_detail"]["failure_reasons"]
+
+    shared = evaluate_sample(samples["topic_scoring_cross_topic_shared_002"])
+    assert "评分档次缺少量化口径" in shared["target_topic_detail"]["risk_titles"]
+    assert "evidence_enough_but_risk_missed" in shared["target_topic_detail"]["failure_reasons"]
+    assert "cross_topic_shared_but_single_topic_hit" in shared["target_topic_detail"]["failure_reasons"]
+
+    degraded = evaluate_sample(samples["topic_scoring_degraded_manual_002"])
+    assert "degraded_to_manual_review" in degraded["target_topic_detail"]["failure_reasons"]
+    assert "risk_degraded_to_manual_review" in degraded["target_topic_detail"]["failure_reasons"]
 
 
 def test_build_topic_summary_aggregates_metrics() -> None:

@@ -28,7 +28,13 @@ TOPIC_FAILURE_REASON_LABELS = {
     "topic_not_triggered": "专题未触发",
     "risk_not_extracted": "专题未抽出风险",
     "degraded_to_manual_review": "已降级为人工复核",
+    "evidence_enough_but_risk_missed": "证据已足够但风险未抽出",
+    "topic_triggered_but_partial_miss": "专题已触发但只抽出部分风险",
+    "risk_degraded_to_manual_review": "存在风险但被降级为人工复核",
+    "cross_topic_shared_but_single_topic_hit": "共享证据场景下仅命中单专题",
 }
+SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
+SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
 
 
 def _extract_json_block(text: str) -> str:
@@ -165,6 +171,30 @@ def _build_scoring_fallback_risks(sections: list[dict], existing_titles: set[str
                     rectification=["删除纯主观评分表述，改为可操作的量化评分标准。"],
                 )
             )
+    if SCORING_RELEVANCE_RE.search(combined_text):
+        title = "评分依据与采购标的关联性不足"
+        if title not in existing_titles:
+            risks.append(
+                _build_risk_point(
+                    source_section=source_section,
+                    title=title,
+                    review_type="评分因素相关性",
+                    judgments=["评分因素聚焦排版、封面等形式内容，与采购标的或履约能力关联性不足。"],
+                    rectification=["删除与采购标的和履约能力无直接关系的评分因素。"],
+                )
+            )
+    if SCORING_INCONSISTENT_RE.search(combined_text):
+        title = "评分口径前后不一致"
+        if title not in existing_titles:
+            risks.append(
+                _build_risk_point(
+                    source_section=source_section,
+                    title=title,
+                    review_type="评分标准不明确",
+                    judgments=["同一评分项的分值或评分口径前后不一致，可能影响评审可操作性。"],
+                    rectification=["统一评分项分值及评分口径表述。"],
+                )
+            )
     return risks
 
 
@@ -298,7 +328,7 @@ def _build_topic_failure_reasons(
     missing_evidence: list[str],
     need_manual_review: bool,
     degraded: bool,
-    recovered_by_fallback: bool,
+    recovered_reason_codes: list[str] | None = None,
 ) -> list[str]:
     reasons: list[str] = []
     if not selected_sections:
@@ -307,8 +337,12 @@ def _build_topic_failure_reasons(
         reasons.append("missing_evidence")
     if degraded or (need_manual_review and missing_evidence):
         reasons.append("degraded_to_manual_review")
-    if recovered_by_fallback:
+    if need_manual_review and selected_sections and missing_evidence:
+        reasons.append("risk_degraded_to_manual_review")
+    recovered_reason_codes = [str(item).strip() for item in (recovered_reason_codes or []) if str(item).strip()]
+    if recovered_reason_codes:
         reasons.append("risk_not_extracted")
+        reasons.extend(recovered_reason_codes)
     return list(dict.fromkeys(reasons))
 
 
@@ -457,7 +491,24 @@ def _postprocess_topic_payload(
             risk_points.append(_to_risk_point(item, definition.label))
 
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    section_modules = {
+        str(section.get("module", "")).strip()
+        for section in sections
+        if isinstance(section, dict) and str(section.get("module", "")).strip()
+    }
+    boundary_modules = set(definition.boundary.primary_modules or definition.modules) | set(definition.boundary.secondary_modules)
+    has_shared_section_signal = any(
+        sum(
+            1
+            for module, score in dict(section.get("module_scores", {}) or {}).items()
+            if module in boundary_modules and int(score or 0) >= 3
+        )
+        >= 2
+        for section in sections
+        if isinstance(section, dict)
+    )
     existing_titles = {risk.title for risk in risk_points if risk.title.strip()}
+    existing_risk_count = len(existing_titles)
     normalized_missing_evidence = _normalize_missing_evidence_items(payload.get("missing_evidence"))
     fallback_risks = (
         _build_topic_rule_fallback_risks(definition, sections, existing_titles)
@@ -466,7 +517,12 @@ def _postprocess_topic_payload(
     )
     if fallback_risks:
         risk_points.extend(fallback_risks)
-        failure_reasons.append("risk_not_extracted")
+        if existing_risk_count > 0:
+            failure_reasons.append("topic_triggered_but_partial_miss")
+        else:
+            failure_reasons.append("evidence_enough_but_risk_missed")
+        if len(section_modules) >= 2 or len(sections) >= 2 or has_shared_section_signal:
+            failure_reasons.append("cross_topic_shared_but_single_topic_hit")
         summary = str(payload.get("summary", "")).strip()
         payload["summary"] = summary or f"{definition.label}专题完成，并根据已召回证据补出明确风险。"
         payload["coverage_note"] = str(payload.get("coverage_note", "")).strip() or "已覆盖专题关键条款。"
@@ -559,7 +615,7 @@ def _run_single_topic(
         missing_evidence=normalized_missing_evidence,
         need_manual_review=bool(payload.get("need_manual_review", False)),
         degraded=False,
-        recovered_by_fallback=bool(postprocess_failure_reasons),
+        recovered_reason_codes=postprocess_failure_reasons,
     )
     return TopicReviewArtifact(
         topic=definition.key,
