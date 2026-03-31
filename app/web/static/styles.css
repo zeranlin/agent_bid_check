@@ -1343,7 +1343,8 @@ textarea:focus {
 .review-block--severity-高.review-block--excerpt .review-block__content--source p,
 .review-block--severity-高.review-block--excerpt .review-block__content--source li,
 .review-block--severity-高.review-block--excerpt .review-block__content--source blockquote {
-  color: rgba(209, 74, 46, 0.72);
+  color: #d14a2e;
+  background: rgba(237, 118, 66, 0.14);
 }
 
 .review-block--severity-中 {
@@ -1359,7 +1360,8 @@ textarea:focus {
 .review-block--severity-中.review-block--excerpt .review-block__content--source p,
 .review-block--severity-中.review-block--excerpt .review-block__content--source li,
 .review-block--severity-中.review-block--excerpt .review-block__content--source blockquote {
-  color: rgba(182, 118, 29, 0.78);
+  color: #b6761d;
+  background: rgba(243, 173, 72, 0.16);
 }
 
 .review-block--severity-低 {
@@ -1375,7 +1377,8 @@ textarea:focus {
 .review-block--severity-低.review-block--excerpt .review-block__content--source p,
 .review-block--severity-低.review-block--excerpt .review-block__content--source li,
 .review-block--severity-低.review-block--excerpt .review-block__content--source blockquote {
-  color: rgba(42, 110, 175, 0.76);
+  color: #2a6eaf;
+  background: rgba(107, 169, 231, 0.16);
 }
 
 .review-block--severity-manual {
@@ -1391,7 +1394,8 @@ textarea:focus {
 .review-block--severity-manual.review-block--excerpt .review-block__content--source p,
 .review-block--severity-manual.review-block--excerpt .review-block__content--source li,
 .review-block--severity-manual.review-block--excerpt .review-block__content--source blockquote {
-  color: rgba(90, 80, 70, 0.78);
+  color: #5a5046;
+  background: rgba(60, 46, 32, 0.08);
 }
 
 .review-block p,
@@ -1448,6 +1452,23 @@ textarea:focus {
 .review-block__content--source li,
 .review-block__content--source blockquote {
   color: rgba(110, 110, 115, 0.96);
+}
+
+.review-block--excerpt .review-block__content--source p,
+.review-block--excerpt .review-block__content--source li,
+.review-block--excerpt .review-block__content--source blockquote {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 0 8px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.review-block--excerpt .review-block__content--source blockquote {
+  padding-left: 14px;
 }
 
 .review-block--location .review-block__content--source p,
