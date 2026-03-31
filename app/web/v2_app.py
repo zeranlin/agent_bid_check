@@ -423,7 +423,19 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
 
 
 def build_comparison_view(comparison: dict) -> dict:
-    if not isinstance(comparison, dict):
+    if not isinstance(comparison, dict) or not any(
+        key in comparison
+        for key in (
+            "clusters",
+            "conflicts",
+            "coverage_gaps",
+            "baseline_only_risks",
+            "topic_only_risks",
+            "manual_review_items",
+            "comparison_summary",
+            "coverage_summary",
+        )
+    ):
         return {
             "available": False,
             "summary": {},
@@ -431,6 +443,7 @@ def build_comparison_view(comparison: dict) -> dict:
             "coverage_gaps": [],
             "baseline_only": [],
             "topic_only": [],
+            "manual_review_items": [],
         }
     return {
         "available": True,
@@ -460,6 +473,72 @@ def build_comparison_view(comparison: dict) -> dict:
         ],
         "manual_review_items": comparison.get("manual_review_items", []) or [],
     }
+
+
+def build_topic_view(topics: list[dict], overview: dict | None = None) -> list[dict]:
+    overview = overview if isinstance(overview, dict) else {}
+    overview_topics: dict[str, dict] = {}
+    for item in overview.get("topics", []) or []:
+        if isinstance(item, dict) and str(item.get("topic", "")).strip():
+            overview_topics[str(item.get("topic", "")).strip()] = item
+
+    normalized: list[dict] = []
+    for topic in topics:
+        if not isinstance(topic, dict):
+            continue
+        topic_key = str(topic.get("topic", "")).strip()
+        if not topic_key:
+            continue
+        metadata = topic.get("metadata", {}) if isinstance(topic.get("metadata", {}), dict) else {}
+        overview_item = overview_topics.get(topic_key, {})
+        missing_evidence = [
+            str(item).strip()
+            for item in (metadata.get("missing_evidence", []) or topic.get("missing_evidence", []) or [])
+            if str(item).strip() and str(item).strip() != "未发现"
+        ]
+        selected_sections = metadata.get("selected_sections", []) if isinstance(metadata.get("selected_sections", []), list) else []
+        topic_coverage = metadata.get("topic_coverage", {}) if isinstance(metadata.get("topic_coverage", {}), dict) else {}
+        covered_modules = [str(item).strip() for item in (topic_coverage.get("covered_modules", []) or []) if str(item).strip()]
+        missing_modules = [str(item).strip() for item in (topic_coverage.get("missing_modules", []) or []) if str(item).strip()]
+        normalized.append(
+            {
+                "topic": topic_key,
+                "topic_label": TOPIC_LABELS.get(topic_key, topic_key),
+                "summary": str(topic.get("summary", "")).strip() or str(overview_item.get("summary", "")).strip() or "未发现",
+                "coverage_note": str(topic.get("coverage_note", "")).strip()
+                or str(overview_item.get("coverage_note", "")).strip()
+                or "未发现",
+                "risk_points": topic.get("risk_points", []) if isinstance(topic.get("risk_points", []), list) else [],
+                "risk_count": len(topic.get("risk_points", []) if isinstance(topic.get("risk_points", []), list) else [])
+                or int(overview_item.get("risk_count", 0) or 0),
+                "need_manual_review": bool(topic.get("need_manual_review", False) or overview_item.get("need_manual_review", False)),
+                "missing_evidence": missing_evidence,
+                "selected_section_count": len(selected_sections),
+                "covered_modules": covered_modules,
+                "missing_modules": missing_modules,
+            }
+        )
+
+    if normalized:
+        return normalized
+
+    for topic_key, item in overview_topics.items():
+        normalized.append(
+            {
+                "topic": topic_key,
+                "topic_label": TOPIC_LABELS.get(topic_key, topic_key),
+                "summary": str(item.get("summary", "")).strip() or "未发现",
+                "coverage_note": str(item.get("coverage_note", "")).strip() or "未发现",
+                "risk_points": [],
+                "risk_count": int(item.get("risk_count", 0) or 0),
+                "need_manual_review": bool(item.get("need_manual_review", False)),
+                "missing_evidence": [],
+                "selected_section_count": 0,
+                "covered_modules": [],
+                "missing_modules": [],
+            }
+        )
+    return normalized
 
 
 def load_result_by_run_id(run_id: str) -> dict | None:
@@ -502,6 +581,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
                 topics.append(payload)
             except Exception:
                 continue
+    topic_view = build_topic_view(topics, overview)
     report = parse_review_markdown(final_markdown)
     return {
         "run_id": run_id,
@@ -514,6 +594,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "comparison": comparison,
         "comparison_view": build_comparison_view(comparison),
         "topics": topics,
+        "topic_view": topic_view,
         "downloads": {
             "review": url_for("download_plus_file", run_id=run_id, kind="review"),
             "extracted": url_for("download_plus_file", run_id=run_id, kind="extracted"),

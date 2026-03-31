@@ -46,6 +46,9 @@ class TopicExecutionPlan:
     selected_keys: tuple[str, ...]
     skipped_keys: tuple[str, ...] = ()
     max_topic_calls: int = 0
+    per_topic_timeout: int = 0
+    per_topic_max_tokens: int = 0
+    allow_degrade_on_error: bool = True
     reason: str = ""
 
 
@@ -301,10 +304,10 @@ TOPIC_SET_REGISTRY = {
     ),
 }
 TOPIC_MODE_BUDGETS = {
-    "slim": 3,
-    "default": 4,
-    "enhanced": 10,
-    "mature": 10,
+    "slim": {"max_topic_calls": 3, "per_topic_timeout": 90, "per_topic_max_tokens": 2200},
+    "default": {"max_topic_calls": 4, "per_topic_timeout": 120, "per_topic_max_tokens": 2800},
+    "enhanced": {"max_topic_calls": 10, "per_topic_timeout": 150, "per_topic_max_tokens": 3200},
+    "mature": {"max_topic_calls": 10, "per_topic_timeout": 150, "per_topic_max_tokens": 3200},
 }
 TOPIC_DEFINITIONS = tuple(TOPIC_TAXONOMY_MAP[key] for key in ACTIVE_TOPIC_KEYS)
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
@@ -331,11 +334,15 @@ def resolve_topic_execution_plan(
             selected_keys=selected_keys,
             skipped_keys=tuple(key for key in requested_keys if key not in selected_keys),
             max_topic_calls=len(selected_keys),
+            per_topic_timeout=TOPIC_MODE_BUDGETS.get(topic_mode, TOPIC_MODE_BUDGETS["default"])["per_topic_timeout"],
+            per_topic_max_tokens=TOPIC_MODE_BUDGETS.get(topic_mode, TOPIC_MODE_BUDGETS["default"])["per_topic_max_tokens"],
+            allow_degrade_on_error=True,
             reason="custom_topic_keys",
         )
 
     requested_keys = TOPIC_SET_REGISTRY.get(topic_mode, TOPIC_SET_REGISTRY["default"])
-    max_topic_calls = TOPIC_MODE_BUDGETS.get(topic_mode, TOPIC_MODE_BUDGETS["default"])
+    budget_profile = TOPIC_MODE_BUDGETS.get(topic_mode, TOPIC_MODE_BUDGETS["default"])
+    max_topic_calls = int(budget_profile["max_topic_calls"])
     available_keys = [key for key in requested_keys if key in TOPIC_TAXONOMY_MAP]
     ranked_keys = sorted(
         available_keys,
@@ -352,6 +359,9 @@ def resolve_topic_execution_plan(
         selected_keys=selected_keys,
         skipped_keys=skipped_keys,
         max_topic_calls=max_topic_calls,
+        per_topic_timeout=int(budget_profile["per_topic_timeout"]),
+        per_topic_max_tokens=int(budget_profile["per_topic_max_tokens"]),
+        allow_degrade_on_error=True,
         reason="budget_limited" if skipped_keys else "full_budget",
     )
 

@@ -171,23 +171,30 @@ def _build_empty_topic_artifact(
     coverage: dict,
     topic_mode: str,
     execution_plan: dict,
+    summary: str | None = None,
+    missing_evidence: list[str] | None = None,
+    raw_output: str = "",
+    error_type: str = "missing_evidence",
 ) -> TopicReviewArtifact:
     sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+    missing_items = list(missing_evidence or (coverage.get("missing_hints", []) if isinstance(coverage, dict) else []))
     return TopicReviewArtifact(
         topic=definition.key,
-        summary=f"{definition.label}专题未召回到足够证据，需人工复核。",
+        summary=summary or f"{definition.label}专题未召回到足够证据，需人工复核。",
         need_manual_review=True,
         coverage_note=_build_default_coverage_note(sections, coverage),
-        raw_output="",
+        raw_output=raw_output,
         metadata={
             "topic_label": definition.label,
             "topic_priority": definition.priority,
             "topic_mode": topic_mode,
             "topic_execution_plan": execution_plan,
             "selected_sections": [],
-            "missing_evidence": coverage.get("missing_hints", []) if isinstance(coverage, dict) else [],
+            "missing_evidence": missing_items,
             "evidence_bundle": bundle,
             "topic_coverage": coverage,
+            "degraded": True,
+            "degrade_reason": error_type,
         },
     )
 
@@ -212,30 +219,45 @@ def _run_single_topic(
     prompt = maybe_disable_qwen_thinking(prompt, settings.model)
     if stream_callback:
         stream_callback(f"\n\n[第三层专题深审·{definition.label}]\n")
-    response = (
-        call_chat_completion_stream(
-            base_url=settings.base_url,
-            model=settings.model,
-            api_key=settings.api_key,
-            system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
-            user_prompt=prompt,
-            temperature=settings.temperature,
-            max_tokens=min(settings.max_tokens, 3200),
-            timeout=settings.timeout,
-            on_text=stream_callback,
+    try:
+        response = (
+            call_chat_completion_stream(
+                base_url=settings.base_url,
+                model=settings.model,
+                api_key=settings.api_key,
+                system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
+                user_prompt=prompt,
+                temperature=settings.temperature,
+                max_tokens=min(settings.max_tokens, int(execution_plan.get("per_topic_max_tokens", 3200) or 3200)),
+                timeout=min(settings.timeout, int(execution_plan.get("per_topic_timeout", settings.timeout) or settings.timeout)),
+                on_text=stream_callback,
+            )
+            if stream_callback
+            else call_chat_completion(
+                base_url=settings.base_url,
+                model=settings.model,
+                api_key=settings.api_key,
+                system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
+                user_prompt=prompt,
+                temperature=settings.temperature,
+                max_tokens=min(settings.max_tokens, int(execution_plan.get("per_topic_max_tokens", 3200) or 3200)),
+                timeout=min(settings.timeout, int(execution_plan.get("per_topic_timeout", settings.timeout) or settings.timeout)),
+            )
         )
-        if stream_callback
-        else call_chat_completion(
-            base_url=settings.base_url,
-            model=settings.model,
-            api_key=settings.api_key,
-            system_prompt="你是政府采购招标文件专题深审助手，只输出合法 JSON。",
-            user_prompt=prompt,
-            temperature=settings.temperature,
-            max_tokens=min(settings.max_tokens, 3200),
-            timeout=settings.timeout,
+    except Exception as exc:
+        if not execution_plan.get("allow_degrade_on_error", True):
+            raise
+        return _build_empty_topic_artifact(
+            definition,
+            bundle,
+            coverage,
+            topic_mode,
+            execution_plan,
+            summary=f"{definition.label}专题调用失败，已自动降级为人工复核。",
+            missing_evidence=[f"专题调用失败：{exc}"],
+            raw_output="",
+            error_type="topic_call_failed",
         )
-    )
     raw_output = extract_response_text(response) or ""
     payload = _parse_topic_json(raw_output)
 
@@ -289,6 +311,9 @@ def run_topic_reviews(
         "selected_keys": list(plan.selected_keys),
         "skipped_keys": list(plan.skipped_keys),
         "max_topic_calls": plan.max_topic_calls,
+        "per_topic_timeout": plan.per_topic_timeout,
+        "per_topic_max_tokens": plan.per_topic_max_tokens,
+        "allow_degrade_on_error": plan.allow_degrade_on_error,
         "reason": plan.reason,
     }
     return [

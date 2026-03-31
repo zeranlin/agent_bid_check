@@ -250,6 +250,22 @@
                 </div>
 
                 <div class="review-card__body">
+                  {% if item.source_tags or item.source_topics or item.conflict_notes or item.manual_reasons %}
+                  <div class="review-detail__signals">
+                    {% for tag in item.source_tags %}
+                    <span class="review-signal-chip review-signal-chip--source">{{ tag }}</span>
+                    {% endfor %}
+                    {% for tag in item.source_topics %}
+                    <span class="review-signal-chip review-signal-chip--topic">{{ tag }}</span>
+                    {% endfor %}
+                    {% if item.conflict_notes %}
+                    <span class="review-signal-chip review-signal-chip--conflict">冲突标记</span>
+                    {% endif %}
+                    {% if item.manual_reasons %}
+                    <span class="review-signal-chip review-signal-chip--manual">人工复核</span>
+                    {% endif %}
+                  </div>
+                  {% endif %}
                   <div class="review-card__main-flow">
                     <div class="review-block review-block--main review-block--severity-{{ item.severity_class }} review-block--excerpt">
                       <span>原文摘录</span>
@@ -283,6 +299,26 @@
                         {% endfor %}
                       </ul>
                     </div>
+                    {% if item.conflict_notes %}
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }}">
+                      <span>冲突说明</span>
+                      <ul>
+                        {% for line in item.conflict_notes %}
+                        <li>{{ line|inline_md }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    {% endif %}
+                    {% if item.manual_reasons %}
+                    <div class="review-block review-block--main review-block--severity-{{ item.severity_class }}">
+                      <span>人工复核原因</span>
+                      <ul>
+                        {% for line in item.manual_reasons %}
+                        <li>{{ line|inline_md }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    {% endif %}
                   </div>
                 </div>
               </article>
@@ -290,6 +326,114 @@
             </section>
           </div>
         </section>
+
+        {% if result.topic_view %}
+        <section class="panel panel--result panel--result-subsection">
+          <div class="panel__head">
+            <div>
+              <p class="kicker">Topics</p>
+              <h2>分专题结果</h2>
+            </div>
+          </div>
+          <div class="topic-compact-grid">
+            {% for topic in result.topic_view %}
+            <article class="topic-compact-card">
+              <div class="topic-compact-card__head">
+                <div>
+                  <h3>{{ topic.topic_label }}</h3>
+                  <p>{{ topic.summary|inline_md }}</p>
+                </div>
+                <div class="topic-compact-card__badge{% if topic.need_manual_review %} is-manual{% endif %}">
+                  {% if topic.need_manual_review %}需复核{% else %}已完成{% endif %}
+                </div>
+              </div>
+              <div class="topic-compact-meta">
+                <span>风险 {{ topic.risk_count }}</span>
+                <span>证据 {{ topic.selected_section_count }}</span>
+                {% if topic.covered_modules %}
+                <span>覆盖 {{ topic.covered_modules|join(' / ') }}</span>
+                {% endif %}
+              </div>
+              <div class="topic-compact-note">{{ topic.coverage_note|inline_md }}</div>
+              {% if topic.missing_evidence or topic.missing_modules %}
+              <div class="topic-compact-tags">
+                {% for item in topic.missing_evidence %}
+                <span class="topic-compact-tag">缺口：{{ item }}</span>
+                {% endfor %}
+                {% for item in topic.missing_modules %}
+                <span class="topic-compact-tag topic-compact-tag--warning">缺模块：{{ item }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if result.comparison_view and result.comparison_view.available %}
+        <section class="panel panel--result panel--result-subsection">
+          <div class="panel__head">
+            <div>
+              <p class="kicker">Compare</p>
+              <h2>差异视图</h2>
+            </div>
+          </div>
+          <div class="compare-compact-summary">
+            <div class="compare-compact-stat">
+              <span>聚类</span>
+              <strong>{{ result.comparison_view.summary.cluster_count }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>冲突</span>
+              <strong>{{ result.comparison_view.summary.conflict_count }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>去重减少</span>
+              <strong>{{ result.comparison_view.summary.duplicate_reduction }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>复核项</span>
+              <strong>{{ result.comparison_view.summary.manual_review_count }}</strong>
+            </div>
+          </div>
+          <div class="compare-compact-grid">
+            <article class="compare-compact-card">
+              <h3>冲突项</h3>
+              {% for item in result.comparison_view.conflicts[:5] %}
+              <div class="compare-compact-item">
+                <strong>{{ item.title|inline_md }}</strong>
+                <p>{{ (item.conflict_notes or [])|join('；')|inline_md }}</p>
+              </div>
+              {% else %}
+              <div class="compare-compact-item is-empty"><p>当前未发现明显冲突。</p></div>
+              {% endfor %}
+            </article>
+            <article class="compare-compact-card">
+              <h3>覆盖缺口</h3>
+              {% for item in result.comparison_view.coverage_gaps[:5] %}
+              <div class="compare-compact-item">
+                <strong>{{ item.topic }} / {{ item.type }}</strong>
+                <p>{{ item.message|inline_md }}</p>
+              </div>
+              {% else %}
+              <div class="compare-compact-item is-empty"><p>当前未发现明显覆盖缺口。</p></div>
+              {% endfor %}
+            </article>
+            <article class="compare-compact-card">
+              <h3>专题补充</h3>
+              {% for item in result.comparison_view.topic_only[:5] %}
+              <div class="compare-compact-item">
+                <strong>{{ item.title|inline_md }}</strong>
+                <p>{{ item.topic_label or item.topic }} / {{ item.review_type }} / {{ item.source_location|inline_md }}</p>
+              </div>
+              {% else %}
+              <div class="compare-compact-item is-empty"><p>当前没有专题补充项。</p></div>
+              {% endfor %}
+            </article>
+          </div>
+        </section>
+        {% endif %}
         {% else %}
         <div class="empty-state">
           <p>上传文件后，系统会直接使用 V2 流程发起审查。</p>
