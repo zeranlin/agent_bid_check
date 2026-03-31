@@ -15,6 +15,62 @@ from app.pipelines.v2.regression import compare_risks, compare_structure, extrac
 
 
 DEFAULT_SAMPLE_PATH = APP_PROJECT_ROOT / "data" / "examples" / "v2_regression_eval_samples.json"
+FAILURE_CODEBOOK = {
+    "section_not_found": {
+        "label": "必需章节未召回",
+        "layer": "structure",
+        "category": "recall_gap",
+        "suggestion": "优先补章节切分与标题识别规则。",
+    },
+    "module_mismatch": {
+        "label": "章节主模块识别错误",
+        "layer": "structure",
+        "category": "module_classification",
+        "suggestion": "补模块关键词与主归属规则。",
+    },
+    "secondary_modules_missing": {
+        "label": "章节次模块覆盖不足",
+        "layer": "structure",
+        "category": "module_coverage",
+        "suggestion": "补共享模块与混合章节识别规则。",
+    },
+    "missing_titles": {
+        "label": "专题缺少必需章节标题",
+        "layer": "coverage",
+        "category": "evidence_coverage",
+        "suggestion": "补专题 coverage 的标题召回与证据映射。",
+    },
+    "missing_modules": {
+        "label": "专题缺少必需模块覆盖",
+        "layer": "coverage",
+        "category": "evidence_coverage",
+        "suggestion": "补专题 evidence bundle 的模块覆盖规则。",
+    },
+    "risk_not_extracted": {
+        "label": "专题风险未抽取命中",
+        "layer": "topic",
+        "category": "risk_extraction",
+        "suggestion": "补专题 prompt 或风险抽取规则。",
+    },
+    "manual_review_flag_mismatch": {
+        "label": "人工复核判定与金标不一致",
+        "layer": "topic",
+        "category": "manual_review_boundary",
+        "suggestion": "收紧明确风险与人工复核的边界。",
+    },
+    "false_positive_risk": {
+        "label": "汇总层出现额外风险点",
+        "layer": "compare",
+        "category": "false_positive",
+        "suggestion": "排查汇总去重与冲突裁决逻辑。",
+    },
+    "unknown_reason": {
+        "label": "未归类失败原因",
+        "layer": "unknown",
+        "category": "unknown",
+        "suggestion": "需人工补充失败原因映射。",
+    },
+}
 
 
 def load_samples(path: Path) -> list[dict]:
@@ -22,6 +78,123 @@ def load_samples(path: Path) -> list[dict]:
     if not isinstance(data, list):
         raise ValueError("回归样本文件必须是数组。")
     return [item for item in data if isinstance(item, dict)]
+
+
+def _split_reason_codes(reason: object) -> list[str]:
+    text = str(reason or "").strip()
+    if not text:
+        return []
+    return [item.strip() for item in text.split(",") if item.strip()]
+
+
+def normalize_failure_code(code: object) -> str:
+    normalized = str(code or "").strip()
+    if not normalized:
+        return "unknown_reason"
+    return normalized if normalized in FAILURE_CODEBOOK else "unknown_reason"
+
+
+def describe_failure_code(code: object) -> dict[str, str]:
+    normalized = normalize_failure_code(code)
+    meta = FAILURE_CODEBOOK.get(normalized, FAILURE_CODEBOOK["unknown_reason"])
+    return {
+        "code": normalized,
+        "label": str(meta["label"]),
+        "layer": str(meta["layer"]),
+        "category": str(meta["category"]),
+        "suggestion": str(meta["suggestion"]),
+    }
+
+
+def _build_failure_analysis(structure_result: dict, risk_result: dict) -> dict:
+    structure_reasons: list[str] = []
+    coverage_reasons: list[str] = []
+    topic_reasons: list[str] = []
+    compare_reasons: list[str] = []
+
+    for item in structure_result.get("missed_sections", []):
+        for reason in _split_reason_codes(item.get("reason")):
+            structure_reasons.append(normalize_failure_code(reason))
+
+    for item in structure_result.get("missed_topic_coverages", []):
+        for reason in _split_reason_codes(item.get("reason")):
+            coverage_reasons.append(normalize_failure_code(reason))
+
+    if risk_result.get("missed_risks"):
+        topic_reasons.append("risk_not_extracted")
+    for item in risk_result.get("manual_review_gaps", []):
+        for reason in _split_reason_codes(item.get("reason")):
+            topic_reasons.append(normalize_failure_code(reason))
+    if risk_result.get("false_positive_risks"):
+        compare_reasons.append("false_positive_risk")
+
+    structure_failed = bool(structure_result.get("missed_sections"))
+    coverage_failed = bool(structure_result.get("missed_topic_coverages"))
+    topic_failed = bool(risk_result.get("missed_risks") or risk_result.get("manual_review_gaps"))
+    compare_failed = bool(risk_result.get("false_positive_risks"))
+
+    layers = [
+        {
+            "layer": "structure",
+            "label": "第一层：结构识别与章节召回",
+            "failed": structure_failed,
+            "reasons": sorted(set(structure_reasons)),
+            "count": len(structure_result.get("missed_sections", [])),
+        },
+        {
+            "layer": "coverage",
+            "label": "第一层延伸：专题 coverage 召回",
+            "failed": coverage_failed,
+            "reasons": sorted(set(coverage_reasons)),
+            "count": len(structure_result.get("missed_topic_coverages", [])),
+        },
+        {
+            "layer": "topic",
+            "label": "第二层：专题风险抽取",
+            "failed": topic_failed,
+            "reasons": sorted(set(topic_reasons)),
+            "count": len(risk_result.get("missed_risks", [])) + len(risk_result.get("manual_review_gaps", [])),
+        },
+        {
+            "layer": "compare",
+            "label": "第三层：汇总与去重",
+            "failed": compare_failed,
+            "reasons": sorted(set(compare_reasons)),
+            "count": len(risk_result.get("false_positive_risks", [])),
+        },
+    ]
+
+    primary_blocker = "none"
+    if structure_failed or coverage_failed:
+        primary_blocker = "structure"
+    elif topic_failed:
+        primary_blocker = "topic"
+    elif compare_failed:
+        primary_blocker = "compare"
+
+    cascaded_failure = primary_blocker == "structure" and (topic_failed or compare_failed)
+    summary_parts: list[str] = []
+    if primary_blocker == "structure":
+        summary_parts.append("第一层主卡点")
+    elif primary_blocker == "topic":
+        summary_parts.append("第二层主卡点")
+    elif primary_blocker == "compare":
+        summary_parts.append("第三层主卡点")
+    else:
+        summary_parts.append("当前样本无显著失败")
+    if cascaded_failure:
+        summary_parts.append("并引发后续层级联失败")
+
+    root_cause_codes = sorted(set(structure_reasons + coverage_reasons + topic_reasons + compare_reasons))
+
+    return {
+        "primary_blocker_layer": primary_blocker,
+        "cascaded_failure": cascaded_failure,
+        "root_causes": root_cause_codes,
+        "root_cause_details": [describe_failure_code(code) for code in root_cause_codes],
+        "layers": layers,
+        "summary": "，".join(summary_parts),
+    }
 
 
 def evaluate_sample(sample: dict) -> dict:
@@ -35,6 +208,7 @@ def evaluate_sample(sample: dict) -> dict:
 
     structure_result = compare_structure(gold_structure, actual_sections, actual_bundles)
     risk_result = compare_risks(gold_risks, actual_risks)
+    failure_analysis = _build_failure_analysis(structure_result, risk_result)
 
     return {
         "sample_id": str(sample.get("sample_id", "sample")),
@@ -54,6 +228,7 @@ def evaluate_sample(sample: dict) -> dict:
         "missed_risk_count": len(risk_result["missed_risks"]),
         "false_positive_risk_count": len(risk_result["false_positive_risks"]),
         "manual_review_gap_count": len(risk_result["manual_review_gaps"]),
+        "failure_analysis": failure_analysis,
         "structure": structure_result,
         "risks": risk_result,
     }
@@ -69,6 +244,30 @@ def build_summary(results: list[dict], sample_path: Path | None = None) -> dict:
     missed_risk_count = sum(int(item.get("missed_risk_count", 0)) for item in results)
     false_positive_risk_count = sum(int(item.get("false_positive_risk_count", 0)) for item in results)
     manual_review_gap_count = sum(int(item.get("manual_review_gap_count", 0)) for item in results)
+    root_cause_summary: dict[str, int] = {}
+    standardized_failure_summary: dict[str, dict[str, object]] = {}
+    layer_failure_summary: dict[str, int] = {}
+    for item in results:
+        failure_analysis = item.get("failure_analysis", {}) if isinstance(item.get("failure_analysis", {}), dict) else {}
+        for reason in failure_analysis.get("root_causes", []):
+            code = normalize_failure_code(reason)
+            root_cause_summary[code] = root_cause_summary.get(code, 0) + 1
+            meta = describe_failure_code(code)
+            bucket = standardized_failure_summary.get(code)
+            if not bucket:
+                standardized_failure_summary[code] = {
+                    **meta,
+                    "count": 1,
+                }
+            else:
+                bucket["count"] = int(bucket.get("count", 0)) + 1
+        for layer in failure_analysis.get("layers", []):
+            if not isinstance(layer, dict) or not layer.get("failed"):
+                continue
+            layer_name = str(layer.get("layer", "")).strip()
+            if not layer_name:
+                continue
+            layer_failure_summary[layer_name] = layer_failure_summary.get(layer_name, 0) + 1
 
     return {
         "sample_path": str(sample_path) if sample_path else "",
@@ -88,6 +287,9 @@ def build_summary(results: list[dict], sample_path: Path | None = None) -> dict:
         "miss_rate": (missed_risk_count / gold_risk_total) if gold_risk_total else 0.0,
         "false_positive_risk_count": false_positive_risk_count,
         "manual_review_gap_count": manual_review_gap_count,
+        "root_cause_summary": root_cause_summary,
+        "standardized_failure_summary": standardized_failure_summary,
+        "layer_failure_summary": layer_failure_summary,
         "samples": results,
     }
 
@@ -98,6 +300,7 @@ def collect_outputs(results: list[dict]) -> dict[str, list[dict]]:
     false_positive_risks: list[dict] = []
     manual_review_gaps: list[dict] = []
     structure_gaps: list[dict] = []
+    failure_analysis: list[dict] = []
 
     for item in results:
         sample_id = str(item.get("sample_id", "sample"))
@@ -113,6 +316,9 @@ def collect_outputs(results: list[dict]) -> dict[str, list[dict]]:
             structure_gaps.append({"sample_id": sample_id, "type": "section", **gap})
         for gap in item.get("structure", {}).get("missed_topic_coverages", []):
             structure_gaps.append({"sample_id": sample_id, "type": "topic_coverage", **gap})
+        analysis = item.get("failure_analysis", {})
+        if isinstance(analysis, dict):
+            failure_analysis.append({"sample_id": sample_id, **analysis})
 
     return {
         "matched_risks": matched_risks,
@@ -120,7 +326,115 @@ def collect_outputs(results: list[dict]) -> dict[str, list[dict]]:
         "false_positive_risks": false_positive_risks,
         "manual_review_gaps": manual_review_gaps,
         "structure_gaps": structure_gaps,
+        "failure_analysis": failure_analysis,
     }
+
+
+def build_markdown_report(summary: dict, outputs: dict[str, list[dict]]) -> str:
+    lines = [
+        "# V2 埋点回归失败报告",
+        "",
+        f"- 样本文件：`{summary.get('sample_path', '')}`",
+        f"- 样本数：`{summary.get('sample_count', 0)}`",
+        f"- 结构命中率：`{summary.get('structure_hit_count', 0)}/{summary.get('structure_required_total', 0)} = {float(summary.get('structure_hit_rate', 0.0)):.2%}`",
+        f"- 专题覆盖命中率：`{summary.get('topic_coverage_hit_count', 0)}/{summary.get('topic_coverage_total', 0)} = {float(summary.get('topic_coverage_hit_rate', 0.0)):.2%}`",
+        f"- 风险命中率：`{summary.get('matched_risk_count', 0)}/{summary.get('gold_risk_total', 0)} = {float(summary.get('risk_hit_rate', 0.0)):.2%}`",
+        f"- 漏报率：`{summary.get('missed_risk_count', 0)}/{summary.get('gold_risk_total', 0)} = {float(summary.get('miss_rate', 0.0)):.2%}`",
+        f"- 误报数：`{summary.get('false_positive_risk_count', 0)}`",
+        f"- 人工复核差异数：`{summary.get('manual_review_gap_count', 0)}`",
+        "",
+        "## 根因汇总",
+        "",
+    ]
+    if summary.get("standardized_failure_summary"):
+        for code, item in sorted(summary["standardized_failure_summary"].items()):
+            lines.extend(
+                [
+                    f"### {item['label']}",
+                    "",
+                    f"- 原因码：`{code}`",
+                    f"- 所属层级：`{item['layer']}`",
+                    f"- 分类：`{item['category']}`",
+                    f"- 出现次数：`{item['count']}`",
+                    f"- 建议修复方向：{item['suggestion']}",
+                    "",
+                ]
+            )
+    else:
+        lines.extend(["- `未发现`", ""])
+
+    lines.extend(["## 样本明细", ""])
+    for sample in summary.get("samples", []):
+        analysis = sample.get("failure_analysis", {}) if isinstance(sample.get("failure_analysis"), dict) else {}
+        lines.extend(
+            [
+                f"### {sample.get('sample_id', 'sample')}",
+                "",
+                f"- 文档名称：`{sample.get('document_name', '')}`",
+                f"- 主阻塞层：`{analysis.get('primary_blocker_layer', 'none')}`",
+                f"- 失败摘要：{analysis.get('summary', '未发现')}",
+                f"- 是否级联失败：`{analysis.get('cascaded_failure', False)}`",
+                "",
+                "#### 分层状态",
+                "",
+            ]
+        )
+        for layer in analysis.get("layers", []):
+            if not isinstance(layer, dict):
+                continue
+            lines.append(
+                f"- `{layer.get('label', layer.get('layer', 'unknown'))}`：failed=`{layer.get('failed', False)}`，count=`{layer.get('count', 0)}`，reasons=`{layer.get('reasons', [])}`"
+            )
+        lines.extend(["", "#### 根因与建议", ""])
+        if analysis.get("root_cause_details"):
+            for detail in analysis["root_cause_details"]:
+                lines.append(
+                    f"- `{detail.get('code', 'unknown_reason')}` / {detail.get('label', '未归类失败原因')}：{detail.get('suggestion', '需人工复核')}"
+                )
+        else:
+            lines.append("- `未发现`")
+
+        lines.extend(["", "#### 结构差异", ""])
+        missed_sections = sample.get("structure", {}).get("missed_sections", [])
+        missed_topic_coverages = sample.get("structure", {}).get("missed_topic_coverages", [])
+        if missed_sections or missed_topic_coverages:
+            for item in missed_sections:
+                lines.append(
+                    f"- 章节缺口：`{item.get('title', '未发现')}`，预期模块=`{item.get('expected_module', '未发现')}`，原因=`{item.get('reason', '未发现')}`"
+                )
+            for item in missed_topic_coverages:
+                lines.append(
+                    f"- coverage 缺口：topic=`{item.get('topic', 'unknown')}`，required_titles=`{item.get('required_titles', [])}`，required_modules=`{item.get('required_modules', [])}`，原因=`{item.get('reason', '未发现')}`"
+                )
+        else:
+            lines.append("- `未发现`")
+
+        lines.extend(["", "#### 风险差异", ""])
+        missed_risks = sample.get("risks", {}).get("missed_risks", [])
+        false_positive_risks = sample.get("risks", {}).get("false_positive_risks", [])
+        manual_review_gaps = sample.get("risks", {}).get("manual_review_gaps", [])
+        if missed_risks or false_positive_risks or manual_review_gaps:
+            for item in missed_risks:
+                lines.append(
+                    f"- 漏报风险：`{item.get('title', '未发现')}`，类型=`{item.get('review_type', '未发现')}`，位置=`{item.get('source_location', '未发现')}`"
+                )
+            for item in false_positive_risks:
+                lines.append(
+                    f"- 误报风险：`{item.get('title', '未发现')}`，类型=`{item.get('review_type', '未发现')}`，位置=`{item.get('source_location', '未发现')}`"
+                )
+            for item in manual_review_gaps:
+                lines.append(
+                    f"- 人工复核差异：`{item.get('title', '未发现')}`，expected=`{item.get('expected_manual_review', False)}`，actual=`{item.get('actual_manual_review', False)}`，原因=`{item.get('reason', '未发现')}`"
+                )
+        else:
+            lines.append("- `未发现`")
+        lines.append("")
+
+    lines.extend(["## 原始差异文件", ""])
+    for key, items in outputs.items():
+        lines.append(f"- `{key}`：`{len(items)}` 条")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def write_outputs(output_dir: Path, summary: dict, outputs: dict[str, list[dict]]) -> None:
@@ -130,7 +444,9 @@ def write_outputs(output_dir: Path, summary: dict, outputs: dict[str, list[dict]
     (output_dir / "false_positive_risks.json").write_text(json.dumps(outputs["false_positive_risks"], ensure_ascii=False, indent=2), encoding="utf-8")
     (output_dir / "manual_review_gaps.json").write_text(json.dumps(outputs["manual_review_gaps"], ensure_ascii=False, indent=2), encoding="utf-8")
     (output_dir / "structure_gaps.json").write_text(json.dumps(outputs["structure_gaps"], ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_dir / "failure_analysis.json").write_text(json.dumps(outputs["failure_analysis"], ensure_ascii=False, indent=2), encoding="utf-8")
     (output_dir / "regression_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_dir / "regression_report.md").write_text(build_markdown_report(summary, outputs), encoding="utf-8")
 
 
 def print_report(summary: dict) -> None:
@@ -153,6 +469,12 @@ def print_report(summary: dict) -> None:
     print(f"漏报数: {summary['missed_risk_count']}")
     print(f"误报数: {summary['false_positive_risk_count']}")
     print(f"人工复核差异数: {summary['manual_review_gap_count']}")
+    if summary.get("layer_failure_summary"):
+        print(f"分层失败分布: {summary['layer_failure_summary']}")
+    if summary.get("root_cause_summary"):
+        print(f"根因分布: {summary['root_cause_summary']}")
+    if summary.get("standardized_failure_summary"):
+        print(f"标准化失败类型: {summary['standardized_failure_summary']}")
 
 
 def _evaluate_real_case(gold_path: Path, result_dir: Path) -> tuple[list[dict], Path]:

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from app.pipelines.v2.regression import compare_risks, compare_structure, extract_actual_risks, extract_actual_structure
 from scripts.eval_v2_regression import (
+    build_markdown_report,
     build_summary,
     collect_outputs,
     describe_failure_code,
@@ -139,3 +140,16 @@ def test_expanded_regression_dataset_can_pass_thresholds() -> None:
     assert summary["topic_coverage_hit_rate"] >= 0.80
     assert summary["risk_hit_rate"] >= 0.80
     assert summary["miss_rate"] <= 0.20
+
+
+def test_regression_markdown_report_contains_layered_failures_and_suggestions(tmp_path: Path) -> None:
+    result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
+    outputs = collect_outputs([result])
+    summary = build_summary([result], Path("data/examples/v2_regression_eval_samples.json"))
+    report = build_markdown_report(summary, outputs)
+    assert "# V2 埋点回归失败报告" in report
+    assert "### regression_structure_gap_001" in report
+    assert "#### 分层状态" in report
+    assert "#### 结构差异" in report
+    assert "#### 风险差异" in report
+    assert "优先补章节切分与标题识别规则。" in report
