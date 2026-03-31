@@ -42,21 +42,66 @@ def _keyword_hits(text: str, keywords: tuple[str, ...]) -> tuple[int, list[str]]
     return score, matched
 
 
+def _is_compact_row_title(title: str) -> bool:
+    stripped = title.strip()
+    return ("\t" in stripped) or stripped.startswith(("1 ", "2 ", "3 ", "4 ", "5 "))
+
+
+def _has_joint_signal(section: SectionCandidate, primary_modules: set[str], secondary_modules: set[str]) -> bool:
+    scores = {str(module): int(score or 0) for module, score in (section.module_scores or {}).items()}
+    return any(scores.get(module, 0) >= 3 for module in primary_modules) and any(
+        scores.get(module, 0) >= 3 for module in secondary_modules
+    )
+
+
 def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tuple[int, list[str], list[str]]:
     title_hits, title_keywords = _keyword_hits(section.title, definition.keywords)
     excerpt_hits, excerpt_keywords = _keyword_hits(f"{section.excerpt}\n{section.body}", definition.keywords)
-    module_bonus = 18 if section.module in definition.modules else 0
+    primary_modules = set(definition.boundary.primary_modules or definition.modules)
+    secondary_modules = set(definition.boundary.secondary_modules)
+    primary_module_bonus = 24 if section.module in primary_modules else 0
+    secondary_module_bonus = 12 if section.module in secondary_modules else 0
     heading_bonus = 5 if section.heading_level == 1 else 3 if section.heading_level > 1 else 0
+    heading_bonus -= 4 if _is_compact_row_title(section.title) else 0
     confidence_bonus = min(section.confidence, 12)
 
     module_hit_bonus = 0
+    module_signal_bonus = 0
+    raw_scores = {str(module): int(score or 0) for module, score in (section.module_scores or {}).items()}
     for module, score in section.module_scores.items():
-        if module in definition.modules:
-            module_hit_bonus += min(int(score), 8)
+        score_value = min(int(score), 8)
+        if module in primary_modules:
+            module_hit_bonus += score_value
+            module_signal_bonus += 4
+        elif module in secondary_modules:
+            module_hit_bonus += min(score_value, 5)
+            module_signal_bonus += 2
 
-    total_score = title_hits * 8 + excerpt_hits * 3 + module_bonus + module_hit_bonus + heading_bonus + confidence_bonus
+    special_bonus = 0
+    if definition.key == "contract_payment":
+        if raw_scores.get("contract", 0) >= 3 and raw_scores.get("acceptance", 0) >= 3:
+            special_bonus += 10
+        if "商务" in section.title and "验收" in section.title:
+            special_bonus += 6
+    if definition.key == "scoring":
+        if raw_scores.get("qualification", 0) >= 3:
+            special_bonus += 4
+
+    total_score = (
+        title_hits * 8
+        + excerpt_hits * 3
+        + primary_module_bonus
+        + secondary_module_bonus
+        + module_hit_bonus
+        + module_signal_bonus
+        + special_bonus
+        + heading_bonus
+        + confidence_bonus
+    )
     reasons: list[str] = []
-    if module_bonus:
+    if primary_module_bonus:
+        reasons.append(f"主模块命中 {section.module}")
+    elif secondary_module_bonus:
         reasons.append(f"主模块命中 {section.module}")
     if title_hits:
         reasons.append(f"标题命中 {title_hits} 次关键词")
@@ -64,6 +109,10 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
         reasons.append(f"正文命中 {excerpt_hits} 次关键词")
     if section.heading_level:
         reasons.append(f"标题层级 {section.heading_level}")
+    if _is_compact_row_title(section.title):
+        reasons.append("表格行标题降权")
+    if special_bonus:
+        reasons.append(f"专题特殊加权 {special_bonus}")
     matched_keywords = list(dict.fromkeys(title_keywords + excerpt_keywords))
     return total_score, reasons, matched_keywords
 
@@ -100,21 +149,90 @@ def _build_bundle(
         if score > 0:
             ranked.append((score, index, section, reasons, matched_keywords))
 
-    ranked.sort(key=lambda item: (item[0], item[2].line_span, len(item[2].excerpt)), reverse=True)
-    primary_ranked = ranked[:4]
+    primary_modules = set(definition.boundary.primary_modules or definition.modules)
+    secondary_modules = set(definition.boundary.secondary_modules)
+    ranked.sort(
+        key=lambda item: (
+            (definition.key == "contract_payment" and _has_joint_signal(item[2], primary_modules, secondary_modules)),
+            item[2].module in primary_modules,
+            any((item[2].module_scores or {}).get(module, 0) > 0 for module in primary_modules),
+            item[0],
+            item[2].line_span,
+            len(item[2].excerpt),
+        ),
+        reverse=True,
+    )
+
+    max_primary = 2 if len(primary_modules) >= 2 else 1
+    primary_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
+    fallback_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
+    for item in ranked:
+        section = item[2]
+        has_primary_signal = (
+            (definition.key == "contract_payment" and _has_joint_signal(section, primary_modules, secondary_modules))
+            or section.module in primary_modules
+            or any(
+            int((section.module_scores or {}).get(module, 0) or 0) >= 3 for module in primary_modules
+            )
+        )
+        if has_primary_signal and len(primary_ranked) < max_primary:
+            primary_ranked.append(item)
+        else:
+            fallback_ranked.append(item)
+    if not primary_ranked:
+        primary_ranked = ranked[:max_primary]
+        fallback_ranked = ranked[max_primary:]
+
     primary_sections = [item[2] for item in primary_ranked]
     primary_ids = [_section_id(section) for section in primary_sections]
     used_ids = set(primary_ids)
-    secondary_sections = _pick_context_sections(
-        ordered_sections=ordered_sections,
-        selected_indexes=[item[1] for item in primary_ranked],
-        used_ids=used_ids,
-        limit=2,
+    secondary_sections: list[SectionCandidate] = []
+    secondary_ranked = sorted(
+        fallback_ranked,
+        key=lambda item: (
+            item[2].module in secondary_modules,
+            any((item[2].module_scores or {}).get(module, 0) > 0 for module in secondary_modules),
+            item[0],
+            -item[1],
+        ),
+        reverse=True,
     )
+    for _, _, section, _, _ in secondary_ranked:
+        if len(secondary_sections) >= 2:
+            break
+        candidate_id = _section_id(section)
+        if candidate_id in used_ids:
+            continue
+        if section.module in secondary_modules or any((section.module_scores or {}).get(module, 0) > 0 for module in secondary_modules):
+            used_ids.add(candidate_id)
+            secondary_sections.append(section)
+    if len(secondary_sections) < 2:
+        secondary_sections.extend(
+            _pick_context_sections(
+                ordered_sections=ordered_sections,
+                selected_indexes=[item[1] for item in primary_ranked],
+                used_ids=used_ids,
+                limit=2 - len(secondary_sections),
+            )
+        )
     secondary_ids = [_section_id(section) for section in secondary_sections]
 
     combined_sections = sorted(primary_sections + secondary_sections, key=lambda item: (item.start_line, item.end_line))
-    covered_modules = list(dict.fromkeys(section.module for section in combined_sections if section.module))
+    covered_modules = list(
+        dict.fromkeys(
+            module
+            for section in combined_sections
+            for module in (
+                [section.module]
+                + [
+                    key
+                    for key, value in (section.module_scores or {}).items()
+                    if int(value or 0) > 0 and key in definition.modules
+                ]
+            )
+            if module
+        )
+    )
     missing_modules = [module for module in definition.modules if module not in covered_modules]
 
     missing_hints: list[str] = []

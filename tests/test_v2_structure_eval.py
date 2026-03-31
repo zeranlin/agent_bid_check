@@ -18,6 +18,7 @@ def test_load_samples_and_evaluate_structure_fixture() -> None:
     assert 0.0 <= result["key_recall"] <= 1.0
     assert 0.0 <= result["coverage_recall_rate"] <= 1.0
     assert 0.0 <= result["negative_pass_rate"] <= 1.0
+    assert 0.0 <= result["secondary_recall_rate"] <= 1.0
     assert result["structure_llm_used"] is False
     assert result["name"] == samples[0]["sample_id"]
     assert result["document_name"] == samples[0]["document_name"]
@@ -37,8 +38,14 @@ def test_build_summary_aggregates_metrics() -> None:
             "negative_pass_count": 1,
             "coverage_total": 3,
             "coverage_pass_count": 2,
+            "secondary_total": 2,
+            "secondary_hit": 1,
             "structure_llm_used": False,
             "structure_fallback_used": False,
+            "coverage_details": [
+                {"topic": "scoring", "passed": False, "failure_reasons": ["missing_modules"]},
+                {"topic": "qualification", "passed": True, "failure_reasons": []},
+            ],
             "details": [],
         },
         {
@@ -51,8 +58,13 @@ def test_build_summary_aggregates_metrics() -> None:
             "negative_pass_count": 1,
             "coverage_total": 1,
             "coverage_pass_count": 1,
+            "secondary_total": 1,
+            "secondary_hit": 1,
             "structure_llm_used": True,
             "structure_fallback_used": True,
+            "coverage_details": [
+                {"topic": "procedure", "passed": False, "failure_reasons": ["primary_order_mismatch"]},
+            ],
             "details": [],
         },
     ]
@@ -61,8 +73,11 @@ def test_build_summary_aggregates_metrics() -> None:
     assert summary["key_recall"] == 2 / 3
     assert summary["negative_pass_rate"] == 2 / 3
     assert summary["coverage_recall_rate"] == 3 / 4
+    assert summary["mixed_section_secondary_recall_rate"] == 2 / 3
     assert summary["llm_used_count"] == 1
     assert summary["fallback_count"] == 1
+    assert summary["topic_failure_summary"] == {"scoring": 1, "procedure": 1}
+    assert summary["failure_reason_summary"] == {"missing_modules": 1, "primary_order_mismatch": 1}
 
 
 def test_evaluate_sample_emits_negative_and_coverage_failures() -> None:
@@ -71,7 +86,12 @@ def test_evaluate_sample_emits_negative_and_coverage_failures() -> None:
         "document_name": "失败细节样本",
         "text": "第一章 资格及评分要求\n内容",
         "expected_sections": [
-            {"title": "第一章 资格及评分要求", "module": "qualification", "key": True}
+            {
+                "title": "第一章 资格及评分要求",
+                "module": "qualification",
+                "secondary_modules": ["scoring"],
+                "key": True,
+            }
         ],
         "must_not_primary_modules": {
             "第一章 资格及评分要求": ["qualification"]
@@ -136,9 +156,11 @@ def test_evaluate_sample_emits_negative_and_coverage_failures() -> None:
 
     assert result["negative_pass_rate"] == 0.0
     assert result["coverage_recall_rate"] == 0.0
+    assert result["secondary_recall_rate"] == 0.0
     assert result["negative_details"][0]["passed"] is False
     assert set(result["coverage_details"][0]["failure_reasons"]) == {
         "missing_modules",
         "primary_order_mismatch",
         "shared_topic_unstable",
     }
+    assert result["secondary_details"][0]["passed"] is False

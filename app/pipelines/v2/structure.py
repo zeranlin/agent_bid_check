@@ -32,10 +32,33 @@ MODULE_KEYWORDS = {
     "policy": ["政府采购", "中小企业", "节能", "环保", "政策", "采购法", "财政部"],
 }
 
+MODULE_PHRASES = {
+    "qualification": ["资格审查", "履约能力", "类似项目", "同类项目", "项目负责人", "核心成员", "社保证明"],
+    "scoring": ["综合评分", "价格分", "纳入评分", "评委综合打分", "最高得", "计分", "打分"],
+    "contract": ["商务条款", "付款安排", "合同价款", "质保期", "质保金", "违约责任", "预付款", "尾款"],
+    "acceptance": ["验收要求", "组织验收", "现场抽检", "试运行", "验收标准", "抽样复核", "最终验收"],
+    "technical": ["技术要求", "检测报告", "技术参数", "样品与演示", "CMA", "CNAS", "国家标准"],
+    "procedure": ["投标须知", "递交安排", "评审安排", "开标安排", "澄清程序", "提交时间", "投标文件递交"],
+    "policy": ["中小企业扶持", "节能环保", "价格扣除", "政策落实", "监狱企业", "残疾人福利"],
+}
+
+TABLE_ROW_RE = re.compile(r"^\d+\s+\S+")
+TABULAR_ROW_RE = re.compile(r"^\d+\t")
+
 
 def _is_heading(line: str) -> bool:
     stripped = line.strip()
     if not stripped:
+        return False
+    if stripped in {"续表", "续页说明", "续页", "附表"}:
+        return False
+    if "\t" in stripped and (TABULAR_ROW_RE.match(stripped) or stripped.count("\t") >= 2):
+        return False
+    if TABLE_ROW_RE.match(stripped) and len(stripped) <= 40:
+        return False
+    if stripped.endswith(("。", ".", "；", ";", "：", ":")) and len(stripped) > 12:
+        return False
+    if stripped.endswith(("；", ";", "。", ".")) and re.match(r"^[（(][一二三四五六七八九十0-9]+[）)]", stripped):
         return False
     if HEADING_RE.match(stripped):
         return True
@@ -65,10 +88,19 @@ def _score_modules(title: str, body: str) -> tuple[str, dict[str, int], list[Mod
         score = 0
         matched_keywords: list[str] = []
         for word in words:
-            count = text.count(word)
+            title_count = title.count(word)
+            body_count = body.count(word)
+            count = title_count * 3 + body_count
             score += count
             if count > 0:
                 matched_keywords.append(word)
+        for phrase in MODULE_PHRASES.get(module, []):
+            if phrase in title:
+                score += 4
+                matched_keywords.append(phrase)
+            elif phrase in body:
+                score += 2
+                matched_keywords.append(phrase)
         scores[module] = score
         if score > 0:
             hits.append(
@@ -80,6 +112,24 @@ def _score_modules(title: str, body: str) -> tuple[str, dict[str, int], list[Mod
                     evidence_keywords=matched_keywords[:8],
                 )
             )
+    stripped_title = title.strip()
+    if "投标须知" in stripped_title or "递交安排" in stripped_title:
+        scores["procedure"] = scores.get("procedure", 0) + 5
+    if "商务" in stripped_title and "验收" in stripped_title and scores.get("contract", 0) > 0:
+        scores["contract"] = scores.get("contract", 0) + 8
+    if "技术" in stripped_title and "验收" in stripped_title and scores.get("technical", 0) > 0:
+        scores["technical"] = scores.get("technical", 0) + 3
+    if "样品" in stripped_title and "演示" in stripped_title and "评分" not in stripped_title:
+        scores["technical"] = scores.get("technical", 0) + 3
+    if "质保" in stripped_title or "违约责任" in stripped_title:
+        scores["contract"] = scores.get("contract", 0) + 4
+    if "资格复核" in stripped_title or "资格审查" in stripped_title:
+        scores["qualification"] = scores.get("qualification", 0) + 5
+    if "政策" in stripped_title and ("须知" in stripped_title or "程序" in stripped_title):
+        scores["procedure"] = scores.get("procedure", 0) + 2
+    if stripped_title == "文档起始" and ("供应商具备" in body or "项目负责人" in body or "类似业绩" in body):
+        scores["qualification"] = scores.get("qualification", 0) + 4
+
     top_module = max(scores, key=scores.get) if scores else "procedure"
     if scores.get(top_module, 0) <= 0:
         top_module = "procedure"
