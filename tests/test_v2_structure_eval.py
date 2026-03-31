@@ -1,20 +1,28 @@
 from __future__ import annotations
 
 from pathlib import Path
+from unittest.mock import patch
 
+from app.pipelines.v2.schemas import V2StageArtifact
 from scripts.eval_v2_structure import build_summary, evaluate_sample, load_samples
 
 
 def test_load_samples_and_evaluate_structure_fixture() -> None:
     sample_path = Path("data/examples/v2_structure_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 3
+    assert len(samples) >= 19
 
     result = evaluate_sample(samples[0], use_llm=False)
     assert result["module_total"] >= 2
     assert 0.0 <= result["module_accuracy"] <= 1.0
     assert 0.0 <= result["key_recall"] <= 1.0
+    assert 0.0 <= result["coverage_recall_rate"] <= 1.0
+    assert 0.0 <= result["negative_pass_rate"] <= 1.0
     assert result["structure_llm_used"] is False
+    assert result["name"] == samples[0]["sample_id"]
+    assert result["document_name"] == samples[0]["document_name"]
+    assert "negative_details" in result
+    assert "coverage_details" in result
 
 
 def test_build_summary_aggregates_metrics() -> None:
@@ -25,6 +33,10 @@ def test_build_summary_aggregates_metrics() -> None:
             "module_correct": 2,
             "key_total": 2,
             "key_hit": 1,
+            "negative_total": 2,
+            "negative_pass_count": 1,
+            "coverage_total": 3,
+            "coverage_pass_count": 2,
             "structure_llm_used": False,
             "structure_fallback_used": False,
             "details": [],
@@ -35,6 +47,10 @@ def test_build_summary_aggregates_metrics() -> None:
             "module_correct": 1,
             "key_total": 1,
             "key_hit": 1,
+            "negative_total": 1,
+            "negative_pass_count": 1,
+            "coverage_total": 1,
+            "coverage_pass_count": 1,
             "structure_llm_used": True,
             "structure_fallback_used": True,
             "details": [],
@@ -43,5 +59,86 @@ def test_build_summary_aggregates_metrics() -> None:
     summary = build_summary(results, Path("samples.json"), use_llm=False)
     assert summary["module_accuracy"] == 0.75
     assert summary["key_recall"] == 2 / 3
+    assert summary["negative_pass_rate"] == 2 / 3
+    assert summary["coverage_recall_rate"] == 3 / 4
     assert summary["llm_used_count"] == 1
     assert summary["fallback_count"] == 1
+
+
+def test_evaluate_sample_emits_negative_and_coverage_failures() -> None:
+    sample = {
+        "sample_id": "structure_test_failure_001",
+        "document_name": "失败细节样本",
+        "text": "第一章 资格及评分要求\n内容",
+        "expected_sections": [
+            {"title": "第一章 资格及评分要求", "module": "qualification", "key": True}
+        ],
+        "must_not_primary_modules": {
+            "第一章 资格及评分要求": ["qualification"]
+        },
+        "coverage_expectations": [
+            {
+                "topic": "scoring",
+                "required_modules": ["qualification", "scoring"],
+                "required_section_titles": ["第一章 资格及评分要求"],
+                "min_sections": 1,
+                "expected_primary_titles": ["第一章 资格及评分要求"],
+                "expected_shared_topics": ["qualification"],
+                "expected_shared_titles": ["第一章 资格及评分要求"],
+            }
+        ],
+    }
+    structure_artifact = V2StageArtifact(
+        name="structure",
+        metadata={
+            "sections": [
+                {
+                    "title": "第一章 资格及评分要求",
+                    "start_line": 1,
+                    "end_line": 3,
+                    "module": "qualification",
+                }
+            ],
+            "structure_llm_used": False,
+            "structure_fallback_used": False,
+        },
+    )
+    evidence_artifact = V2StageArtifact(
+        name="evidence",
+        metadata={
+            "topic_evidence_bundles": {
+                "scoring": {
+                    "sections": [
+                        {
+                            "title": "第一章 资格及评分要求",
+                            "start_line": 1,
+                            "end_line": 3,
+                            "module": "qualification",
+                        }
+                    ],
+                    "primary_section_ids": [],
+                    "secondary_section_ids": ["1-3"],
+                },
+                "qualification": {
+                    "sections": [],
+                    "primary_section_ids": [],
+                    "secondary_section_ids": [],
+                },
+            }
+        },
+    )
+
+    with patch("scripts.eval_v2_structure.build_structure_map", return_value=structure_artifact), patch(
+        "scripts.eval_v2_structure.build_evidence_map",
+        return_value=evidence_artifact,
+    ):
+        result = evaluate_sample(sample, use_llm=False)
+
+    assert result["negative_pass_rate"] == 0.0
+    assert result["coverage_recall_rate"] == 0.0
+    assert result["negative_details"][0]["passed"] is False
+    assert set(result["coverage_details"][0]["failure_reasons"]) == {
+        "missing_modules",
+        "primary_order_mismatch",
+        "shared_topic_unstable",
+    }

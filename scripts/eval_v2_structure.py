@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import PROJECT_ROOT as APP_PROJECT_ROOT, ReviewSettings
+from app.pipelines.v2.evidence import build_evidence_map
 from app.pipelines.v2.structure import build_structure_map
 
 
@@ -37,16 +38,160 @@ def _match_section(expected_title: str, sections: list[dict]) -> dict | None:
     return None
 
 
+def _normalize_list(values: list[str] | tuple[str, ...] | None) -> list[str]:
+    return [str(value).strip() for value in (values or []) if str(value).strip()]
+
+
+def _title_in_list(expected_title: str, actual_titles: list[str]) -> bool:
+    expected_norm = _normalize_text(expected_title)
+    return any(
+        expected_norm in _normalize_text(actual) or _normalize_text(actual) in expected_norm
+        for actual in actual_titles
+        if str(actual).strip()
+    )
+
+
+def _evaluate_negative_module_constraints(must_not_primary_modules: dict, sections: list[dict]) -> tuple[int, int, list[dict]]:
+    total = 0
+    pass_count = 0
+    details: list[dict] = []
+    for title, blocked_modules in (must_not_primary_modules or {}).items():
+        matched = _match_section(str(title), sections)
+        blocked = _normalize_list(blocked_modules if isinstance(blocked_modules, list) else [])
+        if not matched or not blocked:
+            continue
+        predicted_module = str(matched.get("module", "")).strip()
+        total += 1
+        passed = predicted_module not in blocked
+        if passed:
+            pass_count += 1
+        details.append(
+            {
+                "title": str(title),
+                "predicted_module": predicted_module or "未匹配",
+                "blocked_modules": blocked,
+                "passed": passed,
+            }
+        )
+    return total, pass_count, details
+
+
+def _evaluate_coverage_expectations(sample: dict, structure_artifact) -> tuple[int, int, list[dict]]:
+    expectations = [item for item in sample.get("coverage_expectations", []) if isinstance(item, dict)]
+    if not expectations:
+        return 0, 0, []
+
+    evidence = build_evidence_map(
+        document_name=str(sample.get("document_name") or sample.get("sample_id") or "sample"),
+        structure=structure_artifact,
+        topic_mode="enhanced",
+    )
+    bundles = evidence.metadata.get("topic_evidence_bundles", {}) if evidence.metadata else {}
+    total = 0
+    pass_count = 0
+    details: list[dict] = []
+
+    for item in expectations:
+        topic = str(item.get("topic", "")).strip()
+        if not topic:
+            continue
+        required_modules = _normalize_list(item.get("required_modules"))
+        required_titles = _normalize_list(item.get("required_section_titles"))
+        expected_primary_titles = _normalize_list(item.get("expected_primary_titles"))
+        expected_secondary_titles = _normalize_list(item.get("expected_secondary_titles"))
+        expected_shared_topics = _normalize_list(item.get("expected_shared_topics"))
+        expected_shared_titles = _normalize_list(item.get("expected_shared_titles")) or required_titles
+        min_sections = int(item.get("min_sections", 1) or 1)
+        bundle = bundles.get(topic, {}) if isinstance(bundles, dict) else {}
+        sections = bundle.get("sections", []) if isinstance(bundle, dict) else []
+        primary_ids = set(_normalize_list(bundle.get("primary_section_ids", [])))
+        secondary_ids = set(_normalize_list(bundle.get("secondary_section_ids", [])))
+        recalled_titles = [str(section.get("title", "")).strip() for section in sections if isinstance(section, dict)]
+        recalled_modules = [str(section.get("module", "")).strip() for section in sections if isinstance(section, dict)]
+        primary_titles = [
+            str(section.get("title", "")).strip()
+            for section in sections
+            if isinstance(section, dict)
+            and f"{int(section.get('start_line', 0) or 0)}-{int(section.get('end_line', 0) or 0)}" in primary_ids
+        ]
+        secondary_titles = [
+            str(section.get("title", "")).strip()
+            for section in sections
+            if isinstance(section, dict)
+            and f"{int(section.get('start_line', 0) or 0)}-{int(section.get('end_line', 0) or 0)}" in secondary_ids
+        ]
+
+        titles_ok = all(_title_in_list(expected, recalled_titles) for expected in required_titles)
+        modules_ok = all(module in recalled_modules for module in required_modules)
+        section_count_ok = len(sections) >= min_sections
+        primary_order_ok = all(_title_in_list(expected, primary_titles) for expected in expected_primary_titles)
+        secondary_order_ok = all(_title_in_list(expected, secondary_titles) for expected in expected_secondary_titles)
+
+        shared_topics_ok = True
+        shared_topic_hits: dict[str, list[str]] = {}
+        for shared_topic in expected_shared_topics:
+            shared_bundle = bundles.get(shared_topic, {}) if isinstance(bundles, dict) else {}
+            shared_sections = shared_bundle.get("sections", []) if isinstance(shared_bundle, dict) else []
+            shared_titles = [str(section.get("title", "")).strip() for section in shared_sections if isinstance(section, dict)]
+            shared_topic_hits[shared_topic] = shared_titles
+            if not all(_title_in_list(expected, shared_titles) for expected in expected_shared_titles):
+                shared_topics_ok = False
+
+        passed = titles_ok and modules_ok and section_count_ok and primary_order_ok and secondary_order_ok and shared_topics_ok
+
+        total += 1
+        if passed:
+            pass_count += 1
+        details.append(
+            {
+                "topic": topic,
+                "required_modules": required_modules,
+                "required_section_titles": required_titles,
+                "min_sections": min_sections,
+                "recalled_modules": recalled_modules,
+                "recalled_titles": recalled_titles,
+                "primary_titles": primary_titles,
+                "secondary_titles": secondary_titles,
+                "recalled_section_count": len(sections),
+                "passed": passed,
+                "expected_primary_titles": expected_primary_titles,
+                "expected_secondary_titles": expected_secondary_titles,
+                "expected_shared_topics": expected_shared_topics,
+                "expected_shared_titles": expected_shared_titles,
+                "shared_topic_hits": shared_topic_hits,
+                "failure_reasons": [
+                    reason
+                    for reason, ok in (
+                        ("missing_titles", titles_ok),
+                        ("missing_modules", modules_ok),
+                        ("insufficient_sections", section_count_ok),
+                        ("primary_order_mismatch", primary_order_ok),
+                        ("secondary_order_mismatch", secondary_order_ok),
+                        ("shared_topic_unstable", shared_topics_ok),
+                    )
+                    if not ok
+                ],
+            }
+        )
+    return total, pass_count, details
+
+
 def evaluate_sample(sample: dict, use_llm: bool = False) -> dict:
     settings = ReviewSettings()
+    sample_name = str(sample.get("sample_id") or sample.get("name") or "sample")
     artifact = build_structure_map(
-        input_path=Path(str(sample.get("name", "sample")) + ".txt"),
+        input_path=Path(sample_name + ".txt"),
         extracted_text=str(sample.get("text", "")),
         settings=settings,
         use_llm=use_llm,
     )
     sections = artifact.metadata.get("sections", []) if artifact.metadata else []
     expected_sections = sample.get("expected_sections", [])
+    negative_total, negative_pass_count, negative_details = _evaluate_negative_module_constraints(
+        sample.get("must_not_primary_modules", {}),
+        sections,
+    )
+    coverage_total, coverage_pass_count, coverage_details = _evaluate_coverage_expectations(sample, artifact)
 
     module_total = 0
     module_correct = 0
@@ -89,7 +234,10 @@ def evaluate_sample(sample: dict, use_llm: bool = False) -> dict:
         )
 
     return {
-        "name": sample.get("name", "sample"),
+        "name": sample_name,
+        "document_name": str(sample.get("document_name") or sample.get("name") or sample_name),
+        "case_type": str(sample.get("case_type") or "unknown"),
+        "focus_modules": list(sample.get("focus_modules", [])),
         "section_count": len(sections),
         "structure_llm_used": artifact.metadata.get("structure_llm_used", False),
         "structure_fallback_used": artifact.metadata.get("structure_fallback_used", False),
@@ -99,7 +247,15 @@ def evaluate_sample(sample: dict, use_llm: bool = False) -> dict:
         "key_total": key_total,
         "key_hit": key_hit,
         "key_recall": (key_hit / key_total) if key_total else 0.0,
+        "negative_total": negative_total,
+        "negative_pass_count": negative_pass_count,
+        "negative_pass_rate": (negative_pass_count / negative_total) if negative_total else 1.0,
+        "coverage_total": coverage_total,
+        "coverage_pass_count": coverage_pass_count,
+        "coverage_recall_rate": (coverage_pass_count / coverage_total) if coverage_total else 1.0,
         "details": details,
+        "negative_details": negative_details,
+        "coverage_details": coverage_details,
     }
 
 
@@ -109,6 +265,10 @@ def build_summary(results: list[dict], sample_path: Path, use_llm: bool) -> dict
     module_correct = sum(int(result["module_correct"]) for result in results)
     key_total = sum(int(result["key_total"]) for result in results)
     key_hit = sum(int(result["key_hit"]) for result in results)
+    negative_total = sum(int(result.get("negative_total", 0)) for result in results)
+    negative_pass_count = sum(int(result.get("negative_pass_count", 0)) for result in results)
+    coverage_total = sum(int(result.get("coverage_total", 0)) for result in results)
+    coverage_pass_count = sum(int(result.get("coverage_pass_count", 0)) for result in results)
     llm_used_count = sum(1 for result in results if result.get("structure_llm_used"))
     fallback_count = sum(1 for result in results if result.get("structure_fallback_used"))
     return {
@@ -121,6 +281,12 @@ def build_summary(results: list[dict], sample_path: Path, use_llm: bool) -> dict
         "key_total": key_total,
         "key_hit": key_hit,
         "key_recall": (key_hit / key_total) if key_total else 0.0,
+        "negative_total": negative_total,
+        "negative_pass_count": negative_pass_count,
+        "negative_pass_rate": (negative_pass_count / negative_total) if negative_total else 1.0,
+        "coverage_total": coverage_total,
+        "coverage_pass_count": coverage_pass_count,
+        "coverage_recall_rate": (coverage_pass_count / coverage_total) if coverage_total else 1.0,
         "llm_used_count": llm_used_count,
         "fallback_count": fallback_count,
         "samples": results,
@@ -134,6 +300,14 @@ def print_report(summary: dict) -> None:
     print(f"是否启用 LLM 二次识别: {'是' if summary['use_llm'] else '否'}")
     print(f"模块主归属一致率: {summary['module_correct']}/{summary['module_total']} = {summary['module_accuracy']:.2%}")
     print(f"关键章节召回率: {summary['key_hit']}/{summary['key_total']} = {summary['key_recall']:.2%}")
+    print(
+        f"负向主模块约束通过率: {summary['negative_pass_count']}/{summary['negative_total']} = "
+        f"{summary['negative_pass_rate']:.2%}"
+    )
+    print(
+        f"coverage 召回通过率: {summary['coverage_pass_count']}/{summary['coverage_total']} = "
+        f"{summary['coverage_recall_rate']:.2%}"
+    )
     print(f"LLM 触发样本数: {summary['llm_used_count']}")
     print(f"LLM 回退样本数: {summary['fallback_count']}")
     print("")
@@ -141,13 +315,26 @@ def print_report(summary: dict) -> None:
         print(f"[{sample['name']}]")
         print(
             f"  模块一致率: {sample['module_correct']}/{sample['module_total']} = {sample['module_accuracy']:.2%} | "
-            f"关键章节召回率: {sample['key_hit']}/{sample['key_total']} = {sample['key_recall']:.2%}"
+            f"关键章节召回率: {sample['key_hit']}/{sample['key_total']} = {sample['key_recall']:.2%} | "
+            f"coverage: {sample['coverage_pass_count']}/{sample['coverage_total']} = {sample['coverage_recall_rate']:.2%}"
         )
         for detail in sample["details"]:
             print(
                 f"  - {detail['expected_title']} -> {detail['predicted_module']} "
                 f"(期望 {detail['expected_module']}, 匹配: {detail['matched_title']})"
             )
+        for detail in sample.get("negative_details", []):
+            if not detail.get("passed"):
+                print(
+                    f"  - negative_constraint {detail['title']} -> {detail['predicted_module']} "
+                    f"(禁止 {detail['blocked_modules']})"
+                )
+        for detail in sample.get("coverage_details", []):
+            if not detail.get("passed"):
+                print(
+                    f"  - coverage {detail['topic']} 未通过: {detail['failure_reasons']} "
+                    f"(召回标题 {detail['recalled_titles']})"
+                )
         print("")
 
 
