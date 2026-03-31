@@ -8,7 +8,7 @@ from scripts.eval_v2_topics import build_markdown_report, build_summary, evaluat
 def test_load_samples_and_evaluate_topic_fixture() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = load_samples(sample_path)
-    assert len(samples) >= 38
+    assert len(samples) >= 39
 
     result = evaluate_sample(samples[0])
     assert result["topic_count"] >= 1
@@ -51,6 +51,22 @@ def test_multi_topic_recalled_but_missed_samples_are_recovered_by_postprocess() 
         result = evaluate_sample(samples[sample_id])
         for title in titles:
             assert title in result["target_topic_detail"]["risk_titles"]
+        assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
+
+
+def test_technical_standard_detail_samples_cover_explicit_standard_risk_variants() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+    expected_titles = {
+        "topic_technical_standard_name_mismatch_002": "标准名称与编号不一致",
+        "topic_technical_standard_obsolete_002": "引用已废止标准",
+        "topic_technical_standard_method_mismatch_002": "检测方法标准与采购要求不匹配",
+    }
+    for sample_id, expected_title in expected_titles.items():
+        result = evaluate_sample(samples[sample_id])
+        assert result["topic_hit_count"] == 1
+        assert result["topic_miss_count"] == 0
+        assert expected_title in result["target_topic_detail"]["risk_titles"]
         assert "risk_not_extracted" in result["target_topic_detail"]["failure_reasons"]
 
 

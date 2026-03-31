@@ -20,6 +20,10 @@ QUALIFICATION_LOCAL_SERVICE_RE = re.compile(r"(本市|当地|项目所在地).{0
 QUALIFICATION_PERFORMANCE_RE = re.compile(r"(同类项目业绩不少于\d+项|近三年同类业绩不少于\d+项|项目负责人须具备.+(职称|社保|证书))")
 TECHNICAL_STANDARD_MISMATCH_RE = re.compile(r"(人造草\s*GB\s*36246-2018|人工材料体育场地使用要求及检验方法（?GB/T\s*20033-2006）?)")
 TECHNICAL_STANDARD_OBSOLETE_RE = re.compile(r"GB/T\s*1040\.2-2006")
+TECHNICAL_STANDARD_METHOD_MISMATCH_RE = re.compile(
+    r"(检测方法|试验方法).{0,24}(作为交付验收依据|检测报告|验收依据)|"
+    r"(透水率试验方法|塑料薄膜和薄片透水率试验方法)"
+)
 CONTRACT_PAYMENT_FISCAL_RE = re.compile(r"财政资金.{0,10}(到位|拨付)")
 CONTRACT_PAYMENT_ACCEPTANCE_RE = re.compile(r"((终验|最终验收|审计).{0,12}(后|通过后)|验收.{0,8}(后|通过后).{0,8}(60|90|120)个工作日).{0,12}(支付|付款)")
 CONTRACT_PAYMENT_DELAY_RE = re.compile(r"(60|90|120)个工作日内(支付|付款)")
@@ -261,6 +265,18 @@ def _build_topic_rule_fallback_risks(
                         review_type="技术标准",
                         judgments=["标准名称、编号或引用方式可能存在不一致，需核对标准全称与适用范围。"],
                         rectification=["统一标准名称、编号和适用对象的表述。"],
+                    )
+                )
+        if TECHNICAL_STANDARD_METHOD_MISMATCH_RE.search(combined_text):
+            title = "检测方法标准与采购要求不匹配"
+            if title not in existing_titles:
+                risks.append(
+                    _build_risk_point(
+                        source_section=source_section,
+                        title=title,
+                        review_type="技术标准",
+                        judgments=["检测方法或试验方法与采购标的、交付要求之间匹配关系不足，可能导致验收依据偏离采购需求。"],
+                        rectification=["核对检测方法标准与采购标的、验收指标的一致性，删除与采购要求不匹配的检测依据。"],
                     )
                 )
 

@@ -908,6 +908,35 @@
     }
   },
   {
+    "sample_id": "topic_technical_standard_method_mismatch_002",
+    "name": "topic_technical_standard_method_mismatch_002",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "technical_standard"
+    ],
+    "case_type": "positive",
+    "topic": "technical_standard",
+    "description": "检测方法标准与采购要求不匹配的正样本。",
+    "text": "第一章 技术检测要求\n本项目采购内容为操场跑道维护材料，但要求供应商按塑料薄膜和薄片透水率试验方法出具检测报告，作为交付验收依据。",
+    "expected_high_medium_titles": [
+      "检测方法标准与采购要求不匹配"
+    ],
+    "expected_technical_titles": [
+      "检测方法标准与采购要求不匹配"
+    ],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖检测方法条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
     "sample_id": "topic_scoring_relevance_002",
     "name": "topic_scoring_relevance_002",
     "topic_mode": "enhanced",
