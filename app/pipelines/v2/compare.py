@@ -193,6 +193,47 @@ def _build_cross_topic_policy_technical_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cross_topic_star_marker_cluster(
+    *,
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+    technical_locations: list[str],
+    offending_clauses: list[dict[str, object]],
+) -> tuple[RiskPoint, str, str]:
+    clause_texts = [str(item.get("clause_text", "")).strip() for item in offending_clauses if str(item.get("clause_text", "")).strip()]
+    source_location_parts = []
+    if scoring_locations:
+        source_location_parts.append("评审规则：" + "；".join(scoring_locations[:2]))
+    if technical_locations:
+        source_location_parts.append("技术条款：" + "；".join(technical_locations[:2]))
+    source_excerpt_parts = []
+    if scoring_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(scoring_sentences[:1]))
+    if clause_texts:
+        source_excerpt_parts.append("正文条款：" + "；".join(clause_texts[:2]))
+
+    risk = RiskPoint(
+        title="强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+        severity="中风险",
+        review_type="评审规则一致性 / 实质性条款标识完整性",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "评审规则已明确：含 GB（不含 GB/T）或国家强制性标准的描述，应标注 ★。",
+            "当前条款命中了 GB 非 GB/T 或国家强制性标准相关描述，但正文未见 ★ 标识。",
+            "可能导致投标人无法准确识别是否属于实质性条款。",
+            "若评审阶段按实质性条款处理，存在废标争议和评审口径不一致风险。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "若该条款属于实质性要求，应在条款前明确加注 ★。",
+            "若不作为实质性条款，应同步修改评审规则或补充解释，保持规则与正文一致。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -209,14 +250,19 @@ def compare_review_artifacts(
     import_policy_values: list[str] = []
     reject_phrases: list[str] = []
     accept_phrases: list[str] = []
-    policy_locations: list[str] = []
-    policy_sentences: list[str] = []
+    policy_locations_by_topic: dict[str, list[str]] = {}
+    policy_sentences_by_topic: dict[str, list[str]] = {}
     foreign_refs: list[str] = []
     cn_refs: list[str] = []
     has_equivalent_standard_clause = False
     technical_locations: list[str] = []
     foreign_sentences: list[str] = []
     cn_sentences: list[str] = []
+    star_required_for_gb_non_t = False
+    star_required_for_mandatory_standard = False
+    star_rule_locations: list[str] = []
+    star_rule_sentences: list[str] = []
+    star_marker_candidate_clauses: list[dict[str, object]] = []
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -243,14 +289,21 @@ def compare_review_artifacts(
             reject_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_reject_phrases", []) if str(item).strip()])
             accept_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_accept_phrases", []) if str(item).strip()])
             matched_policy_sections = structured_signals.get("import_policy_sections", [])
-            if isinstance(matched_policy_sections, list) and matched_policy_sections:
-                policy_locations.extend(_compact_titles(matched_policy_sections, limit=2))
-            else:
-                policy_locations.extend(section_titles[:2])
-            policy_sentences.extend(
+            topic_policy_locations = (
+                _compact_titles(matched_policy_sections, limit=2)
+                if isinstance(matched_policy_sections, list) and matched_policy_sections
+                else section_titles[:2]
+            )
+            topic_policy_sentences = (
                 _compact_sentences(structured_signals.get("import_policy_sentences", []), limit=2)
                 if isinstance(structured_signals.get("import_policy_sentences", []), list)
                 else []
+            )
+            policy_locations_by_topic[topic.topic] = dedupe(
+                policy_locations_by_topic.get(topic.topic, []) + topic_policy_locations
+            )
+            policy_sentences_by_topic[topic.topic] = dedupe(
+                policy_sentences_by_topic.get(topic.topic, []) + topic_policy_sentences
             )
         if topic.topic == "technical_standard":
             foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
@@ -273,17 +326,55 @@ def compare_review_artifacts(
                 if isinstance(structured_signals.get("cn_standard_sentences", []), list)
                 else []
             )
+            clause_flags = structured_signals.get("standard_clause_flags", [])
+            if isinstance(clause_flags, list):
+                for item in clause_flags:
+                    if isinstance(item, dict):
+                        star_marker_candidate_clauses.append(item)
+        if topic.topic == "scoring":
+            star_required_for_gb_non_t = star_required_for_gb_non_t or bool(structured_signals.get("star_required_for_gb_non_t", False))
+            star_required_for_mandatory_standard = star_required_for_mandatory_standard or bool(
+                structured_signals.get("star_required_for_mandatory_standard", False)
+            )
+            matched_star_sections = structured_signals.get("star_rule_sections", [])
+            if isinstance(matched_star_sections, list):
+                star_rule_locations.extend(_compact_titles(matched_star_sections, limit=2))
+            star_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("star_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("star_rule_sentences", []), list)
+                else []
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
     accept_phrases = dedupe(accept_phrases)
-    policy_locations = dedupe(policy_locations)
-    policy_sentences = dedupe(policy_sentences)
+    if policy_locations_by_topic.get("policy"):
+        policy_locations = dedupe(policy_locations_by_topic.get("policy", []))
+        policy_sentences = dedupe(policy_sentences_by_topic.get("policy", []))
+    else:
+        policy_locations = dedupe(
+            [item for topic_key in ("qualification", "procedure") for item in policy_locations_by_topic.get(topic_key, [])]
+        )
+        policy_sentences = dedupe(
+            [item for topic_key in ("qualification", "procedure") for item in policy_sentences_by_topic.get(topic_key, [])]
+        )
     foreign_refs = dedupe(foreign_refs)
     cn_refs = dedupe(cn_refs)
     technical_locations = dedupe(technical_locations)
     foreign_sentences = dedupe(foreign_sentences)
     cn_sentences = dedupe(cn_sentences)
+    star_rule_locations = dedupe(star_rule_locations)
+    star_rule_sentences = dedupe(star_rule_sentences)
+    star_marker_offending_clauses = [
+        item
+        for item in star_marker_candidate_clauses
+        if isinstance(item, dict)
+        and not bool(item.get("has_star_marker", False))
+        and (
+            (bool(item.get("contains_gb_non_t", False)) and star_required_for_gb_non_t)
+            or (bool(item.get("contains_mandatory_standard", False)) and star_required_for_mandatory_standard)
+        )
+    ]
     if "reject_import" in import_policy_values and "accept_import" in import_policy_values:
         import_policy = "mixed_or_unclear"
     elif "reject_import" in import_policy_values:
@@ -312,6 +403,28 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("policy_technical_inconsistency")
+
+    if star_marker_offending_clauses:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_star_marker_cluster(
+            scoring_locations=star_rule_locations,
+            scoring_sentences=star_rule_sentences,
+            technical_locations=_compact_titles(
+                [
+                    {
+                        "title": str(item.get("title", "")).strip(),
+                        "section_id": str(item.get("section_id", "")).strip(),
+                    }
+                    for item in star_marker_offending_clauses
+                ],
+                limit=2,
+            ),
+            offending_clauses=star_marker_offending_clauses,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("star_marker_missing_for_mandatory_standard")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [

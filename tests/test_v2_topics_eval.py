@@ -131,6 +131,31 @@ def test_real_like_technical_parameter_samples_capture_foreign_standard_and_back
     assert "foreign_standard_conflict" not in background_negative["target_topic_detail"]["failure_reasons"]
 
 
+def test_scoring_star_rule_and_technical_star_marker_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    scoring_rule = evaluate_sample(samples["topic_scoring_star_rule_positive_005"])
+    assert scoring_rule["target_topic_detail"]["structured_signals"]["star_required_for_gb_non_t"] is True
+    assert scoring_rule["target_topic_detail"]["structured_signals"]["star_required_for_mandatory_standard"] is True
+
+    gb_positive = evaluate_sample(samples["topic_technical_standard_star_clause_positive_005"])
+    clause = gb_positive["target_topic_detail"]["structured_signals"]["standard_clause_flags"][0]
+    assert clause["contains_gb_non_t"] is True
+    assert clause["contains_gbt"] is False
+    assert clause["has_star_marker"] is False
+
+    gbt_negative = evaluate_sample(samples["topic_technical_standard_star_clause_negative_gbt_005"])
+    negative_clause = gbt_negative["target_topic_detail"]["structured_signals"]["standard_clause_flags"][0]
+    assert negative_clause["contains_gb_non_t"] is False
+    assert negative_clause["contains_gbt"] is True
+
+    starred_negative = evaluate_sample(samples["topic_technical_standard_star_clause_negative_starred_005"])
+    starred_clause = starred_negative["target_topic_detail"]["structured_signals"]["standard_clause_flags"][0]
+    assert starred_clause["contains_gb_non_t"] is True
+    assert starred_clause["has_star_marker"] is True
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

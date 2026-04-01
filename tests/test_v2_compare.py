@@ -202,6 +202,123 @@ def test_compare_review_artifacts_adds_policy_technical_inconsistency_risk() -> 
     assert comparison.metadata["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
 
 
+def test_compare_review_artifacts_adds_star_marker_missing_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评审规则。",
+            metadata={
+                "selected_sections": [{"title": "评审规则合理性"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "star_required_for_gb_non_t": True,
+                    "star_required_for_mandatory_standard": True,
+                    "star_rule_sections": [{"title": "评审规则合理性"}],
+                    "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "1.规格及技术参数"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "standard_clause_flags": [
+                        {
+                            "title": "1.规格及技术参数",
+                            "section_id": "20-24",
+                            "clause_text": "（7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。",
+                            "contains_gb_non_t": True,
+                            "contains_gbt": False,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": False,
+                        }
+                    ]
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in titles
+    assert comparison.metadata["failure_reason_codes"] == ["star_marker_missing_for_mandatory_standard"]
+    report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
+    assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in report
+    assert "问题定性：中风险" in report
+    assert "审查类型：评审规则一致性 / 实质性条款标识完整性" in report
+    assert "若该条款属于实质性要求，应在条款前明确加注 ★。" in report
+
+
+def test_compare_review_artifacts_does_not_add_star_marker_risk_for_gbt_or_starred_clause() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评审规则。",
+            metadata={
+                "selected_sections": [{"title": "评审规则合理性"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "star_required_for_gb_non_t": True,
+                    "star_required_for_mandatory_standard": True,
+                    "star_rule_sections": [{"title": "评审规则合理性"}],
+                    "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "1.规格及技术参数"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "standard_clause_flags": [
+                        {
+                            "title": "1.规格及技术参数",
+                            "section_id": "20-24",
+                            "clause_text": "电磁兼容性能应满足 GB/T 17626 标准。",
+                            "contains_gb_non_t": False,
+                            "contains_gbt": True,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": False,
+                        },
+                        {
+                            "title": "1.规格及技术参数",
+                            "section_id": "25-27",
+                            "clause_text": "★（7）燃油标准，采用0号轻柴油，符合 GB252 标准。",
+                            "contains_gb_non_t": True,
+                            "contains_gbt": False,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": True,
+                        },
+                    ]
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" for cluster in comparison.clusters)
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [
@@ -304,3 +421,204 @@ def test_compare_review_artifacts_prefers_signal_matched_locations_and_compact_e
     assert cluster.source_excerpts == [
         "政策口径：不接受投标人选用进口产品参与投标\n\n外标引用：1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。\n\n国标/行标：1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"
     ]
+
+
+def test_compare_review_artifacts_prefers_policy_topic_locations_over_qualification_and_procedure() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="qualification",
+            summary="资格专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖资格条款。",
+            metadata={
+                "selected_sections": [{"title": "5.2 投标人资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品"],
+                    "import_policy_sections": [{"title": "5.2 投标人资格要求"}],
+                    "import_policy_sentences": ["不接受投标人选用进口产品"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="procedure",
+            summary="程序专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖程序条款。",
+            metadata={
+                "selected_sections": [{"title": "六、其他补充事宜"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品"],
+                    "import_policy_sections": [{"title": "六、其他补充事宜"}],
+                    "import_policy_sentences": ["不接受投标人选用进口产品"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [{"title": "二、申请人的资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品"],
+                    "import_policy_sections": [{"title": "二、申请人的资格要求"}],
+                    "import_policy_sentences": ["不接受投标人选用进口产品"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "1.规格及技术参数"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_standard_refs": ["BS EN 61000"],
+                    "cn_standard_refs": ["GB/T 17626"],
+                    "has_equivalent_standard_clause": False,
+                    "foreign_standard_sections": [{"title": "1.规格及技术参数"}],
+                    "foreign_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 标准。"],
+                    "cn_standard_sections": [{"title": "1.规格及技术参数"}],
+                    "cn_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 标准。"],
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突"
+    )
+    assert cluster.source_locations == ["政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数"]
+
+
+def test_compare_review_artifacts_adds_star_marker_missing_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评审规则。",
+            metadata={
+                "selected_sections": [{"title": "第一章 评审规则"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "star_required_for_gb_non_t": True,
+                    "star_required_for_mandatory_standard": True,
+                    "star_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术条款。",
+            metadata={
+                "selected_sections": [{"title": "第三章 技术要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "standard_clause_flags": [
+                        {
+                            "section_id": "10-12",
+                            "title": "第三章 技术要求",
+                            "clause_text": "（7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。",
+                            "contains_gb_non_t": True,
+                            "contains_gbt": False,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": False,
+                        }
+                    ]
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清"
+    )
+    assert cluster.severity == "中风险"
+    assert cluster.review_type == "评审规则一致性 / 实质性条款标识完整性"
+    assert cluster.source_locations == ["评审规则：第一章 评审规则；技术条款：第三章 技术要求"]
+    assert "GB252" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["star_marker_missing_for_mandatory_standard"]
+
+
+def test_compare_review_artifacts_does_not_add_star_marker_risk_for_gbt_or_starred_clause() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评审规则。",
+            metadata={
+                "selected_sections": [{"title": "第一章 评审规则"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "star_required_for_gb_non_t": True,
+                    "star_required_for_mandatory_standard": True,
+                    "star_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术条款。",
+            metadata={
+                "selected_sections": [{"title": "第三章 技术要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "standard_clause_flags": [
+                        {
+                            "section_id": "10-12",
+                            "title": "第三章 技术要求",
+                            "clause_text": "电磁兼容性能应满足 GB/T 17626 标准。",
+                            "contains_gb_non_t": False,
+                            "contains_gbt": True,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": False,
+                        },
+                        {
+                            "section_id": "13-15",
+                            "title": "第三章 技术要求",
+                            "clause_text": "★燃油标准，符合 GB252 标准。",
+                            "contains_gb_non_t": True,
+                            "contains_gbt": False,
+                            "contains_mandatory_standard": False,
+                            "has_star_marker": True,
+                        },
+                    ]
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" not in titles

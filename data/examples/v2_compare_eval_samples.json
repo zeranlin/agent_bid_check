@@ -179,5 +179,117 @@
       "coverage_gap_count": 0,
       "failure_reason_code_count": 0
     }
+  },
+  {
+    "name": "sample_scoring_technical_star_marker_positive",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评审规则条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第一章 评审规则"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "star_required_for_gb_non_t": true,
+            "star_required_for_mandatory_standard": true,
+            "star_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号"]
+          }
+        }
+      },
+      {
+        "topic": "technical_standard",
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第三章 技术要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "standard_clause_flags": [
+              {
+                "section_id": "20-22",
+                "title": "第三章 技术要求",
+                "clause_text": "（7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。",
+                "contains_gb_non_t": true,
+                "contains_gbt": false,
+                "contains_mandatory_standard": false,
+                "has_star_marker": false
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 1
+    }
+  },
+  {
+    "name": "sample_scoring_technical_star_marker_negative_gbt",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评审规则条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第一章 评审规则"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "star_required_for_gb_non_t": true,
+            "star_required_for_mandatory_standard": true,
+            "star_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "star_rule_sentences": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号"]
+          }
+        }
+      },
+      {
+        "topic": "technical_standard",
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第三章 技术要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "standard_clause_flags": [
+              {
+                "section_id": "20-22",
+                "title": "第三章 技术要求",
+                "clause_text": "电磁兼容性能应满足 GB/T 17626 标准。",
+                "contains_gb_non_t": false,
+                "contains_gbt": true,
+                "contains_mandatory_standard": false,
+                "has_star_marker": false
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 0,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 0
+    }
   }
 ]

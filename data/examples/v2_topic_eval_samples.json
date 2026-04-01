@@ -1707,5 +1707,105 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_star_rule_positive_005",
+    "name": "topic_scoring_star_rule_positive_005",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评审规则明确含 GB（不含 GB/T）或国家强制性标准需加★。",
+    "text": "第一章 评审规则\n评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评审规则条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_star_clause_positive_005",
+    "name": "topic_technical_standard_star_clause_positive_005",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "正文条款命中 GB 非 GB/T，且未加★。",
+    "text": "第三章 技术要求\n（7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_star_clause_negative_gbt_005",
+    "name": "topic_technical_standard_star_clause_negative_gbt_005",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "正文条款仅命中 GB/T，不应识别为 GB 非 GB/T 条款。",
+    "text": "第三章 技术要求\n电磁兼容性能应满足 GB/T 17626 标准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_star_clause_negative_starred_005",
+    "name": "topic_technical_standard_star_clause_negative_starred_005",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "正文条款已加★，不应再触发缺少★。",
+    "text": "第三章 技术要求\n★（7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术标准条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

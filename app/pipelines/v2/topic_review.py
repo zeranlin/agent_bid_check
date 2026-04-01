@@ -44,6 +44,12 @@ CN_STANDARD_REF_RE = re.compile(
 EQUIVALENT_STANDARD_RE = re.compile(
     r"(等效标准.{0,8}(可接受|均可接受)|满足同等技术要求的等效标准均可接受|同等标准均可接受|或同等标准|等同或优于上述标准)"
 )
+STAR_RULE_GB_NON_T_RE = re.compile(r"(含有\s*GB\s*[（(]?\s*不含\s*GB/T\s*[)）]?|GB\s*[（(]?\s*不含\s*GB/T\s*[)）]?)")
+STAR_RULE_MANDATORY_STANDARD_RE = re.compile(r"(国家强制性标准|强制性标准)")
+STAR_RULE_REQUIREMENT_RE = re.compile(r"(需含有?★号|应标注★|需标注★|实质性条款需加★|必须加注★|应加注★)")
+GB_NON_T_REF_RE = re.compile(r"\bGB(?!\s*/\s*T)\s*[- ]?[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
+GB_T_REF_RE = re.compile(r"\bGB\s*/\s*T\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
+MANDATORY_STANDARD_TEXT_RE = re.compile(r"(国家强制性标准|强制性标准)")
 TOPIC_FAILURE_REASON_LABELS = {
     "missing_evidence": "证据不足",
     "topic_not_triggered": "专题未触发",
@@ -54,6 +60,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "risk_degraded_to_manual_review": "存在风险但被降级为人工复核",
     "cross_topic_shared_but_single_topic_hit": "共享证据场景下仅命中单专题",
     "foreign_standard_conflict": "拒绝进口与外标直引存在潜在冲突",
+    "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -231,6 +238,27 @@ def _normalize_signal_sections(sections: list[dict]) -> list[dict]:
     return normalized
 
 
+def _dedupe_signal_sections(sections: list[dict]) -> list[dict]:
+    seen: set[str] = set()
+    result: list[dict] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        section_id = str(section.get("section_id", "")).strip() or f"{section.get('title', '')}:{section.get('start_line', '')}:{section.get('end_line', '')}"
+        if section_id in seen:
+            continue
+        seen.add(section_id)
+        result.append(section)
+    return result
+
+
+def _has_star_marker_near_text(text: str) -> bool:
+    compact = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not compact:
+        return False
+    return compact.startswith("★") or " ★" in compact[:12] or "★" in compact[:8]
+
+
 def _extract_import_policy_signals(sections: list[dict]) -> dict[str, object]:
     combined_text, _ = _collect_section_text(sections)
     reject_matches = _dedupe_preserve([match.group(0).strip() for match in IMPORT_REJECT_RE.finditer(combined_text)])
@@ -273,12 +301,22 @@ def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, objec
     foreign_sentences: list[str] = []
     cn_sentences: list[str] = []
     equivalent_sentences: list[str] = []
+    gb_non_t_sections: list[dict] = []
+    gb_non_t_sentences: list[str] = []
+    gbt_sections: list[dict] = []
+    gbt_sentences: list[str] = []
+    mandatory_standard_sections: list[dict] = []
+    mandatory_standard_sentences: list[str] = []
+    standard_clause_flags: list[dict[str, object]] = []
     for section in sections:
         if not isinstance(section, dict):
             continue
         section_foreign_sentences = _find_match_fragments(section, FOREIGN_STANDARD_REF_RE)
         section_cn_sentences = _find_match_fragments(section, CN_STANDARD_REF_RE)
         section_equivalent_sentences = _find_match_fragments(section, EQUIVALENT_STANDARD_RE)
+        section_gb_non_t_sentences = _find_match_fragments(section, GB_NON_T_REF_RE)
+        section_gbt_sentences = _find_match_fragments(section, GB_T_REF_RE)
+        section_mandatory_sentences = _find_match_fragments(section, MANDATORY_STANDARD_TEXT_RE)
         if section_foreign_sentences:
             foreign_sections.extend(_normalize_signal_sections([section]))
             foreign_sentences.extend(section_foreign_sentences)
@@ -288,6 +326,31 @@ def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, objec
         if section_equivalent_sentences:
             equivalent_sections.extend(_normalize_signal_sections([section]))
             equivalent_sentences.extend(section_equivalent_sentences)
+        if section_gb_non_t_sentences:
+            gb_non_t_sections.extend(_normalize_signal_sections([section]))
+            gb_non_t_sentences.extend(section_gb_non_t_sentences)
+        if section_gbt_sentences:
+            gbt_sections.extend(_normalize_signal_sections([section]))
+            gbt_sentences.extend(section_gbt_sentences)
+        if section_mandatory_sentences:
+            mandatory_standard_sections.extend(_normalize_signal_sections([section]))
+            mandatory_standard_sentences.extend(section_mandatory_sentences)
+        clause_sentences = _dedupe_preserve(section_gb_non_t_sentences + section_gbt_sentences + section_mandatory_sentences)
+        for clause in clause_sentences:
+            clause_text = re.sub(r"\s+", " ", clause).strip()
+            standard_clause_flags.append(
+                {
+                    "section_id": _section_id(section),
+                    "title": str(section.get("title", "")).strip(),
+                    "start_line": section.get("start_line"),
+                    "end_line": section.get("end_line"),
+                    "clause_text": clause_text,
+                    "contains_gb_non_t": bool(GB_NON_T_REF_RE.search(clause_text)),
+                    "contains_gbt": bool(GB_T_REF_RE.search(clause_text)),
+                    "contains_mandatory_standard": bool(MANDATORY_STANDARD_TEXT_RE.search(clause_text)),
+                    "has_star_marker": _has_star_marker_near_text(clause_text) or _has_star_marker_near_text(str(section.get("title", ""))),
+                }
+            )
     foreign_sentences = _compress_standard_fragments(foreign_sentences, foreign_refs)
     cn_sentences = _compress_standard_fragments(cn_sentences, cn_refs)
     if foreign_refs and cn_refs:
@@ -310,6 +373,48 @@ def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, objec
         "cn_standard_sentences": _dedupe_preserve(cn_sentences),
         "equivalent_standard_sections": equivalent_sections,
         "equivalent_standard_sentences": _dedupe_preserve(equivalent_sentences),
+        "contains_gb_non_t": bool(gb_non_t_sentences),
+        "contains_gbt": any(bool(item.get("contains_gbt", False)) for item in standard_clause_flags),
+        "contains_mandatory_standard": bool(mandatory_standard_sentences),
+        "gb_non_t_sections": gb_non_t_sections,
+        "gb_non_t_sentences": _dedupe_preserve(gb_non_t_sentences),
+        "gbt_sections": gbt_sections,
+        "gbt_sentences": _dedupe_preserve(gbt_sentences),
+        "mandatory_standard_sections": mandatory_standard_sections,
+        "mandatory_standard_sentences": _dedupe_preserve(mandatory_standard_sentences),
+        "has_star_marker": any(bool(item.get("has_star_marker")) for item in standard_clause_flags),
+        "standard_clause_flags": standard_clause_flags,
+    }
+
+
+def _extract_star_rule_signals(sections: list[dict]) -> dict[str, object]:
+    matched_sections: list[dict] = []
+    matched_sentences: list[str] = []
+    star_required_for_gb_non_t = False
+    star_required_for_mandatory_standard = False
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_star_requirement = bool(STAR_RULE_REQUIREMENT_RE.search(text))
+        has_gb_non_t_rule = bool(STAR_RULE_GB_NON_T_RE.search(text))
+        has_mandatory_standard_rule = bool(STAR_RULE_MANDATORY_STANDARD_RE.search(text))
+        if has_star_requirement and (has_gb_non_t_rule or has_mandatory_standard_rule):
+            matched_sections.extend(_normalize_signal_sections([section]))
+            matched_sentences.extend(_find_match_fragments(section, STAR_RULE_REQUIREMENT_RE))
+        if has_star_requirement and has_gb_non_t_rule:
+            star_required_for_gb_non_t = True
+        if has_star_requirement and has_mandatory_standard_rule:
+            star_required_for_mandatory_standard = True
+    return {
+        "star_required_for_gb_non_t": star_required_for_gb_non_t,
+        "star_required_for_mandatory_standard": star_required_for_mandatory_standard,
+        "star_rule_sections": _dedupe_signal_sections(matched_sections) if matched_sections else [],
+        "star_rule_sentences": _dedupe_preserve(matched_sentences),
     }
 
 
@@ -798,6 +903,8 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
     signals: dict[str, object] = {}
     if definition.key in {"policy", "qualification", "procedure"}:
         signals.update(_extract_import_policy_signals(sections))
+    if definition.key == "scoring":
+        signals.update(_extract_star_rule_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
     return signals

@@ -1043,5 +1043,200 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_star_marker_missing_positive_005",
+    "document_name": "强制性标准条款未加星正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-701",
+            "title": "第一章 评审规则",
+            "module": "scoring"
+          },
+          {
+            "id": "sec-technical-701",
+            "title": "第三章 技术要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第一章 评审规则"],
+            "required_modules": ["scoring"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第三章 技术要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-star-701",
+          "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+          "review_type": "评审规则一致性 / 实质性条款标识完整性",
+          "severity": "中风险",
+          "source_location": "第一章 评审规则；第三章 技术要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 评审规则",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          },
+          {
+            "title": "第三章 技术要求",
+            "start_line": 20,
+            "end_line": 32,
+            "module": "technical",
+            "module_scores": {
+              "technical": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第一章 评审规则",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "scoring"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第三章 技术要求",
+                "start_line": 20,
+                "end_line": 32,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+            "review_type": "评审规则一致性 / 实质性条款标识完整性",
+            "severity": "中风险",
+            "source_locations": ["第一章 评审规则；第三章 技术要求"],
+            "source_excerpts": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。 （7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。"],
+            "topics": ["scoring", "technical_standard"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["star_marker_missing_for_mandatory_standard"],
+          "comparison_failure_reason_codes": ["star_marker_missing_for_mandatory_standard"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_star_marker_missing_negative_gbt_005",
+    "document_name": "GB/T 不应触发加星负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-702",
+            "title": "第一章 评审规则",
+            "module": "scoring"
+          },
+          {
+            "id": "sec-technical-702",
+            "title": "第三章 技术要求",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第一章 评审规则"],
+            "required_modules": ["scoring"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["第三章 技术要求"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 评审规则",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          },
+          {
+            "title": "第三章 技术要求",
+            "start_line": 20,
+            "end_line": 32,
+            "module": "technical",
+            "module_scores": {
+              "technical": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第一章 评审规则",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "scoring"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "第三章 技术要求",
+                "start_line": 20,
+                "end_line": 32,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]
