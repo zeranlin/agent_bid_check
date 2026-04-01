@@ -112,6 +112,25 @@ def test_policy_and_technical_standard_samples_capture_import_policy_and_foreign
     assert "foreign_standard_conflict" not in negative["target_topic_detail"]["failure_reasons"]
 
 
+def test_real_like_technical_parameter_samples_capture_foreign_standard_and_background_boundaries() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_technical_standard_parameter_import_conflict_real_004"])
+    assert positive["target_topic_detail"]["structured_signals"]["foreign_standard_refs"] == ["BS EN 61000", "EN55011"]
+    assert "GB/T 17626" in positive["target_topic_detail"]["structured_signals"]["cn_standard_refs"]
+    assert positive["target_topic_detail"]["structured_signals"]["has_equivalent_standard_clause"] is False
+
+    equivalent_negative = evaluate_sample(samples["topic_technical_standard_parameter_equivalent_negative_004"])
+    assert equivalent_negative["target_topic_detail"]["structured_signals"]["has_equivalent_standard_clause"] is True
+    assert "foreign_standard_conflict" not in equivalent_negative["target_topic_detail"]["failure_reasons"]
+
+    background_negative = evaluate_sample(samples["topic_technical_standard_background_negative_004"])
+    assert background_negative["target_topic_detail"]["structured_signals"]["foreign_standard_refs"] == []
+    assert background_negative["target_topic_detail"]["structured_signals"]["cn_standard_refs"] == ["GB/T 17626"]
+    assert "foreign_standard_conflict" not in background_negative["target_topic_detail"]["failure_reasons"]
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

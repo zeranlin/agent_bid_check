@@ -207,6 +207,22 @@ def test_regression_cross_topic_import_conflict_samples_are_classified_correctly
     assert negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_real_like_import_conflict_samples_cover_technical_parameter_recall_boundary() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_policy_technical_parameter_import_conflict_real_004"])
+    negative = evaluate_sample(samples["regression_policy_technical_parameter_background_negative_004"])
+
+    assert positive["structure_hit_count"] == 2
+    assert positive["topic_coverage_hit_count"] == 2
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
+
+    assert negative["structure_hit_count"] == 2
+    assert negative["topic_coverage_hit_count"] == 2
+    assert negative["matched_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

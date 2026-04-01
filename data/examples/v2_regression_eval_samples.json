@@ -821,5 +821,227 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_policy_technical_parameter_import_conflict_real_004",
+    "document_name": "真实文件型规格参数外标冲突样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-601",
+            "title": "第一章 采购政策",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-601",
+            "title": "1.规格及技术参数",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 采购政策"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["1.规格及技术参数"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-policy-technical-601",
+          "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+          "review_type": "技术标准引用一致性 / 潜在限制竞争",
+          "severity": "中风险",
+          "source_location": "1.规格及技术参数",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 采购政策",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "policy",
+            "module_scores": {
+              "policy": 12
+            }
+          },
+          {
+            "title": "（二）其他商务要求",
+            "start_line": 10,
+            "end_line": 16,
+            "module": "technical",
+            "module_scores": {
+              "technical": 4,
+              "contract": 3
+            }
+          },
+          {
+            "title": "1.规格及技术参数",
+            "start_line": 20,
+            "end_line": 38,
+            "module": "technical",
+            "module_scores": {
+              "technical": 13,
+              "acceptance": 2
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 采购政策",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "1.规格及技术参数",
+                "start_line": 20,
+                "end_line": 38,
+                "module": "technical"
+              },
+              {
+                "title": "（二）其他商务要求",
+                "start_line": 10,
+                "end_line": 16,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+            "review_type": "技术标准引用一致性 / 潜在限制竞争",
+            "severity": "中风险",
+            "source_locations": ["1.规格及技术参数"],
+            "source_excerpts": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
+            "topics": ["policy", "technical_standard"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["policy_technical_inconsistency"],
+          "comparison_failure_reason_codes": ["policy_technical_inconsistency"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_policy_technical_parameter_background_negative_004",
+    "document_name": "真实文件型背景外标负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-policy-602",
+            "title": "第一章 采购政策",
+            "module": "policy"
+          },
+          {
+            "id": "sec-technical-602",
+            "title": "1.规格及技术参数",
+            "module": "technical"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "policy",
+            "required_titles": ["第一章 采购政策"],
+            "required_modules": ["policy"]
+          },
+          {
+            "topic": "technical_standard",
+            "required_titles": ["1.规格及技术参数"],
+            "required_modules": ["technical"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第一章 采购政策",
+            "start_line": 1,
+            "end_line": 6,
+            "module": "policy",
+            "module_scores": {
+              "policy": 12
+            }
+          },
+          {
+            "title": "第二章 项目背景",
+            "start_line": 8,
+            "end_line": 14,
+            "module": "procedure",
+            "module_scores": {
+              "procedure": 6,
+              "technical": 1
+            }
+          },
+          {
+            "title": "1.规格及技术参数",
+            "start_line": 16,
+            "end_line": 26,
+            "module": "technical",
+            "module_scores": {
+              "technical": 10
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "policy": {
+            "sections": [
+              {
+                "title": "第一章 采购政策",
+                "start_line": 1,
+                "end_line": 6,
+                "module": "policy"
+              }
+            ]
+          },
+          "technical_standard": {
+            "sections": [
+              {
+                "title": "1.规格及技术参数",
+                "start_line": 16,
+                "end_line": 26,
+                "module": "technical"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

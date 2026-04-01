@@ -887,3 +887,44 @@ def test_v2_structure_contract_schemas_serialize_cleanly() -> None:
     assert hit.to_dict()["score"] == 0.88
     assert bundle.to_dict()["sections"][0]["title"] == "第三章 技术要求"
     assert coverage.to_dict()["need_manual_review"] is True
+
+
+def test_build_evidence_map_prioritizes_technical_parameter_section_for_foreign_standard_refs() -> None:
+    text = """
+第一章 采购政策
+本项目不接受投标人选用进口产品参与投标。
+
+第二章 商务要求
+（一）售后服务要求
+供应商须提供售后服务承诺，并按相关标准开展培训。
+
+（二）其他商务要求
+设备到货后按招标人要求组织验收，检测标准按采购人通知执行。
+
+第三章 技术要求
+1.规格及技术参数
+1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。
+
+第四章 合同条款
+付款方式：验收合格后支付合同款。
+
+第五章 验收要求
+设备验收按合同约定执行。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="slim", topic_keys=["technical_standard"])
+    bundle = evidence.metadata["topic_evidence_bundles"]["technical_standard"]
+    selected_titles = [section["title"] for section in bundle["sections"]]
+    primary_ids = set(bundle["primary_section_ids"])
+    primary_titles = [section["title"] for section in bundle["sections"] if f"{section['start_line']}-{section['end_line']}" in primary_ids]
+
+    assert "1.规格及技术参数" in selected_titles
+    assert "1.规格及技术参数" in primary_titles
+    assert "（二）其他商务要求" not in primary_titles
+    assert any("外标命中" in " ".join(item["reasons"]) for item in bundle["metadata"]["primary_scores"])

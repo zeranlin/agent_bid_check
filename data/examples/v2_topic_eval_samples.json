@@ -1602,5 +1602,110 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_technical_standard_parameter_import_conflict_real_004",
+    "name": "topic_technical_standard_parameter_import_conflict_real_004",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "positive",
+    "topic": "technical_standard",
+    "description": "真实文件型样本：拒绝进口，且在“规格及技术参数”中同时引用 BS EN、GB/T 与 EN 标准，无等效说明。",
+    "text": "第一章 采购政策\n本项目不接受投标人选用进口产品参与投标。\n\n第二章 商务要求\n（一）售后服务要求\n供应商应按采购人要求提供培训服务。\n\n第三章 技术要求\n1.规格及技术参数\n1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。\n\n第四章 合同条款\n付款方式：验收合格后支付合同款。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口政策条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术参数中的标准引用条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_parameter_equivalent_negative_004",
+    "name": "topic_technical_standard_parameter_equivalent_negative_004",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "真实文件型负样本：拒绝进口，但“规格及技术参数”同时给出 GB/T 与 IEC，且写明等效标准可接受。",
+    "text": "第一章 采购政策\n本项目不接受进口产品参与投标。\n\n第三章 技术要求\n1.规格及技术参数\n电磁兼容性能应满足 GB/T 17626 和 IEC 61000，满足同等技术要求的等效标准均可接受。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口限制条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术参数中的标准引用条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_technical_standard_background_negative_004",
+    "name": "topic_technical_standard_background_negative_004",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "policy",
+      "technical_standard"
+    ],
+    "case_type": "negative",
+    "topic": "technical_standard",
+    "description": "真实文件型负样本：有进口限制，但外标只出现在项目背景介绍，不作为约束性技术条款。",
+    "text": "第一章 采购政策\n本项目不接受投标人选用进口产品参与投标。\n\n第二章 项目背景\n国际上常见的参考体系包括 BS EN 61000 与 IEC 61000。\n\n第三章 技术要求\n1.规格及技术参数\n设备性能应满足 GB/T 17626 标准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "policy": {
+        "summary": "政策专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖进口限制条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      },
+      "technical_standard": {
+        "summary": "技术标准专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖技术参数中的国标条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

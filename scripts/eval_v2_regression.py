@@ -212,11 +212,15 @@ def evaluate_sample(sample: dict) -> dict:
     breakpoint = sample.get("breakpoint", {}) if isinstance(sample.get("breakpoint", {}), dict) else {}
     comparison = system.get("comparison", {}) if isinstance(system.get("comparison", {}), dict) else {}
     comparison_metadata = comparison.get("metadata", {}) if isinstance(comparison.get("metadata", {}), dict) else {}
+    raw_comparison_failure_reason_codes = comparison_metadata.get(
+        "comparison_failure_reason_codes",
+        comparison_metadata.get("failure_reason_codes", []),
+    )
     comparison_failure_reason_codes = [
         str(item).strip()
-        for item in comparison_metadata.get("failure_reason_codes", [])
+        for item in raw_comparison_failure_reason_codes
         if str(item).strip()
-    ] if isinstance(comparison_metadata.get("failure_reason_codes", []), list) else []
+    ] if isinstance(raw_comparison_failure_reason_codes, list) else []
 
     return {
         "sample_id": str(sample.get("sample_id", "sample")),

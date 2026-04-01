@@ -366,6 +366,7 @@ def compare_review_artifacts(
         metadata={
             "document_name": document_name,
             "failure_reason_codes": triggered_rule_codes,
+            "comparison_failure_reason_codes": triggered_rule_codes,
             "import_policy": import_policy,
             "foreign_standard_refs": foreign_refs,
             "cn_standard_refs": cn_refs,

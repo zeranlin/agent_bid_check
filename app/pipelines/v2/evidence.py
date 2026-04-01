@@ -1,11 +1,24 @@
 from __future__ import annotations
 
 import json
+import re
 
 from .schemas import EvidenceBundle, ModuleHit, SectionCandidate, TopicCoverage, V2StageArtifact
 from .topics import TOPIC_TAXONOMY, TopicDefinition, resolve_topic_definitions, resolve_topic_execution_plan
 
 SCORING_PRIMARY_TITLE_SIGNALS = ("评分办法", "评标办法", "评审办法", "综合评分表", "评分细则", "评审因素表", "评分标准")
+TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS = ("规格及技术参数", "技术参数", "技术要求", "主要技术参数", "技术规格", "参数要求")
+TECHNICAL_STANDARD_NEGATIVE_TITLE_SIGNALS = ("售后服务", "付款方式", "设备验收", "商务要求", "商务条款", "其他商务")
+TECHNICAL_STANDARD_FOREIGN_REF_RE = re.compile(
+    r"\b(?:BS\s*EN|EN|IEC|ISO|ANSI|UL|DIN|ASTM|JIS|CISPR)\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?",
+    re.IGNORECASE,
+)
+TECHNICAL_STANDARD_CN_REF_RE = re.compile(
+    r"\b(?:GB/T|GB|YY/T|YY|HJ/T|HJ|GA/T|GA|JB/T|JB|SJ/T|SJ|DL/T|DL|HG/T|HG|CJ/T|CJ|QB/T|QB|JGJ|JT/T|JT)\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?",
+    re.IGNORECASE,
+)
+TECHNICAL_STANDARD_CLAUSE_RE = re.compile(r"(符合.{0,24}(标准|规范)|执行.{0,16}(标准|规范)|依据.{0,16}(标准|规范))")
+TECHNICAL_PARAMETER_SIGNAL_RE = re.compile(r"(参数|技术要求|技术指标|规格|性能|电磁|噪声|材质|输出|容量|频率|功率)")
 
 
 def _section_id(section: SectionCandidate) -> str:
@@ -56,6 +69,33 @@ def _has_joint_signal(section: SectionCandidate, primary_modules: set[str], seco
     )
 
 
+def _dedupe_list(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(item for item in items if item))
+
+
+def _technical_standard_profile(section: SectionCandidate) -> dict[str, object]:
+    text = "\n".join(part for part in (section.title, section.excerpt, section.body) if part)
+    title = section.title or ""
+    foreign_refs = _dedupe_list([match.group(0).strip() for match in TECHNICAL_STANDARD_FOREIGN_REF_RE.finditer(text)])
+    cn_refs = _dedupe_list([match.group(0).strip() for match in TECHNICAL_STANDARD_CN_REF_RE.finditer(text)])
+    title_has_primary_signal = any(signal in title for signal in TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS)
+    title_has_negative_signal = any(signal in title for signal in TECHNICAL_STANDARD_NEGATIVE_TITLE_SIGNALS)
+    has_standard_clause = bool(TECHNICAL_STANDARD_CLAUSE_RE.search(text))
+    has_parameter_signal = bool(TECHNICAL_PARAMETER_SIGNAL_RE.search(text))
+    has_standard_keyword = ("标准" in text) or ("规范" in text)
+    strong_standard_section = bool(foreign_refs or cn_refs) and (title_has_primary_signal or has_standard_clause or has_parameter_signal)
+    return {
+        "foreign_refs": foreign_refs,
+        "cn_refs": cn_refs,
+        "title_has_primary_signal": title_has_primary_signal,
+        "title_has_negative_signal": title_has_negative_signal,
+        "has_standard_clause": has_standard_clause,
+        "has_parameter_signal": has_parameter_signal,
+        "has_standard_keyword": has_standard_keyword,
+        "strong_standard_section": strong_standard_section,
+    }
+
+
 def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tuple[int, list[str], list[str]]:
     title_hits, title_keywords = _keyword_hits(section.title, definition.keywords)
     excerpt_hits, excerpt_keywords = _keyword_hits(f"{section.excerpt}\n{section.body}", definition.keywords)
@@ -92,6 +132,30 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus += 8
         if raw_scores.get("technical", 0) >= 3 or raw_scores.get("procedure", 0) >= 3:
             special_bonus += 3
+    if definition.key == "technical_standard":
+        profile = _technical_standard_profile(section)
+        foreign_refs = profile["foreign_refs"]
+        cn_refs = profile["cn_refs"]
+        if profile["title_has_primary_signal"]:
+            special_bonus += 22
+        if profile["has_standard_clause"]:
+            special_bonus += 12
+        if profile["has_parameter_signal"]:
+            special_bonus += 8
+        if profile["has_standard_keyword"]:
+            special_bonus += 4
+        if foreign_refs:
+            special_bonus += 26 + min(len(foreign_refs) * 10, 30)
+        if cn_refs:
+            special_bonus += min(len(cn_refs) * 6, 18)
+        if foreign_refs and cn_refs:
+            special_bonus += 8
+        if profile["strong_standard_section"]:
+            special_bonus += 12
+        if profile["title_has_negative_signal"] and not (foreign_refs or profile["strong_standard_section"]):
+            special_bonus -= 28
+        if section.module in {"contract", "acceptance"} and not (foreign_refs or cn_refs):
+            special_bonus -= 12
 
     total_score = (
         title_hits * 8
@@ -119,6 +183,16 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
         reasons.append("表格行标题降权")
     if special_bonus:
         reasons.append(f"专题特殊加权 {special_bonus}")
+    if definition.key == "technical_standard":
+        profile = _technical_standard_profile(section)
+        if profile["foreign_refs"]:
+            reasons.append(f"外标命中 {len(profile['foreign_refs'])} 处")
+        if profile["cn_refs"]:
+            reasons.append(f"国标命中 {len(profile['cn_refs'])} 处")
+        if profile["title_has_primary_signal"]:
+            reasons.append("技术参数标题优先")
+        if profile["title_has_negative_signal"] and not profile["foreign_refs"]:
+            reasons.append("商务/验收标题降权")
     matched_keywords = list(dict.fromkeys(title_keywords + excerpt_keywords))
     return total_score, reasons, matched_keywords
 
@@ -159,6 +233,22 @@ def _build_bundle(
     secondary_modules = set(definition.boundary.secondary_modules)
     ranked.sort(
         key=lambda item: (
+            (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["foreign_refs"])
+            ),
+            (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["strong_standard_section"])
+            ),
+            (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["title_has_primary_signal"])
+            ),
+            (
+                definition.key == "technical_standard"
+                and not bool(_technical_standard_profile(item[2])["title_has_negative_signal"])
+            ),
             (definition.key == "contract_payment" and _has_joint_signal(item[2], primary_modules, secondary_modules)),
             item[2].module in primary_modules,
             any((item[2].module_scores or {}).get(module, 0) > 0 for module in primary_modules),
@@ -170,14 +260,25 @@ def _build_bundle(
     )
 
     max_primary = 2 if len(primary_modules) >= 2 or definition.key == "scoring" else 1
+    if definition.key == "technical_standard":
+        max_primary = 1
     primary_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
     fallback_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
     for item in ranked:
         section = item[2]
         primary_signal_threshold = 6 if definition.key == "scoring" and section.module not in primary_modules else 3
+        technical_profile = _technical_standard_profile(section) if definition.key == "technical_standard" else None
         has_primary_signal = (
             (definition.key == "contract_payment" and _has_joint_signal(section, primary_modules, secondary_modules))
             or section.module in primary_modules
+            or (
+                definition.key == "technical_standard"
+                and technical_profile is not None
+                and (
+                    technical_profile["strong_standard_section"]
+                    or technical_profile["title_has_primary_signal"]
+                )
+            )
             or (
                 definition.key == "scoring"
                 and any(signal in section.title for signal in SCORING_PRIMARY_TITLE_SIGNALS)
@@ -193,6 +294,28 @@ def _build_bundle(
     if not primary_ranked:
         primary_ranked = ranked[:max_primary]
         fallback_ranked = ranked[max_primary:]
+    if definition.key == "technical_standard" and ranked:
+        strongest_foreign_ref = next(
+            (
+                item
+                for item in ranked
+                if _technical_standard_profile(item[2])["foreign_refs"]
+                and (
+                    _technical_standard_profile(item[2])["strong_standard_section"]
+                    or item[2].module in primary_modules
+                )
+            ),
+            None,
+        )
+        if strongest_foreign_ref is not None and strongest_foreign_ref not in primary_ranked:
+            if len(primary_ranked) < max_primary:
+                primary_ranked.append(strongest_foreign_ref)
+                fallback_ranked = [item for item in fallback_ranked if item != strongest_foreign_ref]
+            elif primary_ranked:
+                replaced = primary_ranked[-1]
+                primary_ranked[-1] = strongest_foreign_ref
+                fallback_ranked = [item for item in fallback_ranked if item != strongest_foreign_ref]
+                fallback_ranked.append(replaced)
 
     primary_sections = [item[2] for item in primary_ranked]
     primary_ids = [_section_id(section) for section in primary_sections]

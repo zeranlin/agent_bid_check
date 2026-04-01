@@ -199,6 +199,7 @@ def test_compare_review_artifacts_adds_policy_technical_inconsistency_risk() -> 
     titles = [cluster.title for cluster in comparison.clusters]
     assert "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突" in titles
     assert comparison.metadata["failure_reason_codes"] == ["policy_technical_inconsistency"]
+    assert comparison.metadata["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
 
 
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:

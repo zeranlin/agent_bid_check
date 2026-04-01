@@ -135,6 +135,10 @@ def _collect_section_text(sections: list[dict]) -> tuple[str, dict]:
     return combined_text, source_section
 
 
+def _section_id(section: dict) -> str:
+    return f"{int(section.get('start_line', 0) or 0)}-{int(section.get('end_line', 0) or 0)}"
+
+
 def _dedupe_preserve(items: list[str]) -> list[str]:
     return list(dict.fromkeys(item for item in items if str(item).strip()))
 
@@ -741,7 +745,18 @@ def _run_single_topic(
         }
         for section in sections
     ]
-    structured_signals = _build_structured_signals(definition, sections)
+    signal_sections = sections
+    if definition.key == "technical_standard":
+        primary_ids = {
+            str(item).strip() for item in bundle.get("primary_section_ids", []) if str(item).strip()
+        } if isinstance(bundle, dict) else set()
+        if primary_ids:
+            primary_sections = [
+                section for section in sections if isinstance(section, dict) and _section_id(section) in primary_ids
+            ]
+            if primary_sections:
+                signal_sections = primary_sections
+    structured_signals = _build_structured_signals(definition, signal_sections)
     failure_reasons = _build_topic_failure_reasons(
         selected_sections=selected_sections,
         missing_evidence=normalized_missing_evidence,
