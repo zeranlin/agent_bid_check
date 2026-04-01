@@ -928,3 +928,64 @@ def test_build_evidence_map_prioritizes_technical_parameter_section_for_foreign_
     assert "1.规格及技术参数" in primary_titles
     assert "（二）其他商务要求" not in primary_titles
     assert any("外标命中" in " ".join(item["reasons"]) for item in bundle["metadata"]["primary_scores"])
+
+
+def test_run_topic_reviews_relaxes_technical_standard_manual_review_when_primary_standard_evidence_is_strong(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    text = """
+第一章 采购政策
+本项目不接受投标人选用进口产品参与投标。
+
+第三章 技术要求
+1.规格及技术参数
+1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。
+""".strip()
+    structure = build_structure_map(
+        input_path=__import__("pathlib").Path("sample.docx"),
+        extracted_text=text,
+        settings=ReviewSettings(),
+        use_llm=False,
+    )
+    evidence = build_evidence_map("sample.docx", structure, topic_mode="enhanced", topic_keys=["technical_standard"])
+
+    def fake_call_chat_completion(**_: object) -> dict:
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{"
+                            "\"summary\": \"技术标准专题需人工复核。\", "
+                            "\"need_manual_review\": true, "
+                            "\"coverage_note\": \"已看到技术参数章节，但未找到完整认证和验收材料。\", "
+                            "\"missing_evidence\": ["
+                            "\"验收标准章节中关于检测报告的具体要求\", "
+                            "\"产品认证证书（如CE、CCC等）的具体要求\""
+                            "], "
+                            "\"risk_points\": []"
+                            "}"
+                        )
+                    }
+                }
+            ]
+        }
+
+    monkeypatch.setattr("app.pipelines.v2.topic_review.call_chat_completion", fake_call_chat_completion)
+
+    topics = run_topic_reviews(
+        document_name="sample.docx",
+        evidence=evidence,
+        settings=ReviewSettings(),
+        topic_mode="enhanced",
+        topic_keys=["technical_standard"],
+    )
+    assert len(topics) == 1
+    topic = topics[0]
+    assert topic.topic == "technical_standard"
+    assert topic.need_manual_review is False
+    assert topic.metadata["missing_evidence"] == ["未发现"]
+    assert "missing_evidence" not in topic.metadata["failure_reasons"]
+    assert "degraded_to_manual_review" not in topic.metadata["failure_reasons"]
+    assert "risk_degraded_to_manual_review" not in topic.metadata["failure_reasons"]
+    assert topic.metadata["structured_signals"]["foreign_standard_refs"] == ["BS EN 61000", "EN55011"]

@@ -43,6 +43,39 @@ def _best_severity(values: list[str]) -> str:
     return explicit[0] if explicit else ordered[0]
 
 
+def _dedupe_dicts_by_key(items: list[dict], key: str) -> list[dict]:
+    seen: set[str] = set()
+    result: list[dict] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        value = str(item.get(key, "")).strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        result.append(item)
+    return result
+
+
+def _compact_titles(sections: list[dict], limit: int = 3) -> list[str]:
+    return [
+        str(section.get("title", "")).strip()
+        for section in _dedupe_dicts_by_key(sections, "title")[:limit]
+        if str(section.get("title", "")).strip()
+    ]
+
+
+def _compact_sentences(sentences: list[str], limit: int = 2) -> list[str]:
+    result: list[str] = []
+    for sentence in dedupe([str(item).strip() for item in sentences if str(item).strip()]):
+        compact = re.sub(r"\s+", " ", sentence).strip()
+        if compact:
+            result.append(compact)
+        if len(result) >= limit:
+            break
+    return result
+
+
 def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str) -> RiskSignature:
     risk.ensure_defaults()
     return RiskSignature(
@@ -109,6 +142,9 @@ def _build_cross_topic_policy_technical_cluster(
     has_equivalent_standard_clause: bool,
     policy_locations: list[str],
     technical_locations: list[str],
+    policy_sentences: list[str],
+    foreign_sentences: list[str],
+    cn_sentences: list[str],
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if policy_locations:
@@ -117,11 +153,17 @@ def _build_cross_topic_policy_technical_cluster(
         source_location_parts.append("技术条款：" + "；".join(technical_locations))
     source_excerpt_parts = []
     if reject_phrases:
-        source_excerpt_parts.append("政策口径：" + "；".join(reject_phrases))
-    if foreign_refs:
-        source_excerpt_parts.append("外标引用：" + "、".join(foreign_refs[:4]))
-    if cn_refs:
-        source_excerpt_parts.append("国标/行标：" + "、".join(cn_refs[:4]))
+        source_excerpt_parts.append("政策口径：" + "；".join(reject_phrases[:2]))
+    elif policy_sentences:
+        source_excerpt_parts.append("政策口径：" + "；".join(policy_sentences))
+    if foreign_sentences:
+        source_excerpt_parts.append("外标引用：" + "；".join(foreign_sentences))
+    elif foreign_refs:
+        source_excerpt_parts.append("外标引用：" + "、".join(foreign_refs[:3]))
+    if cn_sentences:
+        source_excerpt_parts.append("国标/行标：" + "；".join(cn_sentences))
+    elif cn_refs:
+        source_excerpt_parts.append("国标/行标：" + "、".join(cn_refs[:2]))
     if has_equivalent_standard_clause:
         source_excerpt_parts.append("等效说明：已发现等效标准可接受表述")
 
@@ -168,10 +210,13 @@ def compare_review_artifacts(
     reject_phrases: list[str] = []
     accept_phrases: list[str] = []
     policy_locations: list[str] = []
+    policy_sentences: list[str] = []
     foreign_refs: list[str] = []
     cn_refs: list[str] = []
     has_equivalent_standard_clause = False
     technical_locations: list[str] = []
+    foreign_sentences: list[str] = []
+    cn_sentences: list[str] = []
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -197,22 +242,48 @@ def compare_review_artifacts(
                 import_policy_values.append(policy_value)
             reject_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_reject_phrases", []) if str(item).strip()])
             accept_phrases.extend([str(item).strip() for item in structured_signals.get("import_policy_accept_phrases", []) if str(item).strip()])
-            policy_locations.extend(section_titles)
+            matched_policy_sections = structured_signals.get("import_policy_sections", [])
+            if isinstance(matched_policy_sections, list) and matched_policy_sections:
+                policy_locations.extend(_compact_titles(matched_policy_sections, limit=2))
+            else:
+                policy_locations.extend(section_titles[:2])
+            policy_sentences.extend(
+                _compact_sentences(structured_signals.get("import_policy_sentences", []), limit=2)
+                if isinstance(structured_signals.get("import_policy_sentences", []), list)
+                else []
+            )
         if topic.topic == "technical_standard":
             foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
             cn_refs.extend([str(item).strip() for item in structured_signals.get("cn_standard_refs", []) if str(item).strip()])
             has_equivalent_standard_clause = has_equivalent_standard_clause or bool(
                 structured_signals.get("has_equivalent_standard_clause", False)
             )
-            technical_locations.extend(section_titles)
+            matched_foreign_sections = structured_signals.get("foreign_standard_sections", [])
+            if isinstance(matched_foreign_sections, list) and matched_foreign_sections:
+                technical_locations.extend(_compact_titles(matched_foreign_sections, limit=2))
+            else:
+                technical_locations.extend(section_titles[:2])
+            foreign_sentences.extend(
+                _compact_sentences(structured_signals.get("foreign_standard_sentences", []), limit=2)
+                if isinstance(structured_signals.get("foreign_standard_sentences", []), list)
+                else []
+            )
+            cn_sentences.extend(
+                _compact_sentences(structured_signals.get("cn_standard_sentences", []), limit=1)
+                if isinstance(structured_signals.get("cn_standard_sentences", []), list)
+                else []
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
     accept_phrases = dedupe(accept_phrases)
     policy_locations = dedupe(policy_locations)
+    policy_sentences = dedupe(policy_sentences)
     foreign_refs = dedupe(foreign_refs)
     cn_refs = dedupe(cn_refs)
     technical_locations = dedupe(technical_locations)
+    foreign_sentences = dedupe(foreign_sentences)
+    cn_sentences = dedupe(cn_sentences)
     if "reject_import" in import_policy_values and "accept_import" in import_policy_values:
         import_policy = "mixed_or_unclear"
     elif "reject_import" in import_policy_values:
@@ -232,6 +303,9 @@ def compare_review_artifacts(
             has_equivalent_standard_clause=has_equivalent_standard_clause,
             policy_locations=policy_locations,
             technical_locations=technical_locations,
+            policy_sentences=policy_sentences,
+            foreign_sentences=foreign_sentences,
+            cn_sentences=cn_sentences,
         )
         key = _signature_key(cross_risk)
         signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))

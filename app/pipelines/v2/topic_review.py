@@ -57,6 +57,9 @@ TOPIC_FAILURE_REASON_LABELS = {
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
+TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS = ("规格及技术参数", "技术参数", "技术要求", "主要技术参数", "技术规格", "参数要求")
+COMPACT_IMPORT_CLAUSE_RE = re.compile(r"(本项目[^。；;\n]{0,80}(?:不接受|拒绝|允许)[^。；;\n]{0,60}进口[^。；;\n]{0,30}|(?:不接受|拒绝|允许)[^。；;\n]{0,60}进口[^。；;\n]{0,30})")
+COMPACT_STANDARD_CLAUSE_RE = re.compile(r"((?:\b\d{1,2}\.\d{1,2}\b\s*[^\d。；;\n:：]{0,20}[:：]\s*)?(?:符合|满足)[^。；;\n]{0,120}?(?:标准|规范))")
 
 
 def _extract_json_block(text: str) -> str:
@@ -143,10 +146,105 @@ def _dedupe_preserve(items: list[str]) -> list[str]:
     return list(dict.fromkeys(item for item in items if str(item).strip()))
 
 
+def _excerpt_sentences(text: str) -> list[str]:
+    normalized = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not normalized:
+        return []
+    parts = re.split(r"(?<=[。；;！？!?])\s*", normalized)
+    return [part.strip() for part in parts if part.strip()]
+
+
+def _section_sentences(section: dict) -> list[str]:
+    return _excerpt_sentences(str(section.get("excerpt", "")).strip() or str(section.get("body", "")).strip())
+
+
+def _find_matching_sentences(section: dict, patterns: list[re.Pattern[str]]) -> list[str]:
+    matches: list[str] = []
+    for sentence in _section_sentences(section):
+        if any(pattern.search(sentence) for pattern in patterns):
+            matches.append(sentence)
+    return _dedupe_preserve(matches)
+
+
+def _find_match_fragments(section: dict, pattern: re.Pattern[str], window: int = 28) -> list[str]:
+    text = re.sub(r"\s+", " ", str(section.get("excerpt", "")).strip() or str(section.get("body", "")).strip())
+    if not text:
+        return []
+    fragments: list[str] = []
+    for match in pattern.finditer(text):
+        start = max(match.start() - window, 0)
+        end = min(match.end() + window, len(text))
+        while start > 0 and text[start - 1] not in "。；;!?！？\n":
+            start -= 1
+        while end < len(text) and text[end] not in "。；;!?！？\n":
+            end += 1
+        fragment = text[start:end].strip(" ，,;；")
+        if fragment:
+            fragments.append(fragment)
+    return _dedupe_preserve(fragments)
+
+
+def _compress_import_fragments(fragments: list[str], reject_matches: list[str], accept_matches: list[str]) -> list[str]:
+    compressed: list[str] = []
+    for fragment in fragments:
+        match = COMPACT_IMPORT_CLAUSE_RE.search(fragment)
+        if match:
+            compressed.append(match.group(1).strip(" ，,;；"))
+        elif len(fragment) <= 90:
+            compressed.append(fragment)
+    if not compressed:
+        compressed.extend(reject_matches[:1])
+        compressed.extend([item for item in accept_matches[:1] if item not in compressed])
+    return _dedupe_preserve(compressed)
+
+
+def _compress_standard_fragments(fragments: list[str], refs: list[str]) -> list[str]:
+    compressed: list[str] = []
+    for fragment in fragments:
+        match = COMPACT_STANDARD_CLAUSE_RE.search(fragment)
+        if match:
+            compressed.append(match.group(1).strip(" ，,;；"))
+        elif len(fragment) <= 120:
+            compressed.append(fragment)
+    if not compressed and refs:
+        compressed.append("符合 " + "、".join(refs[:3]) + " 标准")
+    return _dedupe_preserve(compressed)
+
+
+def _normalize_signal_sections(sections: list[dict]) -> list[dict]:
+    normalized: list[dict] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        title = str(section.get("title", "")).strip()
+        if not title:
+            continue
+        normalized.append(
+            {
+                "section_id": _section_id(section),
+                "title": title,
+                "start_line": section.get("start_line"),
+                "end_line": section.get("end_line"),
+                "module": str(section.get("module", "")).strip(),
+            }
+        )
+    return normalized
+
+
 def _extract_import_policy_signals(sections: list[dict]) -> dict[str, object]:
     combined_text, _ = _collect_section_text(sections)
     reject_matches = _dedupe_preserve([match.group(0).strip() for match in IMPORT_REJECT_RE.finditer(combined_text)])
     accept_matches = _dedupe_preserve([match.group(0).strip() for match in IMPORT_ACCEPT_RE.finditer(combined_text)])
+    matched_sections: list[dict] = []
+    matched_sentences: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        section_sentences = _find_match_fragments(section, IMPORT_REJECT_RE) + _find_match_fragments(section, IMPORT_ACCEPT_RE)
+        if section_sentences:
+            matched_sections.extend(_normalize_signal_sections([section]))
+            matched_sentences.extend(section_sentences)
+    matched_sentences = _compress_import_fragments(matched_sentences, reject_matches, accept_matches)
     if reject_matches and accept_matches:
         policy = "mixed_or_unclear"
     elif reject_matches:
@@ -159,6 +257,8 @@ def _extract_import_policy_signals(sections: list[dict]) -> dict[str, object]:
         "import_policy": policy,
         "import_policy_reject_phrases": reject_matches,
         "import_policy_accept_phrases": accept_matches,
+        "import_policy_sections": matched_sections,
+        "import_policy_sentences": _dedupe_preserve(matched_sentences),
     }
 
 
@@ -167,6 +267,29 @@ def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, objec
     foreign_refs = _dedupe_preserve([match.group(0).strip() for match in FOREIGN_STANDARD_REF_RE.finditer(combined_text)])
     cn_refs = _dedupe_preserve([match.group(0).strip() for match in CN_STANDARD_REF_RE.finditer(combined_text)])
     has_equivalent_standard_clause = bool(EQUIVALENT_STANDARD_RE.search(combined_text))
+    foreign_sections: list[dict] = []
+    cn_sections: list[dict] = []
+    equivalent_sections: list[dict] = []
+    foreign_sentences: list[str] = []
+    cn_sentences: list[str] = []
+    equivalent_sentences: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        section_foreign_sentences = _find_match_fragments(section, FOREIGN_STANDARD_REF_RE)
+        section_cn_sentences = _find_match_fragments(section, CN_STANDARD_REF_RE)
+        section_equivalent_sentences = _find_match_fragments(section, EQUIVALENT_STANDARD_RE)
+        if section_foreign_sentences:
+            foreign_sections.extend(_normalize_signal_sections([section]))
+            foreign_sentences.extend(section_foreign_sentences)
+        if section_cn_sentences:
+            cn_sections.extend(_normalize_signal_sections([section]))
+            cn_sentences.extend(section_cn_sentences)
+        if section_equivalent_sentences:
+            equivalent_sections.extend(_normalize_signal_sections([section]))
+            equivalent_sentences.extend(section_equivalent_sentences)
+    foreign_sentences = _compress_standard_fragments(foreign_sentences, foreign_refs)
+    cn_sentences = _compress_standard_fragments(cn_sentences, cn_refs)
     if foreign_refs and cn_refs:
         standard_system_mix = "mixed_cn_foreign"
     elif foreign_refs:
@@ -181,7 +304,43 @@ def _extract_standard_reference_signals(sections: list[dict]) -> dict[str, objec
         "has_equivalent_standard_clause": has_equivalent_standard_clause,
         "standard_system_mix": standard_system_mix,
         "foreign_standard_has_version": any(re.search(r"[:\-]\d{4}$", ref) for ref in foreign_refs),
+        "foreign_standard_sections": foreign_sections,
+        "foreign_standard_sentences": _dedupe_preserve(foreign_sentences),
+        "cn_standard_sections": cn_sections,
+        "cn_standard_sentences": _dedupe_preserve(cn_sentences),
+        "equivalent_standard_sections": equivalent_sections,
+        "equivalent_standard_sentences": _dedupe_preserve(equivalent_sentences),
     }
+
+
+def _is_strong_technical_standard_section(section: dict) -> bool:
+    title = str(section.get("title", "")).strip()
+    module = str(section.get("module", "")).strip()
+    return module == "technical" and any(signal in title for signal in TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS)
+
+
+def _should_relax_technical_standard_manual_review(
+    definition: TopicDefinition,
+    payload: dict,
+    bundle: dict,
+) -> bool:
+    if definition.key != "technical_standard":
+        return False
+    if not bool(payload.get("need_manual_review", False)):
+        return False
+    if not _normalize_missing_evidence_items(payload.get("missing_evidence")):
+        return False
+    primary_ids = {str(item).strip() for item in bundle.get("primary_section_ids", []) if str(item).strip()} if isinstance(bundle, dict) else set()
+    sections = [section for section in bundle.get("sections", []) if isinstance(section, dict)] if isinstance(bundle, dict) else []
+    primary_sections = [section for section in sections if _section_id(section) in primary_ids] or sections
+    if not primary_sections:
+        return False
+    if not any(_is_strong_technical_standard_section(section) for section in primary_sections):
+        return False
+    structured_signals = _extract_standard_reference_signals(primary_sections)
+    if not structured_signals.get("foreign_standard_refs") and not structured_signals.get("cn_standard_refs"):
+        return False
+    return True
 
 
 def _build_risk_point(
@@ -627,6 +786,10 @@ def _postprocess_topic_payload(
     if _should_tighten_manual_review(payload, risk_points):
         payload["need_manual_review"] = False
         payload["missing_evidence"] = ["未发现"]
+    if _should_relax_technical_standard_manual_review(definition, payload, bundle):
+        payload["need_manual_review"] = False
+        payload["missing_evidence"] = ["未发现"]
+        payload["coverage_note"] = str(payload.get("coverage_note", "")).strip() or "已覆盖核心技术标准条款。"
 
     return payload, risk_points, failure_reasons
 

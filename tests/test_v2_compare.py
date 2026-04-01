@@ -242,3 +242,65 @@ def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     assert not comparison.clusters
     assert comparison.metadata["failure_reason_codes"] == []
+
+
+def test_compare_review_artifacts_prefers_signal_matched_locations_and_compact_excerpts() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [
+                    {"title": "第一章 招标公告"},
+                    {"title": "二、申请人的资格要求"},
+                    {"title": "投标须知"},
+                ],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品参与投标"],
+                    "import_policy_accept_phrases": [],
+                    "import_policy_sections": [{"title": "二、申请人的资格要求"}],
+                    "import_policy_sentences": ["不接受投标人选用进口产品参与投标。"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [
+                    {"title": "投标技术响应"},
+                    {"title": "1.规格及技术参数"},
+                    {"title": "招标技术要求"},
+                ],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_standard_refs": ["BS EN 61000", "EN55011"],
+                    "cn_standard_refs": ["GB/T 17626"],
+                    "has_equivalent_standard_clause": False,
+                    "standard_system_mix": "mixed_cn_foreign",
+                    "foreign_standard_sections": [{"title": "1.规格及技术参数"}],
+                    "foreign_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
+                    "cn_standard_sections": [{"title": "1.规格及技术参数"}],
+                    "cn_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
+                },
+            },
+        ),
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = comparison.clusters[0]
+
+    assert cluster.source_locations == ["政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数"]
+    assert "招标公告" not in cluster.source_locations[0]
+    assert "投标技术响应" not in cluster.source_locations[0]
+    assert cluster.source_excerpts == [
+        "政策口径：不接受投标人选用进口产品参与投标\n\n外标引用：1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。\n\n国标/行标：1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"
+    ]
