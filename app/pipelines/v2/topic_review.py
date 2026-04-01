@@ -55,6 +55,10 @@ PAYMENT_TERMS_FORBIDDEN_RE = re.compile(
     r"(不得将付款方式作为评审因素|付款方式不得纳入评分|付款条件不得作为评分项|付款条款不得作为评审因素|"
     r"不得将.{0,16}付款(方式|条件|条款).{0,12}(作为评审因素|纳入评分|作为评分项|作为评审项))"
 )
+GIFTS_OR_UNRELATED_GOODS_FORBIDDEN_RE = re.compile(
+    r"(不得要求提供赠品|不得要求提供回扣|不得要求提供与采购无关的其他商品|不得要求提供与采购无关的其他服务|"
+    r"赠品不得作为评审因素|回扣不得纳入评分|不得要求提供赠品、回扣或者与采购无关的其他商品、服务)"
+)
 ACCEPTANCE_PLAN_TERM_RE = re.compile(
     r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|项目验收方案设计|验收标准|验收流程安排|"
     r"验收资料准备节点|项目验收组织能力|验收衔接计划|验收移交方案|项目验收方案|竣工验收方案|"
@@ -63,6 +67,14 @@ ACCEPTANCE_PLAN_TERM_RE = re.compile(
 PAYMENT_TERMS_TERM_RE = re.compile(
     r"(付款周期短于招标文件要求|预付款比例更有利于采购人资金安排|付款节点更优|支付安排优于招标文件要求|"
     r"付款周期|预付款比例|付款方式|付款条件|付款节点|支付安排|付款期限|预付款|首付款|尾款)"
+)
+GIFTS_OR_UNRELATED_GOODS_TERM_RE = re.compile(
+    r"(额外向采购人值班室赠送台式电脑、打印机各1套|赠送台式电脑|赠送打印机|额外赠送|额外提供|赠送|赠品|"
+    r"台式电脑|打印机|回扣|返利|无关商品|无关服务|值班室办公设备配置|会议保障等综合服务内容|"
+    r"办公设备配置|会议保障|综合服务内容)"
+)
+PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE = re.compile(
+    r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机)"
 )
 SCORING_SCORE_LINK_RE = re.compile(
     r"(评审内容|评审标准|评分因素|得分|加分|计分|最高得\s*\d+\s*分|最高得分|满分\s*\d+\s*分|"
@@ -85,6 +97,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★",
     "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素",
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素",
+    "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -531,6 +544,53 @@ def _extract_payment_terms_scoring_signals(sections: list[dict]) -> dict[str, ob
         "payment_terms_scoring_sections": _dedupe_signal_sections(payment_sections),
         "payment_terms_scoring_sentences": _dedupe_preserve(payment_sentences),
         "payment_terms_linked_to_score": payment_terms_linked_to_score,
+    }
+
+
+def _extract_gifts_or_unrelated_goods_scoring_signals(sections: list[dict]) -> dict[str, object]:
+    rule_sections: list[dict] = []
+    rule_sentences: list[str] = []
+    goods_sections: list[dict] = []
+    goods_sentences: list[str] = []
+    scoring_contains_gifts_or_unrelated_goods = False
+    gifts_or_goods_linked_to_score = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_forbidden_rule = bool(GIFTS_OR_UNRELATED_GOODS_FORBIDDEN_RE.search(text))
+        has_goods_term = bool(GIFTS_OR_UNRELATED_GOODS_TERM_RE.search(text))
+        has_score_link = bool(SCORING_SCORE_LINK_RE.search(text))
+        goods_is_procurement_subject = bool(PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE.search(text))
+
+        if has_forbidden_rule:
+            rule_sections.extend(_normalize_signal_sections([section]))
+            fragments = _find_match_fragments(section, GIFTS_OR_UNRELATED_GOODS_FORBIDDEN_RE)
+            rule_sentences.extend(fragments or _find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+        if has_goods_term and not goods_is_procurement_subject:
+            scoring_contains_gifts_or_unrelated_goods = True
+            goods_sections.extend(_normalize_signal_sections([section]))
+            goods_sentences.extend(_find_match_fragments(section, GIFTS_OR_UNRELATED_GOODS_TERM_RE))
+
+        if has_goods_term and has_score_link and not goods_is_procurement_subject:
+            gifts_or_goods_linked_to_score = True
+            goods_sections.extend(_normalize_signal_sections([section]))
+            goods_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+    return {
+        "gifts_or_unrelated_goods_forbidden_in_scoring": bool(rule_sections),
+        "gifts_or_goods_rule_sections": _dedupe_signal_sections(rule_sections),
+        "gifts_or_goods_rule_sentences": _dedupe_preserve(rule_sentences),
+        "scoring_contains_gifts_or_unrelated_goods": scoring_contains_gifts_or_unrelated_goods,
+        "gifts_or_goods_scoring_sections": _dedupe_signal_sections(goods_sections),
+        "gifts_or_goods_scoring_sentences": _dedupe_preserve(goods_sentences),
+        "gifts_or_goods_linked_to_score": gifts_or_goods_linked_to_score,
     }
 
 
@@ -1023,6 +1083,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))
         signals.update(_extract_payment_terms_scoring_signals(sections))
+        signals.update(_extract_gifts_or_unrelated_goods_scoring_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
     return signals

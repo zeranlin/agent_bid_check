@@ -76,6 +76,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补付款条款禁入评分规则与评分标准的交叉校验。",
     },
+    "gifts_or_unrelated_goods_in_scoring_forbidden": {
+        "label": "赠品或无关商品服务被违规纳入评分因素",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补赠品/回扣/无关商品服务禁入评分规则与评分标准的交叉校验。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

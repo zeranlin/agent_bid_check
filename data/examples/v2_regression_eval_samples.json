@@ -1596,5 +1596,283 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_scoring_gifts_positive_008",
+    "document_name": "赠送额外商品进入评分因素正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1001",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-1001",
+          "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+          "review_type": "评分因素合规性 / 不当附加交易条件",
+          "severity": "高风险",
+          "source_location": "第一章 评审规则；第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 36,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 36,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+            "review_type": "评分因素合规性 / 不当附加交易条件",
+            "severity": "高风险",
+            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_excerpts": [
+              "规则要求：评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。\n\n评分内容：额外向采购人值班室赠送台式电脑、打印机各1套的，得100分。；仅承诺1.5小时（90分钟）内到达现场处理问题的，得50分；其他情况不得分。"
+            ],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"],
+          "comparison_failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_gifts_negative_service_only_008",
+    "document_name": "纯响应时效评分不应误报赠品风险负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1002",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_gifts_negative_procurement_subject_008",
+    "document_name": "采购标的本身包含电脑打印机不应误报赠品风险负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1003",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_gifts_hidden_positive_008",
+    "document_name": "隐性附加办公设备配置或会议保障服务进入评分因素正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1004",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-1004",
+          "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+          "review_type": "评分因素合规性 / 不当附加交易条件",
+          "severity": "高风险",
+          "source_location": "第一章 评审规则；第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 34,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 34,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+            "review_type": "评分因素合规性 / 不当附加交易条件",
+            "severity": "高风险",
+            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_excerpts": [
+              "规则要求：评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。\n\n评分内容：提供投标人承担过类似项目的销售安装业绩，且在项目履约中包含值班室办公设备配置或会议保障等综合服务内容的，每提供1个业绩得20分。；其它情况不得分，本项最高得100分。"
+            ],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"],
+          "comparison_failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+        }
+      }
+    }
   }
 ]

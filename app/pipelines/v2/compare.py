@@ -318,6 +318,48 @@ def _build_cross_topic_payment_terms_scoring_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cross_topic_gifts_or_goods_scoring_cluster(
+    *,
+    rule_locations: list[str],
+    rule_sentences: list[str],
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if rule_locations:
+        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+    if scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+
+    source_excerpt_parts = []
+    if rule_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
+    if scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
+
+    risk = RiskPoint(
+        title="将赠送额外商品作为评分条件，违反评审规则合规性要求",
+        severity="高风险",
+        review_type="评分因素合规性 / 不当附加交易条件",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "评审规则已明确，不得要求提供赠品、回扣或者与采购无关的其他商品、服务。",
+            "当前评分内容将“额外赠送台式电脑、打印机各1套”作为高分条件。",
+            "上述赠送内容明显超出采购标的本身，属于与采购无关的额外商品。",
+            "该类设置容易诱导以额外利益换取评分优势，存在明显不合规风险，并可能导致评审结果失真、供应商公平竞争受损。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除“赠送台式电脑、打印机”等与采购无关的附加商品要求。",
+            "售后服务评分如需保留，应仅围绕响应时效、服务能力、保障机制等与采购标的直接相关内容设置。",
+            "对评分标准重新调整，避免将赠品、返利、回扣或无关服务作为加分条件。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -359,6 +401,12 @@ def compare_review_artifacts(
     payment_terms_scoring_locations: list[str] = []
     payment_terms_scoring_sentences: list[str] = []
     payment_terms_linked_to_score = False
+    gifts_or_unrelated_goods_forbidden_in_scoring = False
+    gifts_or_goods_rule_locations: list[str] = []
+    gifts_or_goods_rule_sentences: list[str] = []
+    gifts_or_goods_scoring_locations: list[str] = []
+    gifts_or_goods_scoring_sentences: list[str] = []
+    gifts_or_goods_linked_to_score = False
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -484,6 +532,28 @@ def compare_review_artifacts(
             payment_terms_linked_to_score = payment_terms_linked_to_score or bool(
                 structured_signals.get("payment_terms_linked_to_score", False)
             )
+            gifts_or_unrelated_goods_forbidden_in_scoring = gifts_or_unrelated_goods_forbidden_in_scoring or bool(
+                structured_signals.get("gifts_or_unrelated_goods_forbidden_in_scoring", False)
+            )
+            matched_gifts_rule_sections = structured_signals.get("gifts_or_goods_rule_sections", [])
+            if isinstance(matched_gifts_rule_sections, list):
+                gifts_or_goods_rule_locations.extend(_compact_titles(matched_gifts_rule_sections, limit=2))
+            gifts_or_goods_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("gifts_or_goods_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("gifts_or_goods_rule_sentences", []), list)
+                else []
+            )
+            matched_gifts_scoring_sections = structured_signals.get("gifts_or_goods_scoring_sections", [])
+            if isinstance(matched_gifts_scoring_sections, list):
+                gifts_or_goods_scoring_locations.extend(_compact_titles(matched_gifts_scoring_sections, limit=2))
+            gifts_or_goods_scoring_sentences.extend(
+                _compact_sentences(structured_signals.get("gifts_or_goods_scoring_sentences", []), limit=4)
+                if isinstance(structured_signals.get("gifts_or_goods_scoring_sentences", []), list)
+                else []
+            )
+            gifts_or_goods_linked_to_score = gifts_or_goods_linked_to_score or bool(
+                structured_signals.get("gifts_or_goods_linked_to_score", False)
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -513,6 +583,10 @@ def compare_review_artifacts(
     payment_terms_rule_sentences = dedupe(payment_terms_rule_sentences)
     payment_terms_scoring_locations = dedupe(payment_terms_scoring_locations)
     payment_terms_scoring_sentences = dedupe(payment_terms_scoring_sentences)
+    gifts_or_goods_rule_locations = dedupe(gifts_or_goods_rule_locations)
+    gifts_or_goods_rule_sentences = dedupe(gifts_or_goods_rule_sentences)
+    gifts_or_goods_scoring_locations = dedupe(gifts_or_goods_scoring_locations)
+    gifts_or_goods_scoring_sentences = dedupe(gifts_or_goods_scoring_sentences)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -599,6 +673,19 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("payment_terms_in_scoring_forbidden")
+
+    if gifts_or_unrelated_goods_forbidden_in_scoring and gifts_or_goods_linked_to_score:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_gifts_or_goods_scoring_cluster(
+            rule_locations=gifts_or_goods_rule_locations,
+            rule_sentences=gifts_or_goods_rule_sentences,
+            scoring_locations=gifts_or_goods_scoring_locations,
+            scoring_sentences=gifts_or_goods_scoring_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("gifts_or_unrelated_goods_in_scoring_forbidden")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -736,6 +823,8 @@ def compare_review_artifacts(
             "acceptance_plan_linked_to_score": acceptance_plan_linked_to_score,
             "payment_terms_forbidden_in_scoring": payment_terms_forbidden_in_scoring,
             "payment_terms_linked_to_score": payment_terms_linked_to_score,
+            "gifts_or_unrelated_goods_forbidden_in_scoring": gifts_or_unrelated_goods_forbidden_in_scoring,
+            "gifts_or_goods_linked_to_score": gifts_or_goods_linked_to_score,
         },
     )
 

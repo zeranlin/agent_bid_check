@@ -508,6 +508,146 @@ def test_compare_review_artifacts_does_not_add_payment_terms_risk_for_contract_p
     assert all(cluster.title != "将付款方式纳入评审因素，违反评审规则合规性要求" for cluster in comparison.clusters)
 
 
+def test_compare_review_artifacts_adds_gifts_or_unrelated_goods_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "gifts_or_unrelated_goods_forbidden_in_scoring": True,
+                    "gifts_or_goods_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "gifts_or_goods_rule_sentences": ["评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"],
+                    "scoring_contains_gifts_or_unrelated_goods": True,
+                    "gifts_or_goods_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-34"}],
+                    "gifts_or_goods_scoring_sentences": [
+                        "额外向采购人值班室赠送台式电脑、打印机各1套的，得100分。",
+                        "仅承诺1.5小时（90分钟）内到达现场处理问题的，得50分；其他情况不得分。"
+                    ],
+                    "gifts_or_goods_linked_to_score": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "评分因素合规性 / 不当附加交易条件"
+    assert "赠送台式电脑" in cluster.source_excerpts[0]
+    assert "得100分" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+    report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
+    assert "将赠送额外商品作为评分条件，违反评审规则合规性要求" in report
+    assert "问题定性：高风险" in report
+    assert "删除“赠送台式电脑、打印机”等与采购无关的附加商品要求。" in report
+
+
+def test_compare_review_artifacts_does_not_add_gifts_risk_for_service_response_only() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "gifts_or_unrelated_goods_forbidden_in_scoring": True,
+                    "gifts_or_goods_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "gifts_or_goods_rule_sentences": ["评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"],
+                    "scoring_contains_gifts_or_unrelated_goods": False,
+                    "gifts_or_goods_scoring_sections": [],
+                    "gifts_or_goods_scoring_sentences": ["承诺1小时内到达现场处理问题的，得100分。"],
+                    "gifts_or_goods_linked_to_score": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "将赠送额外商品作为评分条件，违反评审规则合规性要求" for cluster in comparison.clusters)
+
+
+def test_compare_review_artifacts_does_not_add_gifts_risk_for_procurement_subject_goods() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "gifts_or_unrelated_goods_forbidden_in_scoring": True,
+                    "gifts_or_goods_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "gifts_or_goods_rule_sentences": ["评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"],
+                    "scoring_contains_gifts_or_unrelated_goods": False,
+                    "gifts_or_goods_scoring_sections": [],
+                    "gifts_or_goods_scoring_sentences": ["本项目采购标的包括台式电脑、打印机及配套安装服务。评审标准：完全满足技术参数要求的得100分。"],
+                    "gifts_or_goods_linked_to_score": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "将赠送额外商品作为评分条件，违反评审规则合规性要求" for cluster in comparison.clusters)
+
+
+def test_compare_review_artifacts_adds_gifts_risk_for_hidden_related_service_bundle() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "gifts_or_unrelated_goods_forbidden_in_scoring": True,
+                    "gifts_or_goods_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "gifts_or_goods_rule_sentences": ["评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"],
+                    "scoring_contains_gifts_or_unrelated_goods": True,
+                    "gifts_or_goods_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-34"}],
+                    "gifts_or_goods_scoring_sentences": [
+                        "提供投标人承担过类似项目的销售安装业绩，且在项目履约中包含值班室办公设备配置或会议保障等综合服务内容的，每提供1个业绩得20分。",
+                        "其它情况不得分，本项最高得100分。"
+                    ],
+                    "gifts_or_goods_linked_to_score": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+    )
+    assert "值班室办公设备配置" in cluster.source_excerpts[0]
+    assert "会议保障等综合服务内容" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

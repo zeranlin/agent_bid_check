@@ -225,6 +225,41 @@ def test_scoring_payment_terms_rule_and_scoring_signals_are_extracted_correctly(
     assert capability_negative_signals["payment_terms_linked_to_score"] is False
 
 
+def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    rule_sample = evaluate_sample(samples["topic_scoring_gifts_rule_positive_008"])
+    rule_signals = rule_sample["target_topic_detail"]["structured_signals"]
+    assert rule_signals["gifts_or_unrelated_goods_forbidden_in_scoring"] is True
+    assert "不得要求提供赠品" in rule_signals["gifts_or_goods_rule_sentences"][0]
+
+    positive = evaluate_sample(samples["topic_scoring_gifts_scoring_positive_008"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["scoring_contains_gifts_or_unrelated_goods"] is True
+    assert positive_signals["gifts_or_goods_linked_to_score"] is True
+    assert any("赠送台式电脑" in item for item in positive_signals["gifts_or_goods_scoring_sentences"])
+    assert any("打印机" in item for item in positive_signals["gifts_or_goods_scoring_sentences"])
+    assert any("得100分" in item for item in positive_signals["gifts_or_goods_scoring_sentences"])
+
+    service_negative = evaluate_sample(samples["topic_scoring_gifts_negative_service_only_008"])
+    service_negative_signals = service_negative["target_topic_detail"]["structured_signals"]
+    assert service_negative_signals["scoring_contains_gifts_or_unrelated_goods"] is False
+    assert service_negative_signals["gifts_or_goods_linked_to_score"] is False
+
+    subject_negative = evaluate_sample(samples["topic_scoring_gifts_negative_procurement_subject_008"])
+    subject_negative_signals = subject_negative["target_topic_detail"]["structured_signals"]
+    assert subject_negative_signals["scoring_contains_gifts_or_unrelated_goods"] is False
+    assert subject_negative_signals["gifts_or_goods_linked_to_score"] is False
+
+    hidden_positive = evaluate_sample(samples["topic_scoring_gifts_hidden_positive_008"])
+    hidden_positive_signals = hidden_positive["target_topic_detail"]["structured_signals"]
+    assert hidden_positive_signals["scoring_contains_gifts_or_unrelated_goods"] is True
+    assert hidden_positive_signals["gifts_or_goods_linked_to_score"] is True
+    assert any("值班室办公设备配置" in item for item in hidden_positive_signals["gifts_or_goods_scoring_sentences"])
+    assert any("会议保障等综合服务内容" in item for item in hidden_positive_signals["gifts_or_goods_scoring_sentences"])
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
