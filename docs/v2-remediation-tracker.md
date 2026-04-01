@@ -35,7 +35,8 @@
 | E-001 | 补齐“拒绝进口 vs 外标引用”相关样本与回归测试 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | E-002 | 补齐“二层 technical_standard 召回与去噪”监督样本 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | W-001 | review-plus Web 链路重启与新结果复核 | Web/运行链路整改 | 已通过 | Web 新结果已与修复后规则对齐 |
-| W-002 | 补齐真实文件中 R-001~R-007 标准命中映射、compare 规则码与 Web 展示一致性闭环 | Web/运行链路整改 | 待下发 | 尚未进入验收 |
+| W-002 | 补齐真实文件中 R-001~R-007 标准命中映射、compare 规则码与 Web 展示一致性闭环 | Web/运行链路整改 | 未通过 | compare 规则码已补出，但成熟链路展示仍未完全对齐标准任务口径 |
+| W-003 | 补齐成熟输出层与 Web 历史页对标准任务口径的最终展示映射 | Web/运行链路整改 | 待下发 | 尚未进入验收 |
 
 ## 5. 任务详情
 
@@ -868,8 +869,8 @@ T 提交时必须附：
 
 - 任务名称：补齐真实文件中 R-001~R-007 标准命中映射、compare 规则码与 Web 展示一致性闭环
 - 任务类型：Web/运行链路整改
-- 当前状态：`待下发`
-- 当前结论：尚未进入验收
+- 当前状态：`未通过`
+- 当前结论：compare 规则码已补出，但成熟链路展示仍未完全对齐标准任务口径
 
 #### 任务背景
 
@@ -974,3 +975,119 @@ T 提交时必须附：
   - structured_signals 有正文信号，但 compare 仍缺规则码
   - Web 展示与 comparison.json 不一致
   - 把 `R-004 / R-005` 在本文件中误报出来
+
+#### M 本轮验收结论
+
+- 已新增真实文件测试 [test_w002_real_file.py](/Users/linzeran/code/2026-zn/test_getst/tests/test_w002_real_file.py)
+- 已新增多组真实回放目录，其中 [20260401-131548-w002-matrix-replay](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-131548-w002-matrix-replay) 的 [comparison.json](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-131548-w002-matrix-replay/comparison.json) 已具备：
+  - `policy_technical_inconsistency`
+  - `star_marker_missing_for_mandatory_standard`
+  - `acceptance_plan_in_scoring_forbidden`
+  - `specific_brand_or_supplier_in_scoring_forbidden`
+  - `acceptance_testing_cost_shifted_to_bidder`
+- `R-004`、`R-005` 在真实文件回放结果中保持未命中，负样本保护基本达标
+- 但成熟链路目录如 [20260401-133455-w002-mature-llm-1800s](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-133455-w002-mature-llm-1800s) 的 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-133455-w002-mature-llm-1800s/review.md) 仍主要展示 baseline/LLM 泛化标题，未完全切换到标准任务口径
+- 当前说明：
+  - compare 规则码层已基本补齐
+  - 面向用户的成熟输出层 / Web 展示层仍未完全对齐
+- 结论：`未通过`
+
+### W-003
+
+- 任务名称：补齐成熟输出层与 Web 历史页对标准任务口径的最终展示映射
+- 任务类型：Web/运行链路整改
+- 当前状态：`待下发`
+- 当前结论：尚未进入验收
+
+#### 任务背景
+
+`W-002` 本轮验收表明：
+
+- compare 规则码层已经基本补齐
+- 真实文件回放链路已经能够产出标准 failure_reason_codes
+- 但用户实际看到的成熟结果与 Web 历史页，仍主要保留 baseline / LLM 泛化标题，没有稳定切换到标准任务标题
+
+典型证据：
+
+- [20260401-131548-w002-matrix-replay/comparison.json](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-131548-w002-matrix-replay/comparison.json) 已包含：
+  - `policy_technical_inconsistency`
+  - `star_marker_missing_for_mandatory_standard`
+  - `acceptance_plan_in_scoring_forbidden`
+  - `specific_brand_or_supplier_in_scoring_forbidden`
+  - `acceptance_testing_cost_shifted_to_bidder`
+- 但 [20260401-133455-w002-mature-llm-1800s/review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-133455-w002-mature-llm-1800s/review.md) 中，仍以：
+  - `评分标准中“安装、检测、验收、培训计划”分值设置逻辑混乱`
+  - `制造商资质证书评分项指向特定认证`
+  - `商务条款中“交钥匙项目”定义模糊`
+  
+等泛化标题为主，未稳定展示 `R-002 / R-003 / R-006 / R-007` 的标准标题。
+
+#### 问题定位
+
+当前缺口已经从“识别层 / compare 层”收敛到“最终展示层”：
+
+1. 成熟报告装配阶段未优先采用标准 compare 风险标题
+2. baseline / LLM 风险仍在前排覆盖标准任务口径
+3. Web 历史页卡片标题与 `comparison.json` 已产出的标准标题未稳定对齐
+4. 用户从 Web 页面无法一眼确认某条风险是否属于 `R-002 / R-003 / R-006 / R-007`
+
+#### T 整改目标
+
+1. 让成熟输出层优先展示标准任务标题
+2. 让 Web 历史页卡片标题与 `comparison.json` 标准标题一致
+3. 避免 baseline / LLM 泛化标题覆盖标准口径
+4. 让真实文件最终页面可直接映射回 `R-001 ~ R-007`
+
+#### 具体整改要求
+
+1. 成熟报告装配整改
+   - 检查 `assemble_v2_report`、最终风险去重/排序/合并逻辑
+   - 对已命中的标准 compare 风险，优先使用标准标题与标准文案
+   - 泛化 baseline 风险如与标准任务同类，应降级为补充说明，不应占用主标题位
+2. Web 视图映射整改
+   - 检查 `build_review_view` 与历史页卡片构建逻辑
+   - 确保卡片标题优先读取标准 compare 风险标题
+   - 若已有标准 compare 风险，不应再显示同类 baseline 泛化标题作为主卡片
+3. 去重与归并整改
+   - 对 `R-006` 这类“baseline 已有泛化证书风险 + compare 已有标准标题”的场景，必须归并为标准标题
+   - 对 `R-007` 这类“成熟文本已有相近标题”的场景，必须统一到标准标题
+4. 验证对象固定
+   - 必须使用真实文件 `20260401-124857-763f549f`
+   - 最终提交一个新的成熟结果目录与新的 Web 历史页链接
+
+#### 必须补的测试
+
+1. 成熟输出测试
+   - 断言成熟 `review.md` 中能直接看到：
+     - `技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突`
+     - `强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清`
+     - `将项目验收方案纳入评审因素，违反评审规则合规性要求`
+     - `以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险`
+     - `将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险`
+2. Web 卡片测试
+   - 断言 Web 卡片标题与上述标准标题一致
+   - 断言不再以前述同类 baseline 泛化标题作为主展示标题
+3. 负样本测试
+   - `R-004 / R-005` 在该真实文件结果中仍不出现标准卡片
+
+#### 交付物要求
+
+1. 改了哪些文件
+2. 修了哪些成熟输出层 / Web 视图映射逻辑
+3. 新增了哪些测试
+4. 跑了哪些命令，结果如何
+5. 新的成熟结果目录
+6. 新的 Web 历史页链接
+7. 一份“最终用户可见标题矩阵”
+
+#### M 验收标准
+
+- 通过线：
+  - 成熟 `review.md` 中直接呈现标准任务标题
+  - Web 历史页中直接呈现标准任务标题
+  - `comparison.json`、`review.md`、Web 三者标题一致
+  - `R-004 / R-005` 继续不误报
+- 不过线情形：
+  - compare 已有标准规则码，但成熟输出仍显示泛化标题
+  - Web 卡片与 `comparison.json` 标题不一致
+  - 标准标题被 baseline / LLM 同类标题覆盖
