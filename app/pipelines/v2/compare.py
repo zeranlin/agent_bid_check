@@ -251,7 +251,7 @@ def _build_cross_topic_acceptance_plan_scoring_cluster(
     if rule_sentences:
         source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
     if scoring_sentences:
-        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:2]))
+        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
 
     risk = RiskPoint(
         title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
@@ -407,7 +407,7 @@ def compare_review_artifacts(
             if isinstance(matched_scoring_sections, list):
                 acceptance_plan_scoring_locations.extend(_compact_titles(matched_scoring_sections, limit=2))
             acceptance_plan_scoring_sentences.extend(
-                _compact_sentences(structured_signals.get("acceptance_plan_scoring_sentences", []), limit=3)
+                _compact_sentences(structured_signals.get("acceptance_plan_scoring_sentences", []), limit=4)
                 if isinstance(structured_signals.get("acceptance_plan_scoring_sentences", []), list)
                 else []
             )

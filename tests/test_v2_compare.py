@@ -393,6 +393,47 @@ def test_compare_review_artifacts_does_not_add_acceptance_plan_risk_for_non_scor
     assert all(cluster.title != "将项目验收方案纳入评审因素，违反评审规则合规性要求" for cluster in comparison.clusters)
 
 
+def test_compare_review_artifacts_adds_acceptance_plan_risk_for_strong_business_expression() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_plan_forbidden_in_scoring": True,
+                    "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+                    "scoring_contains_acceptance_plan": True,
+                    "acceptance_plan_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-42"}],
+                    "acceptance_plan_scoring_sentences": [
+                        "评审内容：投标人提供的安装、检测、项目验收方案及培训计划。",
+                        "提供项目验收方案设计、验收标准及验收流程安排。",
+                        "验收资料准备节点明确、流程衔接合理，能体现项目验收组织能力，评价为优得60分；评价为良得30分；评价为中得10分；评价为差，不得分。"
+                    ],
+                    "acceptance_plan_linked_to_score": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    )
+    assert "项目验收方案设计" in cluster.source_excerpts[0]
+    assert "验收标准" in cluster.source_excerpts[0]
+    assert "验收流程安排" in cluster.source_excerpts[0]
+    assert "项目验收组织能力" in cluster.source_excerpts[0]
+    assert "评价为优得60分" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["acceptance_plan_in_scoring_forbidden"]
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

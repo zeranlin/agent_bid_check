@@ -178,6 +178,23 @@ def test_scoring_acceptance_plan_rule_and_scoring_signals_are_extracted_correctl
     assert negative_signals["scoring_contains_acceptance_plan"] is False
     assert negative_signals["acceptance_plan_linked_to_score"] is False
 
+    strong_positive = evaluate_sample(samples["topic_scoring_acceptance_plan_scoring_strong_positive_006a"])
+    strong_signals = strong_positive["target_topic_detail"]["structured_signals"]
+    assert strong_signals["acceptance_plan_forbidden_in_scoring"] is True
+    assert strong_signals["scoring_contains_acceptance_plan"] is True
+    assert strong_signals["acceptance_plan_linked_to_score"] is True
+    assert any("项目验收方案设计" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+    assert any("验收标准" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+    assert any("验收流程安排" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+    assert any("验收资料准备节点" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+    assert any("项目验收组织能力" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+    assert any("评价为优得60分" in item for item in strong_signals["acceptance_plan_scoring_sentences"])
+
+    training_negative = evaluate_sample(samples["topic_scoring_acceptance_plan_negative_implementation_only_006a"])
+    training_negative_signals = training_negative["target_topic_detail"]["structured_signals"]
+    assert training_negative_signals["scoring_contains_acceptance_plan"] is False
+    assert training_negative_signals["acceptance_plan_linked_to_score"] is False
+
 
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
