@@ -64,6 +64,9 @@ SPECIFIC_BRAND_OR_SUPPLIER_FORBIDDEN_RE = re.compile(
     r"不得限定或者指定特定的供应商|不得以特定认证作为倾向性评分条件|"
     r"不得限定或者指定特定的专利、商标、品牌或者供应商)"
 )
+ACCEPTANCE_TESTING_COST_FORBIDDEN_RE = re.compile(
+    r"(不得要求中标人承担验收产生的检测费用|验收检测费用不得由中标人承担|验收相关检测费用不得转嫁供应商)"
+)
 ACCEPTANCE_PLAN_TERM_RE = re.compile(
     r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|项目验收方案设计|验收标准|验收流程安排|"
     r"验收资料准备节点|项目验收组织能力|验收衔接计划|验收移交方案|项目验收方案|竣工验收方案|"
@@ -86,6 +89,10 @@ SPECIFIC_CERT_OR_SUPPLIER_TERM_RE = re.compile(
 GENERIC_COMPLIANCE_PROOF_RE = re.compile(
     r"(合格证明|合格证|检验报告|检测报告|法定资质|法定许可|必备资质|国家规定的证明材料)"
 )
+ACCEPTANCE_TESTING_TERM_RE = re.compile(r"(检测|检验|抽检|专项检测|第三方检测|法定检测)")
+ACCEPTANCE_STAGE_TERM_RE = re.compile(r"(验收|相关部门验收|验收合格之前|验收阶段|竣工验收)")
+COST_SHIFT_TERM_RE = re.compile(r"(投标总价包括|自行计入|一切费用|由投标人承担|由中标人承担|负责承担|全部费用)")
+ACCEPTANCE_TESTING_COST_NEGATIVE_RE = re.compile(r"(采购人承担|采购人另行委托|依法另行委托|出厂检验|自检|安装调试)")
 PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE = re.compile(
     r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机)"
 )
@@ -112,6 +119,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素",
     "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件",
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
+    "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -657,6 +665,54 @@ def _extract_specific_cert_or_supplier_scoring_signals(sections: list[dict]) -> 
     }
 
 
+def _extract_acceptance_testing_cost_signals(sections: list[dict]) -> dict[str, object]:
+    rule_sections: list[dict] = []
+    rule_sentences: list[str] = []
+    demand_sections: list[dict] = []
+    demand_sentences: list[str] = []
+    demand_contains_acceptance_testing_cost_signal = False
+    acceptance_testing_cost_shifted_to_bidder = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_forbidden_rule = bool(ACCEPTANCE_TESTING_COST_FORBIDDEN_RE.search(text))
+        has_testing_term = bool(ACCEPTANCE_TESTING_TERM_RE.search(text))
+        has_acceptance_term = bool(ACCEPTANCE_STAGE_TERM_RE.search(text))
+        has_cost_shift_term = bool(COST_SHIFT_TERM_RE.search(text))
+        has_negative_context = bool(ACCEPTANCE_TESTING_COST_NEGATIVE_RE.search(text))
+
+        if has_forbidden_rule:
+            rule_sections.extend(_normalize_signal_sections([section]))
+            fragments = _find_match_fragments(section, ACCEPTANCE_TESTING_COST_FORBIDDEN_RE)
+            rule_sentences.extend(fragments or _find_match_fragments(section, ACCEPTANCE_STAGE_TERM_RE))
+
+        if has_testing_term and has_acceptance_term and not has_negative_context:
+            demand_contains_acceptance_testing_cost_signal = True
+            demand_sections.extend(_normalize_signal_sections([section]))
+            demand_sentences.extend(_find_matching_sentences(section, [ACCEPTANCE_TESTING_TERM_RE, ACCEPTANCE_STAGE_TERM_RE]))
+
+        if has_testing_term and has_acceptance_term and has_cost_shift_term and not has_negative_context:
+            acceptance_testing_cost_shifted_to_bidder = True
+            demand_sections.extend(_normalize_signal_sections([section]))
+            demand_sentences.extend(_find_matching_sentences(section, [ACCEPTANCE_TESTING_TERM_RE, ACCEPTANCE_STAGE_TERM_RE, COST_SHIFT_TERM_RE]))
+
+    return {
+        "acceptance_testing_cost_forbidden_to_bidder": bool(rule_sections),
+        "acceptance_testing_cost_rule_sections": _dedupe_signal_sections(rule_sections),
+        "acceptance_testing_cost_rule_sentences": _dedupe_preserve(rule_sentences),
+        "demand_contains_acceptance_testing_cost_signal": demand_contains_acceptance_testing_cost_signal,
+        "acceptance_testing_cost_sections": _dedupe_signal_sections(demand_sections),
+        "acceptance_testing_cost_evidence": _dedupe_preserve(demand_sentences),
+        "acceptance_testing_cost_shifted_to_bidder": acceptance_testing_cost_shifted_to_bidder,
+    }
+
+
 def _is_strong_technical_standard_section(section: dict) -> bool:
     title = str(section.get("title", "")).strip()
     module = str(section.get("module", "")).strip()
@@ -1150,6 +1206,8 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_specific_cert_or_supplier_scoring_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
+    if definition.key == "acceptance":
+        signals.update(_extract_acceptance_testing_cost_signals(sections))
     return signals
 
 

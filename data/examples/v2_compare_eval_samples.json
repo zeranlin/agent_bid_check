@@ -736,5 +736,80 @@
       "coverage_gap_count": 0,
       "failure_reason_code_count": 0
     }
+  },
+  {
+    "name": "sample_acceptance_testing_cost_positive",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "acceptance",
+        "summary": "验收专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖验收条款与费用承担范围。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第五章 验收与交付要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "acceptance_testing_cost_forbidden_to_bidder": true,
+            "acceptance_testing_cost_rule_sections": [{"title": "第一章 需求合规规则", "section_id": "1-4"}],
+            "acceptance_testing_cost_rule_sentences": ["需求合规性-不得要求中标人承担验收产生的检测费用。"],
+            "demand_contains_acceptance_testing_cost_signal": true,
+            "acceptance_testing_cost_sections": [{"title": "第五章 验收与交付要求", "section_id": "20-34"}],
+            "acceptance_testing_cost_evidence": [
+              "投标人的投标总价包括检测、相关部门验收、验收合格之前等所有含税费用。",
+              "投标人应自行计入系统正常、合法、安全运行及使用所必需的一切费用。"
+            ],
+            "acceptance_testing_cost_shifted_to_bidder": true
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 1
+    }
+  },
+  {
+    "name": "sample_acceptance_testing_cost_negative_selfcheck",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "acceptance",
+        "summary": "验收专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖验收条款与费用承担范围。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第五章 验收与交付要求"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "acceptance_testing_cost_forbidden_to_bidder": true,
+            "acceptance_testing_cost_rule_sections": [{"title": "第一章 需求合规规则", "section_id": "1-4"}],
+            "acceptance_testing_cost_rule_sentences": ["需求合规性-不得要求中标人承担验收产生的检测费用。"],
+            "demand_contains_acceptance_testing_cost_signal": false,
+            "acceptance_testing_cost_sections": [],
+            "acceptance_testing_cost_evidence": [
+              "供应商负责安装、调试、试运行及出厂检验、自检工作，采购验收阶段检测由采购人依法另行委托。"
+            ],
+            "acceptance_testing_cost_shifted_to_bidder": false
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 0,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 0
+    }
   }
 ]

@@ -88,6 +88,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补制造商限定、特定认证体系与评分标准的交叉校验。",
     },
+    "acceptance_testing_cost_shifted_to_bidder": {
+        "label": "验收检测费用被违规计入投标人承担范围",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补验收检测费用禁转嫁规则与需求条款承担范围的交叉校验。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

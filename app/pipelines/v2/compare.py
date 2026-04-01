@@ -402,6 +402,48 @@ def _build_cross_topic_specific_cert_or_supplier_scoring_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_acceptance_testing_cost_shift_cluster(
+    *,
+    rule_locations: list[str],
+    rule_sentences: list[str],
+    demand_locations: list[str],
+    demand_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if rule_locations:
+        source_location_parts.append("规则条款：" + "；".join(rule_locations[:2]))
+    if demand_locations:
+        source_location_parts.append("需求条款：" + "；".join(demand_locations[:2]))
+
+    source_excerpt_parts = []
+    if rule_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
+    if demand_sentences:
+        source_excerpt_parts.append("条款内容：" + "；".join(demand_sentences[:3]))
+
+    risk = RiskPoint(
+        title="将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+        severity="高风险",
+        review_type="需求合规性 / 验收检测费用转嫁",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "规则已明确，不得要求中标人承担验收产生的检测费用。",
+            "当前条款将检测、相关部门验收等费用纳入投标总价或投标人自行承担范围。",
+            "若上述检测属于项目验收、验收合格前所需的第三方检测、专项检测或法定检测事项，则存在将验收检测费用转嫁给中标人的风险。",
+            "该类条款容易导致报价边界不清、合规责任错位及履约争议。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除或调整“验收产生的检测费用由投标人/中标人承担”的表述。",
+            "将安装调试、自检、试运行等正常履约成本，与采购验收阶段产生的检测费用区分开。",
+            "如项目确需检测，应明确检测类型、承担主体和合规依据，避免笼统写入投标人总价承担。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "acceptance", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -455,6 +497,12 @@ def compare_review_artifacts(
     specific_cert_or_supplier_scoring_locations: list[str] = []
     specific_cert_or_supplier_evidence: list[str] = []
     specific_cert_or_supplier_score_linked = False
+    acceptance_testing_cost_forbidden_to_bidder = False
+    acceptance_testing_cost_rule_locations: list[str] = []
+    acceptance_testing_cost_rule_sentences: list[str] = []
+    acceptance_testing_cost_locations: list[str] = []
+    acceptance_testing_cost_evidence: list[str] = []
+    acceptance_testing_cost_shifted_to_bidder = False
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -624,6 +672,29 @@ def compare_review_artifacts(
             specific_cert_or_supplier_score_linked = specific_cert_or_supplier_score_linked or bool(
                 structured_signals.get("specific_cert_or_supplier_score_linked", False)
             )
+        if topic.topic == "acceptance":
+            acceptance_testing_cost_forbidden_to_bidder = acceptance_testing_cost_forbidden_to_bidder or bool(
+                structured_signals.get("acceptance_testing_cost_forbidden_to_bidder", False)
+            )
+            matched_rule_sections = structured_signals.get("acceptance_testing_cost_rule_sections", [])
+            if isinstance(matched_rule_sections, list):
+                acceptance_testing_cost_rule_locations.extend(_compact_titles(matched_rule_sections, limit=2))
+            acceptance_testing_cost_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("acceptance_testing_cost_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("acceptance_testing_cost_rule_sentences", []), list)
+                else []
+            )
+            matched_cost_sections = structured_signals.get("acceptance_testing_cost_sections", [])
+            if isinstance(matched_cost_sections, list):
+                acceptance_testing_cost_locations.extend(_compact_titles(matched_cost_sections, limit=2))
+            acceptance_testing_cost_evidence.extend(
+                _compact_sentences(structured_signals.get("acceptance_testing_cost_evidence", []), limit=4)
+                if isinstance(structured_signals.get("acceptance_testing_cost_evidence", []), list)
+                else []
+            )
+            acceptance_testing_cost_shifted_to_bidder = acceptance_testing_cost_shifted_to_bidder or bool(
+                structured_signals.get("acceptance_testing_cost_shifted_to_bidder", False)
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -661,6 +732,10 @@ def compare_review_artifacts(
     specific_brand_or_supplier_rule_sentences = dedupe(specific_brand_or_supplier_rule_sentences)
     specific_cert_or_supplier_scoring_locations = dedupe(specific_cert_or_supplier_scoring_locations)
     specific_cert_or_supplier_evidence = dedupe(specific_cert_or_supplier_evidence)
+    acceptance_testing_cost_rule_locations = dedupe(acceptance_testing_cost_rule_locations)
+    acceptance_testing_cost_rule_sentences = dedupe(acceptance_testing_cost_rule_sentences)
+    acceptance_testing_cost_locations = dedupe(acceptance_testing_cost_locations)
+    acceptance_testing_cost_evidence = dedupe(acceptance_testing_cost_evidence)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -773,6 +848,19 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("specific_brand_or_supplier_in_scoring_forbidden")
+
+    if acceptance_testing_cost_forbidden_to_bidder and acceptance_testing_cost_shifted_to_bidder:
+        cross_risk, cross_topic, cross_source_rule = _build_acceptance_testing_cost_shift_cluster(
+            rule_locations=acceptance_testing_cost_rule_locations,
+            rule_sentences=acceptance_testing_cost_rule_sentences,
+            demand_locations=acceptance_testing_cost_locations,
+            demand_sentences=acceptance_testing_cost_evidence,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("acceptance_testing_cost_shifted_to_bidder")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -914,6 +1002,8 @@ def compare_review_artifacts(
             "gifts_or_goods_linked_to_score": gifts_or_goods_linked_to_score,
             "specific_brand_or_supplier_forbidden_in_scoring": specific_brand_or_supplier_forbidden_in_scoring,
             "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
+            "acceptance_testing_cost_forbidden_to_bidder": acceptance_testing_cost_forbidden_to_bidder,
+            "acceptance_testing_cost_shifted_to_bidder": acceptance_testing_cost_shifted_to_bidder,
         },
     )
 

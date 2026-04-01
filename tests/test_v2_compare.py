@@ -718,6 +718,76 @@ def test_compare_review_artifacts_does_not_add_specific_cert_or_supplier_risk_fo
     assert all(cluster.title != "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" for cluster in comparison.clusters)
 
 
+def test_compare_review_artifacts_adds_acceptance_testing_cost_shift_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="acceptance",
+            summary="验收专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖验收条款。",
+            metadata={
+                "selected_sections": [{"title": "第五章 验收与交付要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_testing_cost_forbidden_to_bidder": True,
+                    "acceptance_testing_cost_rule_sections": [{"title": "第一章 需求合规规则", "section_id": "1-4"}],
+                    "acceptance_testing_cost_rule_sentences": ["需求合规性-不得要求中标人承担验收产生的检测费用。"],
+                    "demand_contains_acceptance_testing_cost_signal": True,
+                    "acceptance_testing_cost_sections": [{"title": "第五章 验收与交付要求", "section_id": "20-34"}],
+                    "acceptance_testing_cost_evidence": [
+                        "投标人的投标总价包括检测、相关部门验收、验收合格之前等所有含税费用。",
+                        "投标人应自行计入系统正常、合法、安全运行及使用所必需的一切费用。"
+                    ],
+                    "acceptance_testing_cost_shifted_to_bidder": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "需求合规性 / 验收检测费用转嫁"
+    assert "相关部门验收" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["acceptance_testing_cost_shifted_to_bidder"]
+
+
+def test_compare_review_artifacts_does_not_add_acceptance_testing_cost_shift_risk_for_selfcheck() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="acceptance",
+            summary="验收专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖验收条款。",
+            metadata={
+                "selected_sections": [{"title": "第五章 验收与交付要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_testing_cost_forbidden_to_bidder": True,
+                    "acceptance_testing_cost_rule_sections": [{"title": "第一章 需求合规规则", "section_id": "1-4"}],
+                    "acceptance_testing_cost_rule_sentences": ["需求合规性-不得要求中标人承担验收产生的检测费用。"],
+                    "demand_contains_acceptance_testing_cost_signal": False,
+                    "acceptance_testing_cost_sections": [],
+                    "acceptance_testing_cost_evidence": [
+                        "供应商负责安装、调试、试运行及出厂检验、自检工作，采购验收阶段检测由采购人依法另行委托。"
+                    ],
+                    "acceptance_testing_cost_shifted_to_bidder": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险" for cluster in comparison.clusters)
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

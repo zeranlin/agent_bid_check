@@ -2013,5 +2013,144 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_acceptance_testing_cost_positive_010",
+    "document_name": "验收检测费用被计入投标人承担范围正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-acceptance-1001",
+            "title": "第五章 验收与交付要求",
+            "module": "acceptance"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "acceptance",
+            "required_titles": ["第五章 验收与交付要求"],
+            "required_modules": ["acceptance"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-acceptance-1001",
+          "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+          "review_type": "需求合规性 / 验收检测费用转嫁",
+          "severity": "高风险",
+          "source_location": "第一章 需求合规规则；第五章 验收与交付要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第五章 验收与交付要求",
+            "start_line": 20,
+            "end_line": 34,
+            "module": "acceptance",
+            "module_scores": {
+              "acceptance": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "acceptance": {
+            "sections": [
+              {
+                "title": "第五章 验收与交付要求",
+                "start_line": 20,
+                "end_line": 34,
+                "module": "acceptance"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "review_type": "需求合规性 / 验收检测费用转嫁",
+            "severity": "高风险",
+            "source_locations": ["规则条款：第一章 需求合规规则；需求条款：第五章 验收与交付要求"],
+            "source_excerpts": [
+              "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：投标人的投标总价包括检测、相关部门验收、验收合格之前等所有含税费用。；投标人应自行计入系统正常、合法、安全运行及使用所必需的一切费用。"
+            ],
+            "topics": ["acceptance"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["acceptance_testing_cost_shifted_to_bidder"],
+          "comparison_failure_reason_codes": ["acceptance_testing_cost_shifted_to_bidder"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_acceptance_testing_cost_negative_selfcheck_010",
+    "document_name": "安装调试自检不应误报验收检测费用转嫁负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-acceptance-1002",
+            "title": "第五章 验收与交付要求",
+            "module": "acceptance"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "acceptance",
+            "required_titles": ["第五章 验收与交付要求"],
+            "required_modules": ["acceptance"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第五章 验收与交付要求",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "acceptance",
+            "module_scores": {
+              "acceptance": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "acceptance": {
+            "sections": [
+              {
+                "title": "第五章 验收与交付要求",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "acceptance"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

@@ -2232,5 +2232,80 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_acceptance_testing_cost_rule_positive_010",
+    "name": "topic_acceptance_testing_cost_rule_positive_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "acceptance"
+    ],
+    "case_type": "negative",
+    "topic": "acceptance",
+    "description": "规则明确不得要求中标人承担验收产生的检测费用。",
+    "text": "第一章 需求合规规则\n需求合规性-不得要求中标人承担验收产生的检测费用。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "acceptance": {
+        "summary": "验收专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖验收条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_acceptance_testing_cost_positive_010",
+    "name": "topic_acceptance_testing_cost_positive_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "acceptance"
+    ],
+    "case_type": "negative",
+    "topic": "acceptance",
+    "description": "真实业务表达：将检测、相关部门验收及一切费用写入投标人承担范围。",
+    "text": "第五章 验收与交付要求\n★1.本项目为交钥匙项目：投标人的投标总价包括货物设计、生产（采购）、包装、运输至指定位置、装卸、安装、检测、调试、试运行、培训、相关部门验收、验收合格之前及质保期内的首次维护保养、备品备件、专用工具等所有含税费用，同时投标人应自行计入系统正常、合法、安全运行及使用所必需的一切费用。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "acceptance": {
+        "summary": "验收专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖验收条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_acceptance_testing_cost_negative_selfcheck_010",
+    "name": "topic_acceptance_testing_cost_negative_selfcheck_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "acceptance"
+    ],
+    "case_type": "negative",
+    "topic": "acceptance",
+    "description": "仅写安装调试、自检和试运行，不涉及验收检测费用转嫁。",
+    "text": "第五章 验收与交付要求\n供应商负责安装、调试、试运行及出厂检验、自检工作，采购验收阶段检测由采购人依法另行委托。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "acceptance": {
+        "summary": "验收专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖验收条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

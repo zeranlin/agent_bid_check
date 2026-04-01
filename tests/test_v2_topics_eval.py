@@ -283,6 +283,28 @@ def test_scoring_specific_cert_or_supplier_rule_and_scoring_signals_are_extracte
     assert negative_signals["specific_cert_or_supplier_score_linked"] is False
 
 
+def test_acceptance_testing_cost_rule_and_demand_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    rule_sample = evaluate_sample(samples["topic_acceptance_testing_cost_rule_positive_010"])
+    rule_signals = rule_sample["target_topic_detail"]["structured_signals"]
+    assert rule_signals["acceptance_testing_cost_forbidden_to_bidder"] is True
+    assert "不得要求中标人承担验收产生的检测费用" in rule_signals["acceptance_testing_cost_rule_sentences"][0]
+
+    positive = evaluate_sample(samples["topic_acceptance_testing_cost_positive_010"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["demand_contains_acceptance_testing_cost_signal"] is True
+    assert positive_signals["acceptance_testing_cost_shifted_to_bidder"] is True
+    assert any("相关部门验收" in item for item in positive_signals["acceptance_testing_cost_evidence"])
+    assert any("一切费用" in item for item in positive_signals["acceptance_testing_cost_evidence"])
+
+    negative = evaluate_sample(samples["topic_acceptance_testing_cost_negative_selfcheck_010"])
+    negative_signals = negative["target_topic_detail"]["structured_signals"]
+    assert negative_signals["demand_contains_acceptance_testing_cost_signal"] is False
+    assert negative_signals["acceptance_testing_cost_shifted_to_bidder"] is False
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

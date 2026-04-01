@@ -311,6 +311,21 @@ def test_regression_specific_cert_or_supplier_in_scoring_samples_are_classified_
     assert negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_acceptance_testing_cost_shift_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_acceptance_testing_cost_positive_010"])
+    negative = evaluate_sample(samples["regression_acceptance_testing_cost_negative_selfcheck_010"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["acceptance_testing_cost_shifted_to_bidder"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])
