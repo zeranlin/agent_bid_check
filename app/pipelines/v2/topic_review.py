@@ -59,6 +59,11 @@ GIFTS_OR_UNRELATED_GOODS_FORBIDDEN_RE = re.compile(
     r"(不得要求提供赠品|不得要求提供回扣|不得要求提供与采购无关的其他商品|不得要求提供与采购无关的其他服务|"
     r"赠品不得作为评审因素|回扣不得纳入评分|不得要求提供赠品、回扣或者与采购无关的其他商品、服务)"
 )
+SPECIFIC_BRAND_OR_SUPPLIER_FORBIDDEN_RE = re.compile(
+    r"(不得限定或者指定特定的专利|不得限定或者指定特定的商标|不得限定或者指定特定的品牌|"
+    r"不得限定或者指定特定的供应商|不得以特定认证作为倾向性评分条件|"
+    r"不得限定或者指定特定的专利、商标、品牌或者供应商)"
+)
 ACCEPTANCE_PLAN_TERM_RE = re.compile(
     r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|项目验收方案设计|验收标准|验收流程安排|"
     r"验收资料准备节点|项目验收组织能力|验收衔接计划|验收移交方案|项目验收方案|竣工验收方案|"
@@ -72,6 +77,14 @@ GIFTS_OR_UNRELATED_GOODS_TERM_RE = re.compile(
     r"(额外向采购人值班室赠送台式电脑、打印机各1套|赠送台式电脑|赠送打印机|额外赠送|额外提供|赠送|赠品|"
     r"台式电脑|打印机|回扣|返利|无关商品|无关服务|值班室办公设备配置|会议保障等综合服务内容|"
     r"办公设备配置|会议保障|综合服务内容)"
+)
+SPECIFIC_CERT_OR_SUPPLIER_TERM_RE = re.compile(
+    r"(制造商|特定认证证书|标志证书|采用国际标准产品确认证书|采用国际标准产品标志证书|"
+    r"CNAS中国认可产品标志证书|CNAS|省级标准协会|指定品牌|指定供应商|指定认证体系|"
+    r"每具备一项得\d+\s*分|累计最高得分|最高得\d+\s*分)"
+)
+GENERIC_COMPLIANCE_PROOF_RE = re.compile(
+    r"(合格证明|合格证|检验报告|检测报告|法定资质|法定许可|必备资质|国家规定的证明材料)"
 )
 PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE = re.compile(
     r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机)"
@@ -98,6 +111,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素",
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素",
     "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件",
+    "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -594,6 +608,55 @@ def _extract_gifts_or_unrelated_goods_scoring_signals(sections: list[dict]) -> d
     }
 
 
+def _extract_specific_cert_or_supplier_scoring_signals(sections: list[dict]) -> dict[str, object]:
+    rule_sections: list[dict] = []
+    rule_sentences: list[str] = []
+    scoring_sections: list[dict] = []
+    scoring_sentences: list[str] = []
+    scoring_contains_specific_cert_or_supplier_signal = False
+    specific_cert_or_supplier_score_linked = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_forbidden_rule = bool(SPECIFIC_BRAND_OR_SUPPLIER_FORBIDDEN_RE.search(text))
+        has_specific_signal = bool(SPECIFIC_CERT_OR_SUPPLIER_TERM_RE.search(text))
+        has_score_link = bool(SCORING_SCORE_LINK_RE.search(text))
+        is_generic_proof_only = bool(GENERIC_COMPLIANCE_PROOF_RE.search(text)) and not (
+            "制造商" in text or "CNAS" in text or "标志证书" in text or "确认证书" in text or "省级标准协会" in text
+        )
+
+        if has_forbidden_rule:
+            rule_sections.extend(_normalize_signal_sections([section]))
+            fragments = _find_match_fragments(section, SPECIFIC_BRAND_OR_SUPPLIER_FORBIDDEN_RE)
+            rule_sentences.extend(fragments or _find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+        if has_specific_signal and not is_generic_proof_only:
+            scoring_contains_specific_cert_or_supplier_signal = True
+            scoring_sections.extend(_normalize_signal_sections([section]))
+            scoring_sentences.extend(_find_match_fragments(section, SPECIFIC_CERT_OR_SUPPLIER_TERM_RE))
+
+        if has_specific_signal and has_score_link and not is_generic_proof_only:
+            specific_cert_or_supplier_score_linked = True
+            scoring_sections.extend(_normalize_signal_sections([section]))
+            scoring_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+    return {
+        "specific_brand_or_supplier_forbidden_in_scoring": bool(rule_sections),
+        "specific_brand_or_supplier_rule_sections": _dedupe_signal_sections(rule_sections),
+        "specific_brand_or_supplier_rule_sentences": _dedupe_preserve(rule_sentences),
+        "scoring_contains_specific_cert_or_supplier_signal": scoring_contains_specific_cert_or_supplier_signal,
+        "specific_cert_or_supplier_scoring_sections": _dedupe_signal_sections(scoring_sections),
+        "specific_cert_or_supplier_evidence": _dedupe_preserve(scoring_sentences),
+        "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
+    }
+
+
 def _is_strong_technical_standard_section(section: dict) -> bool:
     title = str(section.get("title", "")).strip()
     module = str(section.get("module", "")).strip()
@@ -1084,6 +1147,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_acceptance_plan_scoring_signals(sections))
         signals.update(_extract_payment_terms_scoring_signals(sections))
         signals.update(_extract_gifts_or_unrelated_goods_scoring_signals(sections))
+        signals.update(_extract_specific_cert_or_supplier_scoring_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
     return signals

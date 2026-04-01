@@ -82,6 +82,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补赠品/回扣/无关商品服务禁入评分规则与评分标准的交叉校验。",
     },
+    "specific_brand_or_supplier_in_scoring_forbidden": {
+        "label": "特定认证证书或制造商限定被违规纳入评分因素",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补制造商限定、特定认证体系与评分标准的交叉校验。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

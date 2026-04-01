@@ -2157,5 +2157,80 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_specific_cert_rule_positive_009",
+    "name": "topic_scoring_specific_cert_rule_positive_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评审规则明确不得限定或者指定特定的专利、商标、品牌或者供应商。",
+    "text": "第一章 评审规则\n评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_specific_cert_positive_009",
+    "name": "topic_scoring_specific_cert_positive_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "真实业务表达：制造商特定认证证书和标志证书被作为高分条件。",
+    "text": "第六章 评分办法\n（一）评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分，具备两项得80分，本小项最高得80分。2.具备CNAS中国认可产品标志证书的，得20分，本小项最高得20分。以上累计最高得分为100分。（二）证明文件：须提供有效期内的认证证书扫描件，证明材料未提供或未按要求提供或不清晰不得分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_specific_cert_negative_generic_proof_009",
+    "name": "topic_scoring_specific_cert_negative_generic_proof_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "普通合格证明或法定资质说明，不应误报为特定认证体系评分风险。",
+    "text": "第六章 评分办法\n评分标准：投标产品提供合格证、检验报告及国家规定的法定资质证明材料的，视为满足基本要求；完全满足技术参数要求的得100分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

@@ -360,6 +360,48 @@ def _build_cross_topic_gifts_or_goods_scoring_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cross_topic_specific_cert_or_supplier_scoring_cluster(
+    *,
+    rule_locations: list[str],
+    rule_sentences: list[str],
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if rule_locations:
+        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+    if scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+
+    source_excerpt_parts = []
+    if rule_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
+    if scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
+
+    risk = RiskPoint(
+        title="以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+        severity="高风险",
+        review_type="评分因素合规性 / 限定特定供应商或认证体系",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "评审规则已明确，不得限定或者指定特定的专利、商标、品牌或者供应商。",
+            "当前评分内容将制造商的特定认证证书、特定标志证书作为高分条件。",
+            "上述证书要求明显偏向少数具备特定认证体系的供应商或制造商，容易形成倾向性评分。",
+            "该类设置可能限制公平竞争，并导致评审结果失真或争议增大。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除以特定认证体系、特定标志证书作为高分条件的评分设置。",
+            "如确需评价产品质量或能力，应改为与采购需求直接相关、可由不同供应商公平满足的通用能力指标。",
+            "避免通过制造商身份、指定认证来源或指定标志证书形成事实上的供应商限定。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -407,6 +449,12 @@ def compare_review_artifacts(
     gifts_or_goods_scoring_locations: list[str] = []
     gifts_or_goods_scoring_sentences: list[str] = []
     gifts_or_goods_linked_to_score = False
+    specific_brand_or_supplier_forbidden_in_scoring = False
+    specific_brand_or_supplier_rule_locations: list[str] = []
+    specific_brand_or_supplier_rule_sentences: list[str] = []
+    specific_cert_or_supplier_scoring_locations: list[str] = []
+    specific_cert_or_supplier_evidence: list[str] = []
+    specific_cert_or_supplier_score_linked = False
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -554,6 +602,28 @@ def compare_review_artifacts(
             gifts_or_goods_linked_to_score = gifts_or_goods_linked_to_score or bool(
                 structured_signals.get("gifts_or_goods_linked_to_score", False)
             )
+            specific_brand_or_supplier_forbidden_in_scoring = specific_brand_or_supplier_forbidden_in_scoring or bool(
+                structured_signals.get("specific_brand_or_supplier_forbidden_in_scoring", False)
+            )
+            matched_specific_rule_sections = structured_signals.get("specific_brand_or_supplier_rule_sections", [])
+            if isinstance(matched_specific_rule_sections, list):
+                specific_brand_or_supplier_rule_locations.extend(_compact_titles(matched_specific_rule_sections, limit=2))
+            specific_brand_or_supplier_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("specific_brand_or_supplier_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("specific_brand_or_supplier_rule_sentences", []), list)
+                else []
+            )
+            matched_specific_sections = structured_signals.get("specific_cert_or_supplier_scoring_sections", [])
+            if isinstance(matched_specific_sections, list):
+                specific_cert_or_supplier_scoring_locations.extend(_compact_titles(matched_specific_sections, limit=2))
+            specific_cert_or_supplier_evidence.extend(
+                _compact_sentences(structured_signals.get("specific_cert_or_supplier_evidence", []), limit=4)
+                if isinstance(structured_signals.get("specific_cert_or_supplier_evidence", []), list)
+                else []
+            )
+            specific_cert_or_supplier_score_linked = specific_cert_or_supplier_score_linked or bool(
+                structured_signals.get("specific_cert_or_supplier_score_linked", False)
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -587,6 +657,10 @@ def compare_review_artifacts(
     gifts_or_goods_rule_sentences = dedupe(gifts_or_goods_rule_sentences)
     gifts_or_goods_scoring_locations = dedupe(gifts_or_goods_scoring_locations)
     gifts_or_goods_scoring_sentences = dedupe(gifts_or_goods_scoring_sentences)
+    specific_brand_or_supplier_rule_locations = dedupe(specific_brand_or_supplier_rule_locations)
+    specific_brand_or_supplier_rule_sentences = dedupe(specific_brand_or_supplier_rule_sentences)
+    specific_cert_or_supplier_scoring_locations = dedupe(specific_cert_or_supplier_scoring_locations)
+    specific_cert_or_supplier_evidence = dedupe(specific_cert_or_supplier_evidence)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -686,6 +760,19 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("gifts_or_unrelated_goods_in_scoring_forbidden")
+
+    if specific_brand_or_supplier_forbidden_in_scoring and specific_cert_or_supplier_score_linked:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_specific_cert_or_supplier_scoring_cluster(
+            rule_locations=specific_brand_or_supplier_rule_locations,
+            rule_sentences=specific_brand_or_supplier_rule_sentences,
+            scoring_locations=specific_cert_or_supplier_scoring_locations,
+            scoring_sentences=specific_cert_or_supplier_evidence,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("specific_brand_or_supplier_in_scoring_forbidden")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -825,6 +912,8 @@ def compare_review_artifacts(
             "payment_terms_linked_to_score": payment_terms_linked_to_score,
             "gifts_or_unrelated_goods_forbidden_in_scoring": gifts_or_unrelated_goods_forbidden_in_scoring,
             "gifts_or_goods_linked_to_score": gifts_or_goods_linked_to_score,
+            "specific_brand_or_supplier_forbidden_in_scoring": specific_brand_or_supplier_forbidden_in_scoring,
+            "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
         },
     )
 

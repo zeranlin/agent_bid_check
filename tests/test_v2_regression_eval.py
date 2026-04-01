@@ -296,6 +296,21 @@ def test_regression_gifts_or_unrelated_goods_in_scoring_samples_are_classified_c
     assert subject_negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_specific_cert_or_supplier_in_scoring_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_scoring_specific_cert_positive_009"])
+    negative = evaluate_sample(samples["regression_scoring_specific_cert_negative_generic_proof_009"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["specific_brand_or_supplier_in_scoring_forbidden"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险"
+
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

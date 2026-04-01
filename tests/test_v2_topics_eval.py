@@ -260,6 +260,29 @@ def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> Non
     assert any("会议保障等综合服务内容" in item for item in hidden_positive_signals["gifts_or_goods_scoring_sentences"])
 
 
+def test_scoring_specific_cert_or_supplier_rule_and_scoring_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    rule_sample = evaluate_sample(samples["topic_scoring_specific_cert_rule_positive_009"])
+    rule_signals = rule_sample["target_topic_detail"]["structured_signals"]
+    assert rule_signals["specific_brand_or_supplier_forbidden_in_scoring"] is True
+    assert "不得限定或者指定特定的专利" in rule_signals["specific_brand_or_supplier_rule_sentences"][0]
+
+    positive = evaluate_sample(samples["topic_scoring_specific_cert_positive_009"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["scoring_contains_specific_cert_or_supplier_signal"] is True
+    assert positive_signals["specific_cert_or_supplier_score_linked"] is True
+    assert any("制造商" in item for item in positive_signals["specific_cert_or_supplier_evidence"])
+    assert any("采用国际标准产品确认证书" in item for item in positive_signals["specific_cert_or_supplier_evidence"])
+    assert any("CNAS中国认可产品标志证书" in item for item in positive_signals["specific_cert_or_supplier_evidence"])
+
+    negative = evaluate_sample(samples["topic_scoring_specific_cert_negative_generic_proof_009"])
+    negative_signals = negative["target_topic_detail"]["structured_signals"]
+    assert negative_signals["scoring_contains_specific_cert_or_supplier_signal"] is False
+    assert negative_signals["specific_cert_or_supplier_score_linked"] is False
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

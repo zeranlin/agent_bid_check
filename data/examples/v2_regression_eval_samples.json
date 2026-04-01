@@ -1874,5 +1874,144 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_scoring_specific_cert_positive_009",
+    "document_name": "制造商特定认证证书进入评分因素正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1005",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-1005",
+          "title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+          "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+          "severity": "高风险",
+          "source_location": "第一章 评审规则；第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 38,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 38,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+            "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+            "severity": "高风险",
+            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_excerpts": [
+              "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的。；具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分。；具备CNAS中国认可产品标志证书的，得20分，以上累计最高得分为100分。"
+            ],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["specific_brand_or_supplier_in_scoring_forbidden"],
+          "comparison_failure_reason_codes": ["specific_brand_or_supplier_in_scoring_forbidden"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_specific_cert_negative_generic_proof_009",
+    "document_name": "普通合格证明不应误报特定认证评分风险负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1006",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

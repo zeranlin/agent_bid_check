@@ -648,6 +648,76 @@ def test_compare_review_artifacts_adds_gifts_risk_for_hidden_related_service_bun
     assert comparison.metadata["failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
 
 
+def test_compare_review_artifacts_adds_specific_cert_or_supplier_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "specific_brand_or_supplier_forbidden_in_scoring": True,
+                    "specific_brand_or_supplier_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "specific_brand_or_supplier_rule_sentences": ["评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。"],
+                    "scoring_contains_specific_cert_or_supplier_signal": True,
+                    "specific_cert_or_supplier_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-38"}],
+                    "specific_cert_or_supplier_evidence": [
+                        "柴油发电机组制造商的投标的柴油发电机组，具备以下认证的。",
+                        "具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分。",
+                        "具备CNAS中国认可产品标志证书的，得20分，以上累计最高得分为100分。"
+                    ],
+                    "specific_cert_or_supplier_score_linked": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "评分因素合规性 / 限定特定供应商或认证体系"
+    assert "制造商" in cluster.source_excerpts[0]
+    assert "CNAS中国认可产品标志证书" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["specific_brand_or_supplier_in_scoring_forbidden"]
+
+
+def test_compare_review_artifacts_does_not_add_specific_cert_or_supplier_risk_for_generic_proof() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "specific_brand_or_supplier_forbidden_in_scoring": True,
+                    "specific_brand_or_supplier_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "specific_brand_or_supplier_rule_sentences": ["评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。"],
+                    "scoring_contains_specific_cert_or_supplier_signal": False,
+                    "specific_cert_or_supplier_scoring_sections": [],
+                    "specific_cert_or_supplier_evidence": ["评分标准：投标产品提供合格证、检验报告及国家规定的法定资质证明材料的，视为满足基本要求。"],
+                    "specific_cert_or_supplier_score_linked": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" for cluster in comparison.clusters)
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [
