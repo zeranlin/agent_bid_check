@@ -291,5 +291,78 @@
       "coverage_gap_count": 0,
       "failure_reason_code_count": 0
     }
+  },
+  {
+    "name": "sample_scoring_acceptance_plan_positive",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分规则与评分内容。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第六章 评分办法"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "acceptance_plan_forbidden_in_scoring": true,
+            "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+            "scoring_contains_acceptance_plan": true,
+            "acceptance_plan_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-30"}],
+            "acceptance_plan_scoring_sentences": [
+              "评审内容：投标人针对本项目提供施工组织方案、项目验收移交衔接方案及安全保障措施。",
+              "评审标准：方案每体现1点加10分，最高得30分。"
+            ],
+            "acceptance_plan_linked_to_score": true
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 1
+    }
+  },
+  {
+    "name": "sample_scoring_acceptance_plan_negative_contract_only",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分规则与评分内容。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第六章 评分办法"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "acceptance_plan_forbidden_in_scoring": true,
+            "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+            "scoring_contains_acceptance_plan": false,
+            "acceptance_plan_scoring_sections": [],
+            "acceptance_plan_scoring_sentences": ["评分标准：施工组织方案、安全保障措施每项10分，最高得30分。"],
+            "acceptance_plan_linked_to_score": false
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 0,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 0
+    }
   }
 ]

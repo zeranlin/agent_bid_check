@@ -11,7 +11,7 @@ from app.common.schemas import RiskPoint
 from .schemas import ComparisonArtifact, MergedRiskCluster, RiskSignature, TopicReviewArtifact, V2StageArtifact
 
 
-SEVERITY_ORDER = {"高风险": 3, "中风险": 2, "低风险": 1, "需人工复核": 0}
+SEVERITY_ORDER = {"高风险": 3, "中高风险": 2.5, "中风险": 2, "低风险": 1, "需人工复核": 0}
 
 
 def _normalize_text(text: str) -> str:
@@ -234,6 +234,48 @@ def _build_cross_topic_star_marker_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cross_topic_acceptance_plan_scoring_cluster(
+    *,
+    rule_locations: list[str],
+    rule_sentences: list[str],
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if rule_locations:
+        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+    if scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+
+    source_excerpt_parts = []
+    if rule_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
+    if scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:2]))
+
+    risk = RiskPoint(
+        title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        severity="中高风险",
+        review_type="评分因素合规性 / 评审规则设置合法性",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "评审规则已明确不得将项目验收方案作为评审因素。",
+            "当前评分内容中纳入了验收移交方案或验收资料移交安排。",
+            "相关内容与评分标准、得分或加分直接关联。",
+            "存在评分因素设置不合规、评审争议和中标结果不稳风险。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "将验收方案、验收资料移交安排从评分因素中删除。",
+            "如确需提出要求，应调整至履约、实施或验收管理条款，不得作为评分项。",
+            "对评分标准重新拆分，仅保留允许纳入评分的实施能力内容。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -263,6 +305,12 @@ def compare_review_artifacts(
     star_rule_locations: list[str] = []
     star_rule_sentences: list[str] = []
     star_marker_candidate_clauses: list[dict[str, object]] = []
+    acceptance_plan_forbidden_in_scoring = False
+    acceptance_plan_rule_locations: list[str] = []
+    acceptance_plan_rule_sentences: list[str] = []
+    acceptance_plan_scoring_locations: list[str] = []
+    acceptance_plan_scoring_sentences: list[str] = []
+    acceptance_plan_linked_to_score = False
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -344,6 +392,28 @@ def compare_review_artifacts(
                 if isinstance(structured_signals.get("star_rule_sentences", []), list)
                 else []
             )
+            acceptance_plan_forbidden_in_scoring = acceptance_plan_forbidden_in_scoring or bool(
+                structured_signals.get("acceptance_plan_forbidden_in_scoring", False)
+            )
+            matched_rule_sections = structured_signals.get("acceptance_plan_rule_sections", [])
+            if isinstance(matched_rule_sections, list):
+                acceptance_plan_rule_locations.extend(_compact_titles(matched_rule_sections, limit=2))
+            acceptance_plan_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("acceptance_plan_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("acceptance_plan_rule_sentences", []), list)
+                else []
+            )
+            matched_scoring_sections = structured_signals.get("acceptance_plan_scoring_sections", [])
+            if isinstance(matched_scoring_sections, list):
+                acceptance_plan_scoring_locations.extend(_compact_titles(matched_scoring_sections, limit=2))
+            acceptance_plan_scoring_sentences.extend(
+                _compact_sentences(structured_signals.get("acceptance_plan_scoring_sentences", []), limit=3)
+                if isinstance(structured_signals.get("acceptance_plan_scoring_sentences", []), list)
+                else []
+            )
+            acceptance_plan_linked_to_score = acceptance_plan_linked_to_score or bool(
+                structured_signals.get("acceptance_plan_linked_to_score", False)
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -365,6 +435,10 @@ def compare_review_artifacts(
     cn_sentences = dedupe(cn_sentences)
     star_rule_locations = dedupe(star_rule_locations)
     star_rule_sentences = dedupe(star_rule_sentences)
+    acceptance_plan_rule_locations = dedupe(acceptance_plan_rule_locations)
+    acceptance_plan_rule_sentences = dedupe(acceptance_plan_rule_sentences)
+    acceptance_plan_scoring_locations = dedupe(acceptance_plan_scoring_locations)
+    acceptance_plan_scoring_sentences = dedupe(acceptance_plan_scoring_sentences)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -425,6 +499,19 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("star_marker_missing_for_mandatory_standard")
+
+    if acceptance_plan_forbidden_in_scoring and acceptance_plan_linked_to_score:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_acceptance_plan_scoring_cluster(
+            rule_locations=acceptance_plan_rule_locations,
+            rule_sentences=acceptance_plan_rule_sentences,
+            scoring_locations=acceptance_plan_scoring_locations,
+            scoring_sentences=acceptance_plan_scoring_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("acceptance_plan_in_scoring_forbidden")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -558,6 +645,8 @@ def compare_review_artifacts(
             "foreign_standard_refs": foreign_refs,
             "cn_standard_refs": cn_refs,
             "has_equivalent_standard_clause": has_equivalent_standard_clause,
+            "acceptance_plan_forbidden_in_scoring": acceptance_plan_forbidden_in_scoring,
+            "acceptance_plan_linked_to_score": acceptance_plan_linked_to_score,
         },
     )
 

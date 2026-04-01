@@ -47,6 +47,17 @@ EQUIVALENT_STANDARD_RE = re.compile(
 STAR_RULE_GB_NON_T_RE = re.compile(r"(含有\s*GB\s*[（(]?\s*不含\s*GB/T\s*[)）]?|GB\s*[（(]?\s*不含\s*GB/T\s*[)）]?)")
 STAR_RULE_MANDATORY_STANDARD_RE = re.compile(r"(国家强制性标准|强制性标准)")
 STAR_RULE_REQUIREMENT_RE = re.compile(r"(需含有?★号|应标注★|需标注★|实质性条款需加★|必须加注★|应加注★)")
+ACCEPTANCE_PLAN_FORBIDDEN_RE = re.compile(
+    r"(不得将项目验收方案作为评审因素|验收方案不得纳入评分|验收移交方案不得作为评审项|验收资料不得作为评分因素|"
+    r"不得将.{0,16}(项目)?验收(方案|移交方案|资料|资料移交安排).{0,12}(作为评审因素|纳入评分|作为评审项|作为评分因素))"
+)
+ACCEPTANCE_PLAN_TERM_RE = re.compile(
+    r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|验收移交方案|项目验收方案|竣工验收方案|"
+    r"验收方案|项目验收|验收移交|移交衔接|验收资料|验收安排)"
+)
+SCORING_SCORE_LINK_RE = re.compile(
+    r"(评审内容|评审标准|评分因素|得分|加分|计分|最高得\s*\d+\s*分|最高得分|满分\s*\d+\s*分|每体现\s*\d+\s*点加\s*\d+\s*分)"
+)
 GB_NON_T_REF_RE = re.compile(r"\bGB(?!\s*/\s*T)\s*[- ]?[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
 GB_T_REF_RE = re.compile(r"\bGB\s*/\s*T\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
 MANDATORY_STANDARD_TEXT_RE = re.compile(r"(国家强制性标准|强制性标准)")
@@ -61,6 +72,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "cross_topic_shared_but_single_topic_hit": "共享证据场景下仅命中单专题",
     "foreign_standard_conflict": "拒绝进口与外标直引存在潜在冲突",
     "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★",
+    "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -415,6 +427,52 @@ def _extract_star_rule_signals(sections: list[dict]) -> dict[str, object]:
         "star_required_for_mandatory_standard": star_required_for_mandatory_standard,
         "star_rule_sections": _dedupe_signal_sections(matched_sections) if matched_sections else [],
         "star_rule_sentences": _dedupe_preserve(matched_sentences),
+    }
+
+
+def _extract_acceptance_plan_scoring_signals(sections: list[dict]) -> dict[str, object]:
+    rule_sections: list[dict] = []
+    rule_sentences: list[str] = []
+    acceptance_sections: list[dict] = []
+    acceptance_sentences: list[str] = []
+    scoring_contains_acceptance_plan = False
+    acceptance_plan_linked_to_score = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_forbidden_rule = bool(ACCEPTANCE_PLAN_FORBIDDEN_RE.search(text))
+        has_acceptance_term = bool(ACCEPTANCE_PLAN_TERM_RE.search(text))
+        has_score_link = bool(SCORING_SCORE_LINK_RE.search(text))
+
+        if has_forbidden_rule:
+            rule_sections.extend(_normalize_signal_sections([section]))
+            fragments = _find_match_fragments(section, ACCEPTANCE_PLAN_FORBIDDEN_RE)
+            rule_sentences.extend(fragments or _find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+        if has_acceptance_term:
+            scoring_contains_acceptance_plan = True
+            acceptance_sections.extend(_normalize_signal_sections([section]))
+            acceptance_sentences.extend(_find_match_fragments(section, ACCEPTANCE_PLAN_TERM_RE))
+
+        if has_acceptance_term and has_score_link:
+            acceptance_plan_linked_to_score = True
+            acceptance_sections.extend(_normalize_signal_sections([section]))
+            acceptance_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+    return {
+        "acceptance_plan_forbidden_in_scoring": bool(rule_sections),
+        "acceptance_plan_rule_sections": _dedupe_signal_sections(rule_sections),
+        "acceptance_plan_rule_sentences": _dedupe_preserve(rule_sentences),
+        "scoring_contains_acceptance_plan": scoring_contains_acceptance_plan,
+        "acceptance_plan_scoring_sections": _dedupe_signal_sections(acceptance_sections),
+        "acceptance_plan_scoring_sentences": _dedupe_preserve(acceptance_sentences),
+        "acceptance_plan_linked_to_score": acceptance_plan_linked_to_score,
     }
 
 
@@ -905,6 +963,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_import_policy_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
+        signals.update(_extract_acceptance_plan_scoring_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
     return signals

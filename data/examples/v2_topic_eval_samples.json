@@ -1807,5 +1807,80 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_acceptance_plan_rule_positive_006",
+    "name": "topic_scoring_acceptance_plan_rule_positive_006",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评审规则明确不得将项目验收方案作为评审因素。",
+    "text": "第一章 评审规则\n评审规则合规性-不得将项目验收方案作为评审因素。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评审规则条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_acceptance_plan_scoring_positive_006",
+    "name": "topic_scoring_acceptance_plan_scoring_positive_006",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分内容中纳入项目验收移交衔接方案，并与加分挂钩。",
+    "text": "第六章 评分办法\n一、评审内容：投标人针对本项目提供施工组织方案、项目验收移交衔接方案及安全保障措施，包括但不限于：项目验收资料编制与移交衔接安排；二、评审标准：方案每体现1点加10分，最高得30分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_acceptance_plan_negative_contract_only_006",
+    "name": "topic_scoring_acceptance_plan_negative_contract_only_006",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分项仅评施工组织和安全保障，不含验收内容。",
+    "text": "第六章 评分办法\n仅对施工组织方案、安全保障措施进行综合评分，最高得30分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

@@ -64,6 +64,24 @@ FAILURE_CODEBOOK = {
         "category": "false_positive",
         "suggestion": "排查汇总去重与冲突裁决逻辑。",
     },
+    "acceptance_plan_in_scoring_forbidden": {
+        "label": "验收方案被违规纳入评分因素",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补评分禁入项规则与评分条款交叉校验。",
+    },
+    "policy_technical_inconsistency": {
+        "label": "采购政策与技术标准引用口径不一致",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补政策口径与技术标准引用的一致性比对。",
+    },
+    "star_marker_missing_for_mandatory_standard": {
+        "label": "强制性标准条款未按规则标注星号",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补规则侧星号要求与正文条款标识的交叉校验。",
+    },
     "unknown_reason": {
         "label": "未归类失败原因",
         "layer": "unknown",

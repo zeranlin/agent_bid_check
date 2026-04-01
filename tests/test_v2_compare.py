@@ -319,6 +319,80 @@ def test_compare_review_artifacts_does_not_add_star_marker_risk_for_gbt_or_starr
     assert all(cluster.title != "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" for cluster in comparison.clusters)
 
 
+def test_compare_review_artifacts_adds_acceptance_plan_in_scoring_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_plan_forbidden_in_scoring": True,
+                    "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+                    "scoring_contains_acceptance_plan": True,
+                    "acceptance_plan_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-30"}],
+                    "acceptance_plan_scoring_sentences": [
+                        "评审内容：投标人针对本项目提供施工组织方案、项目验收移交衔接方案及安全保障措施。",
+                        "评审标准：方案每体现1点加10分，最高得30分。"
+                    ],
+                    "acceptance_plan_linked_to_score": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    )
+    assert cluster.severity == "中高风险"
+    assert cluster.review_type == "评分因素合规性 / 评审规则设置合法性"
+    assert cluster.source_locations == ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"]
+    assert "项目验收移交衔接方案" in cluster.source_excerpts[0]
+    assert "最高得30分" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["acceptance_plan_in_scoring_forbidden"]
+    report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
+    assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in report
+    assert "问题定性：中高风险" in report
+    assert "将验收方案、验收资料移交安排从评分因素中删除。" in report
+
+
+def test_compare_review_artifacts_does_not_add_acceptance_plan_risk_for_non_scoring_acceptance_clause() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_plan_forbidden_in_scoring": True,
+                    "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+                    "scoring_contains_acceptance_plan": False,
+                    "acceptance_plan_scoring_sections": [],
+                    "acceptance_plan_scoring_sentences": ["评分标准：仅对施工组织方案、安全保障措施评分，最高得30分。"],
+                    "acceptance_plan_linked_to_score": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "将项目验收方案纳入评审因素，违反评审规则合规性要求" for cluster in comparison.clusters)
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

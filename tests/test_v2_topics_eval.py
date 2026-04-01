@@ -156,6 +156,29 @@ def test_scoring_star_rule_and_technical_star_marker_signals_are_extracted_corre
     assert starred_clause["has_star_marker"] is True
 
 
+def test_scoring_acceptance_plan_rule_and_scoring_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    rule_sample = evaluate_sample(samples["topic_scoring_acceptance_plan_rule_positive_006"])
+    rule_signals = rule_sample["target_topic_detail"]["structured_signals"]
+    assert rule_signals["acceptance_plan_forbidden_in_scoring"] is True
+    assert "不得将项目验收方案作为评审因素" in rule_signals["acceptance_plan_rule_sentences"][0]
+
+    scoring_positive = evaluate_sample(samples["topic_scoring_acceptance_plan_scoring_positive_006"])
+    positive_signals = scoring_positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["scoring_contains_acceptance_plan"] is True
+    assert positive_signals["acceptance_plan_linked_to_score"] is True
+    assert any("项目验收移交衔接方案" in item for item in positive_signals["acceptance_plan_scoring_sentences"])
+    assert any("最高得30分" in item for item in positive_signals["acceptance_plan_scoring_sentences"])
+
+    negative = evaluate_sample(samples["topic_scoring_acceptance_plan_negative_contract_only_006"])
+    negative_signals = negative["target_topic_detail"]["structured_signals"]
+    assert negative_signals["acceptance_plan_forbidden_in_scoring"] is False
+    assert negative_signals["scoring_contains_acceptance_plan"] is False
+    assert negative_signals["acceptance_plan_linked_to_score"] is False
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

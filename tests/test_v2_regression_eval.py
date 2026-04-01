@@ -237,6 +237,20 @@ def test_regression_star_marker_samples_are_classified_correctly() -> None:
     assert negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_acceptance_plan_in_scoring_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_scoring_acceptance_plan_positive_006"])
+    negative = evaluate_sample(samples["regression_scoring_acceptance_plan_negative_contract_only_006"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["missed_risk_count"] == 0
+    assert positive["comparison_failure_reason_codes"] == ["acceptance_plan_in_scoring_forbidden"]
+
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])
