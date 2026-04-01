@@ -35,6 +35,7 @@
 | E-001 | 补齐“拒绝进口 vs 外标引用”相关样本与回归测试 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | E-002 | 补齐“二层 technical_standard 召回与去噪”监督样本 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | W-001 | review-plus Web 链路重启与新结果复核 | Web/运行链路整改 | 已通过 | Web 新结果已与修复后规则对齐 |
+| W-002 | 补齐真实文件中 R-001~R-007 标准命中映射、compare 规则码与 Web 展示一致性闭环 | Web/运行链路整改 | 待下发 | 尚未进入验收 |
 
 ## 5. 任务详情
 
@@ -862,3 +863,114 @@ T 提交时必须附：
 - 任务详情
 - 当前状态
 - M 的最新验收结论
+
+### W-002
+
+- 任务名称：补齐真实文件中 R-001~R-007 标准命中映射、compare 规则码与 Web 展示一致性闭环
+- 任务类型：Web/运行链路整改
+- 当前状态：`待下发`
+- 当前结论：尚未进入验收
+
+#### 任务背景
+
+基于真实历史结果 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-124857-763f549f/review.md) 、 [comparison.json](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-124857-763f549f/comparison.json) 与各专题产物复核，发现：
+
+- `R-001` 已标准命中
+- `R-002` 文件中存在 `GB252 / BS2869` 真实场景，但未按标准任务口径打出
+- `R-003` 文件中存在 `安装、检测、验收、培训计划` 评分场景，但未按“不得将项目验收方案作为评审因素”标准口径落出
+- `R-004` 本次文件未发现对应场景，应保持不命中
+- `R-005` 本次文件未发现对应场景，应保持不命中
+- `R-006` 已出现同类风险，但仍停留在 baseline 泛化标题，未落到标准 compare 规则码
+- `R-007` 已出现同类风险，但 acceptance 专题仅抽到需求侧信号，未稳定落到标准 compare 规则码
+
+#### 本次真实文件核查矩阵
+
+1. `R-001`
+   - 现状：`已标准命中`
+   - 证据：`comparison.metadata.failure_reason_codes = ['policy_technical_inconsistency']`
+2. `R-002`
+   - 现状：`有真实场景，但未标准命中`
+   - 证据：正文存在 `GB252 / BS2869`，但未出现“缺少★”标准风险文案或规则码
+3. `R-003`
+   - 现状：`有真实场景，但未标准命中`
+   - 证据：正文存在 `安装、检测、验收、培训计划` 评分项，review 仅打出“评分逻辑错误”，未按验收方案评分禁入标准口径落出
+4. `R-004`
+   - 现状：`本文件无对应场景`
+   - 要求：继续保持不误报
+5. `R-005`
+   - 现状：`本文件无对应场景`
+   - 要求：继续保持不误报
+6. `R-006`
+   - 现状：`语义命中，但未标准命中`
+   - 证据：已出现 `制造商资质证书评分项指向特定认证` / `产品认证指定省级标准协会`，但没有 `specific_brand_or_supplier_in_scoring_forbidden`
+7. `R-007`
+   - 现状：`语义命中，但未标准命中`
+   - 证据：已出现 `将验收产生的检测费用及相关部门验收费用笼统计入投标人承担范围`，但没有标准 compare 规则码闭环
+
+#### 问题定位
+
+- 真实文件运行时，专题侧已能抽到部分正文信号，但规则侧信号未稳定进入同一次 compare 合并
+- [scoring.json](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-124857-763f549f/topic_reviews/scoring.json) 当前仅有：
+  - `scoring_contains_specific_cert_or_supplier_signal = true`
+  - `specific_cert_or_supplier_score_linked = true`
+- [acceptance.json](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260401-124857-763f549f/topic_reviews/acceptance.json) 当前仅有：
+  - `demand_contains_acceptance_testing_cost_signal = true`
+  - `acceptance_testing_cost_shifted_to_bidder = true`
+- 说明真实链路下，规则侧信号召回/合并/注入存在缺口
+- scoring 专题选中的章节也存在偏移，未稳定召回实际评分规则主章节
+
+#### T 整改目标
+
+1. 让真实文件运行结果中，`R-001 ~ R-007` 均能按“是否存在真实场景”给出正确口径
+2. 对有场景的任务，优先输出标准任务标题、标准风险文案和 compare 规则码
+3. 对无场景的任务，保持不误报
+4. 让 Web 历史结果与 `comparison.json`、专题结构化信号、任务编号口径一致
+
+#### 具体整改要求
+
+1. 真实文件校准
+   - 以历史样本 `20260401-124857-763f549f` 为必测对象
+   - 对 `R-001 ~ R-007` 逐项出“命中 / 不命中 / 语义命中但未标准命中”复核表
+2. 规则侧信号并入问题修复
+   - 修复 scoring / acceptance / technical_standard 等专题在真实文件下的规则侧召回与 structured_signals 注入问题
+   - 确保 compare 阶段能同时看到规则侧与正文侧信号
+3. compare 规则码修复
+   - `R-002` 要能稳定落出对应标准风险标题与规则码
+   - `R-003` 要能稳定落出对应标准风险标题与规则码
+   - `R-006` 要能稳定落出 `specific_brand_or_supplier_in_scoring_forbidden`
+   - `R-007` 要能稳定落出 `acceptance_testing_cost_shifted_to_bidder`
+4. Web 展示一致性修复
+   - Web 历史页中的最终风险标题应尽量与标准任务口径一致
+   - 至少要保证标准 compare 命中结果不会被 baseline 泛化标题掩盖
+5. 负样本保护
+   - `R-004` 在本文件继续不误报
+   - `R-005` 在本文件继续不误报
+
+#### 必交付物
+
+1. 一份真实文件 `R-001 ~ R-007` 命中矩阵
+2. 改了哪些文件
+3. 修了哪些规则侧召回/注入/compare 合并逻辑
+4. 新增了哪些真实文件回归测试
+5. 跑了哪些命令，结果如何
+6. 一份新的真实文件结果目录，证明：
+   - `R-001` 标准命中
+   - `R-002` 标准命中
+   - `R-003` 标准命中
+   - `R-004` 不误报
+   - `R-005` 不误报
+   - `R-006` 标准命中
+   - `R-007` 标准命中
+
+#### M 验收标准
+
+- 通过线：
+  - 真实文件结果中，`R-001 / R-002 / R-003 / R-006 / R-007` 按标准任务口径可见
+  - `R-004 / R-005` 在该文件中保持不误报
+  - `comparison.json` 中出现对应标准规则码
+  - Web 页、review.md、comparison.json 三者口径一致
+- 不过线情形：
+  - 只在 baseline 泛化标题里出现，未映射到标准任务口径
+  - structured_signals 有正文信号，但 compare 仍缺规则码
+  - Web 展示与 comparison.json 不一致
+  - 把 `R-004 / R-005` 在本文件中误报出来
