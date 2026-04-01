@@ -434,6 +434,80 @@ def test_compare_review_artifacts_adds_acceptance_plan_risk_for_strong_business_
     assert comparison.metadata["failure_reason_codes"] == ["acceptance_plan_in_scoring_forbidden"]
 
 
+def test_compare_review_artifacts_adds_payment_terms_in_scoring_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "payment_terms_forbidden_in_scoring": True,
+                    "payment_terms_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "payment_terms_rule_sentences": ["评审规则合规性-不得将付款方式作为评审因素。"],
+                    "scoring_contains_payment_terms": True,
+                    "payment_terms_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-34"}],
+                    "payment_terms_scoring_sentences": [
+                        "评分标准：全部满足要求的得80分。",
+                        "付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分，最高加20分。"
+                    ],
+                    "payment_terms_linked_to_score": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将付款方式纳入评审因素，违反评审规则合规性要求"
+    )
+    assert cluster.severity == "中高风险"
+    assert cluster.review_type == "评分因素合规性 / 商务评分规则合法性"
+    assert "付款周期短于招标文件要求" in cluster.source_excerpts[0]
+    assert "预付款比例更有利于采购人资金安排" in cluster.source_excerpts[0]
+    assert "每项加10分" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["payment_terms_in_scoring_forbidden"]
+    report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
+    assert "将付款方式纳入评审因素，违反评审规则合规性要求" in report
+    assert "问题定性：中高风险" in report
+    assert "将付款周期、预付款比例等内容从评分因素中删除。" in report
+
+
+def test_compare_review_artifacts_does_not_add_payment_terms_risk_for_contract_payment_only() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "payment_terms_forbidden_in_scoring": True,
+                    "payment_terms_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "payment_terms_rule_sentences": ["评审规则合规性-不得将付款方式作为评审因素。"],
+                    "scoring_contains_payment_terms": False,
+                    "payment_terms_scoring_sections": [],
+                    "payment_terms_scoring_sentences": ["评分标准：仅对履约能力、交付保障进行评分，最高得100分。"],
+                    "payment_terms_linked_to_score": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "将付款方式纳入评审因素，违反评审规则合规性要求" for cluster in comparison.clusters)
+
+
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

@@ -1932,5 +1932,105 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_payment_terms_rule_positive_007",
+    "name": "topic_scoring_payment_terms_rule_positive_007",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评审规则明确不得将付款方式作为评审因素。",
+    "text": "第一章 评审规则\n评审规则合规性-不得将付款方式作为评审因素。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评审规则条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_payment_terms_scoring_positive_007",
+    "name": "topic_scoring_payment_terms_scoring_positive_007",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "真实业务表达：付款周期与预付款比例被纳入评分加分项。",
+    "text": "第六章 评分办法\n（一）评分内容 投标人应如实填写《商务条款偏离表》。 （二）评分标准 评审委员会根据响应情况进行打分，全部满足要求的得80分；在此基础上，付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分，最高加20分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_payment_terms_negative_contract_only_007",
+    "name": "topic_scoring_payment_terms_negative_contract_only_007",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分项不含付款安排，仅评履约能力和交付保障。",
+    "text": "第六章 评分办法\n仅对履约能力、交付保障进行评分，最高得100分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_payment_terms_negative_capability_only_007",
+    "name": "topic_scoring_payment_terms_negative_capability_only_007",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "商务评分只评履约能力、交付保障，不含付款安排。",
+    "text": "第六章 评分办法\n评分内容：履约能力、交付保障、售后服务。评分标准：每项加10分，最高加20分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

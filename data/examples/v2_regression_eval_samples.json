@@ -1457,5 +1457,144 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_scoring_payment_terms_positive_007",
+    "document_name": "付款方式进入评分因素正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-901",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-901",
+          "title": "将付款方式纳入评审因素，违反评审规则合规性要求",
+          "review_type": "评分因素合规性 / 商务评分规则合法性",
+          "severity": "中高风险",
+          "source_location": "第一章 评审规则；第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 36,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 36,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将付款方式纳入评审因素，违反评审规则合规性要求",
+            "review_type": "评分因素合规性 / 商务评分规则合法性",
+            "severity": "中高风险",
+            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_excerpts": [
+              "规则要求：评审规则合规性-不得将付款方式作为评审因素。\n\n评分内容：全部满足要求的得80分。；付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分，最高加20分。"
+            ],
+            "topics": ["cross_topic"],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": ["payment_terms_in_scoring_forbidden"],
+          "comparison_failure_reason_codes": ["payment_terms_in_scoring_forbidden"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_payment_terms_negative_contract_only_007",
+    "document_name": "合同付款条款不应误报评分风险负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-902",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

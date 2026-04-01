@@ -441,5 +441,78 @@
       "coverage_gap_count": 0,
       "failure_reason_code_count": 0
     }
+  },
+  {
+    "name": "sample_scoring_payment_terms_positive",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分规则与评分内容。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第六章 评分办法"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "payment_terms_forbidden_in_scoring": true,
+            "payment_terms_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "payment_terms_rule_sentences": ["评审规则合规性-不得将付款方式作为评审因素。"],
+            "scoring_contains_payment_terms": true,
+            "payment_terms_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-34"}],
+            "payment_terms_scoring_sentences": [
+              "评分标准：全部满足要求的得80分。",
+              "付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分，最高加20分。"
+            ],
+            "payment_terms_linked_to_score": true
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 1,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 1
+    }
+  },
+  {
+    "name": "sample_scoring_payment_terms_negative_contract_only",
+    "baseline_markdown": "# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n\n说明：\n- 本审查基于你提供的招标文件文本进行。\n",
+    "topics": [
+      {
+        "topic": "scoring",
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分规则与评分内容。",
+        "risk_points": [],
+        "metadata": {
+          "selected_sections": [{"title": "第六章 评分办法"}],
+          "missing_evidence": [],
+          "structured_signals": {
+            "payment_terms_forbidden_in_scoring": true,
+            "payment_terms_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-6"}],
+            "payment_terms_rule_sentences": ["评审规则合规性-不得将付款方式作为评审因素。"],
+            "scoring_contains_payment_terms": false,
+            "payment_terms_scoring_sections": [],
+            "payment_terms_scoring_sentences": ["评分标准：仅对履约能力、交付保障进行评分，最高得100分。"],
+            "payment_terms_linked_to_score": false
+          }
+        }
+      }
+    ],
+    "expected": {
+      "cluster_count": 0,
+      "conflict_count": 0,
+      "duplicate_reduction": 0,
+      "baseline_only_count": 0,
+      "topic_only_count": 0,
+      "coverage_gap_count": 0,
+      "failure_reason_code_count": 0
+    }
   }
 ]

@@ -196,6 +196,35 @@ def test_scoring_acceptance_plan_rule_and_scoring_signals_are_extracted_correctl
     assert training_negative_signals["acceptance_plan_linked_to_score"] is False
 
 
+def test_scoring_payment_terms_rule_and_scoring_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    rule_sample = evaluate_sample(samples["topic_scoring_payment_terms_rule_positive_007"])
+    rule_signals = rule_sample["target_topic_detail"]["structured_signals"]
+    assert rule_signals["payment_terms_forbidden_in_scoring"] is True
+    assert "不得将付款方式作为评审因素" in rule_signals["payment_terms_rule_sentences"][0]
+
+    positive = evaluate_sample(samples["topic_scoring_payment_terms_scoring_positive_007"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["scoring_contains_payment_terms"] is True
+    assert positive_signals["payment_terms_linked_to_score"] is True
+    assert any("付款周期短于招标文件要求" in item for item in positive_signals["payment_terms_scoring_sentences"])
+    assert any("预付款比例更有利于采购人资金安排" in item for item in positive_signals["payment_terms_scoring_sentences"])
+    assert any("每项加10分" in item for item in positive_signals["payment_terms_scoring_sentences"])
+    assert any("最高加20分" in item for item in positive_signals["payment_terms_scoring_sentences"])
+
+    contract_negative = evaluate_sample(samples["topic_scoring_payment_terms_negative_contract_only_007"])
+    contract_negative_signals = contract_negative["target_topic_detail"]["structured_signals"]
+    assert contract_negative_signals["scoring_contains_payment_terms"] is False
+    assert contract_negative_signals["payment_terms_linked_to_score"] is False
+
+    capability_negative = evaluate_sample(samples["topic_scoring_payment_terms_negative_capability_only_007"])
+    capability_negative_signals = capability_negative["target_topic_detail"]["structured_signals"]
+    assert capability_negative_signals["scoring_contains_payment_terms"] is False
+    assert capability_negative_signals["payment_terms_linked_to_score"] is False
+
+
 def test_topic_failure_reasons_are_granular_for_partial_and_degraded_cases() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

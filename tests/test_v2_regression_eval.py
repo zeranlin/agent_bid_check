@@ -257,6 +257,21 @@ def test_regression_acceptance_plan_in_scoring_samples_are_classified_correctly(
     assert matched["gold_title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
 
 
+def test_regression_payment_terms_in_scoring_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_scoring_payment_terms_positive_007"])
+    negative = evaluate_sample(samples["regression_scoring_payment_terms_negative_contract_only_007"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["payment_terms_in_scoring_forbidden"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "将付款方式纳入评审因素，违反评审规则合规性要求"
+
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

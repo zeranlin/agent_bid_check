@@ -276,6 +276,48 @@ def _build_cross_topic_acceptance_plan_scoring_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cross_topic_payment_terms_scoring_cluster(
+    *,
+    rule_locations: list[str],
+    rule_sentences: list[str],
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if rule_locations:
+        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+    if scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+
+    source_excerpt_parts = []
+    if rule_sentences:
+        source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
+    if scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
+
+    risk = RiskPoint(
+        title="将付款方式纳入评审因素，违反评审规则合规性要求",
+        severity="中高风险",
+        review_type="评分因素合规性 / 商务评分规则合法性",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "评审规则已明确不得将付款方式作为评审因素。",
+            "当前评分标准将付款周期、预付款比例等付款安排直接与加分挂钩。",
+            "付款方式本质上属于合同商务条件，不宜作为竞标评分项。",
+            "若据此评分，存在评分因素设置不合规、结果争议及差别对待风险。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "将付款周期、预付款比例等内容从评分因素中删除。",
+            "如采购人对付款安排有明确要求，应作为合同商务条款统一约定。",
+            "对商务评分规则重新梳理，仅保留允许纳入评分的合规内容。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def compare_review_artifacts(
     document_name: str,
     baseline: V2StageArtifact,
@@ -311,6 +353,12 @@ def compare_review_artifacts(
     acceptance_plan_scoring_locations: list[str] = []
     acceptance_plan_scoring_sentences: list[str] = []
     acceptance_plan_linked_to_score = False
+    payment_terms_forbidden_in_scoring = False
+    payment_terms_rule_locations: list[str] = []
+    payment_terms_rule_sentences: list[str] = []
+    payment_terms_scoring_locations: list[str] = []
+    payment_terms_scoring_sentences: list[str] = []
+    payment_terms_linked_to_score = False
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -414,6 +462,28 @@ def compare_review_artifacts(
             acceptance_plan_linked_to_score = acceptance_plan_linked_to_score or bool(
                 structured_signals.get("acceptance_plan_linked_to_score", False)
             )
+            payment_terms_forbidden_in_scoring = payment_terms_forbidden_in_scoring or bool(
+                structured_signals.get("payment_terms_forbidden_in_scoring", False)
+            )
+            matched_payment_rule_sections = structured_signals.get("payment_terms_rule_sections", [])
+            if isinstance(matched_payment_rule_sections, list):
+                payment_terms_rule_locations.extend(_compact_titles(matched_payment_rule_sections, limit=2))
+            payment_terms_rule_sentences.extend(
+                _compact_sentences(structured_signals.get("payment_terms_rule_sentences", []), limit=2)
+                if isinstance(structured_signals.get("payment_terms_rule_sentences", []), list)
+                else []
+            )
+            matched_payment_scoring_sections = structured_signals.get("payment_terms_scoring_sections", [])
+            if isinstance(matched_payment_scoring_sections, list):
+                payment_terms_scoring_locations.extend(_compact_titles(matched_payment_scoring_sections, limit=2))
+            payment_terms_scoring_sentences.extend(
+                _compact_sentences(structured_signals.get("payment_terms_scoring_sentences", []), limit=4)
+                if isinstance(structured_signals.get("payment_terms_scoring_sentences", []), list)
+                else []
+            )
+            payment_terms_linked_to_score = payment_terms_linked_to_score or bool(
+                structured_signals.get("payment_terms_linked_to_score", False)
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -439,6 +509,10 @@ def compare_review_artifacts(
     acceptance_plan_rule_sentences = dedupe(acceptance_plan_rule_sentences)
     acceptance_plan_scoring_locations = dedupe(acceptance_plan_scoring_locations)
     acceptance_plan_scoring_sentences = dedupe(acceptance_plan_scoring_sentences)
+    payment_terms_rule_locations = dedupe(payment_terms_rule_locations)
+    payment_terms_rule_sentences = dedupe(payment_terms_rule_sentences)
+    payment_terms_scoring_locations = dedupe(payment_terms_scoring_locations)
+    payment_terms_scoring_sentences = dedupe(payment_terms_scoring_sentences)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -512,6 +586,19 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("acceptance_plan_in_scoring_forbidden")
+
+    if payment_terms_forbidden_in_scoring and payment_terms_linked_to_score:
+        cross_risk, cross_topic, cross_source_rule = _build_cross_topic_payment_terms_scoring_cluster(
+            rule_locations=payment_terms_rule_locations,
+            rule_sentences=payment_terms_rule_sentences,
+            scoring_locations=payment_terms_scoring_locations,
+            scoring_sentences=payment_terms_scoring_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("payment_terms_in_scoring_forbidden")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     conflicts = [
@@ -647,6 +734,8 @@ def compare_review_artifacts(
             "has_equivalent_standard_clause": has_equivalent_standard_clause,
             "acceptance_plan_forbidden_in_scoring": acceptance_plan_forbidden_in_scoring,
             "acceptance_plan_linked_to_score": acceptance_plan_linked_to_score,
+            "payment_terms_forbidden_in_scoring": payment_terms_forbidden_in_scoring,
+            "payment_terms_linked_to_score": payment_terms_linked_to_score,
         },
     )
 

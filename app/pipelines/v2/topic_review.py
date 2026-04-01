@@ -51,14 +51,23 @@ ACCEPTANCE_PLAN_FORBIDDEN_RE = re.compile(
     r"(不得将项目验收方案作为评审因素|验收方案不得纳入评分|验收移交方案不得作为评审项|验收资料不得作为评分因素|"
     r"不得将.{0,16}(项目)?验收(方案|移交方案|资料|资料移交安排).{0,12}(作为评审因素|纳入评分|作为评审项|作为评分因素))"
 )
+PAYMENT_TERMS_FORBIDDEN_RE = re.compile(
+    r"(不得将付款方式作为评审因素|付款方式不得纳入评分|付款条件不得作为评分项|付款条款不得作为评审因素|"
+    r"不得将.{0,16}付款(方式|条件|条款).{0,12}(作为评审因素|纳入评分|作为评分项|作为评审项))"
+)
 ACCEPTANCE_PLAN_TERM_RE = re.compile(
     r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|项目验收方案设计|验收标准|验收流程安排|"
     r"验收资料准备节点|项目验收组织能力|验收衔接计划|验收移交方案|项目验收方案|竣工验收方案|"
     r"验收方案|项目验收|验收移交|移交衔接|验收资料|验收安排)"
 )
+PAYMENT_TERMS_TERM_RE = re.compile(
+    r"(付款周期短于招标文件要求|预付款比例更有利于采购人资金安排|付款节点更优|支付安排优于招标文件要求|"
+    r"付款周期|预付款比例|付款方式|付款条件|付款节点|支付安排|付款期限|预付款|首付款|尾款)"
+)
 SCORING_SCORE_LINK_RE = re.compile(
     r"(评审内容|评审标准|评分因素|得分|加分|计分|最高得\s*\d+\s*分|最高得分|满分\s*\d+\s*分|"
-    r"每体现\s*\d+\s*点加\s*\d+\s*分|评价为[优良中差]\s*得\s*\d+\s*分|评价为差[，,、]?\s*不得分|不得分)"
+    r"每体现\s*\d+\s*点加\s*\d+\s*分|每项加\s*\d+\s*分|最高加\s*\d+\s*分|予以加分|"
+    r"评价为[优良中差]\s*得\s*\d+\s*分|评价为差[，,、]?\s*不得分|不得分)"
 )
 GB_NON_T_REF_RE = re.compile(r"\bGB(?!\s*/\s*T)\s*[- ]?[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
 GB_T_REF_RE = re.compile(r"\bGB\s*/\s*T\s*[A-Z0-9.-]*\d+(?:[./-]\d+)*(?::\d{4}|\-\d{4})?", re.IGNORECASE)
@@ -75,6 +84,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "foreign_standard_conflict": "拒绝进口与外标直引存在潜在冲突",
     "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★",
     "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素",
+    "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -475,6 +485,52 @@ def _extract_acceptance_plan_scoring_signals(sections: list[dict]) -> dict[str, 
         "acceptance_plan_scoring_sections": _dedupe_signal_sections(acceptance_sections),
         "acceptance_plan_scoring_sentences": _dedupe_preserve(acceptance_sentences),
         "acceptance_plan_linked_to_score": acceptance_plan_linked_to_score,
+    }
+
+
+def _extract_payment_terms_scoring_signals(sections: list[dict]) -> dict[str, object]:
+    rule_sections: list[dict] = []
+    rule_sentences: list[str] = []
+    payment_sections: list[dict] = []
+    payment_sentences: list[str] = []
+    scoring_contains_payment_terms = False
+    payment_terms_linked_to_score = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_forbidden_rule = bool(PAYMENT_TERMS_FORBIDDEN_RE.search(text))
+        has_payment_term = bool(PAYMENT_TERMS_TERM_RE.search(text))
+        has_score_link = bool(SCORING_SCORE_LINK_RE.search(text))
+
+        if has_forbidden_rule:
+            rule_sections.extend(_normalize_signal_sections([section]))
+            fragments = _find_match_fragments(section, PAYMENT_TERMS_FORBIDDEN_RE)
+            rule_sentences.extend(fragments or _find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+        if has_payment_term:
+            scoring_contains_payment_terms = True
+            payment_sections.extend(_normalize_signal_sections([section]))
+            payment_sentences.extend(_find_match_fragments(section, PAYMENT_TERMS_TERM_RE))
+
+        if has_payment_term and has_score_link:
+            payment_terms_linked_to_score = True
+            payment_sections.extend(_normalize_signal_sections([section]))
+            payment_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+
+    return {
+        "payment_terms_forbidden_in_scoring": bool(rule_sections),
+        "payment_terms_rule_sections": _dedupe_signal_sections(rule_sections),
+        "payment_terms_rule_sentences": _dedupe_preserve(rule_sentences),
+        "scoring_contains_payment_terms": scoring_contains_payment_terms,
+        "payment_terms_scoring_sections": _dedupe_signal_sections(payment_sections),
+        "payment_terms_scoring_sentences": _dedupe_preserve(payment_sentences),
+        "payment_terms_linked_to_score": payment_terms_linked_to_score,
     }
 
 
@@ -966,6 +1022,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))
+        signals.update(_extract_payment_terms_scoring_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
     return signals
