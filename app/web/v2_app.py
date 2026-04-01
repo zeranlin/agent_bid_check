@@ -44,6 +44,12 @@ TOPIC_LABELS = {
     "contract": "合同履约",
     "baseline": "全文直审",
 }
+TOPIC_MODE_LABELS = {
+    "slim": "精简专题",
+    "default": "兼容专题",
+    "enhanced": "增强专题",
+    "mature": "成熟专题",
+}
 STAGE_TO_MESSAGE = {
     "file_reading": "系统正在阅读招标文件并提取正文。",
     "baseline_review": "正在执行第一层全文直审，优先识别通用合规风险。",
@@ -595,6 +601,11 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "comparison_view": build_comparison_view(comparison),
         "topics": topics,
         "topic_view": topic_view,
+        "topic_mode": str(meta.get("topic_mode", "mature")),
+        "topic_mode_label": TOPIC_MODE_LABELS.get(
+            str(meta.get("topic_mode", "mature")),
+            str(meta.get("topic_mode", "mature")),
+        ),
         "downloads": {
             "review": url_for("download_plus_file", run_id=run_id, kind="review"),
             "extracted": url_for("download_plus_file", run_id=run_id, kind="extracted"),
@@ -635,6 +646,8 @@ def list_recent_runs(limit: int = 12) -> list[dict]:
                     "medium": counts["中风险"],
                     "low": counts["低风险"],
                     "manual": counts["需人工复核"],
+                    "topic_mode": result.get("topic_mode", "mature"),
+                    "topic_mode_label": result.get("topic_mode_label", TOPIC_MODE_LABELS["mature"]),
                     "view_url": url_for("review_plus_history", run_id=result["run_id"]),
                 }
             )
@@ -650,7 +663,13 @@ def _save_upload(upload: FileStorage) -> Path:
     return upload_path
 
 
-def run_review_job(job_id: str, upload_path: Path, original_filename: str, form: dict[str, str]) -> None:
+def run_review_job(
+    job_id: str,
+    upload_path: Path,
+    original_filename: str,
+    form: dict[str, str],
+    topic_mode: str = "mature",
+) -> None:
     try:
         settings = ReviewSettings.from_dict(form)
 
@@ -665,6 +684,7 @@ def run_review_job(job_id: str, upload_path: Path, original_filename: str, form:
             settings=settings,
             progress_callback=on_progress,
             stream_callback=on_stream_text,
+            topic_mode=topic_mode,
         )
 
         run_id, run_dir = make_run_dir()
@@ -678,6 +698,7 @@ def run_review_job(job_id: str, upload_path: Path, original_filename: str, form:
             "model": settings.model,
             "config_path": str(WEB_V2_CONFIG_PATH),
             "pipeline": "v2",
+            "topic_mode": topic_mode,
         }
         (run_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         update_job(
@@ -762,12 +783,15 @@ def create_app() -> Flask:
             return jsonify({"ok": False, "error": "请选择招标文件。"}), 400
         if not allowed_file(upload.filename):
             return jsonify({"ok": False, "error": "仅支持 .docx / .txt / .md 文件。"}), 400
+        topic_mode = str(request.form.get("topic_mode", "mature") or "mature").strip().lower()
+        if topic_mode not in TOPIC_MODE_LABELS:
+            topic_mode = "mature"
         upload_path = _save_upload(upload)
         job_id = f"job-v2-{datetime.now().strftime('%Y%m%d-%H%M%S')}-{secrets.token_hex(4)}"
         create_job(job_id, upload.filename)
         worker = threading.Thread(
             target=run_review_job,
-            args=(job_id, upload_path, upload.filename, load_config()),
+            args=(job_id, upload_path, upload.filename, load_config(), topic_mode),
             daemon=True,
         )
         worker.start()
@@ -779,6 +803,8 @@ def create_app() -> Flask:
                 "started_at": get_job(job_id)["started_at"],
                 "stage": "file_reading",
                 "message": STAGE_TO_MESSAGE["file_reading"],
+                "topic_mode": topic_mode,
+                "topic_mode_label": TOPIC_MODE_LABELS.get(topic_mode, topic_mode),
             }
         )
 

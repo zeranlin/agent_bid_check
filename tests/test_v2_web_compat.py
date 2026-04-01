@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import json
 from pathlib import Path
 
@@ -69,3 +70,94 @@ def test_load_result_by_run_id_supports_legacy_overview_without_comparison(tmp_p
     assert result["comparison_view"]["available"] is False
     assert result["topic_view"][0]["topic_label"] == "技术细节"
     assert result["topic_view"][0]["risk_count"] == 1
+    assert result["topic_mode"] == "mature"
+    assert result["topic_mode_label"] == "成熟专题"
+
+
+def test_review_plus_start_defaults_to_mature_mode(tmp_path: Path, monkeypatch) -> None:
+    saved_path = tmp_path / "upload.docx"
+
+    monkeypatch.setattr("app.web.v2_app._save_upload", lambda upload: saved_path)
+    monkeypatch.setattr(
+        "app.web.v2_app.load_config",
+        lambda: {
+            "base_url": "",
+            "model": "",
+            "api_key": "",
+            "timeout": "1800",
+            "temperature": "0",
+            "max_tokens": "6400",
+            "system_prompt": "",
+            "user_prompt": "",
+        },
+    )
+
+    captured: dict[str, object] = {}
+
+    class DummyThread:
+        def __init__(self, *, target, args, daemon):
+            captured["args"] = args
+            captured["daemon"] = daemon
+
+        def start(self):
+            captured["started"] = True
+
+    monkeypatch.setattr("app.web.v2_app.threading.Thread", DummyThread)
+
+    app = create_app()
+    client = app.test_client()
+    response = client.post(
+        "/review-plus/start",
+        data={"tender_file": (io.BytesIO(b"demo"), "sample.docx")},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["topic_mode"] == "mature"
+    assert payload["topic_mode_label"] == "成熟专题"
+    assert captured["args"][-1] == "mature"
+
+
+def test_review_plus_start_accepts_explicit_topic_mode(tmp_path: Path, monkeypatch) -> None:
+    saved_path = tmp_path / "upload.docx"
+
+    monkeypatch.setattr("app.web.v2_app._save_upload", lambda upload: saved_path)
+    monkeypatch.setattr(
+        "app.web.v2_app.load_config",
+        lambda: {
+            "base_url": "",
+            "model": "",
+            "api_key": "",
+            "timeout": "1800",
+            "temperature": "0",
+            "max_tokens": "6400",
+            "system_prompt": "",
+            "user_prompt": "",
+        },
+    )
+
+    captured: dict[str, object] = {}
+
+    class DummyThread:
+        def __init__(self, *, target, args, daemon):
+            captured["args"] = args
+
+        def start(self):
+            captured["started"] = True
+
+    monkeypatch.setattr("app.web.v2_app.threading.Thread", DummyThread)
+
+    app = create_app()
+    client = app.test_client()
+    response = client.post(
+        "/review-plus/start",
+        data={"topic_mode": "default", "tender_file": (io.BytesIO(b"demo"), "sample.docx")},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["topic_mode"] == "default"
+    assert payload["topic_mode_label"] == "兼容专题"
+    assert captured["args"][-1] == "default"

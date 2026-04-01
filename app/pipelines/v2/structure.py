@@ -21,6 +21,11 @@ MODULES = ("qualification", "scoring", "contract", "acceptance", "technical", "p
 LLM_REVIEW_LIMIT = 8
 RULE_CONFIDENCE_THRESHOLD = 3
 RULE_MARGIN_THRESHOLD = 1
+SCORING_TITLE_SIGNALS = ("评分办法", "评标办法", "评审办法", "综合评分表", "评分细则", "评审因素表", "评分标准")
+SCORING_BODY_PATTERNS = (
+    re.compile(r"(最高得|满分|得分|分值|评分因素|综合评分法|价格分|技术分|商务分)"),
+    re.compile(r"\d+\s*分"),
+)
 
 MODULE_KEYWORDS = {
     "qualification": ["资格", "资质", "业绩", "证书", "奖项", "人员", "项目经理", "社保", "信用"],
@@ -44,6 +49,7 @@ MODULE_PHRASES = {
 
 TABLE_ROW_RE = re.compile(r"^\d+\s+\S+")
 TABULAR_ROW_RE = re.compile(r"^\d+\t")
+GENERIC_ATTACHMENT_RE = re.compile(r"^(附表|附录)(\s*[一二三四五六七八九十0-9]+)?$|^(附表|附录)\s*[0-9一二三四五六七八九十]+$")
 
 
 def _is_heading(line: str) -> bool:
@@ -62,6 +68,12 @@ def _is_heading(line: str) -> bool:
         return False
     if HEADING_RE.match(stripped):
         return True
+    if GENERIC_ATTACHMENT_RE.match(stripped):
+        return True
+    if any(signal in stripped for signal in SCORING_TITLE_SIGNALS):
+        return True
+    if stripped.startswith(("附表", "附录")) and any(signal in stripped for signal in ("评分", "评标", "评审", "分值")):
+        return True
     return len(stripped) <= 28 and any(key in stripped for key in ("资格", "评分", "商务", "技术", "验收", "付款", "合同"))
 
 
@@ -78,6 +90,19 @@ def _heading_level(line: str) -> int:
     if _is_heading(stripped):
         return 2
     return 0
+
+
+def _normalize_heading_title(lines: list[str], index: int) -> tuple[str, int]:
+    title = lines[index].strip()[:120]
+    next_index = index
+    if GENERIC_ATTACHMENT_RE.match(title) and index + 1 < len(lines):
+        next_line = lines[index + 1].strip()
+        if next_line and len(next_line) <= 40 and (
+            _is_heading(next_line) or any(signal in next_line for signal in ("评分", "评标", "评审", "技术", "验收", "付款", "合同"))
+        ):
+            title = f"{title} {next_line}".strip()[:120]
+            next_index = index + 1
+    return title, next_index
 
 
 def _score_modules(title: str, body: str) -> tuple[str, dict[str, int], list[ModuleHit]]:
@@ -115,6 +140,12 @@ def _score_modules(title: str, body: str) -> tuple[str, dict[str, int], list[Mod
     stripped_title = title.strip()
     if "投标须知" in stripped_title or "递交安排" in stripped_title:
         scores["procedure"] = scores.get("procedure", 0) + 5
+    if any(signal in stripped_title for signal in SCORING_TITLE_SIGNALS):
+        scores["scoring"] = scores.get("scoring", 0) + 10
+    if stripped_title.startswith(("附表", "附录")) and any(signal in stripped_title for signal in ("评分", "评标", "评审", "分值")):
+        scores["scoring"] = scores.get("scoring", 0) + 8
+    if any(pattern.search(body) for pattern in SCORING_BODY_PATTERNS):
+        scores["scoring"] = scores.get("scoring", 0) + 6
     if "商务" in stripped_title and "验收" in stripped_title and scores.get("contract", 0) > 0:
         scores["contract"] = scores.get("contract", 0) + 8
     if "技术" in stripped_title and "验收" in stripped_title and scores.get("technical", 0) > 0:
@@ -150,10 +181,14 @@ def _build_sections(extracted_text: str) -> list[SectionCandidate]:
         return []
     sections: list[dict[str, object]] = []
     start = 0
-    current_title = lines[0].strip()[:120] if _is_heading(lines[0]) else "文档起始"
-    for index, line in enumerate(lines):
-        if index == 0:
-            continue
+    if _is_heading(lines[0]):
+        current_title, consumed_index = _normalize_heading_title(lines, 0)
+        start = consumed_index
+    else:
+        current_title = "文档起始"
+    index = start + 1
+    while index < len(lines):
+        line = lines[index]
         if _is_heading(line):
             sections.append(
                 {
@@ -163,8 +198,11 @@ def _build_sections(extracted_text: str) -> list[SectionCandidate]:
                     "body": "\n".join(lines[start:index]).strip(),
                 }
             )
-            current_title = line.strip()[:120]
-            start = index
+            current_title, consumed_index = _normalize_heading_title(lines, index)
+            start = consumed_index
+            index = consumed_index + 1
+            continue
+        index += 1
     sections.append(
         {
             "title": current_title,

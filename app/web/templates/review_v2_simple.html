@@ -92,6 +92,17 @@
               </div>
             </label>
 
+            <div class="mode-switch" role="group" aria-label="审查模式">
+              <label class="mode-switch__item">
+                <input type="radio" name="topic_mode" value="mature" checked>
+                <span>成熟专题</span>
+              </label>
+              <label class="mode-switch__item">
+                <input type="radio" name="topic_mode" value="default">
+                <span>兼容专题</span>
+              </label>
+            </div>
+
             <div class="actions">
               <button type="submit" class="button button--primary" id="submit-btn">开始审查</button>
             </div>
@@ -148,6 +159,7 @@
               {% if result.created_at %}
               <span>时间：{{ result.created_at|replace('T', ' ') }}</span>
               {% endif %}
+              <span>模式：{{ result.topic_mode_label }}</span>
               <span>已生成 V2 Markdown 审查结果</span>
             </div>
 
