@@ -12,6 +12,39 @@ from .schemas import ComparisonArtifact, MergedRiskCluster, RiskSignature, Topic
 
 
 SEVERITY_ORDER = {"高风险": 3, "中高风险": 2.5, "中风险": 2, "低风险": 1, "需人工复核": 0}
+STANDARD_RULE_ORDER = {
+    "policy_technical_inconsistency": 0,
+    "star_marker_missing_for_mandatory_standard": 1,
+    "acceptance_plan_in_scoring_forbidden": 2,
+    "specific_brand_or_supplier_in_scoring_forbidden": 3,
+    "acceptance_testing_cost_shifted_to_bidder": 4,
+    "payment_terms_in_scoring_forbidden": 5,
+    "gifts_or_unrelated_goods_in_scoring_forbidden": 6,
+}
+STANDARD_RULE_TITLES = {
+    "policy_technical_inconsistency": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+    "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+    "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+    "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+    "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+    "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素，违反评审规则合规性要求",
+    "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+}
+STANDARD_CLUSTER_SUPPRESSION_RULES = {
+    "acceptance_plan_in_scoring_forbidden": (
+        re.compile(r"(安装、检测、验收、培训计划|验收方案|验收移交|验收资料)", re.IGNORECASE),
+    ),
+    "specific_brand_or_supplier_in_scoring_forbidden": (
+        re.compile(r"(制造商资质证书|特定产品认证证书|制造商特定认证证书|认证证书设置高分值)", re.IGNORECASE),
+    ),
+    "acceptance_testing_cost_shifted_to_bidder": (
+        re.compile(
+            r"(验收产生的检测费用笼统计入投标人承担范围|验收产生的检测费用及相关部门验收费用笼统计入投标人承担范围|"
+            r"交钥匙项目要求与付款方式存在潜在风险|交钥匙项目定义模糊)",
+            re.IGNORECASE,
+        ),
+    ),
+}
 
 
 def _normalize_text(text: str) -> str:
@@ -131,6 +164,58 @@ def _build_cluster(cluster_id: str, items: list[tuple[RiskPoint, str, str]]) -> 
         conflict_notes=conflict_notes,
         need_manual_review=any(risk.severity == "需人工复核" for risk in risks) or bool(conflict_notes),
     )
+
+
+def _detect_standard_rule_code(cluster: MergedRiskCluster) -> str:
+    title = str(cluster.title).strip()
+    for code, standard_title in STANDARD_RULE_TITLES.items():
+        if title == standard_title:
+            return code
+    return ""
+
+
+def _filter_and_sort_clusters(
+    clusters: list[MergedRiskCluster],
+    triggered_rule_codes: list[str],
+) -> list[MergedRiskCluster]:
+    standard_codes_present = {
+        code for code in triggered_rule_codes if code in STANDARD_RULE_TITLES
+    }
+    standard_titles_present = {STANDARD_RULE_TITLES[code] for code in standard_codes_present}
+    standard_compare_titles_present = {
+        str(cluster.title).strip()
+        for cluster in clusters
+        if "compare_rule" in cluster.source_rules and str(cluster.title).strip() in standard_titles_present
+    }
+    filtered: list[MergedRiskCluster] = []
+    for cluster in clusters:
+        cluster_rule_code = _detect_standard_rule_code(cluster)
+        if cluster_rule_code:
+            if str(cluster.title).strip() in standard_compare_titles_present and "compare_rule" not in cluster.source_rules:
+                continue
+            filtered.append(cluster)
+            continue
+        title = str(cluster.title).strip()
+        suppressed = False
+        for code, patterns in STANDARD_CLUSTER_SUPPRESSION_RULES.items():
+            if code not in standard_codes_present:
+                continue
+            if title in standard_titles_present:
+                continue
+            if any(pattern.search(title) for pattern in patterns):
+                suppressed = True
+                break
+        if not suppressed:
+            filtered.append(cluster)
+    filtered.sort(
+        key=lambda cluster: (
+            _detect_standard_rule_code(cluster) == "",
+            STANDARD_RULE_ORDER.get(_detect_standard_rule_code(cluster), 999),
+            -SEVERITY_ORDER.get(cluster.severity, -1),
+            str(cluster.title),
+        )
+    )
+    return filtered
 
 
 def _build_cross_topic_policy_technical_cluster(
@@ -863,6 +948,7 @@ def compare_review_artifacts(
         triggered_rule_codes.append("acceptance_testing_cost_shifted_to_bidder")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
+    clusters = _filter_and_sort_clusters(clusters, triggered_rule_codes)
     conflicts = [
         {
             "cluster_id": cluster.cluster_id,

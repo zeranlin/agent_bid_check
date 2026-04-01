@@ -387,6 +387,7 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
         cluster = cluster_map.get(_normalize_compare_key(risk.title, review_type), {})
         source_tags = [str(item) for item in cluster.get("source_rules", []) if str(item).strip()]
         source_topics = [str(item) for item in cluster.get("topics", []) if str(item).strip() and str(item).strip() != "baseline"]
+        is_standard_compare = "compare_rule" in source_tags
         manual_reasons = []
         if cluster.get("need_manual_review"):
             manual_reasons.extend([str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()])
@@ -407,6 +408,7 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
             "source_topics": [TOPIC_LABELS.get(item, item) for item in source_topics],
             "conflict_notes": [str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()],
             "manual_reasons": manual_reasons,
+            "is_standard_compare": is_standard_compare,
             "judgment_preview": (risk.risk_judgment[0] if risk.risk_judgment else "需人工复核"),
             "source_location_preview": (risk.source_location or "未发现").splitlines()[0][:48],
         }
@@ -418,7 +420,13 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
         if grouped[severity]
     ]
     severity_rank = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
-    all_cards.sort(key=lambda item: (severity_rank.get(item["severity"], len(SEVERITY_ORDER)), item["index"]))
+    all_cards.sort(
+        key=lambda item: (
+            not bool(item["is_standard_compare"]),
+            severity_rank.get(item["severity"], len(SEVERITY_ORDER)),
+            item["index"],
+        )
+    )
     return {
         "summary_counts": summary_counts,
         "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),

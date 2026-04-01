@@ -7,6 +7,15 @@ from .schemas import EvidenceBundle, ModuleHit, SectionCandidate, TopicCoverage,
 from .topics import TOPIC_TAXONOMY, TopicDefinition, resolve_topic_definitions, resolve_topic_execution_plan
 
 SCORING_PRIMARY_TITLE_SIGNALS = ("评分办法", "评标办法", "评审办法", "综合评分表", "评分细则", "评审因素表", "评分标准")
+SCORING_DETAIL_TITLE_SIGNALS = ("评分内容", "评分标准", "评分因素", "评分准则", "综合评分表", "评分细则", "评审因素表")
+SCORING_GENERIC_METHOD_TITLE_SIGNALS = ("综合评分法", "评审程序", "评审方法", "评标方法")
+SCORING_SCORE_LINK_RE = re.compile(
+    r"(得\s*\d+\s*分|加\s*\d+\s*分|最高得\s*\d+\s*分|最高加\s*\d+\s*分|不得分|每具备一项得|每体现\s*\d+\s*点加)"
+)
+SCORING_RISK_SIGNAL_RE = re.compile(
+    r"(安装、检测、验收、培训计划|验收、培训计划|验收方案|验收标准|验收流程|验收资料|"
+    r"验收组织能力|制造商|认证证书|CNAS|省级标准协会|GB\d+|BS2869)"
+)
 TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS = ("规格及技术参数", "技术参数", "技术要求", "主要技术参数", "技术规格", "参数要求")
 TECHNICAL_STANDARD_NEGATIVE_TITLE_SIGNALS = ("售后服务", "付款方式", "设备验收", "商务要求", "商务条款", "其他商务")
 TECHNICAL_STANDARD_FOREIGN_REF_RE = re.compile(
@@ -99,6 +108,7 @@ def _technical_standard_profile(section: SectionCandidate) -> dict[str, object]:
 def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tuple[int, list[str], list[str]]:
     title_hits, title_keywords = _keyword_hits(section.title, definition.keywords)
     excerpt_hits, excerpt_keywords = _keyword_hits(f"{section.excerpt}\n{section.body}", definition.keywords)
+    excerpt_hits_for_score = min(excerpt_hits, 12) if definition.key == "scoring" else excerpt_hits
     primary_modules = set(definition.boundary.primary_modules or definition.modules)
     secondary_modules = set(definition.boundary.secondary_modules)
     primary_module_bonus = 24 if section.module in primary_modules else 0
@@ -132,6 +142,25 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus += 8
         if raw_scores.get("technical", 0) >= 3 or raw_scores.get("procedure", 0) >= 3:
             special_bonus += 3
+        text = "\n".join(part for part in (section.title, section.excerpt, section.body) if part)
+        if any(signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS):
+            special_bonus += 24
+        if SCORING_SCORE_LINK_RE.search(text):
+            special_bonus += 18
+        if SCORING_RISK_SIGNAL_RE.search(text):
+            special_bonus += 14
+        if re.search(r"(安装、检测、验收、培训计划|验收、培训计划)", text) and SCORING_SCORE_LINK_RE.search(text):
+            special_bonus += 30
+        if any(signal in section.title for signal in SCORING_GENERIC_METHOD_TITLE_SIGNALS) and not any(
+            signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS
+        ):
+            special_bonus -= 18
+        if "是指" in text and "综合评分法" in section.title and not SCORING_SCORE_LINK_RE.search(text):
+            special_bonus -= 12
+        if section.module == "procedure" and not SCORING_SCORE_LINK_RE.search(text):
+            special_bonus -= 8
+        if section.line_span >= 18 and not any(signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS):
+            special_bonus -= 18
     if definition.key == "technical_standard":
         profile = _technical_standard_profile(section)
         foreign_refs = profile["foreign_refs"]
@@ -159,7 +188,7 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
 
     total_score = (
         title_hits * 8
-        + excerpt_hits * 3
+        + excerpt_hits_for_score * 3
         + primary_module_bonus
         + secondary_module_bonus
         + module_hit_bonus
@@ -260,6 +289,8 @@ def _build_bundle(
     )
 
     max_primary = 2 if len(primary_modules) >= 2 or definition.key == "scoring" else 1
+    if definition.key == "scoring":
+        max_primary = 5
     if definition.key == "technical_standard":
         max_primary = 1
     primary_ranked: list[tuple[int, int, SectionCandidate, list[str], list[str]]] = []
@@ -281,7 +312,13 @@ def _build_bundle(
             )
             or (
                 definition.key == "scoring"
-                and any(signal in section.title for signal in SCORING_PRIMARY_TITLE_SIGNALS)
+                and (
+                    any(signal in section.title for signal in SCORING_PRIMARY_TITLE_SIGNALS)
+                    or (
+                        any(signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS)
+                        and SCORING_SCORE_LINK_RE.search("\n".join(part for part in (section.title, section.excerpt, section.body) if part))
+                    )
+                )
             )
             or any(
             int((section.module_scores or {}).get(module, 0) or 0) >= primary_signal_threshold for module in primary_modules
@@ -325,6 +362,30 @@ def _build_bundle(
         fallback_ranked,
         key=lambda item: (
             (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["foreign_refs"])
+            ),
+            (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["cn_refs"])
+            ),
+            (
+                definition.key == "technical_standard"
+                and bool(_technical_standard_profile(item[2])["strong_standard_section"])
+            ),
+            (
+                definition.key == "scoring"
+                and any(signal in item[2].title for signal in SCORING_DETAIL_TITLE_SIGNALS)
+            ),
+            (
+                definition.key == "scoring"
+                and bool(SCORING_SCORE_LINK_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+            ),
+            (
+                definition.key == "scoring"
+                and bool(SCORING_RISK_SIGNAL_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+            ),
+            (
                 definition.key == "scoring"
                 and any(signal in item[2].title for signal in ("评分表", "综合评分表", "评分细则", "评审因素表"))
             ),
@@ -341,7 +402,14 @@ def _build_bundle(
         candidate_id = _section_id(section)
         if candidate_id in used_ids:
             continue
-        if section.module in secondary_modules or any((section.module_scores or {}).get(module, 0) > 0 for module in secondary_modules):
+        if (
+            definition.key == "technical_standard"
+            and (
+                _technical_standard_profile(section)["foreign_refs"]
+                or _technical_standard_profile(section)["cn_refs"]
+                or _technical_standard_profile(section)["strong_standard_section"]
+            )
+        ) or section.module in secondary_modules or any((section.module_scores or {}).get(module, 0) > 0 for module in secondary_modules):
             used_ids.add(candidate_id)
             secondary_sections.append(section)
     if len(secondary_sections) < 2:

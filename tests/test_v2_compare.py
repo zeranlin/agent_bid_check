@@ -756,6 +756,114 @@ def test_compare_review_artifacts_adds_acceptance_testing_cost_shift_risk() -> N
     assert comparison.metadata["failure_reason_codes"] == ["acceptance_testing_cost_shifted_to_bidder"]
 
 
+def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_class_titles() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：评分标准中“安装、检测、验收、培训计划”存在主观性描述且分值逻辑错误
+
+- 问题定性：中风险
+- 审查类型：评分因素不相关/评分标准不明确
+- 原文位置：第六章 评分办法
+- 原文摘录：安装、检测、验收、培训计划，评价为优得60分。
+- 风险判断：
+  - 评分逻辑存在主观性。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充量化口径。
+""".strip(),
+    )
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[
+                RiskPoint(
+                    title="制造商资质证书评分项指向特定认证，具有排他性",
+                    severity="高风险",
+                    review_type="评分项合规性审查",
+                    source_location="第六章 评分办法",
+                    source_excerpt="省级标准协会颁发证书每具备一项得40分。",
+                    risk_judgment=["评分项指向特定认证。"],
+                    legal_basis=["需人工复核"],
+                    rectification=["删除特定认证评分。"],
+                )
+            ],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_plan_forbidden_in_scoring": True,
+                    "acceptance_plan_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "acceptance_plan_rule_sentences": ["评审规则合规性-不得将项目验收方案作为评审因素。"],
+                    "scoring_contains_acceptance_plan": True,
+                    "acceptance_plan_scoring_sections": [{"title": "第六章 评分办法", "section_id": "20-42"}],
+                    "acceptance_plan_scoring_sentences": ["安装、检测、验收、培训计划，评价为优得60分。"],
+                    "acceptance_plan_linked_to_score": True,
+                    "specific_brand_or_supplier_forbidden_in_scoring": True,
+                    "specific_brand_or_supplier_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "specific_brand_or_supplier_rule_sentences": ["评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。"],
+                    "scoring_contains_specific_cert_or_supplier_signal": True,
+                    "specific_cert_or_supplier_scoring_sections": [{"title": "第六章 评分办法", "section_id": "50-56"}],
+                    "specific_cert_or_supplier_evidence": ["省级标准协会颁发证书每具备一项得40分。"],
+                    "specific_cert_or_supplier_score_linked": True,
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="acceptance",
+            summary="验收专题完成。",
+            risk_points=[
+                RiskPoint(
+                    title="将验收产生的检测费用笼统计入投标人承担范围，存在需求条款合规风险",
+                    severity="高风险",
+                    review_type="需求条款合规性",
+                    source_location="第五章 验收与交付要求",
+                    source_excerpt="交钥匙项目总价包括检测、相关部门验收等一切费用。",
+                    risk_judgment=["检测费用被笼统计入。"],
+                    legal_basis=["需人工复核"],
+                    rectification=["区分验收检测费用。"],
+                )
+            ],
+            need_manual_review=False,
+            coverage_note="已覆盖验收条款。",
+            metadata={
+                "selected_sections": [{"title": "第五章 验收与交付要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "acceptance_testing_cost_forbidden_to_bidder": True,
+                    "acceptance_testing_cost_rule_sections": [{"title": "第一章 需求合规规则", "section_id": "1-4"}],
+                    "acceptance_testing_cost_rule_sentences": ["需求合规性-不得要求中标人承担验收产生的检测费用。"],
+                    "demand_contains_acceptance_testing_cost_signal": True,
+                    "acceptance_testing_cost_sections": [{"title": "第五章 验收与交付要求", "section_id": "20-34"}],
+                    "acceptance_testing_cost_evidence": ["交钥匙项目总价包括检测、相关部门验收等一切费用。"],
+                    "acceptance_testing_cost_shifted_to_bidder": True,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert titles[:3] == [
+        "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+        "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+    ]
+    assert titles.count("以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险") == 1
+    assert "评分标准中“安装、检测、验收、培训计划”存在主观性描述且分值逻辑错误" not in titles
+    assert "制造商资质证书评分项指向特定认证，具有排他性" not in titles
+    assert "将验收产生的检测费用笼统计入投标人承担范围，存在需求条款合规风险" not in titles
+    assert "将验收产生的检测费用及相关部门验收费用笼统计入投标人承担范围，存在需求条款合规风险" not in titles
+
+
 def test_compare_review_artifacts_does_not_add_acceptance_testing_cost_shift_risk_for_selfcheck() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [

@@ -70,7 +70,7 @@ ACCEPTANCE_TESTING_COST_FORBIDDEN_RE = re.compile(
 ACCEPTANCE_PLAN_TERM_RE = re.compile(
     r"(项目验收移交衔接方案|项目验收资料编制与移交衔接安排|项目验收方案设计|验收标准|验收流程安排|"
     r"验收资料准备节点|项目验收组织能力|验收衔接计划|验收移交方案|项目验收方案|竣工验收方案|"
-    r"验收方案|项目验收|验收移交|移交衔接|验收资料|验收安排)"
+    r"安装、检测、验收、培训计划|验收、培训计划|验收计划|验收方案|项目验收|验收移交|移交衔接|验收资料|验收安排)"
 )
 PAYMENT_TERMS_TERM_RE = re.compile(
     r"(付款周期短于招标文件要求|预付款比例更有利于采购人资金安排|付款节点更优|支付安排优于招标文件要求|"
@@ -120,6 +120,23 @@ TOPIC_FAILURE_REASON_LABELS = {
     "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件",
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
     "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
+}
+BUNDLED_RULE_SECTION_TITLES = {
+    "star_marker": "内置规则库：实质性条款星标规则",
+    "acceptance_plan_scoring": "内置规则库：评分因素合规性",
+    "payment_terms_scoring": "内置规则库：商务评分合规性",
+    "gifts_scoring": "内置规则库：评分因素相关性",
+    "specific_brand_scoring": "内置规则库：评分因素公平竞争",
+    "acceptance_testing_cost": "内置规则库：需求合规性",
+}
+BUILTIN_RULE_SENTENCES = {
+    "star_required_for_gb_non_t": "评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。",
+    "star_required_for_mandatory_standard": "评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。",
+    "acceptance_plan_forbidden_in_scoring": "评审规则合规性-不得将项目验收方案作为评审因素。",
+    "payment_terms_forbidden_in_scoring": "评审规则合规性-不得将付款方式作为评审因素。",
+    "gifts_or_unrelated_goods_forbidden_in_scoring": "评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。",
+    "specific_brand_or_supplier_forbidden_in_scoring": "评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。",
+    "acceptance_testing_cost_forbidden_to_bidder": "需求合规性-不得要求中标人承担验收产生的检测费用。",
 }
 SCORING_RELEVANCE_RE = re.compile(r"(排版美观|封面设计|版式完整|装订质量|字体美观)")
 SCORING_INCONSISTENT_RE = re.compile(r"(满分\s*10\s*分.{0,20}满分\s*15\s*分|满分\s*15\s*分.{0,20}满分\s*10\s*分)")
@@ -311,6 +328,31 @@ def _dedupe_signal_sections(sections: list[dict]) -> list[dict]:
     return result
 
 
+def _builtin_rule_section(kind: str) -> dict[str, object]:
+    return {
+        "section_id": f"builtin:{kind}",
+        "title": BUNDLED_RULE_SECTION_TITLES.get(kind, "内置规则库"),
+        "start_line": 0,
+        "end_line": 0,
+        "module": "builtin_rule",
+    }
+
+
+def _inject_builtin_rule_signal(
+    *,
+    enabled: bool,
+    rule_key: str,
+    section_kind: str,
+    rule_sections: list[dict],
+    rule_sentences: list[str],
+) -> tuple[list[dict], list[str]]:
+    if not enabled:
+        return rule_sections, rule_sentences
+    rule_sections = _dedupe_signal_sections(rule_sections + [_builtin_rule_section(section_kind)])
+    rule_sentences = _dedupe_preserve(rule_sentences + [BUILTIN_RULE_SENTENCES[rule_key]])
+    return rule_sections, rule_sentences
+
+
 def _has_star_marker_near_text(text: str) -> bool:
     compact = re.sub(r"\s+", " ", str(text or "")).strip()
     if not compact:
@@ -469,6 +511,15 @@ def _extract_star_rule_signals(sections: list[dict]) -> dict[str, object]:
             star_required_for_gb_non_t = True
         if has_star_requirement and has_mandatory_standard_rule:
             star_required_for_mandatory_standard = True
+    star_required_for_gb_non_t = True
+    star_required_for_mandatory_standard = True
+    matched_sections, matched_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="star_required_for_gb_non_t",
+        section_kind="star_marker",
+        rule_sections=matched_sections,
+        rule_sentences=matched_sentences,
+    )
     return {
         "star_required_for_gb_non_t": star_required_for_gb_non_t,
         "star_required_for_mandatory_standard": star_required_for_mandatory_standard,
@@ -511,6 +562,13 @@ def _extract_acceptance_plan_scoring_signals(sections: list[dict]) -> dict[str, 
             acceptance_plan_linked_to_score = True
             acceptance_sections.extend(_normalize_signal_sections([section]))
             acceptance_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+    rule_sections, rule_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="acceptance_plan_forbidden_in_scoring",
+        section_kind="acceptance_plan_scoring",
+        rule_sections=rule_sections,
+        rule_sentences=rule_sentences,
+    )
 
     return {
         "acceptance_plan_forbidden_in_scoring": bool(rule_sections),
@@ -557,6 +615,13 @@ def _extract_payment_terms_scoring_signals(sections: list[dict]) -> dict[str, ob
             payment_terms_linked_to_score = True
             payment_sections.extend(_normalize_signal_sections([section]))
             payment_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+    rule_sections, rule_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="payment_terms_forbidden_in_scoring",
+        section_kind="payment_terms_scoring",
+        rule_sections=rule_sections,
+        rule_sentences=rule_sentences,
+    )
 
     return {
         "payment_terms_forbidden_in_scoring": bool(rule_sections),
@@ -604,6 +669,13 @@ def _extract_gifts_or_unrelated_goods_scoring_signals(sections: list[dict]) -> d
             gifts_or_goods_linked_to_score = True
             goods_sections.extend(_normalize_signal_sections([section]))
             goods_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+    rule_sections, rule_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="gifts_or_unrelated_goods_forbidden_in_scoring",
+        section_kind="gifts_scoring",
+        rule_sections=rule_sections,
+        rule_sentences=rule_sentences,
+    )
 
     return {
         "gifts_or_unrelated_goods_forbidden_in_scoring": bool(rule_sections),
@@ -653,6 +725,13 @@ def _extract_specific_cert_or_supplier_scoring_signals(sections: list[dict]) -> 
             specific_cert_or_supplier_score_linked = True
             scoring_sections.extend(_normalize_signal_sections([section]))
             scoring_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))
+    rule_sections, rule_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="specific_brand_or_supplier_forbidden_in_scoring",
+        section_kind="specific_brand_scoring",
+        rule_sections=rule_sections,
+        rule_sentences=rule_sentences,
+    )
 
     return {
         "specific_brand_or_supplier_forbidden_in_scoring": bool(rule_sections),
@@ -701,6 +780,13 @@ def _extract_acceptance_testing_cost_signals(sections: list[dict]) -> dict[str, 
             acceptance_testing_cost_shifted_to_bidder = True
             demand_sections.extend(_normalize_signal_sections([section]))
             demand_sentences.extend(_find_matching_sentences(section, [ACCEPTANCE_TESTING_TERM_RE, ACCEPTANCE_STAGE_TERM_RE, COST_SHIFT_TERM_RE]))
+    rule_sections, rule_sentences = _inject_builtin_rule_signal(
+        enabled=True,
+        rule_key="acceptance_testing_cost_forbidden_to_bidder",
+        section_kind="acceptance_testing_cost",
+        rule_sections=rule_sections,
+        rule_sentences=rule_sentences,
+    )
 
     return {
         "acceptance_testing_cost_forbidden_to_bidder": bool(rule_sections),
@@ -1326,7 +1412,24 @@ def _run_single_topic(
                 section for section in sections if isinstance(section, dict) and _section_id(section) in primary_ids
             ]
             if primary_sections:
-                signal_sections = primary_sections
+                supplemental_sections = []
+                for section in sections:
+                    if not isinstance(section, dict):
+                        continue
+                    if _section_id(section) in primary_ids:
+                        continue
+                    text = "\n".join(
+                        part
+                        for part in (
+                            str(section.get("title", "")).strip(),
+                            str(section.get("excerpt", "")).strip(),
+                            str(section.get("body", "")).strip(),
+                        )
+                        if part
+                    )
+                    if FOREIGN_STANDARD_REF_RE.search(text) or CN_STANDARD_REF_RE.search(text) or GB_NON_T_REF_RE.search(text):
+                        supplemental_sections.append(section)
+                signal_sections = primary_sections + supplemental_sections[:2]
     structured_signals = _build_structured_signals(definition, signal_sections)
     failure_reasons = _build_topic_failure_reasons(
         selected_sections=selected_sections,

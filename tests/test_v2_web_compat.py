@@ -4,7 +4,8 @@ import io
 import json
 from pathlib import Path
 
-from app.web.v2_app import build_comparison_view, build_topic_view, create_app, load_result_by_run_id
+from app.common.markdown_utils import parse_review_markdown
+from app.web.v2_app import build_comparison_view, build_review_view, build_topic_view, create_app, load_result_by_run_id
 
 
 def test_build_comparison_view_marks_empty_payload_unavailable() -> None:
@@ -161,3 +162,63 @@ def test_review_plus_start_accepts_explicit_topic_mode(tmp_path: Path, monkeypat
     assert payload["topic_mode"] == "default"
     assert payload["topic_mode_label"] == "兼容专题"
     assert captured["args"][-1] == "default"
+
+
+def test_build_review_view_prioritizes_standard_compare_cards() -> None:
+    report = parse_review_markdown(
+        """
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：评分标准中“安装、检测、验收、培训计划”存在主观性描述且分值逻辑错误
+
+- 问题定性：中风险
+- 审查类型：评分因素不相关/评分标准不明确
+- 原文位置：第六章 评分办法
+- 原文摘录：安装、检测、验收、培训计划，评价为优得60分。
+- 风险判断：
+  - 需人工复核
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充量化口径
+
+## 风险点2：将项目验收方案纳入评审因素，违反评审规则合规性要求
+
+- 问题定性：中高风险
+- 审查类型：评分因素合规性 / 评审规则设置合法性
+- 原文位置：第六章 评分办法
+- 原文摘录：安装、检测、验收、培训计划，评价为优得60分。
+- 风险判断：
+  - 需人工复核
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 删除验收方案评分
+""".strip()
+    )
+    comparison = {
+        "clusters": [
+            {
+                "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                "review_type": "评分因素合规性 / 评审规则设置合法性",
+                "source_rules": ["compare_rule"],
+                "topics": ["cross_topic"],
+                "conflict_notes": [],
+                "need_manual_review": False,
+            },
+            {
+                "title": "评分标准中“安装、检测、验收、培训计划”存在主观性描述且分值逻辑错误",
+                "review_type": "评分因素不相关/评分标准不明确",
+                "source_rules": ["baseline"],
+                "topics": ["baseline"],
+                "conflict_notes": [],
+                "need_manual_review": False,
+            },
+        ]
+    }
+
+    view = build_review_view(report, comparison)
+    assert view["all_cards"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    assert view["all_cards"][0]["is_standard_compare"] is True
