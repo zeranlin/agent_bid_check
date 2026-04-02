@@ -23,6 +23,7 @@ from app.web.v2_app import build_review_view
 
 
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
+W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
 
 
 def _build_settings() -> ReviewSettings:
@@ -130,6 +131,90 @@ def _build_real_file_replay_topics() -> tuple[V2StageArtifact, V2StageArtifact, 
     return structure, evidence, topics
 
 
+def _build_w005_source_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    text = extract_text(REAL_FILE)
+    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+    bundles = evidence.metadata["topic_evidence_bundles"]
+    coverages = evidence.metadata["topic_coverages"]
+    topics: list[TopicReviewArtifact] = []
+    evidence_aliases = {
+        "qualification": ["qualification"],
+        "scoring": ["scoring"],
+        "technical": ["technical_standard"],
+        "contract": ["contract_payment", "acceptance"],
+    }
+    for path in sorted(W005_SOURCE_RUN.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topic_key = payload.get("topic", path.stem)
+        bundle_sections: list[dict] = []
+        topic_coverage = {}
+        for alias_key in evidence_aliases.get(topic_key, [topic_key]):
+            bundle = bundles.get(alias_key, {})
+            bundle_sections.extend(bundle.get("sections", []))
+            if not topic_coverage and alias_key in coverages:
+                topic_coverage = coverages.get(alias_key, {})
+        selected_sections = [
+            {
+                "title": section.get("title", ""),
+                "start_line": section.get("start_line"),
+                "end_line": section.get("end_line"),
+                "module": section.get("module", ""),
+            }
+            for section in bundle_sections
+            if isinstance(section, dict)
+        ]
+        metadata = {
+            **dict(payload.get("metadata", {}) or {}),
+            "selected_sections": selected_sections,
+            "evidence_bundle": {"sections": bundle_sections},
+            "topic_coverage": topic_coverage,
+        }
+        topics.append(
+            TopicReviewArtifact(
+                topic=topic_key,
+                summary=payload.get("summary", ""),
+                risk_points=[RiskPoint(**risk) for risk in payload.get("risk_points", [])],
+                need_manual_review=payload.get("need_manual_review", False),
+                coverage_note=payload.get("coverage_note", ""),
+                metadata=metadata,
+            )
+        )
+    for synthetic_topic_key in ("policy",):
+        bundle = bundles.get(synthetic_topic_key, {})
+        coverage = coverages.get(synthetic_topic_key, {})
+        sections = bundle.get("sections", [])
+        topics.append(
+            TopicReviewArtifact(
+                topic=synthetic_topic_key,
+                summary=f"{synthetic_topic_key} synthetic replay",
+                risk_points=[],
+                need_manual_review=False,
+                coverage_note="真实文件当前结构召回补充",
+                metadata={
+                    "selected_sections": [
+                        {
+                            "title": section.get("title", ""),
+                            "start_line": section.get("start_line"),
+                            "end_line": section.get("end_line"),
+                            "module": section.get("module", ""),
+                        }
+                        for section in sections
+                        if isinstance(section, dict)
+                    ],
+                    "missing_evidence": ["未发现"],
+                    "evidence_bundle": bundle,
+                    "topic_coverage": coverage,
+                },
+            )
+        )
+    baseline = V2StageArtifact(
+        name="baseline",
+        content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n",
+    )
+    return structure, evidence, topics
+
+
 def test_w002_real_file_compare_matrix_is_complete() -> None:
     structure, evidence, topics = _build_real_file_topics()
     comparison = compare_review_artifacts(REAL_FILE.name, V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n"), topics)
@@ -185,3 +270,28 @@ def test_w004_real_file_refinement_separates_formal_pending_and_excluded() -> No
     assert "废标条件及最终解释权条款证据缺失" in pending_titles
     assert "关键合同条款数值缺失，导致付款与履约责任无法评估" in excluded_titles
     assert "中小企业扶持政策落实条款缺失关键执行参数" in excluded_titles
+
+
+def test_w005_real_file_full_run_topics_are_refined_to_target_matrix() -> None:
+    structure, evidence, replay_topics = _build_w005_source_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
+
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in formal_titles
+    assert "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险" in formal_titles
+
+    assert "关键商务条款数据缺失，合同无法执行" not in formal_titles
+    assert "履约保证金退还期限未定，存在资金占用风险" not in formal_titles
+    assert "验收标准模糊，采购人单方裁量权过大" not in formal_titles
+    assert "评分标准不明确，存在逻辑矛盾" not in formal_titles
+    assert "双电源切换柜尺寸允许偏差过大，可能不符合电气安装规范" not in formal_titles
+
+    assert "关键商务条款数据缺失，合同无法执行" in excluded_titles
+    assert "履约保证金退还期限未定，存在资金占用风险" in excluded_titles
+    assert "验收标准模糊，采购人单方裁量权过大" in excluded_titles
+    assert "双电源切换柜尺寸允许偏差过大，可能不符合电气安装规范" in pending_titles

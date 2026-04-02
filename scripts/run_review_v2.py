@@ -18,6 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="运行 V2 三层招标文件合规审查。")
     parser.add_argument("input_file", help="输入文件路径，支持 .docx/.txt/.md")
     parser.add_argument("-o", "--output-dir", required=True, help="输出目录，例如 data/results/v2/demo-run")
+    parser.add_argument("--topic-mode", default="default", choices=["slim", "default", "enhanced", "mature"])
     parser.add_argument("--base-url", default=None)
     parser.add_argument("--model", default=None)
     parser.add_argument("--api-key", default=None)
@@ -48,7 +49,7 @@ def main() -> int:
     settings.timeout = args.timeout
 
     try:
-        artifacts = review_document_v2(input_path, settings)
+        artifacts = review_document_v2(input_path, settings, topic_mode=args.topic_mode)
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
         print(f"HTTP error {exc.code}: {body}", file=sys.stderr)

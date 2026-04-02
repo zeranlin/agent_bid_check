@@ -9,6 +9,8 @@ from app.common.parser import parse_review_markdown
 from app.common.schemas import RiskPoint
 
 from .schemas import ComparisonArtifact, MergedRiskCluster, RiskSignature, TopicReviewArtifact, V2StageArtifact
+from .topic_review import _build_structured_signals
+from .topics import get_topic_definition
 
 
 SEVERITY_ORDER = {"高风险": 3, "中高风险": 2.5, "中风险": 2, "低风险": 1, "需人工复核": 0}
@@ -47,9 +49,15 @@ STANDARD_CLUSTER_SUPPRESSION_RULES = {
 }
 TITLE_IMPORT_CONSISTENCY_RE = re.compile(r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失)")
 TITLE_CERT_SCORING_RE = re.compile(r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会)")
-TITLE_SCORING_CLARITY_RE = re.compile(r"(评分档次缺少量化口径|评分标准中“施工组织方案”分值设置逻辑混乱|评分标准逻辑混乱，方案评分叠加方式不明)")
+TITLE_SCORING_CLARITY_RE = re.compile(
+    r"(评分档次缺少量化口径|评分标准中“施工组织方案”分值设置逻辑混乱|评分标准逻辑混乱，方案评分叠加方式不明|"
+    r"评分标准不明确，存在逻辑矛盾|评分档次缺少量化口径，主观分值裁量空间过大|主观分值裁量空间过大|评分口径前后不一致)"
+)
 TITLE_PERSONNEL_SCORING_RE = re.compile(r"(评分项分值设置畸高，人员职称与业绩分值占比过大|项目负责人评分中“学历”和“职称”分值权重过高)")
-TITLE_CONTRACT_TEMPLATE_RE = re.compile(r"(关键合同条款数值缺失|合同验收时点留白|违约责任与赔偿条款缺失)")
+TITLE_CONTRACT_TEMPLATE_RE = re.compile(
+    r"(关键合同条款数值缺失|合同验收时点留白|违约责任与赔偿条款缺失|"
+    r"关键商务条款数据缺失，合同无法执行|履约保证金退还期限未定，存在资金占用风险|验收标准模糊，采购人单方裁量权过大)"
+)
 TITLE_INTERNAL_SCORE_WEIGHT_RE = re.compile(r"(三体系认证分值设置过高|分值设置畸高)")
 TITLE_POLICY_MISSING_RE = re.compile(r"(中小企业扶持政策落实条款缺失|节能环保产品政策落实条款缺失)")
 TITLE_CERT_MISSING_RE = re.compile(r"(检测认证要求表述缺失)")
@@ -57,7 +65,7 @@ TITLE_ANNOUNCEMENT_RE = re.compile(r"(澄清/修改截止时间未明确填写)"
 TITLE_IMPORT_ITSELF_RE = re.compile(r"(进口产品禁止性规定表述过于绝对)")
 TITLE_SOCIAL_SECURITY_RE = re.compile(r"(人员社保要求存在特殊豁免)")
 TITLE_BRAND_DISCLOSURE_RE = re.compile(r"(指定具体品牌和型号要求不明确)")
-TITLE_DIMENSION_RE = re.compile(r"(双电源切换柜.*尺寸要求过于具体)")
+TITLE_DIMENSION_RE = re.compile(r"(双电源切换柜.*(尺寸要求过于具体|尺寸允许偏差过大))")
 TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
 TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险)")
 TITLE_ELECTRONIC_SIGNATURE_RE = re.compile(r"(‘不盖章’的表述存在合规风险|不盖章)")
@@ -83,6 +91,8 @@ def _clean_topic_label(topic_key: str) -> str:
         "procedure": "程序条款",
         "policy": "政策条款",
         "cross_topic": "跨专题",
+        "technical": "技术条款",
+        "contract": "合同条款",
     }.get(topic_key, topic_key)
 
 
@@ -146,6 +156,13 @@ def _compact_sentences(sentences: list[str], limit: int = 2) -> list[str]:
         if len(result) >= limit:
             break
     return result
+
+
+def _compact_rule_locations(locations: list[str], limit: int = 2) -> list[str]:
+    explicit = [str(item).strip() for item in locations if str(item).strip() and not str(item).strip().startswith("内置规则库：")]
+    builtin = [str(item).strip() for item in locations if str(item).strip().startswith("内置规则库：")]
+    ordered = explicit or builtin
+    return dedupe(ordered)[:limit]
 
 
 def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str) -> RiskSignature:
@@ -335,16 +352,115 @@ def _cluster_group_key(title: str) -> str:
 
 def _build_topic_signal_map(topics: list[TopicReviewArtifact]) -> dict[str, dict]:
     topic_map: dict[str, dict] = {}
+    for view in _iter_topic_signal_views(topics):
+        info = topic_map.setdefault(
+            view["topic"],
+            {
+                "need_manual_review": False,
+                "missing_evidence": [],
+                "selected_sections": [],
+                "structured_signals": {},
+            },
+        )
+        info["need_manual_review"] = bool(info["need_manual_review"] or view["need_manual_review"])
+        info["missing_evidence"] = dedupe(
+            [str(item).strip() for item in info["missing_evidence"] + view["missing_evidence"] if str(item).strip()]
+        )
+        info["selected_sections"] = _merge_section_lists(info["selected_sections"], view["selected_sections"])
+        info["structured_signals"] = _merge_structured_signals(info["structured_signals"], view["structured_signals"])
+    return topic_map
+
+
+def _canonical_topic_keys(topic_key: str) -> list[str]:
+    if topic_key == "technical":
+        return ["technical_standard"]
+    if topic_key == "contract":
+        return ["contract_payment", "acceptance"]
+    return [topic_key]
+
+
+def _merge_structured_signals(base: dict, extra: dict) -> dict:
+    merged = dict(base or {})
+    for key, value in (extra or {}).items():
+        if isinstance(value, list):
+            current = merged.get(key, [])
+            if all(isinstance(item, dict) for item in [*current, *value] if item is not None):
+                merged[key] = _merge_section_lists(list(current), list(value))
+            else:
+                merged[key] = dedupe([str(item).strip() for item in [*current, *value] if str(item).strip()])
+        elif isinstance(value, dict):
+            current = merged.get(key, {})
+            if isinstance(current, dict):
+                current.update(value)
+                merged[key] = current
+            else:
+                merged[key] = dict(value)
+        elif isinstance(value, bool):
+            merged[key] = bool(merged.get(key, False) or value)
+        elif value not in (None, "", "mixed_or_unclear"):
+            merged[key] = value
+        elif key not in merged:
+            merged[key] = value
+    return merged
+
+
+def _merge_section_lists(current: list[dict], extra: list[dict]) -> list[dict]:
+    merged: list[dict] = list(current or [])
+    seen = {
+        f"{str(item.get('title', '')).strip()}:{item.get('start_line', '')}:{item.get('end_line', '')}"
+        for item in merged
+        if isinstance(item, dict)
+    }
+    for item in extra or []:
+        if not isinstance(item, dict):
+            continue
+        key = f"{str(item.get('title', '')).strip()}:{item.get('start_line', '')}:{item.get('end_line', '')}"
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(item)
+    return merged
+
+
+def _resolve_signal_sections(metadata: dict) -> list[dict]:
+    evidence_bundle = metadata.get("evidence_bundle", {}) if isinstance(metadata.get("evidence_bundle"), dict) else {}
+    sections = evidence_bundle.get("sections", []) if isinstance(evidence_bundle.get("sections"), list) else []
+    if sections:
+        return [section for section in sections if isinstance(section, dict)]
+    selected_sections = metadata.get("selected_sections", []) if isinstance(metadata.get("selected_sections"), list) else []
+    return [section for section in selected_sections if isinstance(section, dict)]
+
+
+def _iter_topic_signal_views(topics: list[TopicReviewArtifact]) -> list[dict]:
+    views: list[dict] = []
     for topic in topics:
         metadata = topic.metadata if isinstance(topic.metadata, dict) else {}
-        structured_signals = metadata.get("structured_signals", {}) if isinstance(metadata.get("structured_signals"), dict) else {}
-        topic_map[topic.topic] = {
-            "need_manual_review": bool(topic.need_manual_review),
-            "missing_evidence": metadata.get("missing_evidence", []),
-            "selected_sections": metadata.get("selected_sections", []),
-            "structured_signals": structured_signals,
-        }
-    return topic_map
+        existing_signals = metadata.get("structured_signals", {}) if isinstance(metadata.get("structured_signals"), dict) else {}
+        selected_sections = metadata.get("selected_sections", []) if isinstance(metadata.get("selected_sections"), list) else []
+        signal_sections = _resolve_signal_sections(metadata)
+        for canonical_key in _canonical_topic_keys(topic.topic):
+            structured_signals = dict(existing_signals)
+            if signal_sections:
+                try:
+                    definition = get_topic_definition(canonical_key)
+                except KeyError:
+                    definition = None
+                if definition is not None:
+                    structured_signals = _merge_structured_signals(
+                        structured_signals,
+                        _build_structured_signals(definition, signal_sections),
+                    )
+            views.append(
+                {
+                    "topic": canonical_key,
+                    "original_topic": topic.topic,
+                    "need_manual_review": bool(topic.need_manual_review),
+                    "missing_evidence": metadata.get("missing_evidence", []) if isinstance(metadata.get("missing_evidence"), list) else [],
+                    "selected_sections": selected_sections or signal_sections,
+                    "structured_signals": structured_signals,
+                }
+            )
+    return views
 
 
 def _is_poor_excerpt(text: str) -> bool:
@@ -620,7 +736,7 @@ def _build_cross_topic_star_marker_cluster(
     clause_texts = [str(item.get("clause_text", "")).strip() for item in offending_clauses if str(item.get("clause_text", "")).strip()]
     source_location_parts = []
     if scoring_locations:
-        source_location_parts.append("评审规则：" + "；".join(scoring_locations[:2]))
+        source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(scoring_locations)))
     if technical_locations:
         source_location_parts.append("技术条款：" + "；".join(technical_locations[:2]))
     source_excerpt_parts = []
@@ -660,7 +776,7 @@ def _build_cross_topic_acceptance_plan_scoring_cluster(
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if rule_locations:
-        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+        source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
     if scoring_locations:
         source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
 
@@ -711,7 +827,7 @@ def _build_cross_topic_payment_terms_scoring_cluster(
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if rule_locations:
-        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+        source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
     if scoring_locations:
         source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
 
@@ -753,7 +869,7 @@ def _build_cross_topic_gifts_or_goods_scoring_cluster(
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if rule_locations:
-        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+        source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
     if scoring_locations:
         source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
 
@@ -795,7 +911,7 @@ def _build_cross_topic_specific_cert_or_supplier_scoring_cluster(
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if rule_locations:
-        source_location_parts.append("评审规则：" + "；".join(rule_locations[:2]))
+        source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
     if scoring_locations:
         source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
 
@@ -838,7 +954,7 @@ def _build_acceptance_testing_cost_shift_cluster(
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if rule_locations:
-        source_location_parts.append("规则条款：" + "；".join(rule_locations[:2]))
+        source_location_parts.append("规则条款：" + "；".join(_compact_rule_locations(rule_locations)))
     if demand_locations:
         source_location_parts.append("需求条款：" + "；".join(demand_locations[:2]))
 
@@ -877,6 +993,7 @@ def compare_review_artifacts(
     topics: list[TopicReviewArtifact],
 ) -> ComparisonArtifact:
     baseline_report = parse_review_markdown(baseline.content)
+    topic_signal_views = _iter_topic_signal_views(topics)
     signatures: list[RiskSignature] = []
     grouped: dict[str, list[tuple[RiskPoint, str, str]]] = {}
     baseline_signature_keys: set[str] = set()
@@ -945,11 +1062,12 @@ def compare_review_artifacts(
             signatures.append(signature)
             grouped.setdefault(key, []).append((risk, topic.topic, "topic"))
             topic_signature_keys.add(key)
-        metadata = topic.metadata if isinstance(topic.metadata, dict) else {}
-        structured_signals = metadata.get("structured_signals", {}) if isinstance(metadata.get("structured_signals", {}), dict) else {}
-        selected_sections = metadata.get("selected_sections", []) if isinstance(metadata.get("selected_sections", []), list) else []
+    for view in topic_signal_views:
+        topic_key = str(view.get("topic", "")).strip()
+        structured_signals = view.get("structured_signals", {}) if isinstance(view.get("structured_signals", {}), dict) else {}
+        selected_sections = view.get("selected_sections", []) if isinstance(view.get("selected_sections", []), list) else []
         section_titles = [str(section.get("title", "")).strip() for section in selected_sections if isinstance(section, dict) and str(section.get("title", "")).strip()]
-        if topic.topic in policy_signal_topics:
+        if topic_key in policy_signal_topics:
             policy_value = str(structured_signals.get("import_policy", "")).strip()
             if policy_value:
                 import_policy_values.append(policy_value)
@@ -966,13 +1084,13 @@ def compare_review_artifacts(
                 if isinstance(structured_signals.get("import_policy_sentences", []), list)
                 else []
             )
-            policy_locations_by_topic[topic.topic] = dedupe(
-                policy_locations_by_topic.get(topic.topic, []) + topic_policy_locations
+            policy_locations_by_topic[topic_key] = dedupe(
+                policy_locations_by_topic.get(topic_key, []) + topic_policy_locations
             )
-            policy_sentences_by_topic[topic.topic] = dedupe(
-                policy_sentences_by_topic.get(topic.topic, []) + topic_policy_sentences
+            policy_sentences_by_topic[topic_key] = dedupe(
+                policy_sentences_by_topic.get(topic_key, []) + topic_policy_sentences
             )
-        if topic.topic == "technical_standard":
+        if topic_key == "technical_standard":
             foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
             cn_refs.extend([str(item).strip() for item in structured_signals.get("cn_standard_refs", []) if str(item).strip()])
             has_equivalent_standard_clause = has_equivalent_standard_clause or bool(
@@ -998,7 +1116,7 @@ def compare_review_artifacts(
                 for item in clause_flags:
                     if isinstance(item, dict):
                         star_marker_candidate_clauses.append(item)
-        if topic.topic == "scoring":
+        if topic_key == "scoring":
             star_required_for_gb_non_t = star_required_for_gb_non_t or bool(structured_signals.get("star_required_for_gb_non_t", False))
             star_required_for_mandatory_standard = star_required_for_mandatory_standard or bool(
                 structured_signals.get("star_required_for_mandatory_standard", False)
@@ -1099,7 +1217,7 @@ def compare_review_artifacts(
             specific_cert_or_supplier_score_linked = specific_cert_or_supplier_score_linked or bool(
                 structured_signals.get("specific_cert_or_supplier_score_linked", False)
             )
-        if topic.topic == "acceptance":
+        if topic_key == "acceptance":
             acceptance_testing_cost_forbidden_to_bidder = acceptance_testing_cost_forbidden_to_bidder or bool(
                 structured_signals.get("acceptance_testing_cost_forbidden_to_bidder", False)
             )
