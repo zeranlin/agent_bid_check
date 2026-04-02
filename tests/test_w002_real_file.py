@@ -24,6 +24,7 @@ from app.web.v2_app import build_review_view
 
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
 W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
+W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-rerun/topic_reviews")
 
 
 def _build_settings() -> ReviewSettings:
@@ -215,6 +216,30 @@ def _build_w005_source_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[
     return structure, evidence, topics
 
 
+def _build_w006_source_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    text = extract_text(REAL_FILE)
+    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+    topics: list[TopicReviewArtifact] = []
+    for path in sorted(W006_SOURCE_RUN.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topics.append(
+            TopicReviewArtifact(
+                topic=payload.get("topic", path.stem),
+                summary=payload.get("summary", ""),
+                risk_points=[RiskPoint(**risk) for risk in payload.get("risk_points", [])],
+                need_manual_review=payload.get("need_manual_review", False),
+                coverage_note=payload.get("coverage_note", ""),
+                metadata=dict(payload.get("metadata", {}) or {}),
+            )
+        )
+    baseline = V2StageArtifact(
+        name="baseline",
+        content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n",
+    )
+    return structure, evidence, topics
+
+
 def test_w002_real_file_compare_matrix_is_complete() -> None:
     structure, evidence, topics = _build_real_file_topics()
     comparison = compare_review_artifacts(REAL_FILE.name, V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n"), topics)
@@ -295,3 +320,51 @@ def test_w005_real_file_full_run_topics_are_refined_to_target_matrix() -> None:
     assert "履约保证金退还期限未定，存在资金占用风险" in excluded_titles
     assert "验收标准模糊，采购人单方裁量权过大" in excluded_titles
     assert "双电源切换柜尺寸允许偏差过大，可能不符合电气安装规范" in pending_titles
+
+
+def test_w006_real_file_output_is_layered_correctly() -> None:
+    structure, evidence, replay_topics = _build_w006_source_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
+
+    for title in [
+        "付款条款关键数据缺失，无法评估公平性与节点衔接",
+        "合同验收时点条款留白，验收流程缺乏明确的可操作性",
+        "履约保证金金额及退还期限未明确",
+        "验收期限留白，影响付款节点触发",
+        "质量保证金及违约责任条款缺失",
+        "标准编号与名称引用混乱且缺失版本信息",
+        "燃油标准引用可能涉及废止或滞后版本",
+        "澄清截止时间未明确填写",
+        "采购标的所属行业未明确，影响中小企业声明函填写",
+        "人员社保证明要求存在特殊豁免，需防范虚假人员风险",
+        "电子投标文件容量限制可能增加投标负担",
+    ]:
+        assert title not in formal_titles
+
+    for title in [
+        "具体资格条款缺失，无法判断是否存在排斥性要求",
+        "关键人员配置及业绩要求证据缺失，需人工复核",
+        "政策导向章节内容缺失，无法确认节能环保等政策落实情况",
+        "缺失检测报告及认证要求的具体规定",
+        "三体系认证设置高分值，需评估与项目履约的关联性",
+        "业绩评分内容与采购标的履约能力关联度存疑",
+    ]:
+        assert title in pending_titles
+
+    for title in [
+        "付款条款关键数据缺失，无法评估公平性与节点衔接",
+        "合同验收时点条款留白，验收流程缺乏明确的可操作性",
+        "履约保证金金额及退还期限未明确",
+        "验收期限留白，影响付款节点触发",
+        "质量保证金及违约责任条款缺失",
+        "澄清截止时间未明确填写",
+        "采购标的所属行业未明确，影响中小企业声明函填写",
+        "人员社保证明要求存在特殊豁免，需防范虚假人员风险",
+        "电子投标文件容量限制可能增加投标负担",
+    ]:
+        assert title in excluded_titles

@@ -47,7 +47,10 @@ STANDARD_CLUSTER_SUPPRESSION_RULES = {
         ),
     ),
 }
-TITLE_IMPORT_CONSISTENCY_RE = re.compile(r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失)")
+TITLE_IMPORT_CONSISTENCY_RE = re.compile(
+    r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失|"
+    r"标准编号与名称引用混乱且缺失版本信息|燃油标准引用可能涉及废止或滞后版本)"
+)
 TITLE_CERT_SCORING_RE = re.compile(r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会)")
 TITLE_SCORING_CLARITY_RE = re.compile(
     r"(评分档次缺少量化口径|评分标准中“施工组织方案”分值设置逻辑混乱|评分标准逻辑混乱，方案评分叠加方式不明|"
@@ -70,12 +73,28 @@ TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
 TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险)")
 TITLE_ELECTRONIC_SIGNATURE_RE = re.compile(r"(‘不盖章’的表述存在合规风险|不盖章)")
 TITLE_TRUNCATED_EVIDENCE_RE = re.compile(r"(质疑处理章节内容不完整)")
-TITLE_PENDING_QUALIFICATION_RE = re.compile(r"(具体资格条件内容缺失)")
+TITLE_PENDING_QUALIFICATION_RE = re.compile(r"(具体资格条件内容缺失|具体资格条款缺失)")
 TITLE_PENDING_WASTE_RE = re.compile(r"(废标条件及最终解释权条款证据缺失)")
 TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理)")
 TITLE_ORIGINAL_ENGINEER_RE = re.compile(r"(制造商原厂工程师)")
 TITLE_ACCEPTANCE_STANDARD_RE = re.compile(r"(验收标准表述模糊)")
 TITLE_SHORT_WINDOW_RE = re.compile(r"(业绩评分中时间范围设定过短)")
+TITLE_CONTRACT_TEMPLATE_STRICT_RE = re.compile(
+    r"(付款条款关键数据缺失，无法评估公平性与节点衔接|合同验收时点条款留白，验收流程缺乏明确的可操作性|"
+    r"履约保证金金额及退还期限未明确|验收期限留白，影响付款节点触发|质量保证金及违约责任条款缺失)"
+)
+TITLE_PENDING_EVIDENCE_RE = re.compile(
+    r"(关键人员配置及业绩要求证据缺失，需人工复核|政策导向章节内容缺失，无法确认节能环保等政策落实情况|"
+    r"缺失检测报告及认证要求的具体规定)"
+)
+TITLE_GENERIC_SCORING_RE = re.compile(
+    r"(三体系认证设置高分值，需评估与项目履约的关联性|业绩评分内容与采购标的履约能力关联度存疑|"
+    r"项目负责人学历、职称及相关经验被纳入评分因素，需进一步论证其与项目履约能力的直接关联性)"
+)
+TITLE_BOUNDARY_LIGHT_RE = re.compile(
+    r"(澄清截止时间未明确填写|采购标的所属行业未明确，影响中小企业声明函填写|"
+    r"人员社保证明要求存在特殊豁免，需防范虚假人员风险|电子投标文件容量限制可能增加投标负担)"
+)
 
 
 def _clean_topic_label(topic_key: str) -> str:
@@ -526,7 +545,7 @@ def _refine_clusters_for_maturity(
             merged_groups.setdefault(group_key, []).append(cluster)
             continue
 
-        if TITLE_CONTRACT_TEMPLATE_RE.search(title):
+        if TITLE_CONTRACT_TEMPLATE_RE.search(title) or TITLE_CONTRACT_TEMPLATE_STRICT_RE.search(title):
             excluded_risks.append(_build_excluded_item(cluster, "证据来自合同模板区/仅供参考区，按边界规则不进入正式风险。"))
             continue
 
@@ -567,6 +586,10 @@ def _refine_clusters_for_maturity(
             excluded_risks.append(_build_excluded_item(cluster, "当前属于合理例外说明场景，未见明显失衡或异常豁免，不作为正式风险。"))
             continue
 
+        if TITLE_BOUNDARY_LIGHT_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "当前属于边界提示或承接字段场景，缺少高确定性项目规则依据，不作为正式风险。"))
+            continue
+
         if TITLE_BRAND_DISCLOSURE_RE.search(title) and (
             qualification_signals.get("brand_disclosure_only_present") or "提供品牌、规格和型号" in signal_text
         ):
@@ -592,6 +615,11 @@ def _refine_clusters_for_maturity(
         if TITLE_PAYMENT_REVIEW_RE.search(title):
             pending_review_items.append(_build_pending_item(cluster, "付款与履约"))
             pending_review_items[-1]["reason"] = "付款链路尚需结合预付款、中间款、尾款和最长账期整体复核，先降为待补证复核项。"
+            continue
+
+        if TITLE_GENERIC_SCORING_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "评分办法"))
+            pending_review_items[-1]["reason"] = "当前更多体现为分值关联性或权重合理性待核查，证据不足以直接作为正式风险定性。"
             continue
 
         if TITLE_ELECTRONIC_SIGNATURE_RE.search(title) and (
@@ -628,6 +656,11 @@ def _refine_clusters_for_maturity(
             pending_review_items[-1]["reason"] = "资格条件全文未完整召回，当前仅保留为待补证复核项。"
             continue
 
+        if TITLE_PENDING_EVIDENCE_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
+            pending_review_items[-1]["reason"] = "当前属于证据召回不足或承接字段未完整展开场景，先转为待补证复核项。"
+            continue
+
         if TITLE_PENDING_WASTE_RE.search(title):
             pending_review_items.append(_build_pending_item(cluster, "程序条款"))
             pending_review_items[-1]["reason"] = "当前未检到对应原文证据，先转为待补证复核项。"
@@ -653,7 +686,12 @@ def _refine_clusters_for_maturity(
         refined.append(cluster)
 
     for group_key, group_clusters in merged_groups.items():
-        refined.append(_merge_cluster_group(group_key, group_clusters))
+        merged_cluster = _merge_cluster_group(group_key, group_clusters)
+        if group_key == "personnel_scoring":
+            pending_review_items.append(_build_pending_item(merged_cluster, "评分办法"))
+            pending_review_items[-1]["reason"] = "当前更多体现为人员条件与履约关联性待核查，证据不足以直接作为正式风险定性。"
+            continue
+        refined.append(merged_cluster)
 
     refined.sort(
         key=lambda cluster: (
