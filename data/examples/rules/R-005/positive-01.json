@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-005",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_gifts_positive_008",
+  "note": "赠送额外商品进入评分项正样本。"
+}
+

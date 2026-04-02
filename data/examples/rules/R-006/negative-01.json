@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-006",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_specific_cert_negative_generic_proof_009",
+  "note": "仅一般合规证明材料的负样本。"
+}
+

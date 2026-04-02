@@ -1,0 +1,90 @@
+rule_id: R-000
+rule_name: 在这里填写规则名称
+rule_version: 1
+status: draft
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 在这里填写规则来源说明
+  created_date: YYYY-MM-DD
+  last_updated_date: YYYY-MM-DD
+
+classification:
+  category: 在这里填写业务分类
+  rule_type: risk_detection
+  target_level: formal
+  severity: medium
+
+summary:
+  business_goal: 在这里填写业务目标
+  reviewer_note: 在这里填写口径说明
+
+trigger_conditions:
+  all_of:
+    - 在这里填写必须同时满足的触发条件
+  any_of:
+    - 在这里填写可选触发条件
+
+exclude_conditions:
+  any_of:
+    - 在这里填写不应触发的排除条件
+
+downgrade_conditions:
+  any_of:
+    - 在这里填写应降级为待补证或排除的条件
+
+output:
+  formal_title: 在这里填写正式风险标题
+  pending_title: 在这里填写待补证复核标题
+  excluded_title: 在这里填写已剔除误报标题
+  formal_description: 在这里填写正式风险描述
+  remediation_advice: 在这里填写整改建议
+
+evidence_hints:
+  keywords:
+    - 在这里填写关键词
+  sections:
+    - 在这里填写重点章节
+
+samples:
+  positive:
+    - data/examples/rules/R-000/positive-01.json
+  negative:
+    - data/examples/rules/R-000/negative-01.json
+  replay:
+    - data/examples/rules/R-000/replay-01.json
+
+tests:
+  unit:
+    - tests/rules/test_R_000.py
+  replay:
+    - tests/replays/test_R_000.py
+  report:
+    - tests/reports/test_R_000.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-000.md
+  followup_tasks:
+    - docs/tasks/W-000.md
+  acceptance_records:
+    - docs/acceptance/R-000.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: YYYY-MM-DD
+    change: 初始创建
+    author: M
+

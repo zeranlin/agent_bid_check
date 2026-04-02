@@ -1,0 +1,94 @@
+rule_id: R-EXAMPLE
+rule_name: 示例规则骨架
+rule_version: 1
+status: draft
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: governance_example
+  origin_desc: G-001 治理骨架搭建阶段提供的示例规则
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: governance_demo
+  rule_type: risk_detection
+  target_level: formal
+  severity: medium
+
+summary:
+  business_goal: 演示规则注册表的完整字段结构
+  reviewer_note: 后续新增规则时应基于模板复制并按真实口径填写
+
+trigger_conditions:
+  all_of:
+    - 命中明确业务禁令
+    - 命中与禁令冲突的正文约束
+  any_of:
+    - 命中真实文件样本
+
+exclude_conditions:
+  any_of:
+    - 仅为背景介绍，不构成约束
+    - 已明确说明等效条件可接受
+
+downgrade_conditions:
+  any_of:
+    - 证据仅覆盖摘要，未覆盖完整条款
+    - 命中弱信号但缺少打分或验收约束
+
+output:
+  formal_title: 示例正式风险标题
+  pending_title: 示例待补证复核标题
+  excluded_title: 示例已剔除误报标题
+  formal_description: 这是一个用于治理骨架校验的示例正式输出文案。
+  remediation_advice: 按真实规则补齐正式文案、整改建议和层级口径。
+
+evidence_hints:
+  keywords:
+    - 示例关键词
+    - 业务禁令
+  sections:
+    - 评分标准
+    - 技术条款
+
+samples:
+  positive:
+    - data/examples/rules/R-EXAMPLE/positive-01.json
+  negative:
+    - data/examples/rules/R-EXAMPLE/negative-01.json
+  replay:
+    - data/examples/rules/R-EXAMPLE/replay-01.json
+
+tests:
+  unit:
+    - tests/test_rule_governance.py
+  replay:
+    - tests/test_rule_governance.py
+  report:
+    - tests/test_rule_governance.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/Task-G1-governance-foundation.md
+  followup_tasks:
+    - docs/tasks/Task-G2-output-single-source.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - governance
+    - registry
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: 初始示例规则创建
+    author: T
+

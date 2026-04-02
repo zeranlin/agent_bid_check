@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-007",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_acceptance_testing_cost_negative_selfcheck_010",
+  "note": "仅自检成本不应触发的负样本。"
+}
+

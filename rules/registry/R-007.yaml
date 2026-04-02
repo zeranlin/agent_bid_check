@@ -1,0 +1,101 @@
+rule_id: R-007
+rule_name: 验收检测费用转嫁识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 需求合规规则要求不得要求中标人承担验收产生的检测费用
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: demand_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: medium
+
+summary:
+  business_goal: 识别将验收检测、相关部门验收等费用笼统计入投标人承担范围的场景
+  reviewer_note: 需区分正常履约自检成本与验收阶段第三方/法定检测费用
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中不得要求中标人承担验收产生的检测费用
+    - 需求侧命中检测、相关部门验收等费用计入投标总价
+    - 存在将验收检测成本转嫁给中标人的信号
+  any_of:
+    - comparison.failure_reason_codes 命中 acceptance_testing_cost_shifted_to_bidder
+
+exclude_conditions:
+  any_of:
+    - 仅表述履约自检、调试或试运行成本
+    - 未形成专项检测、第三方检测或法定检测费用转嫁
+
+downgrade_conditions:
+  any_of:
+    - 条款未明确检测类型，边界仍需人工核实
+
+output:
+  formal_title: 验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险
+  pending_title: 验收检测费用承担边界可能不清，建议人工复核
+  excluded_title: 仅为正常履约自检成本，不构成正式风险
+  formal_description: 条款将检测、相关部门验收等费用笼统纳入投标总价，未区分正常履约成本与验收阶段专项检测费用，存在潜在转嫁风险。
+  remediation_advice: 明确区分履约自检、试运行与验收阶段检测费用，补充检测类型、承担主体和合规依据。
+
+evidence_hints:
+  keywords:
+    - 不得要求中标人承担验收产生的检测费用
+    - 检测
+    - 相关部门验收
+    - 一切费用
+  sections:
+    - 需求条款
+    - 商务要求
+    - 验收与交付
+
+samples:
+  positive:
+    - data/examples/rules/R-007/positive-01.json
+  negative:
+    - data/examples/rules/R-007/negative-01.json
+  replay:
+    - data/examples/rules/R-007/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-007.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

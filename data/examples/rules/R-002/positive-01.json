@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-002",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_star_marker_missing_positive_005",
+  "note": "GB 非 GB/T 且未加星标正样本。"
+}
+

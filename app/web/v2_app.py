@@ -436,6 +436,88 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
     }
 
 
+def build_review_view_from_final_output(final_output: dict, comparison: dict | None = None) -> dict:
+    if not isinstance(final_output, dict):
+        return build_review_view(parse_review_markdown(""), comparison)
+
+    summary_counts = {key: 0 for key in SEVERITY_ORDER}
+    type_counts: dict[str, int] = {}
+    grouped = {key: [] for key in SEVERITY_ORDER}
+    cluster_map: dict[str, dict] = {}
+    if isinstance(comparison, dict):
+        for cluster in comparison.get("clusters", []) or []:
+            if not isinstance(cluster, dict):
+                continue
+            key = _normalize_compare_key(str(cluster.get("title", "")), str(cluster.get("review_type", "")))
+            cluster_map[key] = cluster
+
+    all_cards: list[dict] = []
+    for index, risk in enumerate(final_output.get("formal_risks", []) or [], start=1):
+        if not isinstance(risk, dict):
+            continue
+        severity = str(risk.get("severity", "")).strip()
+        severity = severity if severity in grouped else "需人工复核"
+        summary_counts[severity] += 1
+        review_type = str(risk.get("review_type", "")).strip() or "未分类"
+        type_counts[review_type] = type_counts.get(review_type, 0) + 1
+        title = str(risk.get("title", "")).strip() or f"风险点{index}"
+        cluster = cluster_map.get(_normalize_compare_key(title, review_type), {})
+        source_tags = [str(item) for item in cluster.get("source_rules", []) if str(item).strip()]
+        source_topics = [str(item) for item in cluster.get("topics", []) if str(item).strip() and str(item).strip() != "baseline"]
+        is_standard_compare = "compare_rule" in source_tags
+        conflict_notes = [str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()]
+        manual_reasons: list[str] = []
+        if cluster.get("need_manual_review"):
+            manual_reasons.extend(conflict_notes)
+        if severity == "需人工复核" and not manual_reasons:
+            manual_reasons.append("当前风险点仍建议人工复核。")
+        risk_judgment = [str(item) for item in risk.get("risk_judgment", []) if str(item).strip()]
+        legal_basis = [str(item) for item in risk.get("legal_basis", []) if str(item).strip()]
+        rectification = [str(item) for item in risk.get("rectification", []) if str(item).strip()]
+        card = {
+            "index": index,
+            "title": title,
+            "severity": severity,
+            "severity_class": severity.replace("风险", "") if severity != "需人工复核" else "manual",
+            "review_type": review_type,
+            "source_location": str(risk.get("source_location", "")).strip() or "未发现",
+            "source_excerpt": str(risk.get("source_excerpt", "")).strip() or "未发现",
+            "risk_judgment": risk_judgment,
+            "legal_basis": legal_basis,
+            "rectification": rectification,
+            "source_tags": source_tags,
+            "source_topics": [TOPIC_LABELS.get(item, item) for item in source_topics],
+            "conflict_notes": conflict_notes,
+            "manual_reasons": manual_reasons,
+            "is_standard_compare": is_standard_compare,
+            "judgment_preview": (risk_judgment[0] if risk_judgment else "需人工复核"),
+            "source_location_preview": (str(risk.get("source_location", "")).strip() or "未发现").splitlines()[0][:48],
+        }
+        grouped[severity].append(card)
+        all_cards.append(card)
+
+    sections = [
+        {"severity": severity, "count": len(grouped[severity]), "cards": grouped[severity]}
+        for severity in SEVERITY_ORDER
+        if grouped[severity]
+    ]
+    severity_rank = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
+    all_cards.sort(
+        key=lambda item: (
+            severity_rank.get(item["severity"], len(SEVERITY_ORDER)),
+            not bool(item["is_standard_compare"]),
+            item["index"],
+        )
+    )
+    return {
+        "summary_counts": summary_counts,
+        "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
+        "sections": sections,
+        "total": len(all_cards),
+        "all_cards": all_cards,
+    }
+
+
 def build_comparison_view(comparison: dict) -> dict:
     if not isinstance(comparison, dict) or not any(
         key in comparison
@@ -563,6 +645,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
     review_path = run_dir / "review.md"
     overview_path = run_dir / "v2_overview.json"
     comparison_path = run_dir / "comparison.json"
+    final_output_path = run_dir / "final_output.json"
     topic_dir = run_dir / "topic_reviews"
     if not review_path.exists():
         return None
@@ -585,6 +668,12 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
         except Exception:
             comparison = {}
+    final_output = {}
+    if final_output_path.exists():
+        try:
+            final_output = json.loads(final_output_path.read_text(encoding="utf-8"))
+        except Exception:
+            final_output = {}
     topics: list[dict] = []
     if topic_dir.exists():
         for path in sorted(topic_dir.glob("*.json")):
@@ -597,15 +686,17 @@ def load_result_by_run_id(run_id: str) -> dict | None:
                 continue
     topic_view = build_topic_view(topics, overview)
     report = parse_review_markdown(final_markdown)
+    review_view = build_review_view_from_final_output(final_output, comparison) if final_output else build_review_view(report, comparison)
     return {
         "run_id": run_id,
         "created_at": meta.get("created_at", ""),
         "original_filename": meta.get("original_filename", run_id),
         "review_final_markdown": final_markdown,
         "review_html": Markup(render_markdown(final_markdown)),
-        "review_view": build_review_view(report, comparison),
+        "review_view": review_view,
         "overview": overview,
         "comparison": comparison,
+        "final_output": final_output,
         "comparison_view": build_comparison_view(comparison),
         "topics": topics,
         "topic_view": topic_view,

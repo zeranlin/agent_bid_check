@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-003",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_acceptance_plan_positive_006",
+  "note": "验收方案进入评分项正样本。"
+}
+

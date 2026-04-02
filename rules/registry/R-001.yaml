@@ -1,0 +1,99 @@
+rule_id: R-001
+rule_name: 拒绝进口与外标引用冲突识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: real_case_issue
+  origin_desc: 基于真实文件与跨专题冲突整改形成的成熟规则
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: policy_consistency
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别非进口项目中政策口径与外标引用并存的冲突风险
+  reviewer_note: 外标引用本身不当然违规，但在拒绝进口场景下需重点审查
+
+trigger_conditions:
+  all_of:
+    - 存在拒绝进口或不接受进口产品表述
+    - 存在 BS EN、EN、IEC、UL 等国外标准或国外部件约束
+  any_of:
+    - comparison.failure_reason_codes 命中 policy_technical_inconsistency
+
+exclude_conditions:
+  any_of:
+    - 已明确同等或等效标准可接受
+    - 外标仅作背景参考，不作为技术或验收约束
+
+downgrade_conditions:
+  any_of:
+    - 仅命中背景介绍，未形成采购、技术或验收约束
+
+output:
+  formal_title: 非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险
+  pending_title: 外标引用与采购政策口径可能存在不一致，建议人工复核
+  excluded_title: 外标引用仅为参考性说明，不构成正式风险
+  formal_description: 非进口采购口径、国外标准引用及国外部件相关表述并存，容易导致供应商对可投范围和验收依据理解不一致。
+  remediation_advice: 明确采用国标/行标或说明等效标准可接受，避免形成政策与技术口径冲突。
+
+evidence_hints:
+  keywords:
+    - 不接受投标人选用进口产品
+    - BS EN
+    - EN55011
+    - IEC 61000
+  sections:
+    - 采购政策
+    - 技术参数
+    - 技术标准要求
+
+samples:
+  positive:
+    - data/examples/rules/R-001/positive-01.json
+  negative:
+    - data/examples/rules/R-001/negative-01.json
+  replay:
+    - data/examples/rules/R-001/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-001.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

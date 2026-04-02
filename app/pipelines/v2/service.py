@@ -7,7 +7,7 @@ from typing import Callable
 from app.common.file_extract import extract_document_text
 from app.config import ReviewSettings
 
-from .assembler import assemble_v2_report, build_v2_overview
+from .assembler import assemble_v2_report, build_v2_final_output, build_v2_overview
 from .baseline import run_baseline_review
 from .compare import compare_review_artifacts, comparison_to_json
 from .evidence import build_evidence_map
@@ -94,6 +94,20 @@ def save_review_artifacts_v2(artifacts: V2ReviewArtifacts, output_dir: Path) -> 
         (output_dir / "evidence_map.json").write_text(artifacts.evidence.content, encoding="utf-8")
     if artifacts.comparison is not None:
         (output_dir / "comparison.json").write_text(comparison_to_json(artifacts.comparison), encoding="utf-8")
+        (output_dir / "final_output.json").write_text(
+            json.dumps(
+                build_v2_final_output(
+                    "",
+                    artifacts.baseline,
+                    artifacts.structure,
+                    artifacts.topics,
+                    comparison=artifacts.comparison,
+                ),
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
     (output_dir / "review.md").write_text(artifacts.final_markdown, encoding="utf-8")
     (output_dir / "final_review.md").write_text(artifacts.final_markdown, encoding="utf-8")
     (output_dir / "v2_overview.json").write_text(

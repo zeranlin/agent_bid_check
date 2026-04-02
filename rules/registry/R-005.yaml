@@ -1,0 +1,100 @@
+rule_id: R-005
+rule_name: 赠品及无关商品禁入评分识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 评审规则要求不得提供赠品、回扣或与采购无关的其他商品、服务
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别通过赠送额外商品或无关服务获取评分优势的场景
+  reviewer_note: 需避免将正常服务响应或采购标的本身误判为赠品
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中不得提供赠品或与采购无关商品服务
+    - 评分项命中赠送额外商品、办公设备或无关服务内容
+    - 上述内容与得分直接挂钩
+  any_of:
+    - comparison.failure_reason_codes 命中 gifts_or_unrelated_goods_in_scoring_forbidden
+
+exclude_conditions:
+  any_of:
+    - 仅承诺正常售后响应时间
+    - 相关商品本身属于采购标的
+
+downgrade_conditions:
+  any_of:
+    - 服务内容与采购标的存在弱相关性，需进一步人工核边界
+
+output:
+  formal_title: 将赠送额外商品作为评分条件，违反评审规则合规性要求
+  pending_title: 评分项可能引入赠品或无关商品服务，建议人工复核
+  excluded_title: 相关表述未构成赠品或无关商品评分，不构成正式风险
+  formal_description: 评分条件通过赠送额外商品、办公设备或与采购无关的服务换取加分，属于不当附加交易条件。
+  remediation_advice: 删除赠品或无关商品服务加分条件，仅保留与采购标的直接相关的能力评价指标。
+
+evidence_hints:
+  keywords:
+    - 不得要求提供赠品
+    - 台式电脑
+    - 打印机
+    - 会议保障
+  sections:
+    - 评分内容
+    - 商务评分
+
+samples:
+  positive:
+    - data/examples/rules/R-005/positive-01.json
+  negative:
+    - data/examples/rules/R-005/negative-01.json
+  replay:
+    - data/examples/rules/R-005/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-005.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 
 from app.common.normalize import dedupe, infer_basis_summary
 from app.common.parser import parse_review_markdown
@@ -98,20 +99,19 @@ def _build_description_lines(structure: V2StageArtifact, topics: list[TopicRevie
     return lines
 
 
-def assemble_v2_report(
+def _build_report(
     document_name: str,
     baseline: V2StageArtifact,
     structure: V2StageArtifact,
     topics: list[TopicReviewArtifact],
-    comparison: ComparisonArtifact | None = None,
-) -> str:
+    comparison: ComparisonArtifact,
+) -> ReviewReport:
     baseline_report = parse_review_markdown(baseline.content)
-    comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
     report = ReviewReport()
     report.subject = baseline_report.subject or document_name
     report.description_lines = _build_description_lines(structure, topics)
     report.risk_points = [_cluster_to_risk_point(cluster) for cluster in comparison.clusters]
-    report.pending_review_items = list(comparison.metadata.get("pending_review_items", [])) if comparison and isinstance(comparison.metadata, dict) else []
+    report.pending_review_items = list(comparison.metadata.get("pending_review_items", [])) if isinstance(comparison.metadata, dict) else []
     report.summary_high_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "高风险"]) or ["未发现"]
     report.summary_medium_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "中风险"]) or ["未发现"]
     report.summary_manual_review = dedupe(
@@ -128,6 +128,55 @@ def assemble_v2_report(
     report.basis_summary = dedupe(basis_items)
     report.ensure_defaults(document_name)
     infer_basis_summary(report)
+    return report
+
+
+def build_v2_final_output(
+    document_name: str,
+    baseline: V2StageArtifact,
+    structure: V2StageArtifact,
+    topics: list[TopicReviewArtifact],
+    comparison: ComparisonArtifact | None = None,
+) -> dict:
+    comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
+    report = _build_report(document_name, baseline, structure, topics, comparison)
+    metadata = comparison.metadata if isinstance(comparison.metadata, dict) else {}
+    return {
+        "subject": report.subject,
+        "description_lines": list(report.description_lines),
+        "formal_risks": [
+            {
+                "title": risk.title,
+                "severity": risk.severity,
+                "review_type": risk.review_type,
+                "source_location": risk.source_location,
+                "source_excerpt": risk.source_excerpt,
+                "risk_judgment": list(risk.risk_judgment),
+                "legal_basis": list(risk.legal_basis),
+                "rectification": list(risk.rectification),
+            }
+            for risk in report.risk_points
+        ],
+        "pending_review_items": deepcopy(list(metadata.get("pending_review_items", []))),
+        "excluded_risks": deepcopy(list(metadata.get("excluded_risks", []))),
+        "summary": {
+            "high_risk_titles": list(report.summary_high_risk),
+            "medium_risk_titles": list(report.summary_medium_risk),
+            "manual_review_titles": list(report.summary_manual_review),
+        },
+        "basis_summary": list(report.basis_summary),
+    }
+
+
+def assemble_v2_report(
+    document_name: str,
+    baseline: V2StageArtifact,
+    structure: V2StageArtifact,
+    topics: list[TopicReviewArtifact],
+    comparison: ComparisonArtifact | None = None,
+) -> str:
+    comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
+    report = _build_report(document_name, baseline, structure, topics, comparison)
     return _render_report(report)
 
 

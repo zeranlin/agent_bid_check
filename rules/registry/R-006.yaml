@@ -1,0 +1,100 @@
+rule_id: R-006
+rule_name: 特定认证及发证机构限定识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 评审规则要求不得限定或指定特定专利、商标、品牌或者供应商
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别通过特定认证证书、特定发证机构或制造商身份获取高分的场景
+  reviewer_note: 应区分一般合规证明与指定认证体系高分条件
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中不得限定特定专利、商标、品牌或供应商
+    - 评分项命中特定认证证书、特定发证机构或制造商身份
+    - 相关证书或主体身份与得分直接挂钩
+  any_of:
+    - comparison.failure_reason_codes 命中 specific_brand_or_supplier_in_scoring_forbidden
+
+exclude_conditions:
+  any_of:
+    - 仅要求一般法定合规证明材料
+    - 未形成特定认证、特定发证机构或特定主体身份限制
+
+downgrade_conditions:
+  any_of:
+    - 认证体系与履约能力关联尚需补证论证
+
+output:
+  formal_title: 以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险
+  pending_title: 认证或发证机构要求可能形成倾向性评分，建议人工复核
+  excluded_title: 认证材料未形成特定认证或供应商限定，不构成正式风险
+  formal_description: 评分项以特定认证证书、特定发证机构或制造商身份设置高分条件，容易形成倾向性评分和限制竞争。
+  remediation_advice: 删除特定认证体系和特定发证机构加分条件，改为与采购标的直接相关的通用能力指标。
+
+evidence_hints:
+  keywords:
+    - 省级标准协会
+    - 采用国际标准产品确认证书
+    - CNAS 中国认可产品标志证书
+    - 制造商
+  sections:
+    - 评分内容
+    - 商务评分
+
+samples:
+  positive:
+    - data/examples/rules/R-006/positive-01.json
+  negative:
+    - data/examples/rules/R-006/negative-01.json
+  replay:
+    - data/examples/rules/R-006/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-006.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

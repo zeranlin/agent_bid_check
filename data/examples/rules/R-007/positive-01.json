@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-007",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_acceptance_testing_cost_positive_010",
+  "note": "验收检测费用转嫁正样本。"
+}
+

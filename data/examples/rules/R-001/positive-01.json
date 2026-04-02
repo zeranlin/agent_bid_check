@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-001",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_policy_technical_import_conflict_a_003",
+  "note": "拒绝进口与外标直引冲突正样本。"
+}
+

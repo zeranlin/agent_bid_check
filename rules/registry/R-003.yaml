@@ -1,0 +1,101 @@
+rule_id: R-003
+rule_name: 验收方案禁入评分识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 评审规则要求不得将项目验收方案作为评审因素
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别验收方案、验收流程、验收资料安排进入评分项的场景
+  reviewer_note: 需区分验收方案仅作为履约要求与实际参与评分两类场景
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中不得将项目验收方案作为评审因素
+    - 评分内容命中验收方案或验收资料安排
+    - 验收内容与加分、得分、档次评分直接挂钩
+  any_of:
+    - comparison.failure_reason_codes 命中 acceptance_plan_in_scoring_forbidden
+
+exclude_conditions:
+  any_of:
+    - 验收内容仅出现在合同、履约或验收章节
+    - 文中仅提验收字样，但未进入评分标准
+
+downgrade_conditions:
+  any_of:
+    - 评分表达只体现实施组织能力，验收内容边界尚需人工复核
+
+output:
+  formal_title: 将项目验收方案纳入评审因素，违反评审规则合规性要求
+  pending_title: 验收方案内容可能进入评分因素，建议人工复核
+  excluded_title: 验收内容未进入评分因素，不构成正式风险
+  formal_description: 评审规则已明确不得将项目验收方案作为评审因素，但当前评分项将验收方案或验收资料安排与得分直接挂钩。
+  remediation_advice: 将验收方案相关内容移出评分项，若确需提出要求应调整至履约或验收管理条款。
+
+evidence_hints:
+  keywords:
+    - 不得将项目验收方案作为评审因素
+    - 项目验收移交衔接方案
+    - 验收资料编制与移交安排
+    - 评价为优得60分
+  sections:
+    - 评审内容
+    - 评审标准
+    - 评分办法
+
+samples:
+  positive:
+    - data/examples/rules/R-003/positive-01.json
+  negative:
+    - data/examples/rules/R-003/negative-01.json
+  replay:
+    - data/examples/rules/R-003/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-003.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

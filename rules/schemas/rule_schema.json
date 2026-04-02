@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rule Registry Schema",
+  "type": "object",
+  "required": [
+    "rule_id",
+    "rule_name",
+    "rule_version",
+    "status",
+    "owner",
+    "source",
+    "classification",
+    "trigger_conditions",
+    "exclude_conditions",
+    "downgrade_conditions",
+    "output",
+    "samples",
+    "tests",
+    "task_refs",
+    "activation",
+    "history"
+  ],
+  "properties": {
+    "rule_id": { "type": "string" },
+    "rule_name": { "type": "string" },
+    "rule_version": { "type": "integer" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "in_progress", "review", "active", "rejected", "deprecated"]
+    },
+    "trigger_conditions": { "type": "object" },
+    "exclude_conditions": { "type": "object" },
+    "downgrade_conditions": { "type": "object" },
+    "output": {
+      "type": "object",
+      "required": ["formal_title"]
+    },
+    "samples": { "type": "object" },
+    "tests": { "type": "object" },
+    "task_refs": { "type": "object" }
+  }
+}
+

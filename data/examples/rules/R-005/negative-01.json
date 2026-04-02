@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-005",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_gifts_negative_service_only_008",
+  "note": "仅服务承诺不应触发赠品规则的负样本。"
+}
+

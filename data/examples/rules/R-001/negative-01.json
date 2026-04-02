@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-001",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_policy_technical_import_negative_c_003",
+  "note": "拒绝进口但允许等效标准负样本。"
+}
+

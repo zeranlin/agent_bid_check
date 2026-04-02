@@ -1,0 +1,101 @@
+rule_id: R-002
+rule_name: 强制性标准条款星标缺失识别
+rule_version: 1
+status: active
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: business_rule
+  origin_desc: 评审规则要求 GB 非 GB/T 或国家强制标准条款必须加注星标
+  created_date: 2026-04-02
+  last_updated_date: 2026-04-02
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: medium
+
+summary:
+  business_goal: 识别应加注星标的强制性标准条款未标注问题
+  reviewer_note: 关键边界是区分 GB 与 GB/T，不得泛化误报
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中含 GB 非 GB/T 或国家强制标准需加星标
+    - 正文条款命中 GB 非 GB/T 或国家强制标准
+    - 正文未加注星标
+  any_of:
+    - comparison.failure_reason_codes 命中 star_marker_missing_for_mandatory_standard
+
+exclude_conditions:
+  any_of:
+    - 仅命中 GB/T 标准
+    - 条款已明确加注星标
+    - 规则侧未要求该类条款加星标
+
+downgrade_conditions:
+  any_of:
+    - 条款是否属于实质性要求仍需采购人补充解释
+
+output:
+  formal_title: 强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清
+  pending_title: 强制性标准条款星标要求与正文标识可能不一致，建议人工复核
+  excluded_title: 星标要求边界不成立，不构成正式风险
+  formal_description: 评审规则已要求相关条款加注星标，但正文命中 GB 非 GB/T 或国家强制标准时未见相应标识，存在废标边界不清风险。
+  remediation_advice: 若条款属于实质性要求，应加注星标；否则需同步修订评审规则说明。
+
+evidence_hints:
+  keywords:
+    - 含有GB（不含GB/T）
+    - 国家强制性标准
+    - 需含有★号
+    - GB252
+  sections:
+    - 评审规则
+    - 技术参数
+
+samples:
+  positive:
+    - data/examples/rules/R-002/positive-01.json
+  negative:
+    - data/examples/rules/R-002/negative-01.json
+  replay:
+    - data/examples/rules/R-002/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-002.md
+  followup_tasks:
+    - docs/tasks/W-002.md
+    - docs/tasks/W-003.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: M
+  approved_date: 2026-04-02
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-02
+    change: G-003 首批规则迁移入库
+    author: T
+

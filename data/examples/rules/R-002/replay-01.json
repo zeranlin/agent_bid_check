@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-002",
+  "sample_role": "replay",
+  "real_file": "/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "expected_result": "hit",
+  "reference_test": "tests/test_w002_real_file.py"
+}
+

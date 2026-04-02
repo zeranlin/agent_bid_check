@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-006",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_specific_cert_positive_009",
+  "note": "特定认证及发证机构评分正样本。"
+}
+

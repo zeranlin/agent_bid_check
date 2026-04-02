@@ -1,0 +1,8 @@
+{
+  "rule_id": "R-004",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_payment_terms_negative_contract_only_007",
+  "note": "付款条款只出现在合同章节的负样本。"
+}
+

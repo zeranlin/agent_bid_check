@@ -1,10 +1,12 @@
 import pytest
 
 from app.common.schemas import RiskPoint
-from app.pipelines.v2.assembler import assemble_v2_report
+from app.pipelines.v2.assembler import assemble_v2_report, build_v2_final_output
 from app.pipelines.v2.evidence import build_evidence_map
 from app.pipelines.v2.schemas import (
+    ComparisonArtifact,
     EvidenceBundle,
+    MergedRiskCluster,
     ModuleHit,
     SectionCandidate,
     TopicCoverage,
@@ -128,6 +130,54 @@ def test_build_evidence_map_groups_sections_by_topic() -> None:
     assert evidence.metadata["topic_execution_plan"]["mode"] == "default"
     assert evidence.metadata["topic_execution_plan"]["max_topic_calls"] == 4
     assert evidence.content
+
+
+def test_build_v2_final_output_uses_comparison_as_single_source() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 综合判断
+
+- 高风险问题：
+  - 旧标题
+""".strip(),
+    )
+    artifact = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="cluster-1",
+                title="正式风险标题",
+                severity="高风险",
+                review_type="类型A",
+                source_locations=["第一章"],
+                source_excerpts=["正式摘录"],
+                risk_judgment=["正式判断"],
+                legal_basis=["正式依据"],
+                rectification=["正式建议"],
+            )
+        ],
+        metadata={
+            "pending_review_items": [{"title": "待补证项", "review_type": "资格条件", "topic": "qualification"}],
+            "excluded_risks": [{"title": "已剔除项"}],
+        },
+    )
+
+    final_output = build_v2_final_output(
+        "sample.docx",
+        baseline,
+        V2StageArtifact(name="structure", metadata={}),
+        [],
+        comparison=artifact,
+    )
+
+    assert [item["title"] for item in final_output["formal_risks"]] == ["正式风险标题"]
+    assert final_output["summary"]["high_risk_titles"] == ["正式风险标题"]
+    assert final_output["summary"]["manual_review_titles"] == ["待补证项"]
+    assert [item["title"] for item in final_output["excluded_risks"]] == ["已剔除项"]
 
 
 def test_topic_taxonomy_and_active_topics_contract() -> None:
