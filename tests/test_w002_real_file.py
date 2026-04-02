@@ -402,3 +402,73 @@ def test_w006_final_markdown_summary_uses_layered_results_only() -> None:
         assert title in summary_section
 
     assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section
+
+
+def test_g004_real_file_import_consistency_includes_foreign_component_evidence() -> None:
+    structure, evidence, topics = _build_real_file_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+    )
+    assert any("部件/验收条款" in location for location in cluster.source_locations)
+    assert any("原产地证明" in excerpt for excerpt in cluster.source_excerpts)
+
+
+def test_g004_real_file_turnkey_payment_risk_is_excluded_when_payment_chain_is_complete() -> None:
+    text = extract_text(REAL_FILE)
+    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+    bundle = evidence.metadata["topic_evidence_bundles"]["contract_payment"]
+    sections = [section for section in bundle.get("sections", []) if isinstance(section, dict)]
+    contract_topic = TopicReviewArtifact(
+        topic="contract_payment",
+        summary="付款专题真实文件回放",
+        risk_points=[],
+        need_manual_review=False,
+        coverage_note="已覆盖付款链路。",
+        metadata={
+            "selected_sections": [
+                {
+                    "title": section.get("title", ""),
+                    "start_line": section.get("start_line"),
+                    "end_line": section.get("end_line"),
+                    "module": section.get("module", ""),
+                }
+                for section in sections
+            ],
+            "missing_evidence": ["未发现"],
+            "structured_signals": _build_structured_signals(get_topic_definition("contract_payment"), sections),
+            "evidence_bundle": bundle,
+        },
+    )
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：商务条款中“交钥匙”项目要求与付款方式存在潜在风险
+
+- 问题定性：低风险
+- 审查类型：商务条款失衡
+- 原文位置：第三章 用户需求书 -> 五、商务要求 -> 2.基本要求 & 3.付款方式
+- 原文摘录：本项目为交钥匙项目，投标总价包含所有费用。
+- 风险判断：
+  - 交钥匙项目与付款安排可能存在失衡。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 结合付款链路进一步复核。
+""".strip(),
+    )
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, [contract_topic])
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded = next(
+        item for item in comparison.metadata["excluded_risks"] if item["title"] == "商务条款中“交钥匙”项目要求与付款方式存在潜在风险"
+    )
+    assert "商务条款中“交钥匙”项目要求与付款方式存在潜在风险" not in formal_titles
+    assert "商务条款中“交钥匙”项目要求与付款方式存在潜在风险" not in pending_titles
+    assert "完整付款链路" in excluded["reason"]

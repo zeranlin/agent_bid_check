@@ -1,0 +1,16 @@
+{
+  "feedback_id": "FB-G004-002",
+  "feedback_type": "误报",
+  "document": "[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "focus": "完整付款链路场景下移除交钥匙付款弱风险",
+  "payment_clauses": [
+    "合同签订后支付30%",
+    "全部货物送达后支付50%",
+    "验收合格且运行三个月后支付20%"
+  ],
+  "expected_layer": "excluded_risks",
+  "unexpected_layers": [
+    "formal_risks",
+    "pending_review_items"
+  ]
+}

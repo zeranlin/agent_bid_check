@@ -1373,3 +1373,123 @@ def test_compare_review_artifacts_excludes_contract_template_risks() -> None:
     comparison = compare_review_artifacts("sample.docx", baseline, [])
     assert comparison.clusters == []
     assert any(item["title"] == "关键合同条款数值缺失，导致付款与履约责任无法评估" for item in comparison.metadata["excluded_risks"])
+
+
+def test_compare_review_artifacts_enriches_import_consistency_with_foreign_component_evidence() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [{"title": "二、申请人的资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "import_policy": "reject_import",
+                    "import_policy_reject_phrases": ["不接受投标人选用进口产品参与投标"],
+                    "import_policy_sections": [{"title": "二、申请人的资格要求", "section_id": "10-12"}],
+                    "import_policy_sentences": ["不接受投标人选用进口产品参与投标。"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="technical_standard",
+            summary="技术标准专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖技术标准条款。",
+            metadata={
+                "selected_sections": [{"title": "1.规格及技术参数"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_standard_refs": ["BS EN 61000", "EN55011"],
+                    "cn_standard_refs": ["GB/T 17626"],
+                    "has_equivalent_standard_clause": False,
+                    "foreign_standard_sections": [{"title": "1.规格及技术参数", "section_id": "50-66"}],
+                    "foreign_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
+                    "cn_standard_sentences": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
+                },
+            },
+        ),
+        TopicReviewArtifact(
+            topic="acceptance",
+            summary="验收专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖部件与验收条款。",
+            metadata={
+                "selected_sections": [{"title": "五、商务要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "foreign_component_requirement_present": True,
+                    "foreign_component_sections": [{"title": "五、商务要求", "section_id": "90-98"}],
+                    "foreign_component_sentences": ["国外生产的部件必须有合法的进货渠道证明及原产地证明。"],
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item for item in comparison.clusters if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+    )
+    assert any("部件/验收条款：五、商务要求" in location for location in cluster.source_locations)
+    assert any("原产地证明" in excerpt for excerpt in cluster.source_excerpts)
+    assert any("原产地证明" in judgment for judgment in cluster.risk_judgment)
+
+
+def test_compare_review_artifacts_excludes_turnkey_payment_risk_when_payment_chain_is_complete() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：商务条款中“交钥匙”项目要求与付款方式存在潜在风险
+
+- 问题定性：低风险
+- 审查类型：商务条款失衡
+- 原文位置：第三章 用户需求书 -> 五、商务要求 -> 2.基本要求 & 3.付款方式
+- 原文摘录：本项目为交钥匙项目，投标总价包含所有费用。
+- 风险判断：
+  - 交钥匙项目与付款安排可能存在失衡。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 结合付款链路进一步复核。
+""".strip(),
+    )
+    topics = [
+        TopicReviewArtifact(
+            topic="contract_payment",
+            summary="付款专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖付款链路。",
+            metadata={
+                "selected_sections": [{"title": "3.付款方式"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "payment_chain_complete": True,
+                    "payment_chain_sections": [{"title": "3.付款方式", "section_id": "30-40"}],
+                    "payment_chain_sentences": [
+                        "双方合同签订后，支付合同总价30%。",
+                        "全部货物送达采购人现场后，支付合同总价50%。",
+                        "工程全部安装调试完成经采购人现场验收合格设备正常运行三个月后，支付合同总价20%。",
+                    ],
+                },
+            },
+        )
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert all(item["title"] != "商务条款中“交钥匙”项目要求与付款方式存在潜在风险" for item in comparison.metadata["pending_review_items"])
+    excluded = next(
+        item for item in comparison.metadata["excluded_risks"] if item["title"] == "商务条款中“交钥匙”项目要求与付款方式存在潜在风险"
+    )
+    assert "完整付款链路" in excluded["reason"]
+    assert "支付合同总价30%" in excluded["reason"]

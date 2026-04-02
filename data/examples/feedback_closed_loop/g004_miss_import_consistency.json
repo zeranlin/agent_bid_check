@@ -1,0 +1,10 @@
+{
+  "feedback_id": "FB-G004-001",
+  "feedback_type": "漏报",
+  "document": "[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "focus": "国外部件/原产地证明未进入非进口项目一致性主风险证据",
+  "policy_clause": "不接受投标人选用进口产品参与投标",
+  "technical_clause": "符合 BS EN 61000、GB/T 17626 及 EN55011 标准",
+  "acceptance_clause": "国外生产的部件必须有合法的进货渠道证明及原产地证明",
+  "expected_risk_title": "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+}

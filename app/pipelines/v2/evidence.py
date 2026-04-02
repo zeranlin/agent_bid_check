@@ -43,6 +43,10 @@ TECHNICAL_STANDARD_CN_REF_RE = re.compile(
 )
 TECHNICAL_STANDARD_CLAUSE_RE = re.compile(r"(符合.{0,24}(标准|规范)|执行.{0,16}(标准|规范)|依据.{0,16}(标准|规范))")
 TECHNICAL_PARAMETER_SIGNAL_RE = re.compile(r"(参数|技术要求|技术指标|规格|性能|电磁|噪声|材质|输出|容量|频率|功率)")
+CONTRACT_PAYMENT_TITLE_SIGNALS = ("付款方式", "付款条件", "支付安排", "结算方式", "合同价款")
+CONTRACT_PAYMENT_CHAIN_RE = re.compile(
+    r"((合同签订后|收到发票后|送达采购人现场后|验收合格|运行三个月后).{0,30}(支付|付款).{0,12}\d{1,3}\s*%)"
+)
 
 
 def _section_id(section: SectionCandidate) -> str:
@@ -151,6 +155,10 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus += 10
         if "商务" in section.title and "验收" in section.title:
             special_bonus += 6
+        if any(signal in section.title for signal in CONTRACT_PAYMENT_TITLE_SIGNALS):
+            special_bonus += 32
+        if CONTRACT_PAYMENT_CHAIN_RE.search(text):
+            special_bonus += 28
     if definition.key == "scoring":
         if raw_scores.get("qualification", 0) >= 3:
             special_bonus += 4
@@ -338,6 +346,13 @@ def _build_bundle(
         technical_profile = _technical_standard_profile(section) if definition.key == "technical_standard" else None
         has_primary_signal = (
             (definition.key == "contract_payment" and _has_joint_signal(section, primary_modules, secondary_modules))
+            or (
+                definition.key == "contract_payment"
+                and (
+                    any(signal in section.title for signal in CONTRACT_PAYMENT_TITLE_SIGNALS)
+                    or bool(CONTRACT_PAYMENT_CHAIN_RE.search("\n".join(part for part in (section.title, section.excerpt, section.body) if part)))
+                )
+            )
             or section.module in primary_modules
             or (
                 definition.key == "technical_standard"
@@ -389,6 +404,25 @@ def _build_bundle(
                 replaced = primary_ranked[-1]
                 primary_ranked[-1] = strongest_foreign_ref
                 fallback_ranked = [item for item in fallback_ranked if item != strongest_foreign_ref]
+                fallback_ranked.append(replaced)
+    if definition.key == "contract_payment" and ranked:
+        strongest_payment_clause = next(
+            (
+                item
+                for item in ranked
+                if any(signal in item[2].title for signal in CONTRACT_PAYMENT_TITLE_SIGNALS)
+                or bool(CONTRACT_PAYMENT_CHAIN_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+            ),
+            None,
+        )
+        if strongest_payment_clause is not None and strongest_payment_clause not in primary_ranked:
+            if len(primary_ranked) < max_primary:
+                primary_ranked.append(strongest_payment_clause)
+                fallback_ranked = [item for item in fallback_ranked if item != strongest_payment_clause]
+            elif primary_ranked:
+                replaced = primary_ranked[-1]
+                primary_ranked[-1] = strongest_payment_clause
+                fallback_ranked = [item for item in fallback_ranked if item != strongest_payment_clause]
                 fallback_ranked.append(replaced)
 
     primary_sections = [item[2] for item in primary_ranked]

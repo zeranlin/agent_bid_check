@@ -1,0 +1,24 @@
+feedback_id: FB-XXX
+file_name: 招标文件名.docx
+feedback_type: 漏报
+source_location:
+  section: 原文章节
+  lines: 1-3
+  excerpt: 原文摘录
+customer_feedback: 客户对本条问题的意见
+m_initial_analysis: M 的初步分析
+root_cause_layer: 第二层召回不足
+task_type: 规则整改
+linked_task: G-004
+repair_owner: T
+acceptance_owner: M
+fix_summary:
+  - 修复动作 1
+  - 修复动作 2
+sample_assets:
+  - 路径 1
+tests:
+  - 测试 1
+real_regression_output: data/results/v2/<run-dir>
+regression_result: 待验收
+acceptance_result: 待验收

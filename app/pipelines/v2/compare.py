@@ -528,6 +528,7 @@ def _refine_clusters_for_maturity(
     procedure_signals = topic_map.get("procedure", {}).get("structured_signals", {})
     acceptance_signals = topic_map.get("acceptance", {}).get("structured_signals", {})
     technical_signals = topic_map.get("technical_standard", {}).get("structured_signals", {})
+    contract_payment_signals = topic_map.get("contract_payment", {}).get("structured_signals", {})
 
     merged_groups: dict[str, list[MergedRiskCluster]] = {}
     refined: list[MergedRiskCluster] = []
@@ -613,8 +614,15 @@ def _refine_clusters_for_maturity(
             continue
 
         if TITLE_PAYMENT_REVIEW_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "付款与履约"))
-            pending_review_items[-1]["reason"] = "付款链路尚需结合预付款、中间款、尾款和最长账期整体复核，先降为待补证复核项。"
+            if contract_payment_signals.get("payment_chain_complete"):
+                reason = "已召回到签约预付款、到货中间款和验收尾款的完整付款链路，不再保留该弱信号风险。"
+                payment_chain_sentences = contract_payment_signals.get("payment_chain_sentences", [])
+                if isinstance(payment_chain_sentences, list) and payment_chain_sentences:
+                    reason += " 关键付款节点：" + "；".join(str(item).strip() for item in payment_chain_sentences[:3] if str(item).strip())
+                excluded_risks.append(_build_excluded_item(cluster, reason))
+            else:
+                pending_review_items.append(_build_pending_item(cluster, "付款与履约"))
+                pending_review_items[-1]["reason"] = "付款链路尚需结合预付款、中间款、尾款和最长账期整体复核，先降为待补证复核项。"
             continue
 
         if TITLE_GENERIC_SCORING_RE.search(title):
@@ -713,15 +721,19 @@ def _build_cross_topic_policy_technical_cluster(
     has_equivalent_standard_clause: bool,
     policy_locations: list[str],
     technical_locations: list[str],
+    acceptance_locations: list[str],
     policy_sentences: list[str],
     foreign_sentences: list[str],
     cn_sentences: list[str],
+    acceptance_sentences: list[str],
 ) -> tuple[RiskPoint, str, str]:
     source_location_parts = []
     if policy_locations:
         source_location_parts.append("政策条款：" + "；".join(policy_locations))
     if technical_locations:
         source_location_parts.append("技术条款：" + "；".join(technical_locations))
+    if acceptance_locations:
+        source_location_parts.append("部件/验收条款：" + "；".join(acceptance_locations[:2]))
     source_excerpt_parts = []
     if reject_phrases:
         source_excerpt_parts.append("政策口径：" + "；".join(reject_phrases[:2]))
@@ -735,11 +747,14 @@ def _build_cross_topic_policy_technical_cluster(
         source_excerpt_parts.append("国标/行标：" + "；".join(cn_sentences))
     elif cn_refs:
         source_excerpt_parts.append("国标/行标：" + "、".join(cn_refs[:2]))
+    if acceptance_sentences:
+        source_excerpt_parts.append("国外部件要求：" + "；".join(acceptance_sentences[:2]))
     if has_equivalent_standard_clause:
         source_excerpt_parts.append("等效说明：已发现等效标准可接受表述")
 
     judgments = [
         "引用外标本身不当然违法，但在明确拒绝进口的项目中，如直接绑定外标体系且未说明等效标准可接受，容易造成采购政策口径与技术标准引用口径不一致。",
+        "如文件同时要求国外生产部件提供原产地证明、进货渠道证明等材料，容易进一步放大供应商对可投范围、技术适配与验收边界的理解冲突。",
         "该类表述可能引发供应商对技术标准适用范围、可投产品边界和竞争条件的理解冲突，存在潜在倾向性与限制竞争风险。",
     ]
     if foreign_refs and not cn_refs:
@@ -1050,6 +1065,8 @@ def compare_review_artifacts(
     technical_locations: list[str] = []
     foreign_sentences: list[str] = []
     cn_sentences: list[str] = []
+    foreign_component_locations: list[str] = []
+    foreign_component_sentences: list[str] = []
     star_required_for_gb_non_t = False
     star_required_for_mandatory_standard = False
     star_rule_locations: list[str] = []
@@ -1085,6 +1102,9 @@ def compare_review_artifacts(
     acceptance_testing_cost_locations: list[str] = []
     acceptance_testing_cost_evidence: list[str] = []
     acceptance_testing_cost_shifted_to_bidder = False
+    payment_chain_complete = False
+    payment_chain_locations: list[str] = []
+    payment_chain_sentences: list[str] = []
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -1147,6 +1167,14 @@ def compare_review_artifacts(
             cn_sentences.extend(
                 _compact_sentences(structured_signals.get("cn_standard_sentences", []), limit=1)
                 if isinstance(structured_signals.get("cn_standard_sentences", []), list)
+                else []
+            )
+            matched_foreign_component_sections = structured_signals.get("foreign_component_sections", [])
+            if isinstance(matched_foreign_component_sections, list):
+                foreign_component_locations.extend(_compact_titles(matched_foreign_component_sections, limit=2))
+            foreign_component_sentences.extend(
+                _compact_sentences(structured_signals.get("foreign_component_sentences", []), limit=2)
+                if isinstance(structured_signals.get("foreign_component_sentences", []), list)
                 else []
             )
             clause_flags = structured_signals.get("standard_clause_flags", [])
@@ -1278,6 +1306,24 @@ def compare_review_artifacts(
             acceptance_testing_cost_shifted_to_bidder = acceptance_testing_cost_shifted_to_bidder or bool(
                 structured_signals.get("acceptance_testing_cost_shifted_to_bidder", False)
             )
+            matched_foreign_component_sections = structured_signals.get("foreign_component_sections", [])
+            if isinstance(matched_foreign_component_sections, list):
+                foreign_component_locations.extend(_compact_titles(matched_foreign_component_sections, limit=2))
+            foreign_component_sentences.extend(
+                _compact_sentences(structured_signals.get("foreign_component_sentences", []), limit=2)
+                if isinstance(structured_signals.get("foreign_component_sentences", []), list)
+                else []
+            )
+        if topic_key == "contract_payment":
+            payment_chain_complete = payment_chain_complete or bool(structured_signals.get("payment_chain_complete", False))
+            matched_payment_chain_sections = structured_signals.get("payment_chain_sections", [])
+            if isinstance(matched_payment_chain_sections, list):
+                payment_chain_locations.extend(_compact_titles(matched_payment_chain_sections, limit=2))
+            payment_chain_sentences.extend(
+                _compact_sentences(structured_signals.get("payment_chain_sentences", []), limit=3)
+                if isinstance(structured_signals.get("payment_chain_sentences", []), list)
+                else []
+            )
 
     import_policy_values = dedupe(import_policy_values)
     reject_phrases = dedupe(reject_phrases)
@@ -1297,6 +1343,8 @@ def compare_review_artifacts(
     technical_locations = dedupe(technical_locations)
     foreign_sentences = dedupe(foreign_sentences)
     cn_sentences = dedupe(cn_sentences)
+    foreign_component_locations = dedupe(foreign_component_locations)
+    foreign_component_sentences = dedupe(foreign_component_sentences)
     star_rule_locations = dedupe(star_rule_locations)
     star_rule_sentences = dedupe(star_rule_sentences)
     acceptance_plan_rule_locations = dedupe(acceptance_plan_rule_locations)
@@ -1319,6 +1367,8 @@ def compare_review_artifacts(
     acceptance_testing_cost_rule_sentences = dedupe(acceptance_testing_cost_rule_sentences)
     acceptance_testing_cost_locations = dedupe(acceptance_testing_cost_locations)
     acceptance_testing_cost_evidence = dedupe(acceptance_testing_cost_evidence)
+    payment_chain_locations = dedupe(payment_chain_locations)
+    payment_chain_sentences = dedupe(payment_chain_sentences)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -1348,9 +1398,11 @@ def compare_review_artifacts(
             has_equivalent_standard_clause=has_equivalent_standard_clause,
             policy_locations=policy_locations,
             technical_locations=technical_locations,
+            acceptance_locations=foreign_component_locations,
             policy_sentences=policy_sentences,
             foreign_sentences=foreign_sentences,
             cn_sentences=cn_sentences,
+            acceptance_sentences=foreign_component_sentences,
         )
         key = _signature_key(cross_risk)
         signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))

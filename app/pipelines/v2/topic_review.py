@@ -93,6 +93,13 @@ ACCEPTANCE_TESTING_TERM_RE = re.compile(r"(检测|检验|抽检|专项检测|第
 ACCEPTANCE_STAGE_TERM_RE = re.compile(r"(验收|相关部门验收|验收合格之前|验收阶段|竣工验收)")
 COST_SHIFT_TERM_RE = re.compile(r"(投标总价包括|自行计入|一切费用|由投标人承担|由中标人承担|负责承担|全部费用)")
 ACCEPTANCE_TESTING_COST_NEGATIVE_RE = re.compile(r"(采购人承担|采购人另行委托|依法另行委托|出厂检验|自检|安装调试)")
+FOREIGN_COMPONENT_PROOF_RE = re.compile(
+    r"(国外生产的部件.{0,24}(合法的进货渠道证明|原产地证明)|原产地证明|国外部件|进口部件)"
+)
+PAYMENT_STAGE_SIGNING_RE = re.compile(r"(合同签订后|双方合同签订后)")
+PAYMENT_STAGE_DELIVERY_RE = re.compile(r"(送达采购人现场|全部货物达到合同及合同附件所有要求|到货|交货)")
+PAYMENT_STAGE_ACCEPTANCE_RE = re.compile(r"(验收合格|设备正常运行三个月后|终验后|最终验收后)")
+PAYMENT_PERCENT_RE = re.compile(r"(\d{1,3})\s*%")
 PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE = re.compile(
     r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机)"
 )
@@ -853,6 +860,68 @@ def _extract_compliance_proof_signals(sections: list[dict]) -> dict[str, object]
     }
 
 
+def _extract_foreign_component_proof_signals(sections: list[dict]) -> dict[str, object]:
+    proof_sections: list[dict] = []
+    proof_sentences: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        matches = _find_matching_sentences(section, [FOREIGN_COMPONENT_PROOF_RE])
+        if matches:
+            proof_sections.extend(_normalize_signal_sections([section]))
+            proof_sentences.extend(matches)
+    return {
+        "foreign_component_requirement_present": bool(proof_sections),
+        "foreign_component_sections": _dedupe_signal_sections(proof_sections),
+        "foreign_component_sentences": _dedupe_preserve(proof_sentences),
+    }
+
+
+def _extract_contract_payment_signals(sections: list[dict]) -> dict[str, object]:
+    payment_sections: list[dict] = []
+    payment_sentences: list[str] = []
+    percentages: list[int] = []
+    has_signing_stage = False
+    has_delivery_stage = False
+    has_acceptance_stage = False
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        section_percentages = [int(match.group(1)) for match in PAYMENT_PERCENT_RE.finditer(text)]
+        section_has_payment_signal = bool(section_percentages) and ("支付" in text or "付款" in text)
+        if section_has_payment_signal:
+            payment_sections.extend(_normalize_signal_sections([section]))
+            payment_sentences.extend(_find_matching_sentences(section, [PAYMENT_STAGE_SIGNING_RE, PAYMENT_STAGE_DELIVERY_RE, PAYMENT_STAGE_ACCEPTANCE_RE]))
+            if not payment_sentences:
+                payment_sentences.extend(_find_match_fragments(section, PAYMENT_PERCENT_RE))
+            percentages.extend(section_percentages)
+        has_signing_stage = has_signing_stage or bool(PAYMENT_STAGE_SIGNING_RE.search(text))
+        has_delivery_stage = has_delivery_stage or bool(PAYMENT_STAGE_DELIVERY_RE.search(text))
+        has_acceptance_stage = has_acceptance_stage or bool(PAYMENT_STAGE_ACCEPTANCE_RE.search(text))
+    unique_percentages = _dedupe_preserve([str(item) for item in percentages])
+    percent_sum = sum(int(item) for item in unique_percentages if str(item).isdigit())
+    payment_chain_complete = (
+        bool(payment_sections)
+        and has_signing_stage
+        and has_delivery_stage
+        and has_acceptance_stage
+        and percent_sum >= 90
+        and len(unique_percentages) >= 3
+    )
+    return {
+        "payment_chain_complete": payment_chain_complete,
+        "payment_chain_sections": _dedupe_signal_sections(payment_sections),
+        "payment_chain_sentences": _dedupe_preserve(payment_sentences),
+        "payment_stage_count": int(has_signing_stage) + int(has_delivery_stage) + int(has_acceptance_stage),
+        "payment_percentages": [int(item) for item in unique_percentages if str(item).isdigit()],
+    }
+
+
 def _extract_boundary_context_signals(sections: list[dict]) -> dict[str, object]:
     announcement_sections: list[dict] = []
     announcement_sentences: list[str] = []
@@ -1385,6 +1454,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_boundary_context_signals(sections))
     if definition.key in {"technical_standard", "qualification", "acceptance", "policy"}:
         signals.update(_extract_compliance_proof_signals(sections))
+        signals.update(_extract_foreign_component_proof_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))
@@ -1399,6 +1469,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_acceptance_testing_cost_signals(sections))
         signals.update(_extract_boundary_context_signals(sections))
     if definition.key == "contract_payment":
+        signals.update(_extract_contract_payment_signals(sections))
         signals.update(_extract_boundary_context_signals(sections))
     return signals
 

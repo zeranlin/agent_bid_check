@@ -1,0 +1,28 @@
+feedback_id: FB-G004-001
+file_name: "[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+feedback_type: 漏报
+source_location:
+  section: 五、商务要求
+  lines: 1416-1419
+  excerpt: |
+    ★3.国内生产的部件必须有国家有关部门的认证合格证，强制认证产品必须有3C认证。
+    4.国外生产的部件必须有合法的进货渠道证明及原产地证明。
+customer_feedback: 已命中“拒绝进口 vs 外标引用”主风险，但没有把国外部件/原产地证明这组真实证据带进最终风险说明。
+m_initial_analysis: 现有第三层 compare 已能输出主标题，但第二层 structured signal 没有把“国外部件/原产地证明”作为跨专题一致性证据稳定上送。
+root_cause_layer: 第二层召回不足 + 第三层聚合证据不足
+task_type: 漏报闭环
+linked_task: G-004
+repair_owner: T
+acceptance_owner: M
+fix_summary:
+  - 在 technical_standard/acceptance structured signals 中新增国外部件/原产地证明信号。
+  - 在 compare 的 policy_technical_inconsistency 聚合中加入部件/验收条款位置与摘录。
+sample_assets:
+  - tests/test_v2_compare.py::test_compare_review_artifacts_enriches_import_consistency_with_foreign_component_evidence
+  - tests/test_w002_real_file.py::test_g004_real_file_import_consistency_includes_foreign_component_evidence
+tests:
+  - tests/test_v2_compare.py
+  - tests/test_w002_real_file.py
+real_regression_output: data/results/v2/20260402-g004-feedback-loop-rerun
+regression_result: 已通过
+acceptance_result: 待 M 验收
