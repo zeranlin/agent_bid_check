@@ -368,3 +368,37 @@ def test_w006_real_file_output_is_layered_correctly() -> None:
         "电子投标文件容量限制可能增加投标负担",
     ]:
         assert title in excluded_titles
+
+
+def test_w006_final_markdown_summary_uses_layered_results_only() -> None:
+    structure, evidence, replay_topics = _build_w006_source_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+    report_markdown = assemble_v2_report(REAL_FILE.name, baseline, structure, replay_topics, comparison=comparison)
+
+    pending_section = report_markdown.split("## 待补证复核项", 1)[1].split("## 综合判断", 1)[0]
+    summary_section = report_markdown.split("## 综合判断", 1)[1]
+
+    for title in [
+        "付款条款关键数据缺失，无法评估公平性与节点衔接",
+        "履约保证金金额及退还期限未明确",
+        "验收期限留白，影响付款节点触发",
+        "澄清截止时间未明确填写",
+        "采购标的所属行业未明确，影响中小企业声明函填写",
+        "人员社保证明要求存在特殊豁免，需防范虚假人员风险",
+        "电子投标文件容量限制可能增加投标负担",
+        "qualification:",
+        "performance_staff:",
+        "contract_payment:",
+    ]:
+        assert title not in summary_section
+
+    for title in [
+        "三体系认证设置高分值，需评估与项目履约的关联性",
+        "具体资格条款缺失，无法判断是否存在排斥性要求",
+        "政策导向章节内容缺失，无法确认节能环保等政策落实情况",
+    ]:
+        assert title in pending_section
+        assert title in summary_section
+
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section

@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import assemble_v2_report
 from app.pipelines.v2.compare import compare_review_artifacts
-from app.pipelines.v2.schemas import TopicReviewArtifact, V2StageArtifact
+from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
 def test_compare_review_artifacts_clusters_duplicate_risks() -> None:
@@ -114,6 +114,70 @@ def test_assemble_v2_report_prefers_comparison_clusters() -> None:
     report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
     assert report.count("## 风险点") == 1
     assert "付款节点明显偏后" in report
+
+
+def test_assemble_v2_report_summary_uses_final_layered_results_only() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 综合判断
+
+- 高风险问题：
+  - 付款条款关键数据缺失，无法评估公平性与节点衔接
+- 中风险问题：
+  - 澄清截止时间未明确填写
+- 需人工复核事项：
+  - qualification: 资格条件全文未完整召回
+  - performance_staff: 关键人员证据缺失
+""".strip(),
+    )
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="cluster-1",
+                title="非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险",
+                severity="高风险",
+                review_type="采购政策/技术标准/验收口径一致性审查",
+                source_locations=["政策条款：二、申请人的资格要求", "技术条款：1.规格及技术参数"],
+                source_excerpts=["政策口径：不接受投标人选用进口产品", "外标引用：符合 BS EN 61000 及 EN55011 标准"],
+                risk_judgment=["存在口径不一致风险。"],
+                legal_basis=["需人工复核"],
+                rectification=["补充等效标准说明。"],
+                topics=["policy", "technical_standard"],
+            )
+        ],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "具体资格条款缺失，无法判断是否存在排斥性要求",
+                    "review_type": "资格条件",
+                    "topic": "qualification",
+                    "source_location": "资格要求章节",
+                    "source_excerpt": "资格条件内容未完整展开",
+                    "reason": "当前仅召回到摘要级证据，需补充全文条款后复核。",
+                }
+            ],
+            "excluded_risks": [
+                {"title": "付款条款关键数据缺失，无法评估公平性与节点衔接"},
+                {"title": "澄清截止时间未明确填写"},
+            ],
+        },
+    )
+
+    report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), [], comparison)
+    summary_section = report.split("## 综合判断", 1)[1]
+
+    assert "付款条款关键数据缺失，无法评估公平性与节点衔接" not in summary_section
+    assert "澄清截止时间未明确填写" not in summary_section
+    assert "qualification:" not in summary_section
+    assert "performance_staff:" not in summary_section
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section
+    assert "具体资格条款缺失，无法判断是否存在排斥性要求" in report
+    assert "- 需人工复核事项：" in summary_section
 
 
 def test_compare_review_artifacts_enriches_coverage_analysis() -> None:

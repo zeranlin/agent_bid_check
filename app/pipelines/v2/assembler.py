@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from app.common.normalize import dedupe, infer_basis_summary, infer_summary
+from app.common.normalize import dedupe, infer_basis_summary
 from app.common.parser import parse_review_markdown
 from app.common.schemas import ReviewReport, RiskPoint
 
@@ -112,20 +112,21 @@ def assemble_v2_report(
     report.description_lines = _build_description_lines(structure, topics)
     report.risk_points = [_cluster_to_risk_point(cluster) for cluster in comparison.clusters]
     report.pending_review_items = list(comparison.metadata.get("pending_review_items", [])) if comparison and isinstance(comparison.metadata, dict) else []
-    report.summary_high_risk = dedupe(baseline_report.summary_high_risk)
-    report.summary_medium_risk = dedupe(baseline_report.summary_medium_risk)
+    report.summary_high_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "高风险"]) or ["未发现"]
+    report.summary_medium_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "中风险"]) or ["未发现"]
     report.summary_manual_review = dedupe(
-        baseline_report.summary_manual_review
-        + [topic.summary for topic in topics if topic.need_manual_review]
-        + comparison.manual_review_items
-    )
+        [
+            str(item.get("title", "")).strip()
+            for item in report.pending_review_items
+            if isinstance(item, dict)
+        ]
+    ) or ["未发现"]
 
     basis_items = list(baseline_report.basis_summary)
     for cluster in comparison.clusters:
         basis_items.extend(cluster.legal_basis)
     report.basis_summary = dedupe(basis_items)
     report.ensure_defaults(document_name)
-    infer_summary(report)
     infer_basis_summary(report)
     return _render_report(report)
 
