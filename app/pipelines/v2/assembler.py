@@ -34,6 +34,23 @@ def _render_report(report: ReviewReport) -> str:
         lines.extend([f"  - {item}" for item in risk.rectification])
         lines.append("")
 
+    pending_review_items = getattr(report, "pending_review_items", [])
+    if pending_review_items:
+        lines.extend(["---", "", "## 待补证复核项", ""])
+        for index, item in enumerate(pending_review_items, start=1):
+            lines.extend(
+                [
+                    f"### 复核项{index}：{item.get('title', '待补证复核项')}",
+                    "",
+                    f"- 复核类型：{item.get('review_type', '需人工复核')}",
+                    f"- 所属专题：{item.get('topic', '未分类')}",
+                    f"- 原文位置：{item.get('source_location', '未发现')}",
+                    f"- 原文摘录：{item.get('source_excerpt', '未发现')}",
+                    f"- 复核原因：{item.get('reason', '当前证据未完整覆盖对应条款，需补充证据后复核。')}",
+                    "",
+                ]
+            )
+
     lines.extend(["---", "", "## 综合判断", ""])
     lines.append("- 高风险问题：")
     lines.extend([f"  - {item}" for item in report.summary_high_risk])
@@ -94,6 +111,7 @@ def assemble_v2_report(
     report.subject = baseline_report.subject or document_name
     report.description_lines = _build_description_lines(structure, topics)
     report.risk_points = [_cluster_to_risk_point(cluster) for cluster in comparison.clusters]
+    report.pending_review_items = list(comparison.metadata.get("pending_review_items", [])) if comparison and isinstance(comparison.metadata, dict) else []
     report.summary_high_risk = dedupe(baseline_report.summary_high_risk)
     report.summary_medium_risk = dedupe(baseline_report.summary_medium_risk)
     report.summary_manual_review = dedupe(

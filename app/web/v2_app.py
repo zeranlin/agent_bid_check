@@ -422,8 +422,8 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
     severity_rank = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
     all_cards.sort(
         key=lambda item: (
-            not bool(item["is_standard_compare"]),
             severity_rank.get(item["severity"], len(SEVERITY_ORDER)),
+            not bool(item["is_standard_compare"]),
             item["index"],
         )
     )

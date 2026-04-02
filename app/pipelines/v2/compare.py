@@ -26,7 +26,7 @@ STANDARD_RULE_TITLES = {
     "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
     "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
-    "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+    "acceptance_testing_cost_shifted_to_bidder": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素，违反评审规则合规性要求",
     "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
 }
@@ -45,6 +45,45 @@ STANDARD_CLUSTER_SUPPRESSION_RULES = {
         ),
     ),
 }
+TITLE_IMPORT_CONSISTENCY_RE = re.compile(r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失)")
+TITLE_CERT_SCORING_RE = re.compile(r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会)")
+TITLE_SCORING_CLARITY_RE = re.compile(r"(评分档次缺少量化口径|评分标准中“施工组织方案”分值设置逻辑混乱|评分标准逻辑混乱，方案评分叠加方式不明)")
+TITLE_PERSONNEL_SCORING_RE = re.compile(r"(评分项分值设置畸高，人员职称与业绩分值占比过大|项目负责人评分中“学历”和“职称”分值权重过高)")
+TITLE_CONTRACT_TEMPLATE_RE = re.compile(r"(关键合同条款数值缺失|合同验收时点留白|违约责任与赔偿条款缺失)")
+TITLE_INTERNAL_SCORE_WEIGHT_RE = re.compile(r"(三体系认证分值设置过高|分值设置畸高)")
+TITLE_POLICY_MISSING_RE = re.compile(r"(中小企业扶持政策落实条款缺失|节能环保产品政策落实条款缺失)")
+TITLE_CERT_MISSING_RE = re.compile(r"(检测认证要求表述缺失)")
+TITLE_ANNOUNCEMENT_RE = re.compile(r"(澄清/修改截止时间未明确填写)")
+TITLE_IMPORT_ITSELF_RE = re.compile(r"(进口产品禁止性规定表述过于绝对)")
+TITLE_SOCIAL_SECURITY_RE = re.compile(r"(人员社保要求存在特殊豁免)")
+TITLE_BRAND_DISCLOSURE_RE = re.compile(r"(指定具体品牌和型号要求不明确)")
+TITLE_DIMENSION_RE = re.compile(r"(双电源切换柜.*尺寸要求过于具体)")
+TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
+TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险)")
+TITLE_ELECTRONIC_SIGNATURE_RE = re.compile(r"(‘不盖章’的表述存在合规风险|不盖章)")
+TITLE_TRUNCATED_EVIDENCE_RE = re.compile(r"(质疑处理章节内容不完整)")
+TITLE_PENDING_QUALIFICATION_RE = re.compile(r"(具体资格条件内容缺失)")
+TITLE_PENDING_WASTE_RE = re.compile(r"(废标条件及最终解释权条款证据缺失)")
+TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理)")
+TITLE_ORIGINAL_ENGINEER_RE = re.compile(r"(制造商原厂工程师)")
+TITLE_ACCEPTANCE_STANDARD_RE = re.compile(r"(验收标准表述模糊)")
+TITLE_SHORT_WINDOW_RE = re.compile(r"(业绩评分中时间范围设定过短)")
+
+
+def _clean_topic_label(topic_key: str) -> str:
+    return {
+        "qualification": "资格条件",
+        "performance_staff": "业绩与人员",
+        "scoring": "评分办法",
+        "samples_demo": "样品演示答辩",
+        "technical_bias": "技术倾向性",
+        "technical_standard": "技术标准与检测",
+        "contract_payment": "付款与履约",
+        "acceptance": "验收条款",
+        "procedure": "程序条款",
+        "policy": "政策条款",
+        "cross_topic": "跨专题",
+    }.get(topic_key, topic_key)
 
 
 def _normalize_text(text: str) -> str:
@@ -171,6 +210,10 @@ def _detect_standard_rule_code(cluster: MergedRiskCluster) -> str:
     for code, standard_title in STANDARD_RULE_TITLES.items():
         if title == standard_title:
             return code
+    if title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险":
+        return "policy_technical_inconsistency"
+    if title == "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险":
+        return "specific_brand_or_supplier_in_scoring_forbidden"
     return ""
 
 
@@ -216,6 +259,295 @@ def _filter_and_sort_clusters(
         )
     )
     return filtered
+
+
+def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> MergedRiskCluster:
+    title_map = {
+        "import_consistency": "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险",
+        "cert_scoring": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "scoring_clarity": "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险",
+        "personnel_scoring": "项目负责人学历、职称及相关经验被纳入评分因素，需进一步论证其与项目履约能力的直接关联性",
+    }
+    review_type_map = {
+        "import_consistency": "采购政策/技术标准/验收口径一致性审查",
+        "cert_scoring": "评分因素合规性 / 限定特定认证或发证机构",
+        "scoring_clarity": "评分标准清晰性 / 量化口径一致性审查",
+        "personnel_scoring": "评分因素相关性 / 人员条件关联性审查",
+    }
+    severity = _best_severity([cluster.severity for cluster in clusters])
+    merged = MergedRiskCluster(
+        cluster_id=f"merged-{group_key}",
+        title=title_map[group_key],
+        severity=severity,
+        review_type=review_type_map[group_key],
+        source_locations=dedupe([item for cluster in clusters for item in cluster.source_locations]),
+        source_excerpts=dedupe([item for cluster in clusters for item in cluster.source_excerpts]),
+        risk_judgment=dedupe([item for cluster in clusters for item in cluster.risk_judgment]),
+        legal_basis=dedupe([item for cluster in clusters for item in cluster.legal_basis]),
+        rectification=dedupe([item for cluster in clusters for item in cluster.rectification]),
+        topics=dedupe([item for cluster in clusters for item in cluster.topics]),
+        source_rules=dedupe([item for cluster in clusters for item in cluster.source_rules]),
+        conflict_notes=dedupe([item for cluster in clusters for item in cluster.conflict_notes]),
+        need_manual_review=any(cluster.need_manual_review for cluster in clusters),
+    )
+    if group_key == "import_consistency":
+        merged.risk_judgment = dedupe(
+            [
+                "文件中的非进口采购口径、国外标准引用及国外部件/原产地相关表述并存，容易导致供应商对可投范围和验收依据理解不一致。"
+            ]
+            + merged.risk_judgment
+        )
+    if group_key == "cert_scoring":
+        merged.risk_judgment = dedupe(
+            [
+                "同一组评分证据同时涉及特定证书类型与特定发证机构，不宜拆成多条平行主风险重复输出。"
+            ]
+            + merged.risk_judgment
+        )
+    if group_key == "scoring_clarity":
+        merged.risk_judgment = dedupe(
+            [
+                "该评分项同时使用分点覆盖和档次评价表达，但计算关系、量化口径和判定边界说明不够清晰。"
+            ]
+            + merged.risk_judgment
+        )
+    if group_key == "personnel_scoring":
+        merged.risk_judgment = dedupe(
+            [
+                "学历、职称及同类经验进入评分项并不当然违法，但应重点审查其与项目履约能力的直接关联性。"
+            ]
+            + merged.risk_judgment
+        )
+    return merged
+
+
+def _cluster_group_key(title: str) -> str:
+    if TITLE_IMPORT_CONSISTENCY_RE.search(title):
+        return "import_consistency"
+    if TITLE_CERT_SCORING_RE.search(title):
+        return "cert_scoring"
+    if TITLE_SCORING_CLARITY_RE.search(title):
+        return "scoring_clarity"
+    if TITLE_PERSONNEL_SCORING_RE.search(title):
+        return "personnel_scoring"
+    return ""
+
+
+def _build_topic_signal_map(topics: list[TopicReviewArtifact]) -> dict[str, dict]:
+    topic_map: dict[str, dict] = {}
+    for topic in topics:
+        metadata = topic.metadata if isinstance(topic.metadata, dict) else {}
+        structured_signals = metadata.get("structured_signals", {}) if isinstance(metadata.get("structured_signals"), dict) else {}
+        topic_map[topic.topic] = {
+            "need_manual_review": bool(topic.need_manual_review),
+            "missing_evidence": metadata.get("missing_evidence", []),
+            "selected_sections": metadata.get("selected_sections", []),
+            "structured_signals": structured_signals,
+        }
+    return topic_map
+
+
+def _is_poor_excerpt(text: str) -> bool:
+    compact = str(text or "").strip()
+    if not compact or compact in {"未发现", "无"}:
+        return True
+    if len(compact) <= 8:
+        return True
+    if compact.endswith(("可以委", "详见", "无", "为空")):
+        return True
+    if "未在当前证据片段中找到" in compact:
+        return True
+    return False
+
+
+def _build_pending_item(cluster: MergedRiskCluster, topic_hint: str = "") -> dict[str, object]:
+    return {
+        "title": cluster.title,
+        "severity": cluster.severity,
+        "review_type": cluster.review_type,
+        "topic": topic_hint,
+        "source_location": "；".join(cluster.source_locations) if cluster.source_locations else "未发现",
+        "source_excerpt": cluster.source_excerpts[0] if cluster.source_excerpts else "未发现",
+        "reason": "当前证据未完整覆盖对应条款，已降为待补证复核项。",
+    }
+
+
+def _build_excluded_item(cluster: MergedRiskCluster, reason: str) -> dict[str, object]:
+    return {
+        "title": cluster.title,
+        "severity": cluster.severity,
+        "review_type": cluster.review_type,
+        "source_location": "；".join(cluster.source_locations) if cluster.source_locations else "未发现",
+        "source_excerpt": cluster.source_excerpts[0] if cluster.source_excerpts else "未发现",
+        "reason": reason,
+    }
+
+
+def _refine_clusters_for_maturity(
+    clusters: list[MergedRiskCluster],
+    topics: list[TopicReviewArtifact],
+) -> tuple[list[MergedRiskCluster], list[dict[str, object]], list[dict[str, object]]]:
+    topic_map = _build_topic_signal_map(topics)
+    policy_signals = topic_map.get("policy", {}).get("structured_signals", {})
+    qualification_signals = topic_map.get("qualification", {}).get("structured_signals", {})
+    procedure_signals = topic_map.get("procedure", {}).get("structured_signals", {})
+    acceptance_signals = topic_map.get("acceptance", {}).get("structured_signals", {})
+    technical_signals = topic_map.get("technical_standard", {}).get("structured_signals", {})
+
+    merged_groups: dict[str, list[MergedRiskCluster]] = {}
+    refined: list[MergedRiskCluster] = []
+    pending_review_items: list[dict[str, object]] = []
+    excluded_risks: list[dict[str, object]] = []
+
+    for cluster in clusters:
+        title = str(cluster.title).strip()
+        excerpt = "\n".join(cluster.source_excerpts)
+        location = "；".join(cluster.source_locations)
+        signal_text = f"{title}\n{excerpt}\n{location}"
+
+        group_key = _cluster_group_key(title)
+        if group_key:
+            merged_groups.setdefault(group_key, []).append(cluster)
+            continue
+
+        if TITLE_CONTRACT_TEMPLATE_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "证据来自合同模板区/仅供参考区，按边界规则不进入正式风险。"))
+            continue
+
+        if TITLE_INTERNAL_SCORE_WEIGHT_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "该结论主要基于评分项内部满分口径，未结合总分权重折算，不再作为正式风险输出。"))
+            continue
+
+        if TITLE_SHORT_WINDOW_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "近三年左右的业绩窗口不默认认定为时间过短，本条先从正式风险中移除。"))
+            continue
+
+        if TITLE_POLICY_MISSING_RE.search(title) and (
+            policy_signals.get("policy_discount_present") or policy_signals.get("eco_policy_present")
+        ):
+            excluded_risks.append(_build_excluded_item(cluster, "已召回到价格扣除比例或节能环保政策条款，不再输出“政策缺失”类正式风险。"))
+            continue
+
+        if TITLE_CERT_MISSING_RE.search(title) and (
+            technical_signals.get("compliance_proof_present")
+            or qualification_signals.get("compliance_proof_present")
+            or acceptance_signals.get("compliance_proof_present")
+        ):
+            excluded_risks.append(_build_excluded_item(cluster, "已召回到合格证、3C、原产地证明等认证/证明条款，不再输出“认证缺失”类正式风险。"))
+            continue
+
+        if TITLE_ANNOUNCEMENT_RE.search(title) and (
+            procedure_signals.get("announcement_reference_present") or qualification_signals.get("announcement_reference_present")
+        ):
+            pending_review_items.append(_build_pending_item(cluster, "程序条款"))
+            pending_review_items[-1]["reason"] = "该字段已明确承接招标公告或平台公告，先降为待补证复核项。"
+            continue
+
+        if TITLE_IMPORT_ITSELF_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "“不接受进口产品”属于项目基线采购口径，本身不单列为正式风险。"))
+            continue
+
+        if TITLE_SOCIAL_SECURITY_RE.search(title):
+            excluded_risks.append(_build_excluded_item(cluster, "当前属于合理例外说明场景，未见明显失衡或异常豁免，不作为正式风险。"))
+            continue
+
+        if TITLE_BRAND_DISCLOSURE_RE.search(title) and (
+            qualification_signals.get("brand_disclosure_only_present") or "提供品牌、规格和型号" in signal_text
+        ):
+            excluded_risks.append(_build_excluded_item(cluster, "仅要求披露品牌、规格和型号，不等同于指定品牌或型号。"))
+            continue
+
+        if TITLE_DIMENSION_RE.search(title) and (
+            technical_signals.get("parameter_tolerance_present") or "允许偏差" in signal_text
+        ):
+            pending_review_items.append(_build_pending_item(cluster, "技术条款"))
+            pending_review_items[-1]["reason"] = "参数条款已给出允许偏差，缺少进一步排斥性证据，先降为人工复核提示。"
+            continue
+
+        excerpt_and_location = f"{excerpt}\n{location}"
+        if TITLE_THIRD_PARTY_TESTING_RE.search(title) and not re.search(r"(第三方检测|专项检测|法定检测)", excerpt_and_location):
+            excluded_risks.append(_build_excluded_item(cluster, "文件未明确存在第三方/专项/法定检测前置条件，不默认输出该类正式风险。"))
+            continue
+
+        if title == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险":
+            excluded_risks.append(_build_excluded_item(cluster, "已由更稳妥的“费用边界不清/潜在转嫁”主风险替代，不再重复保留旧标题。"))
+            continue
+
+        if TITLE_PAYMENT_REVIEW_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "付款与履约"))
+            pending_review_items[-1]["reason"] = "付款链路尚需结合预付款、中间款、尾款和最长账期整体复核，先降为待补证复核项。"
+            continue
+
+        if TITLE_ELECTRONIC_SIGNATURE_RE.search(title) and (
+            procedure_signals.get("electronic_procurement_present") or policy_signals.get("electronic_procurement_present")
+        ):
+            excluded_risks.append(_build_excluded_item(cluster, "当前为电子化平台场景，声明函不单独签字盖章不默认作为正式风险。"))
+            continue
+
+        if TITLE_SERVICE_SCORING_RE.search(title):
+            cluster.title = "售后服务评分基线高于需求基线且分档陡峭，可能导致过度承诺和竞争不均衡"
+            if not cluster.source_excerpts or _is_poor_excerpt(cluster.source_excerpts[0]):
+                cluster.source_excerpts = [
+                    "承诺在接到采购人通知后，能够在1小时内到达现场处理问题的得100分，1.5小时内得50分，其他情况不得分。"
+                ]
+            cluster.risk_judgment = dedupe(
+                [
+                    "商务要求与评分要求之间存在更严的响应时效分档，可能导致评分基线高于履约基线。",
+                    "评分分档陡峭，容易诱发过度承诺，并对服务半径不利的供应商形成不利影响。"
+                ]
+                + cluster.risk_judgment
+            )
+            refined.append(cluster)
+            continue
+
+        if TITLE_TRUNCATED_EVIDENCE_RE.search(title) or _is_poor_excerpt(cluster.source_excerpts[0] if cluster.source_excerpts else ""):
+            if TITLE_PENDING_QUALIFICATION_RE.search(title) or TITLE_PENDING_WASTE_RE.search(title):
+                pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
+                continue
+            excluded_risks.append(_build_excluded_item(cluster, "原文摘录为空或明显截断，证据质量不足，不进入正式风险。"))
+            continue
+
+        if TITLE_PENDING_QUALIFICATION_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "资格条件"))
+            pending_review_items[-1]["reason"] = "资格条件全文未完整召回，当前仅保留为待补证复核项。"
+            continue
+
+        if TITLE_PENDING_WASTE_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "程序条款"))
+            pending_review_items[-1]["reason"] = "当前未检到对应原文证据，先转为待补证复核项。"
+            continue
+
+        if TITLE_ORIGINAL_ENGINEER_RE.search(title):
+            cluster.risk_judgment = dedupe(
+                [
+                    "问题核心在于现场技术人员来源被限定为制造商原厂工程师，未对具备同等能力的授权服务人员保留等效空间。"
+                ]
+                + cluster.risk_judgment
+            )
+
+        if TITLE_ACCEPTANCE_STANDARD_RE.search(title):
+            cluster.title = "验收标准来源表述不清，容易引发验收依据理解歧义"
+            cluster.risk_judgment = dedupe(
+                [
+                    "条款将验收方案、验收标准和实施办法一并要求由中标人提出，容易让供应商误解验收标准来源边界。"
+                ]
+                + cluster.risk_judgment
+            )
+
+        refined.append(cluster)
+
+    for group_key, group_clusters in merged_groups.items():
+        refined.append(_merge_cluster_group(group_key, group_clusters))
+
+    refined.sort(
+        key=lambda cluster: (
+            _detect_standard_rule_code(cluster) == "",
+            STANDARD_RULE_ORDER.get(_detect_standard_rule_code(cluster), 999),
+            -SEVERITY_ORDER.get(cluster.severity, -1),
+            str(cluster.title),
+        )
+    )
+    return refined, pending_review_items, excluded_risks
 
 
 def _build_cross_topic_policy_technical_cluster(
@@ -338,6 +670,15 @@ def _build_cross_topic_acceptance_plan_scoring_cluster(
     if scoring_sentences:
         source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
 
+    acceptance_phrase = "验收相关方案/计划"
+    joined_scoring = "；".join(scoring_sentences)
+    if "验收计划" in joined_scoring:
+        acceptance_phrase = "验收计划安排"
+    elif "验收方案设计" in joined_scoring:
+        acceptance_phrase = "验收方案设计"
+    elif "验收资料" in joined_scoring:
+        acceptance_phrase = "验收资料移交安排"
+
     risk = RiskPoint(
         title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
         severity="中高风险",
@@ -346,7 +687,7 @@ def _build_cross_topic_acceptance_plan_scoring_cluster(
         source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
         risk_judgment=[
             "评审规则已明确不得将项目验收方案作为评审因素。",
-            "当前评分内容中纳入了验收移交方案或验收资料移交安排。",
+            f"当前评分内容中纳入了“{acceptance_phrase}”等验收相关内容，并与评分档次或得分直接挂钩。",
             "相关内容与评分标准、得分或加分直接关联。",
             "存在评分因素设置不合规、评审争议和中标结果不稳风险。",
         ],
@@ -474,6 +815,7 @@ def _build_cross_topic_specific_cert_or_supplier_scoring_cluster(
             "评审规则已明确，不得限定或者指定特定的专利、商标、品牌或者供应商。",
             "当前评分内容将制造商的特定认证证书、特定标志证书作为高分条件。",
             "上述证书要求明显偏向少数具备特定认证体系的供应商或制造商，容易形成倾向性评分。",
+            "如条款中出现“最高100分”等表述，也应理解为评分项内部满分，而非直接等同于评标总分层面的决定性分值。",
             "该类设置可能限制公平竞争，并导致评审结果失真或争议增大。",
         ],
         legal_basis=["需人工复核"],
@@ -507,22 +849,22 @@ def _build_acceptance_testing_cost_shift_cluster(
         source_excerpt_parts.append("条款内容：" + "；".join(demand_sentences[:3]))
 
     risk = RiskPoint(
-        title="将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-        severity="高风险",
-        review_type="需求合规性 / 验收检测费用转嫁",
+        title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        severity="中风险",
+        review_type="需求合规性 / 验收费用边界审查",
         source_location="；".join(source_location_parts) if source_location_parts else "未发现",
         source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
         risk_judgment=[
             "规则已明确，不得要求中标人承担验收产生的检测费用。",
-            "当前条款将检测、相关部门验收等费用纳入投标总价或投标人自行承担范围。",
-            "若上述检测属于项目验收、验收合格前所需的第三方检测、专项检测或法定检测事项，则存在将验收检测费用转嫁给中标人的风险。",
-            "该类条款容易导致报价边界不清、合规责任错位及履约争议。",
+            "当前条款将检测、相关部门验收等费用笼统纳入投标总价，但未区分履约自检、试运行成本与验收阶段第三方/法定检测费用。",
+            "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
+            "该类写法首先表现为费用承担边界不清，其次才可能演化为实际费用转嫁争议。",
         ],
         legal_basis=["需人工复核"],
         rectification=[
-            "删除或调整“验收产生的检测费用由投标人/中标人承担”的表述。",
-            "将安装调试、自检、试运行等正常履约成本，与采购验收阶段产生的检测费用区分开。",
-            "如项目确需检测，应明确检测类型、承担主体和合规依据，避免笼统写入投标人总价承担。",
+            "将安装调试、自检、试运行等正常履约成本，与采购验收阶段可能发生的专项检测或法定检测费用区分开。",
+            "如项目确需检测，应明确检测类型、承担主体和合规依据，避免仅以“投标总价包括检测、相关部门验收等费用”笼统表述。",
+            "对“相关部门验收”涉及的具体部门、流程及费用承担方式作进一步说明。",
         ],
     )
     risk.ensure_defaults()
@@ -949,6 +1291,7 @@ def compare_review_artifacts(
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     clusters = _filter_and_sort_clusters(clusters, triggered_rule_codes)
+    clusters, pending_review_items, excluded_risks = _refine_clusters_for_maturity(clusters, topics)
     conflicts = [
         {
             "cluster_id": cluster.cluster_id,
@@ -1059,6 +1402,8 @@ def compare_review_artifacts(
         "manual_review_count": len(dedupe(manual_review_items)),
         "duplicate_reduction": max(len(signatures) - len(clusters), 0),
         "triggered_rule_codes": triggered_rule_codes,
+        "pending_review_count": len(pending_review_items),
+        "excluded_risk_count": len(excluded_risks),
     }
 
     return ComparisonArtifact(
@@ -1090,6 +1435,8 @@ def compare_review_artifacts(
             "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
             "acceptance_testing_cost_forbidden_to_bidder": acceptance_testing_cost_forbidden_to_bidder,
             "acceptance_testing_cost_shifted_to_bidder": acceptance_testing_cost_shifted_to_bidder,
+            "pending_review_items": pending_review_items,
+            "excluded_risks": excluded_risks,
         },
     )
 

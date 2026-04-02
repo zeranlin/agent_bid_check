@@ -96,6 +96,17 @@ ACCEPTANCE_TESTING_COST_NEGATIVE_RE = re.compile(r"(采购人承担|采购人另
 PROCUREMENT_SUBJECT_GOODS_CONTEXT_RE = re.compile(
     r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机)"
 )
+POLICY_DISCOUNT_RE = re.compile(r"(投标总价给予\s*\d+%?\s*的扣除|给予\s*\d+%?\s*的扣除|\d+%?\s*的扣除)")
+POLICY_SUBJECT_RE = re.compile(r"(中小企业|小型企业|微型企业|残疾人福利性单位|监狱企业)")
+ECO_POLICY_RE = re.compile(
+    r"(节能产品政府采购|环境标志产品政府采购|节能产品认证证书|环境标志产品|调整优化节能产品、环境标志产品政府采购执行机制)"
+)
+COMPLIANCE_PROOF_RE = re.compile(r"(合格证书|机组合格证书|认证合格证|3C认证|原产地证明|三包条例证书|节能产品认证证书)")
+ANNOUNCEMENT_REFERENCE_RE = re.compile(r"(具体时间详见.*招标公告|资格要求详见.*招标公告|以公告为准|详见深圳政府采购智慧平台招标公告)")
+ELECTRONIC_PROCUREMENT_RE = re.compile(r"(电子投标|电子化|智慧平台|CA签名|电子签章|深圳政府采购智慧平台|声明函不需要盖章或签字)")
+CONTRACT_TEMPLATE_RE = re.compile(r"(合同条款及格式|仅供参考|合同范本|格式仅供参考)")
+BRAND_DISCLOSURE_ONLY_RE = re.compile(r"(提供品牌、规格和型号)")
+PARAMETER_TOLERANCE_RE = re.compile(r"(允许偏差\s*[+-]?\d+%?|允许偏差\+\d+%)")
 SCORING_SCORE_LINK_RE = re.compile(
     r"(评审内容|评审标准|评分因素|得分|加分|计分|最高得\s*\d+\s*分|最高得分|满分\s*\d+\s*分|"
     r"每体现\s*\d+\s*点加\s*\d+\s*分|每项加\s*\d+\s*分|最高加\s*\d+\s*分|予以加分|"
@@ -799,6 +810,92 @@ def _extract_acceptance_testing_cost_signals(sections: list[dict]) -> dict[str, 
     }
 
 
+def _extract_policy_execution_signals(sections: list[dict]) -> dict[str, object]:
+    discount_sections: list[dict] = []
+    discount_sentences: list[str] = []
+    eco_sections: list[dict] = []
+    eco_sentences: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        discount_matches = _find_matching_sentences(section, [POLICY_DISCOUNT_RE, POLICY_SUBJECT_RE])
+        eco_matches = _find_matching_sentences(section, [ECO_POLICY_RE])
+        if discount_matches:
+            discount_sections.extend(_normalize_signal_sections([section]))
+            discount_sentences.extend(discount_matches)
+        if eco_matches:
+            eco_sections.extend(_normalize_signal_sections([section]))
+            eco_sentences.extend(eco_matches)
+    return {
+        "policy_discount_present": bool(discount_sections),
+        "policy_discount_sections": _dedupe_signal_sections(discount_sections),
+        "policy_discount_sentences": _dedupe_preserve(discount_sentences),
+        "eco_policy_present": bool(eco_sections),
+        "eco_policy_sections": _dedupe_signal_sections(eco_sections),
+        "eco_policy_sentences": _dedupe_preserve(eco_sentences),
+    }
+
+
+def _extract_compliance_proof_signals(sections: list[dict]) -> dict[str, object]:
+    proof_sections: list[dict] = []
+    proof_sentences: list[str] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        matches = _find_matching_sentences(section, [COMPLIANCE_PROOF_RE])
+        if matches:
+            proof_sections.extend(_normalize_signal_sections([section]))
+            proof_sentences.extend(matches)
+    return {
+        "compliance_proof_present": bool(proof_sections),
+        "compliance_proof_sections": _dedupe_signal_sections(proof_sections),
+        "compliance_proof_sentences": _dedupe_preserve(proof_sentences),
+    }
+
+
+def _extract_boundary_context_signals(sections: list[dict]) -> dict[str, object]:
+    announcement_sections: list[dict] = []
+    announcement_sentences: list[str] = []
+    electronic_sections: list[dict] = []
+    electronic_sentences: list[str] = []
+    contract_template_sections: list[dict] = []
+    brand_disclosure_sections: list[dict] = []
+    parameter_tolerance_sections: list[dict] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        title = str(section.get("title", "")).strip()
+        text = "\n".join(
+            part for part in (title, str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if ANNOUNCEMENT_REFERENCE_RE.search(text):
+            announcement_sections.extend(_normalize_signal_sections([section]))
+            announcement_sentences.extend(_find_matching_sentences(section, [ANNOUNCEMENT_REFERENCE_RE]))
+        if ELECTRONIC_PROCUREMENT_RE.search(text):
+            electronic_sections.extend(_normalize_signal_sections([section]))
+            electronic_sentences.extend(_find_matching_sentences(section, [ELECTRONIC_PROCUREMENT_RE]))
+        if CONTRACT_TEMPLATE_RE.search(text):
+            contract_template_sections.extend(_normalize_signal_sections([section]))
+        if BRAND_DISCLOSURE_ONLY_RE.search(text):
+            brand_disclosure_sections.extend(_normalize_signal_sections([section]))
+        if PARAMETER_TOLERANCE_RE.search(text):
+            parameter_tolerance_sections.extend(_normalize_signal_sections([section]))
+    return {
+        "announcement_reference_present": bool(announcement_sections),
+        "announcement_reference_sections": _dedupe_signal_sections(announcement_sections),
+        "announcement_reference_sentences": _dedupe_preserve(announcement_sentences),
+        "electronic_procurement_present": bool(electronic_sections),
+        "electronic_procurement_sections": _dedupe_signal_sections(electronic_sections),
+        "electronic_procurement_sentences": _dedupe_preserve(electronic_sentences),
+        "contract_template_present": bool(contract_template_sections),
+        "contract_template_sections": _dedupe_signal_sections(contract_template_sections),
+        "brand_disclosure_only_present": bool(brand_disclosure_sections),
+        "brand_disclosure_sections": _dedupe_signal_sections(brand_disclosure_sections),
+        "parameter_tolerance_present": bool(parameter_tolerance_sections),
+        "parameter_tolerance_sections": _dedupe_signal_sections(parameter_tolerance_sections),
+    }
+
+
 def _is_strong_technical_standard_section(section: dict) -> bool:
     title = str(section.get("title", "")).strip()
     module = str(section.get("module", "")).strip()
@@ -1284,16 +1381,25 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
     signals: dict[str, object] = {}
     if definition.key in {"policy", "qualification", "procedure"}:
         signals.update(_extract_import_policy_signals(sections))
+        signals.update(_extract_policy_execution_signals(sections))
+        signals.update(_extract_boundary_context_signals(sections))
+    if definition.key in {"technical_standard", "qualification", "acceptance", "policy"}:
+        signals.update(_extract_compliance_proof_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))
         signals.update(_extract_payment_terms_scoring_signals(sections))
         signals.update(_extract_gifts_or_unrelated_goods_scoring_signals(sections))
         signals.update(_extract_specific_cert_or_supplier_scoring_signals(sections))
+        signals.update(_extract_boundary_context_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))
+        signals.update(_extract_boundary_context_signals(sections))
     if definition.key == "acceptance":
         signals.update(_extract_acceptance_testing_cost_signals(sections))
+        signals.update(_extract_boundary_context_signals(sections))
+    if definition.key == "contract_payment":
+        signals.update(_extract_boundary_context_signals(sections))
     return signals
 
 

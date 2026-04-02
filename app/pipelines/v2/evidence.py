@@ -16,6 +16,21 @@ SCORING_RISK_SIGNAL_RE = re.compile(
     r"(安装、检测、验收、培训计划|验收、培训计划|验收方案|验收标准|验收流程|验收资料|"
     r"验收组织能力|制造商|认证证书|CNAS|省级标准协会|GB\d+|BS2869)"
 )
+POLICY_FIXED_SIGNAL_RE = re.compile(
+    r"(关于享受优惠政策的主体及价格扣除比例|中小企业声明函|残疾人福利性单位声明函|监狱企业|"
+    r"节能产品政府采购|环境标志产品政府采购|节能产品认证证书|价格扣除比例|投标总价给予\s*\d+%?\s*的扣除|"
+    r"给予\s*\d+%?\s*的扣除|优惠政策)"
+)
+COMPLIANCE_PROOF_SIGNAL_RE = re.compile(
+    r"(合格证书|机组合格证书|认证合格证|3C认证|原产地证明|三包条例证书|节能产品认证证书)"
+)
+ANNOUNCEMENT_REFERENCE_SIGNAL_RE = re.compile(
+    r"(具体时间详见.*招标公告|资格要求详见.*招标公告|以公告为准|详见深圳政府采购智慧平台招标公告)"
+)
+ELECTRONIC_PROCUREMENT_SIGNAL_RE = re.compile(
+    r"(电子投标|电子化|智慧平台|CA签名|电子签章|深圳政府采购智慧平台|声明函不需要盖章或签字)"
+)
+CONTRACT_TEMPLATE_SIGNAL_RE = re.compile(r"(合同条款及格式|仅供参考|合同范本|格式仅供参考)")
 TECHNICAL_STANDARD_PRIMARY_TITLE_SIGNALS = ("规格及技术参数", "技术参数", "技术要求", "主要技术参数", "技术规格", "参数要求")
 TECHNICAL_STANDARD_NEGATIVE_TITLE_SIGNALS = ("售后服务", "付款方式", "设备验收", "商务要求", "商务条款", "其他商务")
 TECHNICAL_STANDARD_FOREIGN_REF_RE = re.compile(
@@ -109,6 +124,7 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
     title_hits, title_keywords = _keyword_hits(section.title, definition.keywords)
     excerpt_hits, excerpt_keywords = _keyword_hits(f"{section.excerpt}\n{section.body}", definition.keywords)
     excerpt_hits_for_score = min(excerpt_hits, 12) if definition.key == "scoring" else excerpt_hits
+    text = "\n".join(part for part in (section.title, section.excerpt, section.body) if part)
     primary_modules = set(definition.boundary.primary_modules or definition.modules)
     secondary_modules = set(definition.boundary.secondary_modules)
     primary_module_bonus = 24 if section.module in primary_modules else 0
@@ -142,7 +158,6 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus += 8
         if raw_scores.get("technical", 0) >= 3 or raw_scores.get("procedure", 0) >= 3:
             special_bonus += 3
-        text = "\n".join(part for part in (section.title, section.excerpt, section.body) if part)
         if any(signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS):
             special_bonus += 24
         if SCORING_SCORE_LINK_RE.search(text):
@@ -185,6 +200,28 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus -= 28
         if section.module in {"contract", "acceptance"} and not (foreign_refs or cn_refs):
             special_bonus -= 12
+        if COMPLIANCE_PROOF_SIGNAL_RE.search(text):
+            special_bonus += 10
+    if definition.key == "policy":
+        if POLICY_FIXED_SIGNAL_RE.search(text):
+            special_bonus += 28
+        if re.search(r"\d+\s*%\s*的扣除", text):
+            special_bonus += 22
+        if "其他关键信息" in section.title or "政策" in section.title:
+            special_bonus += 8
+    if definition.key == "procedure":
+        if ANNOUNCEMENT_REFERENCE_SIGNAL_RE.search(text):
+            special_bonus += 20
+        if ELECTRONIC_PROCUREMENT_SIGNAL_RE.search(text):
+            special_bonus += 10
+    if definition.key == "qualification":
+        if ANNOUNCEMENT_REFERENCE_SIGNAL_RE.search(text):
+            special_bonus += 12
+        if COMPLIANCE_PROOF_SIGNAL_RE.search(text):
+            special_bonus += 8
+    if definition.key in {"acceptance", "contract_payment"}:
+        if CONTRACT_TEMPLATE_SIGNAL_RE.search(text):
+            special_bonus -= 24
 
     total_score = (
         title_hits * 8

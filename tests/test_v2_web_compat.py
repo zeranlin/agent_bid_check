@@ -186,7 +186,7 @@ def test_build_review_view_prioritizes_standard_compare_cards() -> None:
 
 ## 风险点2：将项目验收方案纳入评审因素，违反评审规则合规性要求
 
-- 问题定性：中高风险
+- 问题定性：中风险
 - 审查类型：评分因素合规性 / 评审规则设置合法性
 - 原文位置：第六章 评分办法
 - 原文摘录：安装、检测、验收、培训计划，评价为优得60分。
@@ -222,3 +222,54 @@ def test_build_review_view_prioritizes_standard_compare_cards() -> None:
     view = build_review_view(report, comparison)
     assert view["all_cards"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
     assert view["all_cards"][0]["is_standard_compare"] is True
+
+
+def test_build_review_view_sorts_left_risk_list_by_severity_desc() -> None:
+    report = parse_review_markdown(
+        """
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：中风险事项
+
+- 问题定性：中风险
+- 审查类型：类型A
+- 原文位置：第一章
+- 原文摘录：中风险内容。
+- 风险判断：
+  - 中风险判断
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 建议A
+
+## 风险点2：高风险事项
+
+- 问题定性：高风险
+- 审查类型：类型B
+- 原文位置：第二章
+- 原文摘录：高风险内容。
+- 风险判断：
+  - 高风险判断
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 建议B
+
+## 风险点3：低风险事项
+
+- 问题定性：低风险
+- 审查类型：类型C
+- 原文位置：第三章
+- 原文摘录：低风险内容。
+- 风险判断：
+  - 低风险判断
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 建议C
+""".strip()
+    )
+    view = build_review_view(report, comparison=None)
+    assert [item["title"] for item in view["all_cards"][:3]] == ["高风险事项", "中风险事项", "低风险事项"]

@@ -197,7 +197,7 @@ def test_compare_review_artifacts_adds_policy_technical_inconsistency_risk() -> 
     ]
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     titles = [cluster.title for cluster in comparison.clusters]
-    assert "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突" in titles
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in titles
     assert comparison.metadata["failure_reason_codes"] == ["policy_technical_inconsistency"]
     assert comparison.metadata["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
 
@@ -678,11 +678,9 @@ def test_compare_review_artifacts_adds_specific_cert_or_supplier_risk() -> None:
     ]
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
-    cluster = next(
-        item for item in comparison.clusters if item.title == "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险"
-    )
+    cluster = next(item for item in comparison.clusters if item.title == "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险")
     assert cluster.severity == "高风险"
-    assert cluster.review_type == "评分因素合规性 / 限定特定供应商或认证体系"
+    assert cluster.review_type == "评分因素合规性 / 限定特定认证或发证机构"
     assert "制造商" in cluster.source_excerpts[0]
     assert "CNAS中国认可产品标志证书" in cluster.source_excerpts[0]
     assert comparison.metadata["failure_reason_codes"] == ["specific_brand_or_supplier_in_scoring_forbidden"]
@@ -715,7 +713,7 @@ def test_compare_review_artifacts_does_not_add_specific_cert_or_supplier_risk_fo
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     assert comparison.metadata["failure_reason_codes"] == []
-    assert all(cluster.title != "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" for cluster in comparison.clusters)
+    assert all(cluster.title != "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" for cluster in comparison.clusters)
 
 
 def test_compare_review_artifacts_adds_acceptance_testing_cost_shift_risk() -> None:
@@ -747,11 +745,9 @@ def test_compare_review_artifacts_adds_acceptance_testing_cost_shift_risk() -> N
     ]
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
-    cluster = next(
-        item for item in comparison.clusters if item.title == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
-    )
-    assert cluster.severity == "高风险"
-    assert cluster.review_type == "需求合规性 / 验收检测费用转嫁"
+    cluster = next(item for item in comparison.clusters if item.title == "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险")
+    assert cluster.severity == "中风险"
+    assert cluster.review_type == "需求合规性 / 验收费用边界审查"
     assert "相关部门验收" in cluster.source_excerpts[0]
     assert comparison.metadata["failure_reason_codes"] == ["acceptance_testing_cost_shifted_to_bidder"]
 
@@ -854,10 +850,10 @@ def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_
     titles = [cluster.title for cluster in comparison.clusters]
     assert titles[:3] == [
         "将项目验收方案纳入评审因素，违反评审规则合规性要求",
-        "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
-        "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+        "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
     ]
-    assert titles.count("以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险") == 1
+    assert titles.count("以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险") == 1
     assert "评分标准中“安装、检测、验收、培训计划”存在主观性描述且分值逻辑错误" not in titles
     assert "制造商资质证书评分项指向特定认证，具有排他性" not in titles
     assert "将验收产生的检测费用笼统计入投标人承担范围，存在需求条款合规风险" not in titles
@@ -893,7 +889,7 @@ def test_compare_review_artifacts_does_not_add_acceptance_testing_cost_shift_ris
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     assert comparison.metadata["failure_reason_codes"] == []
-    assert all(cluster.title != "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险" for cluster in comparison.clusters)
+    assert all(cluster.title != "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险" for cluster in comparison.clusters)
 
 
 def test_compare_review_artifacts_avoids_false_positive_when_equivalent_standard_is_allowed() -> None:
@@ -1079,7 +1075,7 @@ def test_compare_review_artifacts_prefers_policy_topic_locations_over_qualificat
     cluster = next(
         item
         for item in comparison.clusters
-        if item.title == "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突"
+        if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
     )
     assert cluster.source_locations == ["政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数"]
 
@@ -1199,3 +1195,117 @@ def test_compare_review_artifacts_does_not_add_star_marker_risk_for_gbt_or_starr
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     titles = [cluster.title for cluster in comparison.clusters]
     assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" not in titles
+
+
+def test_compare_review_artifacts_excludes_policy_missing_risk_when_discount_and_eco_evidence_present() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：中小企业扶持政策落实条款缺失关键执行参数
+
+- 问题定性：中风险
+- 审查类型：政策适用完整性审查
+- 原文位置：第二章 其他关键信息
+- 原文摘录：未发现明确价格扣除比例。
+- 风险判断：
+  - 需人工复核
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充价格扣除比例
+""".strip(),
+    )
+    topics = [
+        TopicReviewArtifact(
+            topic="policy",
+            summary="政策专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖政策条款。",
+            metadata={
+                "selected_sections": [{"title": "第二章 其他关键信息"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "policy_discount_present": True,
+                    "policy_discount_sentences": ["投标总价给予10%的扣除。"],
+                    "eco_policy_present": True,
+                    "eco_policy_sentences": ["如涉及相关品目，应提供有效节能产品认证证书。"],
+                },
+            },
+        )
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert all(cluster.title != "中小企业扶持政策落实条款缺失关键执行参数" for cluster in comparison.clusters)
+    assert any(item["title"] == "中小企业扶持政策落实条款缺失关键执行参数" for item in comparison.metadata["excluded_risks"])
+
+
+def test_compare_review_artifacts_moves_evidence_gap_items_to_pending_review() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：具体资格条件内容缺失，无法判断是否存在排斥性条款
+
+- 问题定性：需人工复核
+- 审查类型：资格条件审查
+- 原文位置：第五章 招标公告
+- 原文摘录：详见招标公告。
+- 风险判断：
+  - 需补充资格条件全文
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充公告全文
+""".strip(),
+    )
+    topics = [
+        TopicReviewArtifact(
+            topic="qualification",
+            summary="资格专题仍需人工复核。",
+            risk_points=[],
+            need_manual_review=True,
+            coverage_note="资格条件未完整召回。",
+            metadata={
+                "selected_sections": [{"title": "5.2 投标人资格要求"}],
+                "missing_evidence": ["招标公告中投标人资格要求全文"],
+                "structured_signals": {},
+            },
+        )
+    ]
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert all(cluster.title != "具体资格条件内容缺失，无法判断是否存在排斥性条款" for cluster in comparison.clusters)
+    assert any(item["title"] == "具体资格条件内容缺失，无法判断是否存在排斥性条款" for item in comparison.metadata["pending_review_items"])
+
+
+def test_compare_review_artifacts_excludes_contract_template_risks() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：关键合同条款数值缺失，导致付款与履约责任无法评估
+
+- 问题定性：高风险
+- 审查类型：条款完整性审查
+- 原文位置：第五章 合同条款及格式
+- 原文摘录：仅供参考，付款比例留空。
+- 风险判断：
+  - 需人工复核
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充具体比例
+""".strip(),
+    )
+    comparison = compare_review_artifacts("sample.docx", baseline, [])
+    assert comparison.clusters == []
+    assert any(item["title"] == "关键合同条款数值缺失，导致付款与履约责任无法评估" for item in comparison.metadata["excluded_risks"])

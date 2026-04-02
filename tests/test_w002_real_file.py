@@ -18,6 +18,7 @@ from app.pipelines.v2.topic_review import (
     GB_NON_T_REF_RE,
     _build_structured_signals,
 )
+from app.pipelines.v2.topics import get_topic_definition
 from app.web.v2_app import build_review_view
 
 
@@ -89,6 +90,46 @@ def _build_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[To
     return structure, evidence, [topic for topic in topics]
 
 
+def _build_real_file_replay_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    text = extract_text(REAL_FILE)
+    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+    source_run = Path("data/results/v2/20260401-173633-92447616/topic_reviews")
+    topics: list[TopicReviewArtifact] = []
+    for path in sorted(source_run.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topic_key = payload.get("topic", path.stem)
+        definition = get_topic_definition(topic_key)
+        bundle = evidence.metadata["topic_evidence_bundles"][topic_key]
+        sections = [section for section in bundle.get("sections", []) if isinstance(section, dict)]
+        metadata = {
+            **dict(payload.get("metadata", {}) or {}),
+            "selected_sections": [
+                {
+                    "title": section.get("title", ""),
+                    "start_line": section.get("start_line"),
+                    "end_line": section.get("end_line"),
+                    "module": section.get("module", ""),
+                }
+                for section in sections
+            ],
+            "structured_signals": _build_structured_signals(definition, sections),
+            "evidence_bundle": bundle,
+            "topic_coverage": evidence.metadata["topic_coverages"][topic_key],
+        }
+        topics.append(
+            TopicReviewArtifact(
+                topic=topic_key,
+                summary=payload.get("summary", ""),
+                risk_points=[RiskPoint(**risk) for risk in payload.get("risk_points", [])],
+                need_manual_review=payload.get("need_manual_review", False),
+                coverage_note=payload.get("coverage_note", ""),
+                metadata=metadata,
+            )
+        )
+    return structure, evidence, topics
+
+
 def test_w002_real_file_compare_matrix_is_complete() -> None:
     structure, evidence, topics = _build_real_file_topics()
     comparison = compare_review_artifacts(REAL_FILE.name, V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n"), topics)
@@ -111,11 +152,11 @@ def test_w002_real_file_compare_matrix_is_complete() -> None:
     assert technical_topic.metadata["structured_signals"]["contains_gb_non_t"] is True
 
     titles = [cluster.title for cluster in comparison.clusters]
-    assert "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突" in titles
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in titles
     assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in titles
     assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in titles
-    assert "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" in titles
-    assert "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险" in titles
+    assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in titles
+    assert "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险" in titles
 
 
 def test_w002_real_file_web_titles_follow_comparison_titles() -> None:
@@ -129,3 +170,18 @@ def test_w002_real_file_web_titles_follow_comparison_titles() -> None:
     assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in card_titles
     assert "将付款方式纳入评审因素，违反评审规则合规性要求" not in card_titles
     assert "将赠送额外商品作为评分条件，违反评审规则合规性要求" not in card_titles
+
+
+def test_w004_real_file_refinement_separates_formal_pending_and_excluded() -> None:
+    structure, evidence, replay_topics = _build_real_file_replay_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+    assert "具体资格条件内容缺失，无法判断是否存在排斥性条款" in pending_titles
+    assert "废标条件及最终解释权条款证据缺失" in pending_titles
+    assert "关键合同条款数值缺失，导致付款与履约责任无法评估" in excluded_titles
+    assert "中小企业扶持政策落实条款缺失关键执行参数" in excluded_titles
