@@ -1599,7 +1599,7 @@
   },
   {
     "sample_id": "regression_scoring_gifts_positive_008",
-    "document_name": "赠送额外商品进入评分因素正样本",
+    "document_name": "赠送非项目物资进入评分因素正样本",
     "gold": {
       "structure": {
         "required_sections": [
@@ -1620,8 +1620,8 @@
       "risks": [
         {
           "id": "risk-scoring-1001",
-          "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
-          "review_type": "评分因素合规性 / 不当附加交易条件",
+          "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
+          "review_type": "评分因素合规性 / 赠送非项目物资评分",
           "severity": "高风险",
           "source_location": "第一章 评审规则；第六章 评分办法",
           "manual_review": false
@@ -1659,8 +1659,8 @@
       "comparison": {
         "clusters": [
           {
-            "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
-            "review_type": "评分因素合规性 / 不当附加交易条件",
+            "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
+            "review_type": "评分因素合规性 / 赠送非项目物资评分",
             "severity": "高风险",
             "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
             "source_excerpts": [
@@ -1673,6 +1673,65 @@
         "metadata": {
           "failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"],
           "comparison_failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_gifts_negative_necessary_accessories_008",
+    "document_name": "必要配套附件进入评分不应误报赠品风险负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1002a",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": ["第六章 评分办法"],
+            "required_modules": ["scoring"]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 20,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 20,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
         }
       }
     }
@@ -1818,8 +1877,8 @@
       "risks": [
         {
           "id": "risk-scoring-1004",
-          "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
-          "review_type": "评分因素合规性 / 不当附加交易条件",
+          "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
+          "review_type": "评分因素合规性 / 赠送非项目物资评分",
           "severity": "高风险",
           "source_location": "第一章 评审规则；第六章 评分办法",
           "manual_review": false
@@ -1857,8 +1916,8 @@
       "comparison": {
         "clusters": [
           {
-            "title": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
-            "review_type": "评分因素合规性 / 不当附加交易条件",
+            "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
+            "review_type": "评分因素合规性 / 赠送非项目物资评分",
             "severity": "高风险",
             "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
             "source_excerpts": [

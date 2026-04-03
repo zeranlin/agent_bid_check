@@ -277,22 +277,25 @@ def test_regression_gifts_or_unrelated_goods_in_scoring_samples_are_classified_c
     positive = evaluate_sample(samples["regression_scoring_gifts_positive_008"])
     negative = evaluate_sample(samples["regression_scoring_gifts_negative_service_only_008"])
     subject_negative = evaluate_sample(samples["regression_scoring_gifts_negative_procurement_subject_008"])
+    accessories_negative = evaluate_sample(samples["regression_scoring_gifts_negative_necessary_accessories_008"])
     hidden_positive = evaluate_sample(samples["regression_scoring_gifts_hidden_positive_008"])
 
     assert positive["matched_risk_count"] == 1
     assert positive["comparison_failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
     matched = positive["risks"]["matched_risks"][0]
-    assert matched["gold_title"] == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+    assert matched["gold_title"] == "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险"
     assert hidden_positive["matched_risk_count"] == 1
     assert hidden_positive["comparison_failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
     hidden_matched = hidden_positive["risks"]["matched_risks"][0]
-    assert hidden_matched["gold_title"] == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+    assert hidden_matched["gold_title"] == "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险"
 
     assert negative["matched_risk_count"] == 0
     assert negative["missed_risk_count"] == 0
     assert negative["comparison_failure_reason_codes"] == []
     assert subject_negative["matched_risk_count"] == 0
     assert subject_negative["missed_risk_count"] == 0
+    assert accessories_negative["matched_risk_count"] == 0
+    assert accessories_negative["missed_risk_count"] == 0
     assert subject_negative["comparison_failure_reason_codes"] == []
 
 

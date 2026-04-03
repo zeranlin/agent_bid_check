@@ -602,17 +602,17 @@ def test_compare_review_artifacts_adds_gifts_or_unrelated_goods_risk() -> None:
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     cluster = next(
-        item for item in comparison.clusters if item.title == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+        item for item in comparison.clusters if item.title == "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险"
     )
     assert cluster.severity == "高风险"
-    assert cluster.review_type == "评分因素合规性 / 不当附加交易条件"
+    assert cluster.review_type == "评分因素合规性 / 赠送非项目物资评分"
     assert "赠送台式电脑" in cluster.source_excerpts[0]
     assert "得100分" in cluster.source_excerpts[0]
     assert comparison.metadata["failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
     report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
-    assert "将赠送额外商品作为评分条件，违反评审规则合规性要求" in report
+    assert "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" in report
     assert "问题定性：高风险" in report
-    assert "删除“赠送台式电脑、打印机”等与采购无关的附加商品要求。" in report
+    assert "删除赠送台式电脑、打印机、办公设备等与项目采购无关物资的加分条件。" in report
 
 
 def test_compare_review_artifacts_does_not_add_gifts_risk_for_service_response_only() -> None:
@@ -642,7 +642,7 @@ def test_compare_review_artifacts_does_not_add_gifts_risk_for_service_response_o
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     assert comparison.metadata["failure_reason_codes"] == []
-    assert all(cluster.title != "将赠送额外商品作为评分条件，违反评审规则合规性要求" for cluster in comparison.clusters)
+    assert all(cluster.title != "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" for cluster in comparison.clusters)
 
 
 def test_compare_review_artifacts_does_not_add_gifts_risk_for_procurement_subject_goods() -> None:
@@ -672,7 +672,7 @@ def test_compare_review_artifacts_does_not_add_gifts_risk_for_procurement_subjec
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     assert comparison.metadata["failure_reason_codes"] == []
-    assert all(cluster.title != "将赠送额外商品作为评分条件，违反评审规则合规性要求" for cluster in comparison.clusters)
+    assert all(cluster.title != "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" for cluster in comparison.clusters)
 
 
 def test_compare_review_artifacts_adds_gifts_risk_for_hidden_related_service_bundle() -> None:
@@ -705,11 +705,41 @@ def test_compare_review_artifacts_adds_gifts_risk_for_hidden_related_service_bun
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     cluster = next(
-        item for item in comparison.clusters if item.title == "将赠送额外商品作为评分条件，违反评审规则合规性要求"
+        item for item in comparison.clusters if item.title == "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险"
     )
     assert "值班室办公设备配置" in cluster.source_excerpts[0]
     assert "会议保障等综合服务内容" in cluster.source_excerpts[0]
     assert comparison.metadata["failure_reason_codes"] == ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+
+
+def test_compare_review_artifacts_does_not_add_gifts_risk_for_necessary_accessories() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分规则。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "gifts_or_unrelated_goods_forbidden_in_scoring": True,
+                    "gifts_or_goods_rule_sections": [{"title": "第一章 评审规则", "section_id": "1-5"}],
+                    "gifts_or_goods_rule_sentences": ["评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"],
+                    "scoring_contains_gifts_or_unrelated_goods": False,
+                    "gifts_or_goods_scoring_sections": [],
+                    "gifts_or_goods_scoring_sentences": ["承诺无偿提供安装辅材、调试辅材和随机附件的，得20分。"],
+                    "gifts_or_goods_linked_to_score": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    assert comparison.metadata["failure_reason_codes"] == []
+    assert all(cluster.title != "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" for cluster in comparison.clusters)
 
 
 def test_compare_review_artifacts_adds_specific_cert_or_supplier_risk() -> None:

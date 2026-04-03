@@ -2134,6 +2134,31 @@
     }
   },
   {
+    "sample_id": "topic_scoring_gifts_negative_necessary_accessories_008",
+    "name": "topic_scoring_gifts_negative_necessary_accessories_008",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分条款中提到无偿提供安装辅材、调试辅材、随机附件，但属于项目必要配套，不应误报为赠品风险。",
+    "text": "第六章 评分办法\n承诺无偿提供安装辅材、调试辅材和随机附件并完成现场调试的，得20分；未提供完整配套的，不得分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
     "sample_id": "topic_scoring_gifts_hidden_positive_008",
     "name": "topic_scoring_gifts_hidden_positive_008",
     "topic_mode": "enhanced",

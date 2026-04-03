@@ -1,6 +1,6 @@
 rule_id: R-004
 rule_name: 付款方式禁入评分识别
-rule_version: 1
+rule_version: 2
 status: active
 
 owner:
@@ -11,7 +11,7 @@ source:
   origin_type: business_rule
   origin_desc: 评审规则要求不得将付款方式作为评审因素
   created_date: 2026-04-02
-  last_updated_date: 2026-04-02
+  last_updated_date: 2026-04-03
 
 classification:
   category: scoring_compliance
@@ -98,4 +98,7 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-
+  - version: 2
+    date: 2026-04-03
+    change: R-004-F 补强真实表达“付款周期短于招标文件要求 / 预付款比例更有利于采购人资金安排”回放基线与专项测试
+    author: T

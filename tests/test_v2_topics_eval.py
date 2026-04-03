@@ -252,6 +252,11 @@ def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> Non
     assert subject_negative_signals["scoring_contains_gifts_or_unrelated_goods"] is False
     assert subject_negative_signals["gifts_or_goods_linked_to_score"] is False
 
+    accessories_negative = evaluate_sample(samples["topic_scoring_gifts_negative_necessary_accessories_008"])
+    accessories_negative_signals = accessories_negative["target_topic_detail"]["structured_signals"]
+    assert accessories_negative_signals["scoring_contains_gifts_or_unrelated_goods"] is False
+    assert accessories_negative_signals["gifts_or_goods_linked_to_score"] is False
+
     hidden_positive = evaluate_sample(samples["topic_scoring_gifts_hidden_positive_008"])
     hidden_positive_signals = hidden_positive["target_topic_detail"]["structured_signals"]
     assert hidden_positive_signals["scoring_contains_gifts_or_unrelated_goods"] is True

@@ -1,9 +1,9 @@
 {
-  "rule_id": "R-004",
+  "rule_id": "R-008",
   "sample_role": "replay",
   "real_file": "/Users/linzeran/code/2026-zn/test_getst/data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0323.docx",
   "expected_result": "hit",
-  "reference_result_dir": "data/results/v2/20260403-r004f-real-replay",
+  "reference_result_dir": "data/results/v2/20260403-r008-real-replay",
   "reference_test": "tests/test_w002_real_file.py",
-  "note": "使用保留付款评分条款的历史真实上传版进行回放，当前 test_target 版本不含该条款。"
+  "note": "使用保留显性赠送条款的历史真实上传版进行回放，当前 test_target 版本不含该条款。"
 }

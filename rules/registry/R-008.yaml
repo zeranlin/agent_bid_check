@@ -1,0 +1,120 @@
+rule_id: R-008
+rule_name: 评分项中赠送非项目物资识别
+rule_version: 1
+status: review
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: remediation_rule
+  origin_desc: 真实文件中出现“1小时到场并赠送台式电脑、打印机各1套得100分”条款，需从 R-005 总类规则中拆出独立显性规则
+  created_date: 2026-04-03
+  last_updated_date: 2026-04-03
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 独立识别评分项中要求赠送台式电脑、打印机、办公设备、礼品、值班室物资等非项目物资的显性高风险场景
+  reviewer_note: R-008 从 R-005 总类规则中拆出，专门承接显性“赠送非项目物资”口径，避免继续被泛化成一般售后服务或无关服务问题
+
+trigger_conditions:
+  all_of:
+    - 规则侧命中不得要求提供赠品、回扣或者与采购无关的其他商品、服务
+    - 评分项、加分项或承诺项中出现赠送、附送、额外提供、无偿提供等显性表达
+    - 赠送对象命中台式电脑、打印机、办公设备、礼品、值班室物资等非采购标的
+    - 赠送行为与得分、加分、档次评价或中标倾向直接挂钩
+  any_of:
+    - comparison.failure_reason_codes 命中 gifts_or_unrelated_goods_in_scoring_forbidden
+
+exclude_conditions:
+  any_of:
+    - 所谓赠送内容本身属于采购标的组成部分
+    - 条款仅涉及随机附件、安装辅材、调试辅材、必要配套、备品备件等项目必要配套
+    - 仅涉及正常培训、延保、维保等与采购标的直接相关的履约服务
+
+downgrade_conditions:
+  any_of:
+    - 赠送对象是否属于非项目物资存在边界歧义，需结合清单和报价范围进一步人工核实
+    - 仅出现弱赠送信号，未与得分或档次评价直接挂钩
+
+output:
+  formal_title: 评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险
+  pending_title: 评分项可能引入赠送非项目物资安排，建议人工复核
+  excluded_title: 相关表述属于项目必要配套或采购标的组成部分，不构成赠品评分风险
+  formal_description: 评分条款将向采购人额外赠送与采购标的无关的物资作为加分条件，实质上是以赠品或附加利益影响评审结果，不属于围绕履约能力、技术响应或服务能力设置的正当评分因素。
+  remediation_advice: 删除赠送台式电脑、打印机、办公设备等与项目采购无关物资的加分条件；评分因素应仅围绕采购标的履约能力、技术响应、实施组织和服务保障能力设置。
+
+evidence_hints:
+  keywords:
+    - 不得要求提供赠品
+    - 赠送
+    - 附送
+    - 额外提供
+    - 无偿提供
+    - 台式电脑
+    - 打印机
+    - 办公设备
+    - 礼品
+    - 值班室物资
+  sections:
+    - 评分内容
+    - 评分标准
+    - 售后服务承诺
+    - 商务评分
+
+boundary_relation:
+  role: child_rule
+  parent_rule: R-005
+  boundary_note:
+    - R-008 只负责显性“赠送非项目物资”条款
+    - R-005 保留“无关商品/无关服务进入评分”的总类和隐性办公设备/会议保障变体
+  shared_implementation:
+    compare_rule_code: gifts_or_unrelated_goods_in_scoring_forbidden
+    implementation_note: 当前 compare 规则码共享，但显性赠送非项目物资场景的标准标题、样本、测试、真实文件回放由 R-008 单独治理
+
+samples:
+  positive:
+    - data/examples/rules/R-008/positive-01.json
+  negative:
+    - data/examples/rules/R-008/negative-01.json
+  replay:
+    - data/examples/rules/R-008/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+    - tests/test_rule_registry_r008.py
+  replay:
+    - tests/test_w002_real_file.py
+  report:
+    - tests/test_v2_web_compat.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-008.md
+  followup_tasks:
+    - docs/v2-remediation-tracker.md
+  acceptance_records:
+    - docs/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-03
+    change: 从 R-005 总类规则中拆出独立显性“赠送非项目物资”规则并完成治理注册
+    author: T

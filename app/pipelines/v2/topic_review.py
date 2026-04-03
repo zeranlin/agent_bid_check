@@ -77,9 +77,13 @@ PAYMENT_TERMS_TERM_RE = re.compile(
     r"付款周期|预付款比例|付款方式|付款条件|付款节点|支付安排|付款期限|预付款|首付款|尾款)"
 )
 GIFTS_OR_UNRELATED_GOODS_TERM_RE = re.compile(
-    r"(额外向采购人值班室赠送台式电脑、打印机各1套|赠送台式电脑|赠送打印机|额外赠送|额外提供|赠送|赠品|"
-    r"台式电脑|打印机|回扣|返利|无关商品|无关服务|值班室办公设备配置|会议保障等综合服务内容|"
+    r"(额外向采购人值班室赠送台式电脑、打印机各1套|赠送台式电脑|赠送打印机|赠送办公设备|赠送值班室物资|"
+    r"附送|额外赠送|额外提供|无偿提供|赠送|赠品|台式电脑|打印机|办公设备|礼品|值班室物资|"
+    r"回扣|返利|无关商品|无关服务|值班室办公设备配置|会议保障等综合服务内容|"
     r"办公设备配置|会议保障|综合服务内容)"
+)
+GIFTS_OR_UNRELATED_GOODS_NEGATIVE_RE = re.compile(
+    r"(随机附件|随机配件|安装辅材|调试辅材|必要配套|配套附件|备品备件|延保服务|培训服务|维保服务)"
 )
 SPECIFIC_CERT_OR_SUPPLIER_TERM_RE = re.compile(
     r"(制造商|特定认证证书|标志证书|采用国际标准产品确认证书|采用国际标准产品标志证书|"
@@ -135,7 +139,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "star_marker_missing_for_mandatory_standard": "强制性标准条款未按评审规则标注★",
     "acceptance_plan_in_scoring_forbidden": "将项目验收方案纳入评审因素",
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素",
-    "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件",
+    "gifts_or_unrelated_goods_in_scoring_forbidden": "评分项中要求赠送非项目物资",
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
     "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
 }
@@ -678,12 +682,14 @@ def _extract_gifts_or_unrelated_goods_scoring_signals(sections: list[dict]) -> d
             fragments = _find_match_fragments(section, GIFTS_OR_UNRELATED_GOODS_FORBIDDEN_RE)
             rule_sentences.extend(fragments or _find_match_fragments(section, SCORING_SCORE_LINK_RE))
 
-        if has_goods_term and not goods_is_procurement_subject:
+        goods_is_project_related = bool(GIFTS_OR_UNRELATED_GOODS_NEGATIVE_RE.search(text))
+
+        if has_goods_term and not goods_is_procurement_subject and not goods_is_project_related:
             scoring_contains_gifts_or_unrelated_goods = True
             goods_sections.extend(_normalize_signal_sections([section]))
             goods_sentences.extend(_find_match_fragments(section, GIFTS_OR_UNRELATED_GOODS_TERM_RE))
 
-        if has_goods_term and has_score_link and not goods_is_procurement_subject:
+        if has_goods_term and has_score_link and not goods_is_procurement_subject and not goods_is_project_related:
             gifts_or_goods_linked_to_score = True
             goods_sections.extend(_normalize_signal_sections([section]))
             goods_sentences.extend(_find_match_fragments(section, SCORING_SCORE_LINK_RE))

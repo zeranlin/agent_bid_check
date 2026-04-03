@@ -16,6 +16,13 @@ SCORING_RISK_SIGNAL_RE = re.compile(
     r"(安装、检测、验收、培训计划|验收、培训计划|验收方案|验收标准|验收流程|验收资料|"
     r"验收组织能力|制造商|认证证书|CNAS|省级标准协会|GB\d+|BS2869)"
 )
+SCORING_GIFTS_EXPLICIT_SIGNAL_RE = re.compile(r"(赠送|附送|额外提供|无偿提供|赠品|回扣|返利)")
+SCORING_GIFTS_HIDDEN_SIGNAL_RE = re.compile(r"(值班室办公设备配置|会议保障等综合服务内容|办公设备配置|会议保障|综合服务内容)")
+SCORING_NON_PROJECT_GOODS_RE = re.compile(r"(台式电脑|打印机|办公设备|礼品|值班室物资|值班室办公设备)")
+SCORING_GIFTS_NEGATIVE_RE = re.compile(r"(随机附件|随机配件|安装辅材|调试辅材|必要配套|配套附件|备品备件|延保服务|培训服务|维保服务)")
+SCORING_PROCUREMENT_SUBJECT_GOODS_RE = re.compile(
+    r"(本项目采购标的包括|采购标的包括|采购内容包括|采购范围包括|本次采购包括|本项目包含).{0,40}(台式电脑|打印机|办公设备)"
+)
 POLICY_FIXED_SIGNAL_RE = re.compile(
     r"(关于享受优惠政策的主体及价格扣除比例|中小企业声明函|残疾人福利性单位声明函|监狱企业|"
     r"节能产品政府采购|环境标志产品政府采购|节能产品认证证书|价格扣除比例|投标总价给予\s*\d+%?\s*的扣除|"
@@ -160,6 +167,12 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
         if CONTRACT_PAYMENT_CHAIN_RE.search(text):
             special_bonus += 28
     if definition.key == "scoring":
+        has_score_link = bool(SCORING_SCORE_LINK_RE.search(text))
+        direct_gifts_signal = bool(SCORING_GIFTS_EXPLICIT_SIGNAL_RE.search(text))
+        non_project_goods_signal = bool(SCORING_NON_PROJECT_GOODS_RE.search(text))
+        hidden_gifts_signal = bool(SCORING_GIFTS_HIDDEN_SIGNAL_RE.search(text))
+        gifts_negative_signal = bool(SCORING_GIFTS_NEGATIVE_RE.search(text))
+        procurement_subject_goods = bool(SCORING_PROCUREMENT_SUBJECT_GOODS_RE.search(text))
         if raw_scores.get("qualification", 0) >= 3:
             special_bonus += 4
         if any(signal in section.title for signal in ("评分表", "综合评分表", "评分细则", "评审因素表")):
@@ -168,12 +181,17 @@ def _score_section(section: SectionCandidate, definition: TopicDefinition) -> tu
             special_bonus += 3
         if any(signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS):
             special_bonus += 24
-        if SCORING_SCORE_LINK_RE.search(text):
+        if has_score_link:
             special_bonus += 18
         if SCORING_RISK_SIGNAL_RE.search(text):
             special_bonus += 14
-        if re.search(r"(安装、检测、验收、培训计划|验收、培训计划)", text) and SCORING_SCORE_LINK_RE.search(text):
+        if re.search(r"(安装、检测、验收、培训计划|验收、培训计划)", text) and has_score_link:
             special_bonus += 30
+        if not procurement_subject_goods and not gifts_negative_signal:
+            if direct_gifts_signal and non_project_goods_signal and has_score_link:
+                special_bonus += 42
+            elif hidden_gifts_signal and has_score_link:
+                special_bonus += 26
         if any(signal in section.title for signal in SCORING_GENERIC_METHOD_TITLE_SIGNALS) and not any(
             signal in section.title for signal in SCORING_DETAIL_TITLE_SIGNALS
         ):
@@ -443,6 +461,18 @@ def _build_bundle(
             (
                 definition.key == "technical_standard"
                 and bool(_technical_standard_profile(item[2])["strong_standard_section"])
+            ),
+            (
+                definition.key == "scoring"
+                and bool(SCORING_GIFTS_EXPLICIT_SIGNAL_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+                and bool(SCORING_NON_PROJECT_GOODS_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+                and not bool(SCORING_GIFTS_NEGATIVE_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+                and not bool(SCORING_PROCUREMENT_SUBJECT_GOODS_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+            ),
+            (
+                definition.key == "scoring"
+                and bool(SCORING_GIFTS_HIDDEN_SIGNAL_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
+                and bool(SCORING_SCORE_LINK_RE.search("\n".join(part for part in (item[2].title, item[2].excerpt, item[2].body) if part)))
             ),
             (
                 definition.key == "scoring"

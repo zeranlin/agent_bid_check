@@ -23,6 +23,8 @@ from app.web.v2_app import build_review_view
 
 
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
+R008_REAL_FILE = Path("data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0323.docx")
+R004_REAL_FILE = Path("data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0323.docx")
 W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
 W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-rerun/topic_reviews")
 G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
@@ -32,10 +34,10 @@ def _build_settings() -> ReviewSettings:
     return ReviewSettings()
 
 
-def _build_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
-    text = extract_text(REAL_FILE)
-    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
-    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+def _build_topics_for_file(real_file: Path) -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    text = extract_text(real_file)
+    structure = build_structure_map(real_file, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(real_file.name, structure, topic_mode="mature")
     topics: list[TopicReviewArtifact] = []
     for topic_key in ("policy", "scoring", "technical_standard", "acceptance"):
         bundle = evidence.metadata["topic_evidence_bundles"][topic_key]
@@ -88,9 +90,21 @@ def _build_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[To
         )
     baseline = V2StageArtifact(
         name="baseline",
-        content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n",
+        content=f"# 招标文件合规审查结果\n\n审查对象：`{real_file.name}`\n",
     )
     return structure, evidence, [topic for topic in topics]
+
+
+def _build_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_topics_for_file(REAL_FILE)
+
+
+def _build_r008_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_topics_for_file(R008_REAL_FILE)
+
+
+def _build_r004_real_file_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_topics_for_file(R004_REAL_FILE)
 
 
 def _build_real_file_replay_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
@@ -331,7 +345,7 @@ def test_w002_real_file_web_titles_follow_comparison_titles() -> None:
     card_titles = [card["title"] for card in review_view["all_cards"]]
     assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in card_titles
     assert "将付款方式纳入评审因素，违反评审规则合规性要求" not in card_titles
-    assert "将赠送额外商品作为评分条件，违反评审规则合规性要求" not in card_titles
+    assert "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" not in card_titles
 
 
 def test_w004_real_file_refinement_separates_formal_pending_and_excluded() -> None:
@@ -538,3 +552,57 @@ def test_g005_real_file_moves_qualification_missing_and_policy_missing_to_pendin
     assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" not in formal_titles
     assert "投标人资格要求内容缺失，无法判断是否存在排斥性条款" in pending_titles
     assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" in pending_titles
+
+
+def test_r008_real_file_replay_hits_gifts_non_project_goods_risk() -> None:
+    structure, evidence, topics = _build_r008_real_file_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{R008_REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(R008_REAL_FILE.name, baseline, topics)
+
+    codes = comparison.metadata["comparison_failure_reason_codes"]
+    assert "gifts_or_unrelated_goods_in_scoring_forbidden" in codes
+
+    scoring_topic = next(topic for topic in topics if topic.topic == "scoring")
+    scoring_titles = [section["title"] for section in scoring_topic.metadata["selected_sections"]]
+    assert "（一） 评分内容" in scoring_titles
+    assert scoring_topic.metadata["structured_signals"]["scoring_contains_gifts_or_unrelated_goods"] is True
+    assert scoring_topic.metadata["structured_signals"]["gifts_or_goods_linked_to_score"] is True
+    assert any("赠送台式电脑" in item for item in scoring_topic.metadata["structured_signals"]["gifts_or_goods_scoring_sentences"])
+
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" in titles
+
+    cluster = next(item for item in comparison.clusters if item.title == "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险")
+    assert any("评分条款" in location for location in cluster.source_locations)
+    assert any("赠送台式电脑、打印机各1套" in excerpt for excerpt in cluster.source_excerpts)
+
+    report_markdown = assemble_v2_report(R008_REAL_FILE.name, baseline, structure, topics, comparison=comparison)
+    assert "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险" in report_markdown
+    assert "删除赠送台式电脑、打印机、办公设备等与项目采购无关物资的加分条件。" in report_markdown
+
+
+def test_r004_real_file_replay_hits_payment_terms_in_scoring_risk() -> None:
+    structure, evidence, topics = _build_r004_real_file_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{R004_REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(R004_REAL_FILE.name, baseline, topics)
+
+    codes = comparison.metadata["comparison_failure_reason_codes"]
+    assert "payment_terms_in_scoring_forbidden" in codes
+
+    scoring_topic = next(topic for topic in topics if topic.topic == "scoring")
+    assert scoring_topic.metadata["structured_signals"]["scoring_contains_payment_terms"] is True
+    assert scoring_topic.metadata["structured_signals"]["payment_terms_linked_to_score"] is True
+    assert any("付款周期短于招标文件要求" in item for item in scoring_topic.metadata["structured_signals"]["payment_terms_scoring_sentences"])
+    assert any("预付款比例更有利于采购人资金安排" in item for item in scoring_topic.metadata["structured_signals"]["payment_terms_scoring_sentences"])
+
+    titles = [cluster.title for cluster in comparison.clusters]
+    assert "将付款方式纳入评审因素，违反评审规则合规性要求" in titles
+
+    cluster = next(item for item in comparison.clusters if item.title == "将付款方式纳入评审因素，违反评审规则合规性要求")
+    assert any("评分条款" in location for location in cluster.source_locations)
+    assert any("付款周期短于招标文件要求" in excerpt for excerpt in cluster.source_excerpts)
+    assert any("预付款比例更有利于采购人资金安排" in excerpt for excerpt in cluster.source_excerpts)
+
+    report_markdown = assemble_v2_report(R004_REAL_FILE.name, baseline, structure, topics, comparison=comparison)
+    assert "将付款方式纳入评审因素，违反评审规则合规性要求" in report_markdown
+    assert "将付款周期、预付款比例等内容从评分因素中删除。" in report_markdown

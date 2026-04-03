@@ -30,7 +30,7 @@ STANDARD_RULE_TITLES = {
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
     "acceptance_testing_cost_shifted_to_bidder": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素，违反评审规则合规性要求",
-    "gifts_or_unrelated_goods_in_scoring_forbidden": "将赠送额外商品作为评分条件，违反评审规则合规性要求",
+    "gifts_or_unrelated_goods_in_scoring_forbidden": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
 }
 STANDARD_CLUSTER_SUPPRESSION_RULES = {
     "acceptance_plan_in_scoring_forbidden": (
@@ -78,6 +78,13 @@ TITLE_PENDING_QUALIFICATION_RE = re.compile(
 )
 TITLE_PENDING_WASTE_RE = re.compile(r"(废标条件及最终解释权条款证据缺失)")
 TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理)")
+GIFTS_EXPLICIT_SCORING_EXCERPT_RE = re.compile(
+    r"((赠送|附送|额外提供|无偿提供).{0,24}(台式电脑|打印机|办公设备|礼品|值班室物资)|"
+    r"(台式电脑|打印机|办公设备|礼品|值班室物资).{0,24}(赠送|附送|额外提供|无偿提供))"
+)
+PAYMENT_TERMS_SCORING_EXCERPT_RE = re.compile(
+    r"(付款周期短于招标文件要求|预付款比例更有利于采购人资金安排|付款节点更优|支付安排优于招标文件要求)"
+)
 TITLE_ORIGINAL_ENGINEER_RE = re.compile(r"(制造商原厂工程师)")
 TITLE_ACCEPTANCE_STANDARD_RE = re.compile(r"(验收标准表述模糊)")
 TITLE_SHORT_WINDOW_RE = re.compile(r"(业绩评分中时间范围设定过短)")
@@ -185,6 +192,13 @@ def _compact_rule_locations(locations: list[str], limit: int = 2) -> list[str]:
     builtin = [str(item).strip() for item in locations if str(item).strip().startswith("内置规则库：")]
     ordered = explicit or builtin
     return dedupe(ordered)[:limit]
+
+
+def _compact_preferred_sentences(sentences: list[str], preferred_re: re.Pattern[str], limit: int = 2) -> list[str]:
+    normalized = [str(item).strip() for item in sentences if str(item).strip()]
+    preferred = [item for item in normalized if preferred_re.search(item)]
+    ordered = preferred + [item for item in normalized if item not in preferred]
+    return _compact_sentences(ordered, limit=limit)
 
 
 def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str) -> RiskSignature:
@@ -881,17 +895,20 @@ def _build_cross_topic_payment_terms_scoring_cluster(
     scoring_locations: list[str],
     scoring_sentences: list[str],
 ) -> tuple[RiskPoint, str, str]:
+    compact_scoring_locations = dedupe([str(item).strip() for item in scoring_locations if str(item).strip()])[:1]
+    compact_scoring_sentences = _compact_preferred_sentences(scoring_sentences, PAYMENT_TERMS_SCORING_EXCERPT_RE, limit=1)
+
     source_location_parts = []
     if rule_locations:
         source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
-    if scoring_locations:
-        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+    if compact_scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(compact_scoring_locations))
 
     source_excerpt_parts = []
     if rule_sentences:
         source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
-    if scoring_sentences:
-        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
+    if compact_scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(compact_scoring_sentences))
 
     risk = RiskPoint(
         title="将付款方式纳入评审因素，违反评审规则合规性要求",
@@ -923,35 +940,38 @@ def _build_cross_topic_gifts_or_goods_scoring_cluster(
     scoring_locations: list[str],
     scoring_sentences: list[str],
 ) -> tuple[RiskPoint, str, str]:
+    compact_scoring_locations = dedupe([str(item).strip() for item in scoring_locations if str(item).strip()])[:1]
+    compact_scoring_sentences = _compact_preferred_sentences(scoring_sentences, GIFTS_EXPLICIT_SCORING_EXCERPT_RE, limit=1)
+
     source_location_parts = []
     if rule_locations:
         source_location_parts.append("评审规则：" + "；".join(_compact_rule_locations(rule_locations)))
-    if scoring_locations:
-        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+    if compact_scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(compact_scoring_locations))
 
     source_excerpt_parts = []
     if rule_sentences:
         source_excerpt_parts.append("规则要求：" + "；".join(rule_sentences[:1]))
-    if scoring_sentences:
-        source_excerpt_parts.append("评分内容：" + "；".join(scoring_sentences[:3]))
+    if compact_scoring_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(compact_scoring_sentences))
 
     risk = RiskPoint(
-        title="将赠送额外商品作为评分条件，违反评审规则合规性要求",
+        title="评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
         severity="高风险",
-        review_type="评分因素合规性 / 不当附加交易条件",
+        review_type="评分因素合规性 / 赠送非项目物资评分",
         source_location="；".join(source_location_parts) if source_location_parts else "未发现",
         source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
         risk_judgment=[
             "评审规则已明确，不得要求提供赠品、回扣或者与采购无关的其他商品、服务。",
-            "当前评分内容将“额外赠送台式电脑、打印机各1套”作为高分条件。",
-            "上述赠送内容明显超出采购标的本身，属于与采购无关的额外商品。",
-            "该类设置容易诱导以额外利益换取评分优势，存在明显不合规风险，并可能导致评审结果失真、供应商公平竞争受损。",
+            "当前评分条款将向采购人额外赠送台式电脑、打印机等非项目物资作为高分条件。",
+            "上述赠送内容明显超出采购标的本身，不属于围绕履约能力、技术响应或服务能力设置的正当评分因素。",
+            "该类设置实质上是以赠品或附加利益影响评审结果，存在明显不当加分和评审合规风险，并可能损害供应商公平竞争。",
         ],
         legal_basis=["需人工复核"],
         rectification=[
-            "删除“赠送台式电脑、打印机”等与采购无关的附加商品要求。",
-            "售后服务评分如需保留，应仅围绕响应时效、服务能力、保障机制等与采购标的直接相关内容设置。",
-            "对评分标准重新调整，避免将赠品、返利、回扣或无关服务作为加分条件。",
+            "删除赠送台式电脑、打印机、办公设备等与项目采购无关物资的加分条件。",
+            "评分因素应仅围绕采购标的履约能力、技术响应、实施组织和服务保障能力设置。",
+            "不得通过赠品、附加物资或与采购无关的其他商品、服务影响评审结果。",
         ],
     )
     risk.ensure_defaults()

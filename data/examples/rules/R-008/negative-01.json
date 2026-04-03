@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-008",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_gifts_negative_necessary_accessories_008",
+  "note": "安装辅材、调试辅材、随机附件等必要配套不应误报为赠送非项目物资。"
+}
