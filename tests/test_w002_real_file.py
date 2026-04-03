@@ -25,6 +25,7 @@ from app.web.v2_app import build_review_view
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
 W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
 W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-rerun/topic_reviews")
+G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
 
 
 def _build_settings() -> ReviewSettings:
@@ -237,6 +238,57 @@ def _build_w006_source_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[
         name="baseline",
         content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n",
     )
+    return structure, evidence, topics
+
+
+def _build_feedback_source_topics(source_run: Path) -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    text = extract_text(REAL_FILE)
+    structure = build_structure_map(REAL_FILE, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(REAL_FILE.name, structure, topic_mode="mature")
+    bundles = evidence.metadata["topic_evidence_bundles"]
+    coverages = evidence.metadata["topic_coverages"]
+    topics: list[TopicReviewArtifact] = []
+    evidence_aliases = {
+        "qualification": ["qualification"],
+        "scoring": ["scoring"],
+        "technical": ["technical_standard"],
+        "contract": ["contract_payment", "acceptance"],
+    }
+    for path in sorted(source_run.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topic_key = payload.get("topic", path.stem)
+        bundle_sections: list[dict] = []
+        topic_coverage = {}
+        for alias_key in evidence_aliases.get(topic_key, [topic_key]):
+            bundle = bundles.get(alias_key, {})
+            bundle_sections.extend(bundle.get("sections", []))
+            if not topic_coverage and alias_key in coverages:
+                topic_coverage = coverages.get(alias_key, {})
+        metadata = {
+            **dict(payload.get("metadata", {}) or {}),
+            "selected_sections": [
+                {
+                    "title": section.get("title", ""),
+                    "start_line": section.get("start_line"),
+                    "end_line": section.get("end_line"),
+                    "module": section.get("module", ""),
+                }
+                for section in bundle_sections
+                if isinstance(section, dict)
+            ],
+            "evidence_bundle": {"sections": bundle_sections},
+            "topic_coverage": topic_coverage,
+        }
+        topics.append(
+            TopicReviewArtifact(
+                topic=topic_key,
+                summary=payload.get("summary", ""),
+                risk_points=[RiskPoint(**risk) for risk in payload.get("risk_points", [])],
+                need_manual_review=payload.get("need_manual_review", False),
+                coverage_note=payload.get("coverage_note", ""),
+                metadata=metadata,
+            )
+        )
     return structure, evidence, topics
 
 
@@ -472,3 +524,17 @@ def test_g004_real_file_turnkey_payment_risk_is_excluded_when_payment_chain_is_c
     assert "商务条款中“交钥匙”项目要求与付款方式存在潜在风险" not in formal_titles
     assert "商务条款中“交钥匙”项目要求与付款方式存在潜在风险" not in pending_titles
     assert "完整付款链路" in excluded["reason"]
+
+
+def test_g005_real_file_moves_qualification_missing_and_policy_missing_to_pending() -> None:
+    structure, evidence, replay_topics = _build_feedback_source_topics(G005_SOURCE_RUN)
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+
+    assert "投标人资格要求内容缺失，无法判断是否存在排斥性条款" not in formal_titles
+    assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" not in formal_titles
+    assert "投标人资格要求内容缺失，无法判断是否存在排斥性条款" in pending_titles
+    assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" in pending_titles

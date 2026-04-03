@@ -33,7 +33,7 @@ def test_feedback_records_follow_unified_schema() -> None:
         payload = yaml.safe_load(path.read_text(encoding="utf-8"))
         assert REQUIRED_KEYS.issubset(payload.keys()), path.name
         assert payload["feedback_type"] in {"漏报", "误报"}
-        assert payload["linked_task"] == "G-004"
+        assert payload["linked_task"] in {"G-004", "G-005"}
         assert isinstance(payload["fix_summary"], list) and payload["fix_summary"]
 
 
@@ -43,3 +43,18 @@ def test_feedback_matrix_covers_closed_loop_cases() -> None:
     assert "FB-G004-002" in matrix
     assert "漏报" in matrix
     assert "误报" in matrix
+
+
+def test_feedback_ledger_tracks_formal_intake_records() -> None:
+    ledger = (FEEDBACK_ROOT / "records" / "feedback-ledger.md").read_text(encoding="utf-8")
+    assert "FB-20260403-001" in ledger
+    assert "Task-G5-FB-20260403-001" in ledger
+    assert "误报" in ledger
+    assert "待验收" in ledger
+
+
+def test_feedback_production_note_defines_running_entry() -> None:
+    content = (FEEDBACK_ROOT / "production-intake.md").read_text(encoding="utf-8")
+    assert "正式接入入口" in content
+    assert "feedback/records/feedback-ledger.md" in content
+    assert "FB-20260403-001" in content

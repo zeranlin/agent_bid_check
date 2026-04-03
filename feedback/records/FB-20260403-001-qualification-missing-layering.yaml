@@ -1,0 +1,35 @@
+feedback_id: FB-20260403-001
+file_name: "[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+feedback_date: 2026-04-03
+feedback_type: 误报
+source_location:
+  section: 5.2 投标人资格要求
+  lines: 3369-3422
+  excerpt: |
+    5.2 投标人资格要求
+    参加本项目的投标人应具备的资格条件详见本项目招标公告中“投标人资格要求”（即申请人的资格要求）的内容。
+customer_feedback: 当前结果把“投标人资格要求内容缺失，无法判断是否存在排斥性条款”打成正式风险，但这类问题本质上是公告承接/证据未完整展开，应该进入待补证复核，而不是正式风险。
+m_initial_analysis: 这是成熟输出层的正式/待补证分层错误，不是新规则缺失。compare 对“资格条件缺失”类标题只覆盖了旧变体，没有覆盖当前真实文件中的新标题。
+root_cause_layer: 第四层输出分层治理
+task_type: 误报抑制
+linked_task: G-005
+linked_rule: compare_pending_layering
+linked_ticket: Task-G5-FB-20260403-001
+repair_owner: T
+acceptance_owner: M
+status: 待验收
+fix_summary:
+  - 扩展 compare 中待补证资格类标题匹配，覆盖“投标人资格要求内容缺失”新变体。
+  - 同步扩展政策导向缺失类标题匹配，避免同类证据不足问题误回正式风险。
+  - 补正式运行台账、正式任务单、回归测试与真实文件新结果目录。
+sample_assets:
+  - tests/test_v2_compare.py::test_compare_review_artifacts_moves_new_qualification_missing_variant_to_pending
+  - tests/test_v2_compare.py::test_compare_review_artifacts_moves_new_policy_missing_variant_to_pending
+  - tests/test_w002_real_file.py::test_g005_real_file_moves_qualification_missing_and_policy_missing_to_pending
+tests:
+  - tests/test_v2_compare.py
+  - tests/test_w002_real_file.py
+  - tests/test_feedback_registry.py
+real_regression_output: data/results/v2/20260403-g005-production-intake-rerun
+regression_result: 已通过
+acceptance_result: 待 M 验收

@@ -73,7 +73,9 @@ TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
 TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险)")
 TITLE_ELECTRONIC_SIGNATURE_RE = re.compile(r"(‘不盖章’的表述存在合规风险|不盖章)")
 TITLE_TRUNCATED_EVIDENCE_RE = re.compile(r"(质疑处理章节内容不完整)")
-TITLE_PENDING_QUALIFICATION_RE = re.compile(r"(具体资格条件内容缺失|具体资格条款缺失)")
+TITLE_PENDING_QUALIFICATION_RE = re.compile(
+    r"(具体资格条件内容缺失|具体资格条款缺失|投标人资格要求内容缺失，无法判断是否存在排斥性条款)"
+)
 TITLE_PENDING_WASTE_RE = re.compile(r"(废标条件及最终解释权条款证据缺失)")
 TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理)")
 TITLE_ORIGINAL_ENGINEER_RE = re.compile(r"(制造商原厂工程师)")
@@ -85,6 +87,7 @@ TITLE_CONTRACT_TEMPLATE_STRICT_RE = re.compile(
 )
 TITLE_PENDING_EVIDENCE_RE = re.compile(
     r"(关键人员配置及业绩要求证据缺失，需人工复核|政策导向章节内容缺失，无法确认节能环保等政策落实情况|"
+    r"政策导向章节内容缺失，无法全面审查其他政策落实情况|"
     r"缺失检测报告及认证要求的具体规定)"
 )
 TITLE_GENERIC_SCORING_RE = re.compile(

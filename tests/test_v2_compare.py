@@ -1375,6 +1375,68 @@ def test_compare_review_artifacts_excludes_contract_template_risks() -> None:
     assert any(item["title"] == "关键合同条款数值缺失，导致付款与履约责任无法评估" for item in comparison.metadata["excluded_risks"])
 
 
+def test_compare_review_artifacts_moves_new_qualification_missing_variant_to_pending() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：投标人资格要求内容缺失，无法判断是否存在排斥性条款
+
+- 问题定性：需人工复核
+- 审查类型：资格条件审查
+- 原文位置：第 3369 - 3422 行
+- 原文摘录：5.2 投标人资格要求 参加本项目的投标人应具备的资格条件详见本项目招标公告中“投标人资格要求”的内容。
+- 风险判断：
+  - 当前仅承接到公告引用，无法确认资格门槛。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 调取招标公告原文复核。
+""".strip(),
+    )
+    comparison = compare_review_artifacts("sample.docx", baseline, [])
+    assert all(cluster.title != "投标人资格要求内容缺失，无法判断是否存在排斥性条款" for cluster in comparison.clusters)
+    pending = next(
+        item for item in comparison.metadata["pending_review_items"] if item["title"] == "投标人资格要求内容缺失，无法判断是否存在排斥性条款"
+    )
+    assert pending["topic"] == "资格条件"
+    assert "待补证复核" in pending["reason"]
+
+
+def test_compare_review_artifacts_moves_new_policy_missing_variant_to_pending() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：政策导向章节内容缺失，无法全面审查其他政策落实情况
+
+- 问题定性：需人工复核
+- 审查类型：政策适用与落实
+- 原文位置：证据3 第 3422 行
+- 原文摘录：6． 政策导向 6.
+- 风险判断：
+  - 当前章节只有标题，正文未完整召回。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补充完整条文后再审查。
+""".strip(),
+    )
+    comparison = compare_review_artifacts("sample.docx", baseline, [])
+    assert all(cluster.title != "政策导向章节内容缺失，无法全面审查其他政策落实情况" for cluster in comparison.clusters)
+    pending = next(
+        item for item in comparison.metadata["pending_review_items"] if item["title"] == "政策导向章节内容缺失，无法全面审查其他政策落实情况"
+    )
+    assert pending["topic"] in {"专题", "政策条款", "baseline"}
+    assert "证据召回不足" in pending["reason"] or "待补证复核" in pending["reason"]
+
+
 def test_compare_review_artifacts_enriches_import_consistency_with_foreign_component_evidence() -> None:
     baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
     topics = [
