@@ -120,7 +120,7 @@ flowchart TB
 
 V2 Web 页面入口在：
 
-- [v2_app.py](/Users/linzeran/code/2026-zn/test_getst/app/web/v2_app.py)
+- [v2_app.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/web/v2_app.py)
 
 用户在页面点击“开始审查”后，系统执行：
 
@@ -143,7 +143,7 @@ V2 Web 页面入口在：
 
 V2 CLI 入口在：
 
-- [run_review_v2.py](/Users/linzeran/code/2026-zn/test_getst/scripts/run_review_v2.py)
+- [run_review_v2.py](https://github.com/zeranlin/agent_bid_check/blob/main/scripts/run_review_v2.py)
 
 CLI 适合：
 
@@ -156,7 +156,7 @@ CLI 适合：
 
 真正的核心总控函数在：
 
-- [service.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/service.py)
+- [service.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/service.py)
 
 关键函数：
 
@@ -177,7 +177,7 @@ CLI 适合：
 
 实现位置：
 
-- [service.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/service.py)
+- [service.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/service.py)
 
 调用函数：
 
@@ -218,7 +218,7 @@ CLI 适合：
 
 实现位置：
 
-- [baseline.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/baseline.py)
+- [baseline.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/baseline.py)
 
 核心逻辑：
 
@@ -270,7 +270,7 @@ CLI 适合：
 
 实现位置：
 
-- [structure.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/structure.py)
+- [structure.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/structure.py)
 
 输入：
 
@@ -312,7 +312,7 @@ CLI 适合：
 
 定义位置：
 
-- [schemas.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/schemas.py)
+- [schemas.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/schemas.py)
 
 运维排障优先看：
 
@@ -332,7 +332,7 @@ CLI 适合：
 
 实现位置：
 
-- [evidence.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/evidence.py)
+- [evidence.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/evidence.py)
 
 输入：
 
@@ -383,7 +383,7 @@ CLI 适合：
 
 实现位置：
 
-- [topic_review.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/topic_review.py)
+- [topic_review.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/topic_review.py)
 
 输入：
 
@@ -449,7 +449,7 @@ CLI 适合：
 
 实现位置：
 
-- [compare.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/compare.py)
+- [compare.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/compare.py)
 
 输入：
 
@@ -503,7 +503,7 @@ CLI 适合：
 
 实现位置：
 
-- [assembler.py](/Users/linzeran/code/2026-zn/test_getst/app/pipelines/v2/assembler.py)
+- [assembler.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/pipelines/v2/assembler.py)
 
 输入：
 
@@ -574,29 +574,29 @@ run_dir/
 ### 8.1 配置目录
 
 - V2 配置文件：
-  [review_v2.json](/Users/linzeran/code/2026-zn/test_getst/data/config/review_v2.json)
+  [review_v2.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/config/review_v2.json)
 
 ### 8.2 上传目录
 
 - V2 上传文件目录：
-  [data/uploads/v2](/Users/linzeran/code/2026-zn/test_getst/data/uploads/v2)
+  [data/uploads/v2](https://github.com/zeranlin/agent_bid_check/blob/main/data/uploads/v2)
 
 ### 8.3 结果目录
 
 - V2 结果目录：
-  [data/results/v2](/Users/linzeran/code/2026-zn/test_getst/data/results/v2)
+  [data/results/v2](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2)
 
 ### 8.4 任务状态目录
 
 - V2 Job 目录：
-  [data/jobs/v2](/Users/linzeran/code/2026-zn/test_getst/data/jobs/v2)
+  [data/jobs/v2](https://github.com/zeranlin/agent_bid_check/blob/main/data/jobs/v2)
 
 
 ## 9. 页面状态与内部步骤映射
 
 Web 页面当前显示的步骤状态来自：
 
-- [v2_app.py](/Users/linzeran/code/2026-zn/test_getst/app/web/v2_app.py)
+- [v2_app.py](https://github.com/zeranlin/agent_bid_check/blob/main/app/web/v2_app.py)
 
 当前阶段枚举：
 

@@ -1,6 +1,6 @@
 # 招标文件合规审查结果
 
-审查对象：`/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZCG2025000300-A].docx`
+审查对象：`test_target/zf/埋点测试案例和结果/[SZCG2025000300-A].docx`
 
 定位文本：`https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt`
 
@@ -355,4 +355,3 @@
   官方来源：[PDF全文](https://fgw.sh.gov.cn/cmsres/2f/2f18b02b60d344d5ac61b3d1a61a99d1/583073ccfa9458c2efec68aad39570aa.pdf)
 - 《深圳经济特区政府采购条例实施细则》  
   官方来源：[深圳市人民政府](https://www.sz.gov.cn/szsrmzfxxgk/zc/gz/content/post_9728717.html)
-

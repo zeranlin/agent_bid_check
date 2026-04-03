@@ -229,5 +229,5 @@ M 必须同步完成：
 
 建议配套使用以下文档：
 
-- [project-management-layering-plan.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/project-management-layering-plan.md)
-- [rule-intake-workflow.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-intake-workflow.md)
+- [project-management-layering-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/project-management-layering-plan.md)
+- [rule-intake-workflow.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-intake-workflow.md)

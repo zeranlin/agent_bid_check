@@ -73,6 +73,6 @@
 
 建议配套使用以下文档：
 
-- [project-management-layering-plan.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/project-management-layering-plan.md)
-- [rule-intake-workflow.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-intake-workflow.md)
-- [task-and-acceptance-templates.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/task-and-acceptance-templates.md)
+- [project-management-layering-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/project-management-layering-plan.md)
+- [rule-intake-workflow.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-intake-workflow.md)
+- [task-and-acceptance-templates.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-and-acceptance-templates.md)

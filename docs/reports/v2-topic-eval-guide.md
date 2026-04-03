@@ -52,8 +52,8 @@
 
 当前固定样本文件：
 
-- [data/examples/v2_topic_eval_samples.json](/Users/linzeran/code/2026-zn/test_getst/data/examples/v2_topic_eval_samples.json)
-- [data/eval/v2_labels/v2_topic_eval_samples.json](/Users/linzeran/code/2026-zn/test_getst/data/eval/v2_labels/v2_topic_eval_samples.json)
+- [data/examples/v2_topic_eval_samples.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/examples/v2_topic_eval_samples.json)
+- [data/eval/v2_labels/v2_topic_eval_samples.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/eval/v2_labels/v2_topic_eval_samples.json)
 
 
 ## 4. 关键指标解释

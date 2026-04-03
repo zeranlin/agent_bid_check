@@ -174,7 +174,7 @@ test_refs:
 
 规则状态变化时，系统自动提示更新或自动更新：
 
-- `docs/v2-remediation-tracker.md`
+- `docs/trackers/v2-remediation-tracker.md`
 
 ### 6.6 自动做回归检查
 

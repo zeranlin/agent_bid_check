@@ -191,7 +191,7 @@
 
 输出：
 
-- `docs/v2-structure-eval-guide.md`
+- `docs/reports/v2-structure-eval-guide.md`
 
 验收：
 
@@ -333,7 +333,7 @@
 
 输出：
 
-- `docs/v2-topic-eval-guide.md`
+- `docs/reports/v2-topic-eval-guide.md`
 
 验收：
 
@@ -397,7 +397,7 @@
 
 输出：
 
-- `docs/v2-quality-gate-next.md`
+- `docs/trackers/v2-quality-gate-next.md`
 
 验收：
 

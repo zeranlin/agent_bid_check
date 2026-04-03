@@ -64,7 +64,7 @@
 
 输出：
 
-- `docs/v2-risk-recall-system-plan.md` 中第一层职责边界明确版
+- `docs/architecture/v2-risk-recall-system-plan.md` 中第一层职责边界明确版
 
 验收：
 

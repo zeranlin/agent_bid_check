@@ -181,7 +181,7 @@ M 验收时至少检查：
 
 建议配套使用以下文档：
 
-- [project-management-layering-plan.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/project-management-layering-plan.md)
+- [project-management-layering-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/project-management-layering-plan.md)
 - `任务单 / 验收单模板规范`
 - 规则总目录
 - 真实文件基线说明

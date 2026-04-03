@@ -1,6 +1,6 @@
 # 招标文件提取结果
 
-来源文件：`/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZCG2025000300-A].docx`
+来源文件：`test_target/zf/埋点测试案例和结果/[SZCG2025000300-A].docx`
 
 辅助定位文本：`https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt`
 
@@ -307,4 +307,3 @@
   - `货物的一切风险（包括...可能的侵权等），均由中标人承担`
   - 位置：政府采购投标及履约承诺函、商务要求验收条件，[`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1285), [`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1295), [`_szcg2025000300.txt`](https://github.com/zeranlin/agent_bid_check/blob/main/_szcg2025000300.txt#L1214)
 - 专有技术：`未发现`
-

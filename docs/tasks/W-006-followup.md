@@ -4,7 +4,7 @@
 
 - 关联任务：`W-006`
 - 整改类型：`未通过后补强`
-- 当前状态：`待下发`
+- 当前状态：`已通过`
 - 下发对象：`T`
 - 监督角色：`M`
 
@@ -26,18 +26,18 @@
 
 当前真实文件结果目录：
 
-- [20260402-133514-w006-default-entry-rerun](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun)
+- [20260402-133514-w006-default-entry-rerun](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun)
 
 正式风险主清单已经收敛为 10 条，见：
 
-- [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L14)
+- [review.md](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L14)
 
 但在同一份最终报告末尾，又重新出现以下旧口径：
 
-- 合同模板区旧结论回流，见 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L345)
-- 澄清截止时间未填、文件容量限制等程序类旧口径回流，见 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L346)
-- 所属行业未明确、政策导向章节缺失等政策类旧口径回流，见 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L347)
-- 人员社保豁免、三体系高分值、证据缺失等复核项被再次写成泛化结论，见 [review.md](/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L343)
+- 合同模板区旧结论回流，见 [review.md](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L345)
+- 澄清截止时间未填、文件容量限制等程序类旧口径回流，见 [review.md](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L346)
+- 所属行业未明确、政策导向章节缺失等政策类旧口径回流，见 [review.md](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L347)
+- 人员社保豁免、三体系高分值、证据缺失等复核项被再次写成泛化结论，见 [review.md](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260402-133514-w006-default-entry-rerun/review.md#L343)
 
 ### 2. 当前测试只测 compare 分层，没有测最终成品页
 
@@ -49,7 +49,7 @@
 
 见：
 
-- [tests/test_w002_real_file.py](/Users/linzeran/code/2026-zn/test_getst/tests/test_w002_real_file.py#L325)
+- [tests/test_w002_real_file.py](https://github.com/zeranlin/agent_bid_check/blob/main/tests/test_w002_real_file.py#L325)
 
 问题在于：
 
@@ -134,7 +134,7 @@
 
 固定文件：
 
-- [/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx](/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx)
+- `test_target/zf/埋点测试案例和结果/[SZDL2025000495-A]柴油发电机组及相关配套机电设备采购及安装项目.docx`
 
 断言最终 `review.md` 不再出现以下表述或同义回流：
 

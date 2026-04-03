@@ -18,9 +18,27 @@
 
 ## 2. 文档清单
 
+### 2.0 docs/ 目录治理
+
+- 文件： [docs-directory-governance-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-directory-governance-plan.md)
+- 作用：
+  - 定义 `docs/` 的目标目录结构
+  - 明确不同类型文档应该进入哪个目录
+  - 给出迁移实施边界与批次策略
+
+- 文件： [docs-inventory-mapping.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-inventory-mapping.md)
+- 作用：
+  - 梳理当前 `docs/` 主要文档的分类映射
+  - 说明后续建议归属目录、是否改名、是否归档
+
+- 文件： [docs-migration-checklist.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-migration-checklist.md)
+- 作用：
+  - 定义迁移批次和链接修复顺序
+  - 明确本轮已实施与暂不实施项
+
 ### 2.1 项目管理分层方案
 
-- 文件： [project-management-layering-plan.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/project-management-layering-plan.md)
+- 文件： [project-management-layering-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/project-management-layering-plan.md)
 - 作用：
   - 定义项目的顶层分层
   - 区分业务功能、规则治理、质量回归、汇报体系
@@ -28,7 +46,7 @@
 
 ### 2.2 规则接入流程图
 
-- 文件： [rule-intake-workflow.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-intake-workflow.md)
+- 文件： [rule-intake-workflow.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-intake-workflow.md)
 - 作用：
   - 描述“客户提出新规则”后，如何进入项目治理流程
   - 明确从规则登记、任务编号、开发、验收到规则入库的完整流程
@@ -36,7 +54,7 @@
 
 ### 2.3 任务单 / 验收单模板规范
 
-- 文件： [task-and-acceptance-templates.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/task-and-acceptance-templates.md)
+- 文件： [task-and-acceptance-templates.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-and-acceptance-templates.md)
 - 作用：
   - 统一任务单模板
   - 统一 T 回传格式
@@ -45,7 +63,7 @@
 
 ### 2.4 规则总目录模板
 
-- 文件： [rule-catalog-template.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-catalog-template.md)
+- 文件： [rule-catalog-template.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-catalog-template.md)
 - 作用：
   - 统一管理项目中已正式入库的规则
   - 建立规则编号、规则码、专题、样本、测试、真实文件基线之间的映射
@@ -55,13 +73,13 @@
 
 建议按以下顺序阅读：
 
-1. 先看 [project-management-layering-plan.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/project-management-layering-plan.md)
+1. 先看 [project-management-layering-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/project-management-layering-plan.md)
    - 先理解项目的整体管理分层
-2. 再看 [rule-intake-workflow.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-intake-workflow.md)
+2. 再看 [rule-intake-workflow.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-intake-workflow.md)
    - 理解新规则如何进入治理流程
-3. 再看 [task-and-acceptance-templates.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/task-and-acceptance-templates.md)
+3. 再看 [task-and-acceptance-templates.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-and-acceptance-templates.md)
    - 理解任务单怎么下发、怎么验收
-4. 最后看 [rule-catalog-template.md](/Users/linzeran/code/2026-zn/test_getst/docs/governance/rule-catalog-template.md)
+4. 最后看 [rule-catalog-template.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-catalog-template.md)
    - 理解规则最终如何正式入库
 
 ## 4. 使用建议
