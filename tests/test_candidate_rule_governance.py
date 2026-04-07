@@ -22,6 +22,10 @@ REAL_IMPORT_PATH = CANDIDATE_ROOT / "imports" / "candidate_rules_2026-04-07_real
 REAL_LEDGER_PATH = CANDIDATE_ROOT / "mappings" / "candidate_rule_ledger_2026-04-07_real_batch_001.yaml"
 REAL_SUMMARY_PATH = CANDIDATE_ROOT / "mappings" / "candidate_rule_triage_summary_2026-04-07_real_batch_001.yaml"
 REAL_SNAPSHOT_PATH = CANDIDATE_ROOT / "snapshots" / "SNAP-2026-04-07-triage-002.md"
+G9_TASK_PATH = ROOT / "docs" / "tasks" / "Task-G9-real-candidate-triage.md"
+G10_TASK_PATH = ROOT / "docs" / "tasks" / "Task-G10-first-priority-formalization.md"
+G10_GUIDE_PATH = ROOT / "docs" / "governance" / "candidate-rule-first-priority-formalization-guide.md"
+G10_PACKAGE_PATH = CANDIDATE_ROOT / "mappings" / "first_priority_formalization_package_2026-04-07.yaml"
 ALLOWED_DECISIONS = {"formal_rule", "conditional_rule", "capability_item", "drop"}
 REQUIRED_LEDGER_FIELDS = {
     "candidate_id",
@@ -191,3 +195,43 @@ def test_real_candidate_triage_summary_matches_ledger_counts() -> None:
     assert summary["first_priority_candidates"]
     assert summary["capability_backlog"]
     assert REAL_SNAPSHOT_PATH.exists()
+
+
+def test_first_priority_formalization_package_exists_and_is_readable() -> None:
+    payload = yaml.safe_load(G10_PACKAGE_PATH.read_text(encoding="utf-8"))
+    assert payload["task_id"] == "Task-G10"
+    assert payload["selection_scope"]["max_items"] <= 6
+    assert payload["formalization_candidates"]
+    assert G10_GUIDE_PATH.exists()
+    assert G10_TASK_PATH.exists()
+    assert G9_TASK_PATH.exists()
+
+
+def test_first_priority_formalization_candidates_have_clear_ownership() -> None:
+    payload = yaml.safe_load(G10_PACKAGE_PATH.read_text(encoding="utf-8"))
+    candidates = payload["formalization_candidates"]
+    assert len(candidates) <= payload["selection_scope"]["max_items"]
+    for item in candidates:
+        assert item["candidate_id"]
+        assert item["source_rule_text"]
+        assert item["ownership"]["route"] in {"new_rule", "strengthen_existing_rule"}
+        if item["ownership"]["route"] == "new_rule":
+            assert item["ownership"]["proposed_rule_id"].startswith("R-0")
+            assert item["new_rule_draft"]["rule_name"]
+            assert item["new_rule_draft"]["rule_goal"]
+            assert item["new_rule_draft"]["trigger_conditions"]
+            assert item["new_rule_draft"]["exclude_conditions"]
+            assert item["new_rule_draft"]["formal_title"]
+            assert item["new_rule_draft"]["remediation_advice"]
+        else:
+            assert item["ownership"]["target_rule_id"].startswith("R-0")
+            assert item["strengthen_existing_rule"]["target_rule_id"] == item["ownership"]["target_rule_id"]
+            assert item["strengthen_existing_rule"]["strengthen_scope"]
+
+
+def test_first_priority_formalization_avoids_duplicate_construction() -> None:
+    payload = yaml.safe_load(G10_PACKAGE_PATH.read_text(encoding="utf-8"))
+    absorbed_ids = {item["candidate_id"] for item in payload["already_absorbed_or_skip"]}
+    candidate_ids = {item["candidate_id"] for item in payload["formalization_candidates"]}
+    assert not (absorbed_ids & candidate_ids)
+    assert any(item["ownership"]["route"] == "new_rule" for item in payload["formalization_candidates"])

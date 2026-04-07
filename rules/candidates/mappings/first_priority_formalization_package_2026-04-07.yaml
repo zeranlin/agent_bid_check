@@ -1,0 +1,143 @@
+task_id: Task-G10
+source_batch_id: CAND-IMPORT-2026-04-07-REAL-001
+source_summary: rules/candidates/mappings/candidate_rule_triage_summary_2026-04-07_real_batch_001.yaml
+guide_path: docs/governance/candidate-rule-first-priority-formalization-guide.md
+selection_scope:
+  principle: 首批只推进最稳定、最高价值且与现有规则不重复的一小批真实候选条目
+  max_items: 5
+  non_goals:
+    - 不一次性纳管全部 first_priority_candidates
+    - 不把边界不清的宽泛条目硬塞进首批
+selection_criteria:
+  - 高频
+  - 高业务价值
+  - 触发条件稳定
+  - 排除条件可定义
+  - 可形成统一风险文案
+  - 不与现有 R-001 ~ R-008 重复建设
+formalization_candidates:
+  - candidate_id: RC-001
+    source_rule_text: 不得将国务院已明令取消的或国家行政机关非强制的资质、资格作为资格条件
+    ownership:
+      route: new_rule
+      proposed_rule_id: R-009
+      target_rule_id: ""
+      reason: 资格条件侧禁限语义稳定，与现有 R-001 ~ R-008 不重叠，适合单独纳管
+    related_candidates:
+      - RC-003
+    new_rule_draft:
+      rule_name: 已取消或非强制资质禁入资格条件识别
+      rule_goal: 识别将国务院已取消或行政机关非强制资质、资格作为投标资格条件的限制性条款
+      trigger_conditions:
+        - 资格条件、合格供应商条件或资格审查表中出现资质、资格要求
+        - 条款命中已取消资质、已取消资格、非强制资质、非强制资格等语义
+        - 条款将相关要求作为准入门槛或资格条件
+      exclude_conditions:
+        - 条款引用的是现行法定强制许可或法定准入资质
+        - 仅为背景介绍或政策说明，未形成资格准入要求
+      formal_title: 将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险
+      remediation_advice: 删除已取消或非强制资质资格要求，仅保留与采购标的直接相关且具有法定依据的准入条件
+  - candidate_id: RC-002
+    source_rule_text: 不得将国务院已明令取消的资质、资格、认证作为评审因素
+    ownership:
+      route: new_rule
+      proposed_rule_id: R-010
+      target_rule_id: ""
+      reason: 评分因素侧禁限项语义明确，可与 R-009 形成资格/评分双侧治理
+    related_candidates:
+      - RC-014
+    new_rule_draft:
+      rule_name: 已取消资质资格认证禁入评分识别
+      rule_goal: 识别将已取消资质、资格或行政机关非强制认证作为评分加分条件的合规风险
+      trigger_conditions:
+        - 评分项、加分项或评审标准中出现资质、资格、认证要求
+        - 条款命中已取消、非强制、已明令取消等语义
+        - 相关要求与分值、加分或档次评价直接挂钩
+      exclude_conditions:
+        - 要求的是现行法定强制许可或法定合规证明
+        - 条款仅在资格条件中出现，未进入评分因素
+      formal_title: 将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险
+      remediation_advice: 删除已取消或非强制资质资格认证的评分条件，改为与履约能力直接相关的合规评价指标
+  - candidate_id: RC-015
+    source_rule_text: 不得要求提供有关资质证明文件、证照、证件原件
+    ownership:
+      route: new_rule
+      proposed_rule_id: R-011
+      target_rule_id: ""
+      reason: 与电子证照纸质件要求边界天然成组，正负样本清晰，适合合并纳管
+    related_candidates:
+      - RC-016
+    new_rule_draft:
+      rule_name: 资质证明材料原件及纸质证照要求边界识别
+      rule_goal: 识别采购文件要求提供资质原件或电子证照纸质件的材料提交边界风险
+      trigger_conditions:
+        - 资格材料、响应文件提交要求或审查材料清单中出现证照提交要求
+        - 条款命中原件、纸质证照、电子证照纸质版等语义
+        - 相关要求被设置为必须提交的资格或响应材料
+      exclude_conditions:
+        - 法律法规另有明确原件核验要求
+        - 仅要求提供电子证照查询方式或加盖电子签章版本
+      formal_title: 要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险
+      remediation_advice: 删除无依据的原件和纸质件提交要求，优先采用电子证照、系统核验或加盖有效签章的复印件/扫描件
+  - candidate_id: RC-020
+    source_rule_text: 不得限定供应商注册地或所在地或要求供应商在某行政区域内设立分支机构。
+    ownership:
+      route: new_rule
+      proposed_rule_id: R-012
+      target_rule_id: ""
+      reason: 可与所有制、组织形式、经营网点限制一起形成完整的主体身份与地域限制规则对象
+    related_candidates:
+      - RC-018
+      - RC-019
+      - RC-021
+    new_rule_draft:
+      rule_name: 供应商主体身份与地域限制识别
+      rule_goal: 识别通过所有制形式、组织形式、注册地、所在地、分支机构或经营网点设置不当准入门槛的条款
+      trigger_conditions:
+        - 资格条件、合格供应商要求或资格审查条款中出现主体身份或地域要求
+        - 条款命中所有制形式、组织形式、注册地、所在地、分支机构、经营网点等语义
+        - 相关要求被作为投标准入、资格门槛或合格供应商条件
+      exclude_conditions:
+        - 条款仅要求中标后本地服务响应安排，未作为投标准入条件
+        - 法律法规对特定项目确有明确地域设置依据
+      formal_title: 以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险
+      remediation_advice: 删除所有制、组织形式、注册地、分支机构、经营网点等不当准入限制，仅保留与履约直接相关且有明确依据的要求
+  - candidate_id: RC-004
+    source_rule_text: 不得设定特定企业人员证书作为资格条件、评审因素
+    ownership:
+      route: strengthen_existing_rule
+      proposed_rule_id: ""
+      target_rule_id: R-006
+      reason: 评分因素侧与 R-006 的证书/认证倾向性评分边界高度接近，先作为现有规则补强更稳
+    strengthen_existing_rule:
+      target_rule_id: R-006
+      strengthen_scope:
+        - 将“特定企业人员证书作为评审因素”纳入 R-006 的评分侧补强范围
+        - 明确与资格条件侧要求拆分，避免一个条目同时覆盖资格和评分两种治理对象
+      boundary_note: 资格条件侧不在本批并入 R-006，后续如与资质边界类条目形成稳定组合，再单独立项
+already_absorbed_or_skip:
+  - candidate_id: RC-003
+    source_rule_text: 不得设置与需求不相符的资质要求
+    reason: 业务价值高，但“与需求不相符”的判定证据边界过宽，暂不进入首批正式纳管
+  - candidate_id: RC-013
+    source_rule_text: 不得设置安全生产标准化证书
+    reason: 可能涉及行业或项目画像，不宜在本批直接全国化纳管
+  - candidate_id: RC-014
+    source_rule_text: 设置证书暗含经营年限要求
+    reason: 建议作为 R-010 或 R-006 后续补强候选，不单独在本批立项
+  - candidate_id: RC-016
+    source_rule_text: 不得要求提供电子证照的纸质证照
+    reason: 已并入 R-011 草案的关联候选，不重复作为单独首批入口
+  - candidate_id: RC-018
+    source_rule_text: 不得限定供应商所有制形式
+    reason: 已并入 R-012 草案的关联候选，不重复作为单独首批入口
+  - candidate_id: RC-019
+    source_rule_text: 不得限定供应商组织形式
+    reason: 已并入 R-012 草案的关联候选，不重复作为单独首批入口
+  - candidate_id: RC-021
+    source_rule_text: 不得设定供应商经营网点作为合格供应商资质条款
+    reason: 已并入 R-012 草案的关联候选，不重复作为单独首批入口
+risks_and_followups:
+  - RC-003 需要先补“需求不相符”判定证据模型，再决定是否正式立项
+  - RC-004 资格条件侧仍需后续拆解，不应因评分侧并入 R-006 而被误认为已完全覆盖
+  - R-009 ~ R-012 当前仅为纳管草案，不等于已完成运行时规则开发
