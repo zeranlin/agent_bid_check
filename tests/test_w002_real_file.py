@@ -31,6 +31,7 @@ W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-reru
 G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
 CURRENT_REAL_RUN = Path("data/results/v2/20260403-diesel-rerun/topic_reviews")
 W007_SOURCE_RESULT = Path("data/results/v2/20260407-140828-232a1471")
+REAL_0330_RESULT = Path("data/results/v2/20260407-142533-e1287e2b")
 
 
 def _build_settings() -> ReviewSettings:
@@ -317,6 +318,7 @@ def _build_topics_from_result_run(result_dir: Path) -> tuple[Path, V2StageArtifa
     meta = json.loads((result_dir / "meta.json").read_text(encoding="utf-8"))
     saved_file = Path("data/uploads/v2") / str(meta["saved_filename"])
     source_run = result_dir / "topic_reviews"
+    baseline_path = result_dir / "baseline_review.md"
     text = extract_text(saved_file)
     structure = build_structure_map(saved_file, text, _build_settings(), use_llm=False)
     evidence = build_evidence_map(saved_file.name, structure, topic_mode="mature")
@@ -352,11 +354,17 @@ def _build_topics_from_result_run(result_dir: Path) -> tuple[Path, V2StageArtifa
                 metadata=metadata,
             )
         )
-    baseline = V2StageArtifact(
-        name="baseline",
-        content=f"# 招标文件合规审查结果\n\n审查对象：`{saved_file.name}`\n",
+    baseline_content = (
+        baseline_path.read_text(encoding="utf-8")
+        if baseline_path.exists()
+        else f"# 招标文件合规审查结果\n\n审查对象：`{saved_file.name}`\n"
     )
+    baseline = V2StageArtifact(name="baseline", content=baseline_content)
     return saved_file, structure, baseline, topics
+
+
+def _build_0330_result_topics() -> tuple[Path, V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_topics_from_result_run(REAL_0330_RESULT)
 
 
 def test_w002_real_file_compare_matrix_is_complete() -> None:
@@ -746,3 +754,65 @@ def test_r004_real_file_replay_hits_payment_terms_in_scoring_risk() -> None:
     report_markdown = assemble_v2_report(R004_REAL_FILE.name, baseline, structure, topics, comparison=comparison)
     assert "将付款方式纳入评审因素，违反评审规则合规性要求" in report_markdown
     assert "将付款周期、预付款比例等内容从评分因素中删除。" in report_markdown
+
+
+def test_0330_real_file_output_is_deduped_and_downgraded() -> None:
+    saved_file, structure, baseline, topics = _build_0330_result_topics()
+    comparison = compare_review_artifacts(saved_file.name, baseline, topics)
+
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
+
+    assert "业绩评分限定特定行政区域，存在地域排斥风险" in formal_titles
+    assert "业绩要求限定特定行政区域，排斥外地供应商" not in formal_titles
+
+    assert "项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理" in formal_titles
+    assert "人员评分中学历、职称及证书要求分值过高，可能构成过高门槛" not in formal_titles
+
+    assert "履约保证金比例严重超标" in formal_titles
+    assert "履约保证金比例过高，增加供应商负担" not in formal_titles
+
+    assert "技术参数中指定特定生产日期，具有明显排他性和倾向性" in formal_titles
+
+    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+    assert "评分标准主观性过强，缺乏量化依据，易导致评审不公" not in formal_titles
+
+    assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in formal_titles
+    assert "评分标准中限定特定认证机构，限制竞争" not in formal_titles
+
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "燃油标准引用非国标且可能失效" not in formal_titles
+
+    assert "踏勘现场作为资格性审查条件，违反通用条款" in formal_titles
+
+    assert "中小企业扶持政策价格扣除比例缺失" not in formal_titles
+    assert "中小企业扶持政策价格扣除比例缺失" in pending_titles
+
+    for title in [
+        "企业证书（三体系）评分分值设置过高，存在排斥中小企业风险",
+        "澄清/修改事项截止时间未明确填写",
+        "进口产品禁止条款表述过于绝对，未预留法定例外",
+        "评分标准中“诚信情况”查询渠道及扣分标准表述不清",
+        "验收主体表述笼统，未明确‘相关人员’的具体构成及职责",
+    ]:
+        assert title not in formal_titles
+
+    assert "澄清/修改事项截止时间未明确填写" not in pending_titles
+    assert "澄清/修改事项截止时间未明确填写" in excluded_titles
+    assert "验收流程关键时点留白，导致验收条款不可操作" not in formal_titles
+    assert "验收流程关键时点留白，导致验收条款不可操作" in excluded_titles
+
+
+def test_0330_real_file_industry_experience_wording_matches_project_context() -> None:
+    saved_file, structure, baseline, topics = _build_0330_result_topics()
+    comparison = compare_review_artifacts(saved_file.name, baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "将特定行业经验（柴油发电机组）作为评分项，可能构成以不合理条件限制投标人"
+    )
+    judgment_text = "\n".join(cluster.risk_judgment)
+    assert "若本项目并非专门针对柴油发电机组采购" not in judgment_text
+    assert "若标的为通用服务或设备" not in judgment_text
+    assert "本项目采购标的虽为柴油发电机组" in judgment_text
