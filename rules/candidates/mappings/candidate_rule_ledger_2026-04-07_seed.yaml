@@ -69,3 +69,52 @@ entries:
     task_id: Task-G6
     status: rejected
     snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-005
+    source_name: 外部审查点样例批次
+    source_rule_text: 付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分。
+    source_category: 评分因素合规性
+    decision: formal_rule
+    decision_reason: 条件稳定、业务价值高，且已被现有付款方式禁入评分规则稳定吸收。
+    target_rule_id: R-004
+    target_layer: formal_risks
+    profile_dependency: none
+    negative_conditions:
+      - 付款安排仅出现在合同商务条款且不参与评分时不触发。
+    samples_status: seeded
+    tests_status: seeded
+    task_id: R-004
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-006
+    source_name: 外部审查点样例批次
+    source_rule_text: 承诺1小时到场并额外赠送台式电脑、打印机各1套的得100分。
+    source_category: 显性赠品评分
+    decision: formal_rule
+    decision_reason: 属于显性赠送非项目物资评分条款，已被 R-008 独立规则吸收。
+    target_rule_id: R-008
+    target_layer: formal_risks
+    profile_dependency: none
+    negative_conditions:
+      - 所谓赠送内容属于采购标的组成部分或必要配套时不触发。
+    samples_status: seeded
+    tests_status: seeded
+    task_id: R-008
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-007
+    source_name: 外部审查点样例批次
+    source_rule_text: 通过额外办公设备配置、会议保障或值班室物资安排获取评分优势。
+    source_category: 隐性无关商品/服务评分
+    decision: formal_rule
+    decision_reason: 属于隐性无关商品/服务评分场景，现阶段由 R-005 总类规则承接。
+    target_rule_id: R-005
+    target_layer: formal_risks
+    profile_dependency: none
+    negative_conditions:
+      - 相关内容属于采购标的或必要履约服务时不触发。
+      - 显性赠送非项目物资场景优先由 R-008 承接。
+    samples_status: seeded
+    tests_status: seeded
+    task_id: R-005
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001

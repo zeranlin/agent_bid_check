@@ -1,0 +1,91 @@
+batch_id: CAND-MIGRATE-2026-04-07-001
+snapshot_id: SNAP-2026-04-07-migrate-001
+task_id: Task-G8
+selection_criteria:
+  - 高频
+  - 高业务价值
+  - 触发条件稳定
+  - 排除条件可定义
+  - 可形成统一风险文案
+  - 可形成样本与测试闭环
+scope_control:
+  principle: 首批只纳入高确定性、高复用价值候选条目，不追求数量
+  non_goals:
+    - 不一次性覆盖全部候选条目
+    - 不将条件型规则和能力项直接升级为正式规则
+first_batch_recommendations:
+  formal_rule:
+    - candidate_id: CR-001
+      source_rule_text: 不得将项目验收方案作为评审因素。
+      migration_action: absorbed_existing_rule
+      absorbed_by_rule_id: R-003
+      proposed_rule_id: ""
+      mapping_task_id: R-003
+      samples_status: seeded
+      tests_status: seeded
+      sample_refs:
+        - data/examples/rules/R-003/positive-01.json
+      test_refs:
+        - tests/test_v2_compare.py
+        - tests/test_w002_real_file.py
+      duplicate_guard: 已被现有正式规则吸收，不再重复立项
+    - candidate_id: CR-005
+      source_rule_text: 付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分。
+      migration_action: absorbed_existing_rule
+      absorbed_by_rule_id: R-004
+      proposed_rule_id: ""
+      mapping_task_id: R-004-F
+      samples_status: seeded
+      tests_status: seeded
+      sample_refs:
+        - data/examples/rules/R-004/positive-01.json
+      test_refs:
+        - tests/test_v2_compare.py
+        - tests/test_w002_real_file.py
+      duplicate_guard: 已被现有正式规则吸收，不再重复立项
+    - candidate_id: CR-006
+      source_rule_text: 承诺1小时到场并额外赠送台式电脑、打印机各1套的得100分。
+      migration_action: absorbed_existing_rule
+      absorbed_by_rule_id: R-008
+      proposed_rule_id: ""
+      mapping_task_id: R-008
+      samples_status: seeded
+      tests_status: seeded
+      sample_refs:
+        - data/examples/rules/R-008/positive-01.json
+      test_refs:
+        - tests/test_v2_compare.py
+        - tests/test_rule_registry_r008.py
+      duplicate_guard: 已被现有正式规则吸收，不再重复立项
+    - candidate_id: CR-007
+      source_rule_text: 通过额外办公设备配置、会议保障或值班室物资安排获取评分优势。
+      migration_action: absorbed_existing_rule
+      absorbed_by_rule_id: R-005
+      proposed_rule_id: ""
+      mapping_task_id: R-005
+      samples_status: seeded
+      tests_status: seeded
+      sample_refs:
+        - data/examples/rules/R-005/positive-01.json
+      test_refs:
+        - tests/test_v2_compare.py
+      duplicate_guard: 已被现有正式规则吸收，不再重复立项
+  conditional_rule:
+    - candidate_id: CR-002
+      source_rule_text: 针对冷链、生鲜等特定品类，可对温控运输轨迹进行条件化核验。
+      keep_reason: 依赖采购品类和履约画像，建议保留到第二批条件型规则观察池
+  capability_item:
+    - candidate_id: CR-003
+      source_rule_text: 应结合全文识别政策条款是否仅有标题、缺少实质正文。
+      keep_reason: 应由章节召回与证据质量能力承接，不直接规则化
+  drop:
+    - candidate_id: CR-004
+      source_rule_text: 建议供应商提供暖场礼品提升服务感知。
+      keep_reason: 不属于当前项目规则纳管范围
+next_stage_backlog:
+  second_batch_candidates:
+    - CR-002
+  capability_backlog:
+    - CR-003
+  observation_only:
+    - CR-004

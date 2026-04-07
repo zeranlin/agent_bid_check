@@ -15,3 +15,12 @@ candidate_items:
   - candidate_id: CR-004
     source_rule_text: 建议供应商提供暖场礼品提升服务感知。
     source_category: 无效或不纳入项
+  - candidate_id: CR-005
+    source_rule_text: 付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分。
+    source_category: 评分因素合规性
+  - candidate_id: CR-006
+    source_rule_text: 承诺1小时到场并额外赠送台式电脑、打印机各1套的得100分。
+    source_category: 显性赠品评分
+  - candidate_id: CR-007
+    source_rule_text: 通过额外办公设备配置、会议保障或值班室物资安排获取评分优势。
+    source_category: 隐性无关商品/服务评分
