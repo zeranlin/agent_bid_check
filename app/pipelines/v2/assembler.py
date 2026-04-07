@@ -69,6 +69,12 @@ def _cluster_to_risk_point(cluster: MergedRiskCluster) -> RiskPoint:
     judgment = list(cluster.risk_judgment)
     if cluster.conflict_notes:
         judgment.extend(cluster.conflict_notes)
+    legal_basis = [item for item in cluster.legal_basis if str(item).strip()]
+    if not legal_basis:
+        if "compare_rule" in cluster.source_rules and cluster.severity != "需人工复核" and not cluster.need_manual_review:
+            legal_basis = ["已结合规则库交叉校验与原文条款综合判断。"]
+        else:
+            legal_basis = ["需人工复核"]
     risk = RiskPoint(
         title=cluster.title,
         severity=cluster.severity,
@@ -76,7 +82,7 @@ def _cluster_to_risk_point(cluster: MergedRiskCluster) -> RiskPoint:
         source_location="；".join(cluster.source_locations) if cluster.source_locations else "未发现",
         source_excerpt="\n\n".join(cluster.source_excerpts[:2]) if cluster.source_excerpts else "未发现",
         risk_judgment=judgment or ["需人工复核"],
-        legal_basis=cluster.legal_basis or ["需人工复核"],
+        legal_basis=legal_basis,
         rectification=cluster.rectification or ["未发现"],
     )
     risk.ensure_defaults()

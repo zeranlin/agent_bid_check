@@ -316,6 +316,41 @@ def test_build_review_view_from_final_output_prefers_single_source_titles() -> N
     assert view["summary_counts"]["高风险"] == 1
 
 
+def test_build_review_view_from_final_output_clears_manual_placeholder_for_deterministic_standard_rule() -> None:
+    final_output = {
+        "formal_risks": [
+            {
+                "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                "severity": "中高风险",
+                "review_type": "评分因素合规性 / 评审规则设置合法性",
+                "source_location": "第六章 评分办法",
+                "source_excerpt": "验收计划评价为优得60分。",
+                "risk_judgment": ["评审规则已明确不得将项目验收方案作为评审因素。"],
+                "legal_basis": ["需人工复核"],
+                "rectification": ["删除验收方案评分。"],
+            }
+        ]
+    }
+    comparison = {
+        "clusters": [
+            {
+                "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                "review_type": "评分因素合规性 / 评审规则设置合法性",
+                "source_rules": ["compare_rule"],
+                "topics": ["cross_topic"],
+                "conflict_notes": [],
+                "need_manual_review": False,
+            }
+        ]
+    }
+
+    view = build_review_view_from_final_output(final_output, comparison)
+    card = view["all_cards"][0]
+    assert card["is_standard_compare"] is True
+    assert card["manual_reasons"] == []
+    assert "需人工复核" not in card["legal_basis"]
+
+
 def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: Path, monkeypatch) -> None:
     run_dir = tmp_path / "single-source-run"
     run_dir.mkdir()

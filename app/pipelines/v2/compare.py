@@ -331,6 +331,22 @@ def _detect_standard_rule_code(cluster: MergedRiskCluster) -> str:
     return ""
 
 
+def _is_deterministic_compare_rule_cluster(cluster: MergedRiskCluster) -> bool:
+    return (
+        "compare_rule" in cluster.source_rules
+        and cluster.severity != "需人工复核"
+        and not cluster.need_manual_review
+        and not cluster.conflict_notes
+    )
+
+
+def _sanitize_deterministic_compare_rule_cluster(cluster: MergedRiskCluster) -> MergedRiskCluster:
+    if not _is_deterministic_compare_rule_cluster(cluster):
+        return cluster
+    cluster.legal_basis = [item for item in cluster.legal_basis if str(item).strip() and str(item).strip() != "需人工复核"]
+    return cluster
+
+
 def _filter_and_sort_clusters(
     clusters: list[MergedRiskCluster],
     triggered_rule_codes: list[str],
@@ -350,7 +366,7 @@ def _filter_and_sort_clusters(
         if cluster_rule_code:
             if str(cluster.title).strip() in standard_compare_titles_present and "compare_rule" not in cluster.source_rules:
                 continue
-            filtered.append(cluster)
+            filtered.append(_sanitize_deterministic_compare_rule_cluster(cluster))
             continue
         title = str(cluster.title).strip()
         suppressed = False
@@ -363,7 +379,7 @@ def _filter_and_sort_clusters(
                 suppressed = True
                 break
         if not suppressed:
-            filtered.append(cluster)
+            filtered.append(_sanitize_deterministic_compare_rule_cluster(cluster))
     filtered.sort(
         key=lambda cluster: (
             _detect_standard_rule_code(cluster) == "",

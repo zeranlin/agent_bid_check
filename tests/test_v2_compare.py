@@ -430,10 +430,12 @@ def test_compare_review_artifacts_adds_acceptance_plan_in_scoring_risk() -> None
         item for item in comparison.clusters if item.title == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
     )
     assert cluster.severity == "中高风险"
+    assert cluster.need_manual_review is False
     assert cluster.review_type == "评分因素合规性 / 评审规则设置合法性"
     assert cluster.source_locations == ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"]
     assert "项目验收移交衔接方案" in cluster.source_excerpts[0]
     assert "最高得30分" in cluster.source_excerpts[0]
+    assert "需人工复核" not in cluster.legal_basis
     assert comparison.metadata["failure_reason_codes"] == ["acceptance_plan_in_scoring_forbidden"]
     report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
     assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in report

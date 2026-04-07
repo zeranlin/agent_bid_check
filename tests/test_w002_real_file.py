@@ -20,7 +20,7 @@ from app.pipelines.v2.topic_review import (
     _build_structured_signals,
 )
 from app.pipelines.v2.topics import get_topic_definition
-from app.web.v2_app import build_review_view
+from app.web.v2_app import build_review_view, build_review_view_from_final_output
 
 
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
@@ -816,3 +816,26 @@ def test_0330_real_file_industry_experience_wording_matches_project_context() ->
     assert "若本项目并非专门针对柴油发电机组采购" not in judgment_text
     assert "若标的为通用服务或设备" not in judgment_text
     assert "本项目采购标的虽为柴油发电机组" in judgment_text
+
+
+def test_0330_real_file_standard_rule_formal_risk_does_not_carry_manual_marker() -> None:
+    saved_file, structure, baseline, topics = _build_0330_result_topics()
+    comparison = compare_review_artifacts(saved_file.name, baseline, topics)
+
+    cluster = next(
+        item for item in comparison.clusters if item.title == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    )
+    assert cluster.need_manual_review is False
+    assert "compare_rule" in cluster.source_rules
+    assert "需人工复核" not in cluster.legal_basis
+
+    final_output = build_v2_final_output(saved_file.name, baseline, structure, topics, comparison=comparison)
+    formal_risk = next(
+        item for item in final_output["formal_risks"] if item["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    )
+    assert "需人工复核" not in formal_risk["legal_basis"]
+
+    review_view = build_review_view_from_final_output(final_output, json.loads(comparison_to_json(comparison)))
+    card = next(item for item in review_view["all_cards"] if item["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求")
+    assert card["manual_reasons"] == []
+    assert "需人工复核" not in card["legal_basis"]

@@ -28,7 +28,7 @@ from app.config import (
 from app.pipelines.v2.service import review_document_v2, save_review_artifacts_v2
 
 
-SEVERITY_ORDER = ["高风险", "中风险", "低风险", "需人工复核"]
+SEVERITY_ORDER = ["高风险", "中高风险", "中风险", "低风险", "需人工复核"]
 TOPIC_LABELS = {
     "qualification": "资格条件",
     "performance_staff": "业绩与人员",
@@ -367,6 +367,23 @@ def _normalize_compare_key(title: str, review_type: str) -> str:
     return re.sub(r"\s+", "", f"{title}|{review_type}").lower()
 
 
+def _is_deterministic_compare_rule_card(cluster: dict, severity: str) -> bool:
+    source_rules = [str(item).strip() for item in cluster.get("source_rules", []) if str(item).strip()]
+    conflict_notes = [str(item).strip() for item in cluster.get("conflict_notes", []) if str(item).strip()]
+    return (
+        "compare_rule" in source_rules
+        and severity != "需人工复核"
+        and not bool(cluster.get("need_manual_review"))
+        and not conflict_notes
+    )
+
+
+def _sanitize_card_legal_basis(legal_basis: list[str], cluster: dict, severity: str) -> list[str]:
+    if not _is_deterministic_compare_rule_card(cluster, severity):
+        return legal_basis
+    return [item for item in legal_basis if item.strip() != "需人工复核"]
+
+
 def build_review_view(report, comparison: dict | None = None) -> dict:
     summary_counts = {key: 0 for key in SEVERITY_ORDER}
     type_counts: dict[str, int] = {}
@@ -389,10 +406,11 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
         source_topics = [str(item) for item in cluster.get("topics", []) if str(item).strip() and str(item).strip() != "baseline"]
         is_standard_compare = "compare_rule" in source_tags
         manual_reasons = []
-        if cluster.get("need_manual_review"):
+        if cluster.get("need_manual_review") and not _is_deterministic_compare_rule_card(cluster, severity):
             manual_reasons.extend([str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()])
         if severity == "需人工复核" and not manual_reasons:
             manual_reasons.append("当前风险点仍建议人工复核。")
+        legal_basis = _sanitize_card_legal_basis([str(item) for item in risk.legal_basis if str(item).strip()], cluster, severity)
         card = {
             "index": index,
             "title": risk.title,
@@ -402,7 +420,7 @@ def build_review_view(report, comparison: dict | None = None) -> dict:
             "source_location": risk.source_location,
             "source_excerpt": risk.source_excerpt,
             "risk_judgment": risk.risk_judgment,
-            "legal_basis": risk.legal_basis,
+            "legal_basis": legal_basis,
             "rectification": risk.rectification,
             "source_tags": source_tags,
             "source_topics": [TOPIC_LABELS.get(item, item) for item in source_topics],
@@ -467,12 +485,16 @@ def build_review_view_from_final_output(final_output: dict, comparison: dict | N
         is_standard_compare = "compare_rule" in source_tags
         conflict_notes = [str(item) for item in cluster.get("conflict_notes", []) if str(item).strip()]
         manual_reasons: list[str] = []
-        if cluster.get("need_manual_review"):
+        if cluster.get("need_manual_review") and not _is_deterministic_compare_rule_card(cluster, severity):
             manual_reasons.extend(conflict_notes)
         if severity == "需人工复核" and not manual_reasons:
             manual_reasons.append("当前风险点仍建议人工复核。")
         risk_judgment = [str(item) for item in risk.get("risk_judgment", []) if str(item).strip()]
-        legal_basis = [str(item) for item in risk.get("legal_basis", []) if str(item).strip()]
+        legal_basis = _sanitize_card_legal_basis(
+            [str(item) for item in risk.get("legal_basis", []) if str(item).strip()],
+            cluster,
+            severity,
+        )
         rectification = [str(item) for item in risk.get("rectification", []) if str(item).strip()]
         card = {
             "index": index,
