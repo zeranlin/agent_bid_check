@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import assemble_v2_report
-from app.pipelines.v2.compare import compare_review_artifacts
+from app.pipelines.v2.compare import _compact_sentences, compare_review_artifacts
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
@@ -114,6 +114,20 @@ def test_assemble_v2_report_prefers_comparison_clusters() -> None:
     report = assemble_v2_report("sample.docx", baseline, V2StageArtifact(name="structure", metadata={}), topics, comparison)
     assert report.count("## 风险点") == 1
     assert "付款节点明显偏后" in report
+
+
+def test_compact_sentences_removes_progressive_overlapping_fragments() -> None:
+    sentences = [
+        "（一）评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分，具备两项得80分，本小项最高得80分",
+        "（一）评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分，具备两项得80分，本小项最高得80分。2.具备CNAS中国认可产品标志证书的，得20分，本小项最高得20分",
+        "（一）评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分，具备两项得80分，本小项最高得80分。2.具备CNAS中国认可产品标志证书的，得20分，本小项最高得20分。以上累计最高得分为100分",
+    ]
+
+    result = _compact_sentences(sentences, limit=3)
+
+    assert result == [
+        "（一）评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分，具备两项得80分，本小项最高得80分。2.具备CNAS中国认可产品标志证书的，得20分，本小项最高得20分。以上累计最高得分为100分"
+    ]
 
 
 def test_assemble_v2_report_summary_uses_final_layered_results_only() -> None:
@@ -1403,6 +1417,66 @@ def test_compare_review_artifacts_excludes_contract_template_risks() -> None:
     comparison = compare_review_artifacts("sample.docx", baseline, [])
     assert comparison.clusters == []
     assert any(item["title"] == "关键合同条款数值缺失，导致付款与履约责任无法评估" for item in comparison.metadata["excluded_risks"])
+
+
+def test_compare_review_artifacts_excludes_explicit_template_placeholder_risks() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：验收流程关键时间节点缺失，条款不可执行
+
+- 问题定性：中风险
+- 审查类型：完整性审查
+- 原文位置：第三条（二）1
+- 原文摘录：甲方收到乙方自测报告后         个工作日内，有权要求乙方配合甲方完成检测；检测通过后         个工作日内组织验收；收到甲方整改通知后个工作日内完成整改。
+- 风险判断：
+  - 验收节点留白。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补齐时间节点。
+""".strip(),
+    )
+    comparison = compare_review_artifacts("sample.docx", baseline, [])
+    assert all(cluster.title != "验收流程关键时间节点缺失，条款不可执行" for cluster in comparison.clusters)
+    excluded = next(
+        item for item in comparison.metadata["excluded_risks"] if item["title"] == "验收流程关键时间节点缺失，条款不可执行"
+    )
+    assert "模板中的时限占位符" in excluded["reason"]
+
+
+def test_compare_review_artifacts_moves_ambiguous_template_placeholder_to_pending() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：验收流程关键时间节点缺失，条款不可执行
+
+- 问题定性：中风险
+- 审查类型：完整性审查
+- 原文位置：验收流程说明
+- 原文摘录：检测通过后         个工作日内组织初验，整改后个工作日内完成复验。
+- 风险判断：
+  - 验收节点留白。
+- 法律/政策依据：
+  - 需人工复核
+- 整改建议：
+  - 补齐时间节点。
+""".strip(),
+    )
+    comparison = compare_review_artifacts("sample.docx", baseline, [])
+    assert all(cluster.title != "验收流程关键时间节点缺失，条款不可执行" for cluster in comparison.clusters)
+    pending = next(
+        item for item in comparison.metadata["pending_review_items"] if item["title"] == "验收流程关键时间节点缺失，条款不可执行"
+    )
+    assert "模板留白迹象" in pending["reason"]
 
 
 def test_compare_review_artifacts_moves_new_qualification_missing_variant_to_pending() -> None:

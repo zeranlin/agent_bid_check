@@ -51,10 +51,14 @@ TITLE_IMPORT_CONSISTENCY_RE = re.compile(
     r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失|"
     r"标准编号与名称引用混乱且缺失版本信息|燃油标准引用可能涉及废止或滞后版本)"
 )
-TITLE_CERT_SCORING_RE = re.compile(r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会)")
+TITLE_CERT_SCORING_RE = re.compile(
+    r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会|评分标准中.?制造商发电机组资质证书要求特定认证|"
+    r"制造商发电机组资质证书要求特定认证)"
+)
 TITLE_SCORING_CLARITY_RE = re.compile(
     r"(评分档次缺少量化口径|评分标准中“施工组织方案”分值设置逻辑混乱|评分标准逻辑混乱，方案评分叠加方式不明|"
-    r"评分标准不明确，存在逻辑矛盾|评分档次缺少量化口径，主观分值裁量空间过大|主观分值裁量空间过大|评分口径前后不一致)"
+    r"评分标准不明确，存在逻辑矛盾|评分档次缺少量化口径，主观分值裁量空间过大|主观分值裁量空间过大|"
+    r"评分口径前后不一致|方案评分项分值逻辑混乱)"
 )
 TITLE_PERSONNEL_SCORING_RE = re.compile(r"(评分项分值设置畸高，人员职称与业绩分值占比过大|项目负责人评分中“学历”和“职称”分值权重过高)")
 TITLE_CONTRACT_TEMPLATE_RE = re.compile(
@@ -63,6 +67,9 @@ TITLE_CONTRACT_TEMPLATE_RE = re.compile(
 )
 TITLE_INTERNAL_SCORE_WEIGHT_RE = re.compile(r"(三体系认证分值设置过高|分值设置畸高)")
 TITLE_POLICY_MISSING_RE = re.compile(r"(中小企业扶持政策落实条款缺失|节能环保产品政策落实条款缺失)")
+TITLE_POLICY_GUIDANCE_RE = re.compile(
+    r"(中小企业声明函填写指引中未明确.?采购标的所属行业.?|中小企业声明函填写指引中关于.?不重复享受.?)"
+)
 TITLE_CERT_MISSING_RE = re.compile(r"(检测认证要求表述缺失)")
 TITLE_ANNOUNCEMENT_RE = re.compile(r"(澄清/修改截止时间未明确填写)")
 TITLE_IMPORT_ITSELF_RE = re.compile(r"(进口产品禁止性规定表述过于绝对)")
@@ -70,14 +77,15 @@ TITLE_SOCIAL_SECURITY_RE = re.compile(r"(人员社保要求存在特殊豁免)")
 TITLE_BRAND_DISCLOSURE_RE = re.compile(r"(指定具体品牌和型号要求不明确)")
 TITLE_DIMENSION_RE = re.compile(r"(双电源切换柜.*(尺寸要求过于具体|尺寸允许偏差过大))")
 TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
-TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险)")
+TITLE_PAYMENT_REVIEW_RE = re.compile(r"(交钥匙.*付款方式存在潜在风险|尾款支付节点滞后，资金占用风险高|预付款比例偏低且支付条件模糊)")
 TITLE_ELECTRONIC_SIGNATURE_RE = re.compile(r"(‘不盖章’的表述存在合规风险|不盖章)")
 TITLE_TRUNCATED_EVIDENCE_RE = re.compile(r"(质疑处理章节内容不完整)")
 TITLE_PENDING_QUALIFICATION_RE = re.compile(
-    r"(具体资格条件内容缺失|具体资格条款缺失|投标人资格要求内容缺失，无法判断是否存在排斥性条款)"
+    r"(具体资格条件内容缺失|具体资格条款缺失|投标人资格要求内容缺失，无法判断是否存在排斥性条款|"
+    r"关键人员配置及业绩要求信息缺失，无法判断合理性)"
 )
 TITLE_PENDING_WASTE_RE = re.compile(r"(废标条件及最终解释权条款证据缺失)")
-TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理)")
+TITLE_SERVICE_SCORING_RE = re.compile(r"(售后服务承诺评分标准设置不合理|评分标准中“售后服务承诺”.*响应时间要求过于严苛)")
 GIFTS_EXPLICIT_SCORING_EXCERPT_RE = re.compile(
     r"((赠送|附送|额外提供|无偿提供).{0,24}(台式电脑|打印机|办公设备|礼品|值班室物资)|"
     r"(台式电脑|打印机|办公设备|礼品|值班室物资).{0,24}(赠送|附送|额外提供|无偿提供))"
@@ -87,23 +95,42 @@ PAYMENT_TERMS_SCORING_EXCERPT_RE = re.compile(
 )
 TITLE_ORIGINAL_ENGINEER_RE = re.compile(r"(制造商原厂工程师)")
 TITLE_ACCEPTANCE_STANDARD_RE = re.compile(r"(验收标准表述模糊)")
-TITLE_SHORT_WINDOW_RE = re.compile(r"(业绩评分中时间范围设定过短)")
+TITLE_SHORT_WINDOW_RE = re.compile(r"(业绩评分中时间范围设定过短|业绩评分项时间范围表述存在逻辑矛盾|供应商同类项目业绩情况.?时间范围设定过短)")
 TITLE_CONTRACT_TEMPLATE_STRICT_RE = re.compile(
     r"(付款条款关键数据缺失，无法评估公平性与节点衔接|合同验收时点条款留白，验收流程缺乏明确的可操作性|"
-    r"履约保证金金额及退还期限未明确|验收期限留白，影响付款节点触发|质量保证金及违约责任条款缺失)"
+    r"履约保证金金额及退还期限未明确|验收期限留白，影响付款节点触发|质量保证金及违约责任条款缺失|"
+    r"关键条款缺失：履约保证金、违约责任等未明确)"
 )
 TITLE_PENDING_EVIDENCE_RE = re.compile(
     r"(关键人员配置及业绩要求证据缺失，需人工复核|政策导向章节内容缺失，无法确认节能环保等政策落实情况|"
     r"政策导向章节内容缺失，无法全面审查其他政策落实情况|"
+    r"政策导向章节内容缺失，无法确认节能环保及进口产品政策落实情况|"
+    r"关键人员配置及业绩要求信息缺失，无法判断合理性|"
+    r"制造商资质证书要求表述模糊，存在设置不合理门槛风险|"
+    r"商务条款中“设备安装要求”设定特定资质和人员经验，可能构成不合理限制|"
     r"缺失检测报告及认证要求的具体规定)"
 )
 TITLE_GENERIC_SCORING_RE = re.compile(
-    r"(三体系认证设置高分值，需评估与项目履约的关联性|业绩评分内容与采购标的履约能力关联度存疑|"
-    r"项目负责人学历、职称及相关经验被纳入评分因素，需进一步论证其与项目履约能力的直接关联性)"
+    r"(三体系认证设置高分值，需评估与项目履约的关联性|三体系认证及特定产品证书设置高分值，存在排斥潜在投标人风险|"
+    r"业绩评分内容与采购标的履约能力关联度存疑|"
+    r"项目负责人学历、职称及相关经验被纳入评分因素，需进一步论证其与项目履约能力的直接关联性|"
+    r"评分标准中“拟安排的项目负责人情况”设置学历、职称及经验累计得分，可能构成以不合理条件限制竞争)"
 )
 TITLE_BOUNDARY_LIGHT_RE = re.compile(
     r"(澄清截止时间未明确填写|采购标的所属行业未明确，影响中小企业声明函填写|"
-    r"人员社保证明要求存在特殊豁免，需防范虚假人员风险|电子投标文件容量限制可能增加投标负担)"
+    r"人员社保证明要求存在特殊豁免，需防范虚假人员风险|社保证明要求存在特殊豁免条款，需防范规避监管风险|"
+    r"电子投标文件容量限制可能增加投标负担|电子投标文件容量限制需关注|"
+    r"中小企业声明函填写指引中关于.?不重复享受.?)"
+)
+TEMPLATE_PLACEHOLDER_PARTY_RE = re.compile(r"(甲方|乙方)")
+TEMPLATE_PLACEHOLDER_WORKFLOW_RE = re.compile(r"(验收|整改|履约|检测|自测报告|整改通知|质量验收|交货|保修)")
+TEMPLATE_PLACEHOLDER_CONTEXT_RE = re.compile(r"(合同|协议|履约|验收|整改|保修|售后)")
+TEMPLATE_PLACEHOLDER_MARK_RE = re.compile(r"(_{3,}|＿{2,}|﹍{2,}|▁{2,}| {6,}|[【\[]\s*[】\]]|[□■])")
+TEMPLATE_PLACEHOLDER_DURATION_RE = re.compile(
+    r"((?:收到[^。；\n]{0,24}后|检测通过后|整改(?:通知)?后|验收后|自测报告后|到货后|安装调试完毕后|"
+    r"履行完毕[^。；\n]{0,18}后)(?:\s*[_＿﹍▁ ]{0,12})?(?:个工作日|小时)|"
+    r"(?:[_＿﹍▁]{2,}| {6,})(?:个工作日|小时)|"
+    r"(?:收到[^。；\n]{0,24}后|检测通过后|整改(?:通知)?后|验收后|自测报告后).{0,8}个工作日内)"
 )
 
 
@@ -177,8 +204,28 @@ def _compact_titles(sections: list[dict], limit: int = 3) -> list[str]:
 
 
 def _compact_sentences(sentences: list[str], limit: int = 2) -> list[str]:
+    normalized = [re.sub(r"\s+", " ", str(item).strip()) for item in sentences if str(item).strip()]
+    deduped = dedupe(normalized)
+    filtered: list[str] = []
+    for index, sentence in enumerate(deduped):
+        compact_sentence = re.sub(r"\s+", "", sentence)
+        if not compact_sentence:
+            continue
+        # Drop shorter overlapping fragments when a later sentence already carries the same evidence
+        # with a fuller span. This avoids repeated progressive excerpts in Web "原文摘录".
+        shadowed = False
+        for other_index, other in enumerate(deduped):
+            if other_index == index:
+                continue
+            compact_other = re.sub(r"\s+", "", other)
+            if compact_other and compact_sentence != compact_other and compact_sentence in compact_other:
+                shadowed = True
+                break
+        if not shadowed:
+            filtered.append(sentence)
+
     result: list[str] = []
-    for sentence in dedupe([str(item).strip() for item in sentences if str(item).strip()]):
+    for sentence in filtered:
         compact = re.sub(r"\s+", " ", sentence).strip()
         if compact:
             result.append(compact)
@@ -503,7 +550,7 @@ def _is_poor_excerpt(text: str) -> bool:
     compact = str(text or "").strip()
     if not compact or compact in {"未发现", "无"}:
         return True
-    if len(compact) <= 8:
+    if len(compact) <= 4:
         return True
     if compact.endswith(("可以委", "详见", "无", "为空")):
         return True
@@ -535,6 +582,29 @@ def _build_excluded_item(cluster: MergedRiskCluster, reason: str) -> dict[str, o
     }
 
 
+def _detect_template_placeholder_status(cluster: MergedRiskCluster) -> str:
+    text = "\n".join(
+        [
+            str(cluster.title).strip(),
+            *[str(item).strip() for item in cluster.source_locations if str(item).strip()],
+            *[str(item).strip() for item in cluster.source_excerpts if str(item).strip()],
+        ]
+    )
+    if not text:
+        return ""
+
+    has_party = bool(TEMPLATE_PLACEHOLDER_PARTY_RE.search(text))
+    has_workflow = bool(TEMPLATE_PLACEHOLDER_WORKFLOW_RE.search(text))
+    has_placeholder = bool(TEMPLATE_PLACEHOLDER_MARK_RE.search(text) or TEMPLATE_PLACEHOLDER_DURATION_RE.search(text))
+    has_context = bool(TEMPLATE_PLACEHOLDER_CONTEXT_RE.search(text))
+
+    if has_party and has_workflow and has_placeholder:
+        return "explicit"
+    if has_placeholder and has_workflow and (has_party or has_context):
+        return "pending"
+    return ""
+
+
 def _refine_clusters_for_maturity(
     clusters: list[MergedRiskCluster],
     topics: list[TopicReviewArtifact],
@@ -558,6 +628,20 @@ def _refine_clusters_for_maturity(
         location = "；".join(cluster.source_locations)
         signal_text = f"{title}\n{excerpt}\n{location}"
 
+        template_placeholder_status = _detect_template_placeholder_status(cluster)
+        if template_placeholder_status == "explicit":
+            excluded_risks.append(
+                _build_excluded_item(
+                    cluster,
+                    "检测到合同/协议模板中的时限占位符，属于模板留白，不直接作为正式风险输出。",
+                )
+            )
+            continue
+        if template_placeholder_status == "pending":
+            pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
+            pending_review_items[-1]["reason"] = "检测到条款存在模板留白迹象，需结合是否为生效正文继续复核。"
+            continue
+
         group_key = _cluster_group_key(title)
         if group_key:
             merged_groups.setdefault(group_key, []).append(cluster)
@@ -579,6 +663,14 @@ def _refine_clusters_for_maturity(
             policy_signals.get("policy_discount_present") or policy_signals.get("eco_policy_present")
         ):
             excluded_risks.append(_build_excluded_item(cluster, "已召回到价格扣除比例或节能环保政策条款，不再输出“政策缺失”类正式风险。"))
+            continue
+
+        if TITLE_POLICY_GUIDANCE_RE.search(title) and (
+            policy_signals.get("policy_discount_present")
+            or policy_signals.get("announcement_reference_present")
+            or policy_signals.get("electronic_procurement_present")
+        ):
+            excluded_risks.append(_build_excluded_item(cluster, "当前属于政策填写指引或声明函边界说明场景，不再作为正式风险输出。"))
             continue
 
         if TITLE_CERT_MISSING_RE.search(title) and (
@@ -689,6 +781,15 @@ def _refine_clusters_for_maturity(
         if TITLE_PENDING_WASTE_RE.search(title):
             pending_review_items.append(_build_pending_item(cluster, "程序条款"))
             pending_review_items[-1]["reason"] = "当前未检到对应原文证据，先转为待补证复核项。"
+            continue
+
+        if cluster.severity == "需人工复核":
+            topic_hint = _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"
+            if TITLE_CONTRACT_TEMPLATE_RE.search(title) or TITLE_CONTRACT_TEMPLATE_STRICT_RE.search(title):
+                excluded_risks.append(_build_excluded_item(cluster, "当前仅形成模板区占位或缺失提示，不进入正式风险。"))
+            else:
+                pending_review_items.append(_build_pending_item(cluster, topic_hint))
+                pending_review_items[-1]["reason"] = "当前专题已标记需人工复核，暂不作为正式风险输出。"
             continue
 
         if TITLE_ORIGINAL_ENGINEER_RE.search(title):

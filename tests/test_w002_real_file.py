@@ -8,6 +8,7 @@ from app.common.markdown_utils import parse_review_markdown
 from app.common.schemas import RiskPoint
 from app.config import ReviewSettings
 from app.pipelines.v2.assembler import assemble_v2_report
+from app.pipelines.v2.assembler import build_v2_final_output
 from app.pipelines.v2.compare import compare_review_artifacts, comparison_to_json
 from app.pipelines.v2.evidence import build_evidence_map
 from app.pipelines.v2.schemas import TopicReviewArtifact, V2StageArtifact
@@ -28,6 +29,8 @@ R004_REAL_FILE = Path("data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0
 W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
 W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-rerun/topic_reviews")
 G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
+CURRENT_REAL_RUN = Path("data/results/v2/20260403-diesel-rerun/topic_reviews")
+W007_SOURCE_RESULT = Path("data/results/v2/20260407-140828-232a1471")
 
 
 def _build_settings() -> ReviewSettings:
@@ -306,6 +309,56 @@ def _build_feedback_source_topics(source_run: Path) -> tuple[V2StageArtifact, V2
     return structure, evidence, topics
 
 
+def _build_current_real_run_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_feedback_source_topics(CURRENT_REAL_RUN)
+
+
+def _build_topics_from_result_run(result_dir: Path) -> tuple[Path, V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    meta = json.loads((result_dir / "meta.json").read_text(encoding="utf-8"))
+    saved_file = Path("data/uploads/v2") / str(meta["saved_filename"])
+    source_run = result_dir / "topic_reviews"
+    text = extract_text(saved_file)
+    structure = build_structure_map(saved_file, text, _build_settings(), use_llm=False)
+    evidence = build_evidence_map(saved_file.name, structure, topic_mode="mature")
+    bundles = evidence.metadata["topic_evidence_bundles"]
+    coverages = evidence.metadata["topic_coverages"]
+    topics: list[TopicReviewArtifact] = []
+    for path in sorted(source_run.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topic_key = payload.get("topic", path.stem)
+        bundle = bundles.get(topic_key, {})
+        sections = [section for section in bundle.get("sections", []) if isinstance(section, dict)]
+        metadata = {
+            **dict(payload.get("metadata", {}) or {}),
+            "selected_sections": [
+                {
+                    "title": section.get("title", ""),
+                    "start_line": section.get("start_line"),
+                    "end_line": section.get("end_line"),
+                    "module": section.get("module", ""),
+                }
+                for section in sections
+            ],
+            "evidence_bundle": bundle,
+            "topic_coverage": coverages.get(topic_key, {}),
+        }
+        topics.append(
+            TopicReviewArtifact(
+                topic=topic_key,
+                summary=payload.get("summary", ""),
+                risk_points=[RiskPoint(**risk) for risk in payload.get("risk_points", [])],
+                need_manual_review=payload.get("need_manual_review", False),
+                coverage_note=payload.get("coverage_note", ""),
+                metadata=metadata,
+            )
+        )
+    baseline = V2StageArtifact(
+        name="baseline",
+        content=f"# 招标文件合规审查结果\n\n审查对象：`{saved_file.name}`\n",
+    )
+    return saved_file, structure, baseline, topics
+
+
 def test_w002_real_file_compare_matrix_is_complete() -> None:
     structure, evidence, topics = _build_real_file_topics()
     comparison = compare_review_artifacts(REAL_FILE.name, V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n"), topics)
@@ -470,6 +523,60 @@ def test_w006_final_markdown_summary_uses_layered_results_only() -> None:
     assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section
 
 
+def test_w004_current_real_run_collapses_variant_titles_and_layers_results() -> None:
+    structure, evidence, replay_topics = _build_current_real_run_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_FILE.name, baseline, replay_topics)
+
+    formal_titles = [cluster.title for cluster in comparison.clusters]
+    pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
+    excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
+
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in formal_titles
+    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+    assert "验收标准来源表述不清，容易引发验收依据理解歧义" in formal_titles
+
+    for title in [
+        "三体系认证及特定产品证书设置高分值，存在排斥潜在投标人风险",
+        "中小企业声明函填写指引中未明确‘采购标的所属行业’",
+        "尾款支付节点滞后，资金占用风险高",
+        "评分标准中“制造商发电机组资质证书”要求特定认证，具有明显倾向性",
+        "业绩评分项时间范围表述存在逻辑矛盾",
+        "商务条款中“设备安装要求”设定特定资质和人员经验，可能构成不合理限制",
+        "政策导向章节内容缺失，无法确认节能环保及进口产品政策落实情况",
+        "社保证明要求存在特殊豁免条款，需防范规避监管风险",
+        "评分标准中“拟安排的项目负责人情况”设置学历、职称及经验累计得分，可能构成以不合理条件限制竞争",
+        "预付款比例偏低且支付条件模糊",
+        "中小企业声明函填写指引中关于‘不重复享受’的表述需结合具体评审办法确认",
+        "电子投标文件容量限制需关注",
+        "评分标准中“供应商同类项目业绩情况”时间范围设定过短，可能限制竞争",
+    ]:
+        assert title not in formal_titles
+
+    for title in [
+        "关键人员配置及业绩要求信息缺失，无法判断合理性",
+        "具体资格条款缺失，无法判断是否存在排斥性要求",
+        "废标条件及最终解释权条款证据缺失",
+        "缺失检测报告及认证要求的具体规定",
+        "政策导向章节内容缺失，无法确认节能环保及进口产品政策落实情况",
+    ]:
+        assert title in pending_titles
+
+    for title in [
+        "中小企业声明函填写指引中未明确‘采购标的所属行业’",
+        "尾款支付节点滞后，资金占用风险高",
+        "预付款比例偏低且支付条件模糊",
+        "社保证明要求存在特殊豁免条款，需防范规避监管风险",
+        "中小企业声明函填写指引中关于‘不重复享受’的表述需结合具体评审办法确认",
+        "电子投标文件容量限制需关注",
+        "关键条款缺失：履约保证金、违约责任等未明确",
+    ]:
+        assert title in excluded_titles
+
+    assert len(formal_titles) <= 12
+
+
 def test_g004_real_file_import_consistency_includes_foreign_component_evidence() -> None:
     structure, evidence, topics = _build_real_file_topics()
     baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
@@ -552,6 +659,39 @@ def test_g005_real_file_moves_qualification_missing_and_policy_missing_to_pendin
     assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" not in formal_titles
     assert "投标人资格要求内容缺失，无法判断是否存在排斥性条款" in pending_titles
     assert "政策导向章节内容缺失，无法全面审查其他政策落实情况" in pending_titles
+
+
+def test_w007_real_file_template_placeholder_risks_do_not_enter_formal() -> None:
+    saved_file, structure, baseline, topics = _build_topics_from_result_run(W007_SOURCE_RESULT)
+    comparison = compare_review_artifacts(saved_file.name, baseline, topics)
+
+    template_tokens = ["甲方收到乙方自测报告后", "检测通过后", "整改通知后"]
+    formal_titles = [
+        cluster.title
+        for cluster in comparison.clusters
+        if any(token in " ".join(cluster.source_excerpts) for token in template_tokens)
+    ]
+    assert formal_titles == []
+
+    excluded_matches = [
+        item
+        for item in comparison.metadata["excluded_risks"]
+        if any(token in str(item.get("source_excerpt", "")) for token in template_tokens)
+    ]
+    pending_matches = [
+        item
+        for item in comparison.metadata["pending_review_items"]
+        if any(token in str(item.get("source_excerpt", "")) for token in template_tokens)
+    ]
+    assert excluded_matches or pending_matches
+    for item in excluded_matches:
+        assert "模板中的时限占位符" in str(item.get("reason", ""))
+
+    final_output = build_v2_final_output(saved_file.name, baseline, structure, topics, comparison=comparison)
+    assert not any(
+        any(token in str(item.get("source_excerpt", "")) for token in template_tokens)
+        for item in final_output["formal_risks"]
+    )
 
 
 def test_r008_real_file_replay_hits_gifts_non_project_goods_risk() -> None:
