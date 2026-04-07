@@ -1,0 +1,133 @@
+batch_id: CAND-IMPORT-2026-04-07-REAL-001
+snapshot_id: SNAP-2026-04-07-triage-002
+task_id: Task-G9
+total_candidates: 154
+counts:
+  formal_rule: 84
+  conditional_rule: 56
+  capability_item: 12
+  drop: 2
+first_priority_candidates:
+- candidate_id: RC-001
+  source_rule_text: 不得将国务院已明令取消的或国家行政机关非强制的资质、资格作为资格条件
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-002
+  source_rule_text: 不得将国务院已明令取消的资质、资格、认证作为评审因素
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-003
+  source_rule_text: 不得设置与需求不相符的资质要求
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-004
+  source_rule_text: 不得设定特定企业人员证书作为资格条件、评审因素
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-013
+  source_rule_text: 不得设置安全生产标准化证书
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-014
+  source_rule_text: 设置证书暗含经营年限要求
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-015
+  source_rule_text: 不得要求提供有关资质证明文件、证照、证件原件
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-016
+  source_rule_text: 不得要求提供电子证照的纸质证照
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-018
+  source_rule_text: 不得限定供应商所有制形式
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-019
+  source_rule_text: 不得限定供应商组织形式
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-020
+  source_rule_text: 不得限定供应商注册地或所在地或要求供应商在某行政区域内设立分支机构。
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+- candidate_id: RC-021
+  source_rule_text: 不得设定供应商经营网点作为合格供应商资质条款
+  decision: formal_rule
+  target_rule_id: ''
+  priority_reason: 可作为下一批正式纳管优先对象
+capability_backlog:
+- candidate_id: RC-143
+  source_rule_text: 内容一致性校验
+  source_section: CCK-001
+- candidate_id: RC-144
+  source_rule_text: 参数要求偏离强制性国家标准
+  source_section: CCK-003
+- candidate_id: RC-145
+  source_rule_text: 引用标准与采购标的物无关
+  source_section: CCK-003
+- candidate_id: RC-146
+  source_rule_text: 进口产品厂家证明文件要求
+  source_section: CCK-003
+- candidate_id: RC-147
+  source_rule_text: 内容应能定位到章节、段落、表格、附件
+  source_section: CCK-004
+- candidate_id: RC-148
+  source_rule_text: 表格证据至少应定位到行
+  source_section: CCK-004
+- candidate_id: RC-149
+  source_rule_text: 表格证据较优应定位到单元格
+  source_section: CCK-004
+- candidate_id: RC-150
+  source_rule_text: 表格证据最佳应定位到单元格内问题片段
+  source_section: CCK-004
+- candidate_id: RC-151
+  source_rule_text: 文件乱码检测
+  source_section: CCK-005
+- candidate_id: RC-152
+  source_rule_text: 疑似错别字检查
+  source_section: CCK-005
+- candidate_id: RC-153
+  source_rule_text: 不得出现主观性表述
+  source_section: CCK-005
+- candidate_id: RC-154
+  source_rule_text: 不得设置敏感风险词
+  source_section: CCK-005
+absorbed_candidates:
+- candidate_id: RC-037
+  source_rule_text: 不得要求提供赠品、回扣或者与采购无关的其他商品、服务
+  absorbed_by_rule_id: R-005
+- candidate_id: RC-047
+  source_rule_text: 不得限定证书的认证机构
+  absorbed_by_rule_id: R-006
+- candidate_id: RC-073
+  source_rule_text: 不得将“付款方式”作为评审因素。
+  absorbed_by_rule_id: R-004
+- candidate_id: RC-074
+  source_rule_text: 不得将“项目验收方案”作为评审因素，
+  absorbed_by_rule_id: R-003
+- candidate_id: RC-107
+  source_rule_text: 含有GB（不含GB/T）或国家强制性标准的描述中需含有★号
+  absorbed_by_rule_id: R-002
+- candidate_id: RC-110
+  source_rule_text: 非进口项目不得设置国际标准
+  absorbed_by_rule_id: R-001
+- candidate_id: RC-127
+  source_rule_text: 不得要求中标人承担验收产生的检测费用
+  absorbed_by_rule_id: R-007
+notes:
+- 来源文档正文声明唯一审查点约150个，本轮按治理视角抽取去重后形成154条真实候选治理条目。
+- 已被现有规则吸收的条目仅登记吸收关系，不重复立项。
+- 对边界不清、地域/品类依赖强或更适合作为能力建设的条目，优先分流到 conditional_rule 或 capability_item。
