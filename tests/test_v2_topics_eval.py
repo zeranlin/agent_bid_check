@@ -219,6 +219,31 @@ def test_scoring_payment_terms_rule_and_scoring_signals_are_extracted_correctly(
     assert contract_negative_signals["scoring_contains_payment_terms"] is False
     assert contract_negative_signals["payment_terms_linked_to_score"] is False
 
+
+def test_qualification_cancelled_or_non_mandatory_qualification_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_qualification_cancelled_or_non_mandatory_positive_009"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["qualification_requirement_present"] is True
+    assert positive_signals["cancelled_or_non_mandatory_qualification_signal"] is True
+    assert positive_signals["cancelled_or_non_mandatory_qualification_used_as_gate"] is True
+    assert any(("已明令取消" in item) or ("非强制" in item) for item in positive_signals["cancelled_or_non_mandatory_qualification_sentences"])
+
+    candidate_expression = evaluate_sample(samples["topic_qualification_cancelled_or_non_mandatory_candidate_expression_009"])
+    candidate_signals = candidate_expression["target_topic_detail"]["structured_signals"]
+    assert candidate_signals["qualification_requirement_present"] is True
+    assert candidate_signals["cancelled_or_non_mandatory_qualification_signal"] is True
+    assert candidate_signals["cancelled_or_non_mandatory_qualification_used_as_gate"] is True
+    assert candidate_signals["cancelled_or_non_mandatory_qualification_prohibition_context"] is True
+
+    negative = evaluate_sample(samples["topic_qualification_cancelled_or_non_mandatory_negative_legal_009"])
+    negative_signals = negative["target_topic_detail"]["structured_signals"]
+    assert negative_signals["qualification_requirement_present"] is True
+    assert negative_signals["cancelled_or_non_mandatory_qualification_signal"] is False
+    assert negative_signals["cancelled_or_non_mandatory_qualification_used_as_gate"] is False
+
     capability_negative = evaluate_sample(samples["topic_scoring_payment_terms_negative_capability_only_007"])
     capability_negative_signals = capability_negative["target_topic_detail"]["structured_signals"]
     assert capability_negative_signals["scoring_contains_payment_terms"] is False

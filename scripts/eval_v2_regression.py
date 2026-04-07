@@ -94,6 +94,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补验收检测费用禁转嫁规则与需求条款承担范围的交叉校验。",
     },
+    "cancelled_or_non_mandatory_qualification_as_gate": {
+        "label": "已取消或非强制资质资格被违规作为资格条件",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补资格条件侧已取消或非强制资质资格禁入门槛规则与资格条款的交叉校验。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

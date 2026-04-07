@@ -2332,5 +2332,80 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_qualification_cancelled_or_non_mandatory_positive_009",
+    "name": "topic_qualification_cancelled_or_non_mandatory_positive_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "资格条件中将已明令取消资质作为资格审查门槛。",
+    "text": "第二章 投标人资格要求\n投标人资格要求：投标人须具备省级主管部门已明令取消的行业资质证书。未提供上述资质证书的，资格审查不通过。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格条件条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_cancelled_or_non_mandatory_candidate_expression_009",
+    "name": "topic_qualification_cancelled_or_non_mandatory_candidate_expression_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "真实候选表达应被识别出资格条件与已取消/非强制资质语义，但属于禁止性表述。",
+    "text": "第二章 资格条件\n不得将国务院已明令取消的或国家行政机关非强制的资质、资格作为资格条件。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格条件条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_cancelled_or_non_mandatory_negative_legal_009",
+    "name": "topic_qualification_cancelled_or_non_mandatory_negative_legal_009",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "现行法定强制许可不应触发已取消或非强制资质信号。",
+    "text": "第二章 投标人资格要求\n投标人须具备现行有效的特种设备生产许可证，作为法定准入资质。未提供的，资格审查不通过。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖资格条件条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

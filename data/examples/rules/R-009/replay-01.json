@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-009",
+  "sample_role": "replay",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_qualification_cancelled_or_non_mandatory_positive_011",
+  "note": "R-009 首轮端到端回放样本。"
+}

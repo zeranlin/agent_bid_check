@@ -9,19 +9,29 @@
             "id": "sec-contract-001",
             "title": "第五章 商务及验收要求",
             "module": "contract",
-            "secondary_modules": ["acceptance"]
+            "secondary_modules": [
+              "acceptance"
+            ]
           }
         ],
         "topic_coverages": [
           {
             "topic": "contract",
-            "required_titles": ["第五章 商务及验收要求"],
-            "required_modules": ["contract"]
+            "required_titles": [
+              "第五章 商务及验收要求"
+            ],
+            "required_modules": [
+              "contract"
+            ]
           },
           {
             "topic": "acceptance",
-            "required_titles": ["第五章 商务及验收要求"],
-            "required_modules": ["contract"]
+            "required_titles": [
+              "第五章 商务及验收要求"
+            ],
+            "required_modules": [
+              "contract"
+            ]
           }
         ]
       },
@@ -29,7 +39,9 @@
         {
           "id": "risk-contract-001",
           "title": "付款节点与财政资金到位挂钩",
-          "aliases": ["付款以财政资金到位为前提"],
+          "aliases": [
+            "付款以财政资金到位为前提"
+          ],
           "review_type": "商务条款失衡",
           "severity": "高风险",
           "source_location": "第五章 商务及验收要求 付款方式",
@@ -90,27 +102,45 @@
             "title": "付款以财政资金到位为前提",
             "review_type": "商务条款失衡",
             "severity": "高风险",
-            "source_locations": ["第五章 商务及验收要求 付款方式"],
-            "source_excerpts": ["收到财政资金后再支付合同款"],
-            "topics": ["contract"],
+            "source_locations": [
+              "第五章 商务及验收要求 付款方式"
+            ],
+            "source_excerpts": [
+              "收到财政资金后再支付合同款"
+            ],
+            "topics": [
+              "contract"
+            ],
             "need_manual_review": false
           },
           {
             "title": "验收标准描述不完整",
             "review_type": "验收条款不明确",
             "severity": "中风险",
-            "source_locations": ["第五章 商务及验收要求 验收条款"],
-            "source_excerpts": ["验收标准详见相关规范"],
-            "topics": ["acceptance"],
+            "source_locations": [
+              "第五章 商务及验收要求 验收条款"
+            ],
+            "source_excerpts": [
+              "验收标准详见相关规范"
+            ],
+            "topics": [
+              "acceptance"
+            ],
             "need_manual_review": false
           },
           {
             "title": "报价页盖章要求不够明确",
             "review_type": "程序条款",
             "severity": "低风险",
-            "source_locations": ["第八章 投标文件格式"],
-            "source_excerpts": ["报价页须按要求盖章"],
-            "topics": ["procedure"],
+            "source_locations": [
+              "第八章 投标文件格式"
+            ],
+            "source_excerpts": [
+              "报价页须按要求盖章"
+            ],
+            "topics": [
+              "procedure"
+            ],
             "need_manual_review": false
           }
         ]
@@ -132,8 +162,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -189,8 +223,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -240,9 +278,15 @@
             "title": "评分档次缺少量化口径",
             "review_type": "评分标准不明确",
             "severity": "中风险",
-            "source_locations": ["第六章 评分办法"],
-            "source_excerpts": ["技术方案优得40分，良得30分，一般得20分。"],
-            "topics": ["scoring"],
+            "source_locations": [
+              "第六章 评分办法"
+            ],
+            "source_excerpts": [
+              "技术方案优得40分，良得30分，一般得20分。"
+            ],
+            "topics": [
+              "scoring"
+            ],
             "need_manual_review": false
           }
         ]
@@ -264,8 +308,12 @@
         "topic_coverages": [
           {
             "topic": "technical_standard",
-            "required_titles": ["第三章 技术标准及检测要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第三章 技术标准及检测要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -315,9 +363,15 @@
             "title": "引用已废止标准",
             "review_type": "技术标准",
             "severity": "中风险",
-            "source_locations": ["第三章 技术标准及检测要求"],
-            "source_excerpts": ["塑料拉伸性能的测定 第2部分 GB/T 1040.2-2006。"],
-            "topics": ["technical_standard"],
+            "source_locations": [
+              "第三章 技术标准及检测要求"
+            ],
+            "source_excerpts": [
+              "塑料拉伸性能的测定 第2部分 GB/T 1040.2-2006。"
+            ],
+            "topics": [
+              "technical_standard"
+            ],
             "need_manual_review": false
           }
         ]
@@ -334,19 +388,29 @@
             "id": "sec-contract-301",
             "title": "第五章 合同付款与验收",
             "module": "contract",
-            "secondary_modules": ["acceptance"]
+            "secondary_modules": [
+              "acceptance"
+            ]
           }
         ],
         "topic_coverages": [
           {
             "topic": "contract",
-            "required_titles": ["第五章 合同付款与验收"],
-            "required_modules": ["contract"]
+            "required_titles": [
+              "第五章 合同付款与验收"
+            ],
+            "required_modules": [
+              "contract"
+            ]
           },
           {
             "topic": "acceptance",
-            "required_titles": ["第五章 合同付款与验收"],
-            "required_modules": ["contract"]
+            "required_titles": [
+              "第五章 合同付款与验收"
+            ],
+            "required_modules": [
+              "contract"
+            ]
           }
         ]
       },
@@ -414,18 +478,30 @@
             "title": "付款条件与验收结果双重挂钩",
             "review_type": "商务条款失衡",
             "severity": "高风险",
-            "source_locations": ["第五章 合同付款与验收 付款条款"],
-            "source_excerpts": ["项目终验合格且财政资金到位后支付剩余合同款。"],
-            "topics": ["contract"],
+            "source_locations": [
+              "第五章 合同付款与验收 付款条款"
+            ],
+            "source_excerpts": [
+              "项目终验合格且财政资金到位后支付剩余合同款。"
+            ],
+            "topics": [
+              "contract"
+            ],
             "need_manual_review": false
           },
           {
             "title": "验收标准缺少明确指标",
             "review_type": "验收条款不明确",
             "severity": "需人工复核",
-            "source_locations": ["第五章 合同付款与验收 验收条款"],
-            "source_excerpts": ["验收标准详见有关规范，采购人有最终解释权。"],
-            "topics": ["acceptance"],
+            "source_locations": [
+              "第五章 合同付款与验收 验收条款"
+            ],
+            "source_excerpts": [
+              "验收标准详见有关规范，采购人有最终解释权。"
+            ],
+            "topics": [
+              "acceptance"
+            ],
             "need_manual_review": true
           }
         ]
@@ -452,13 +528,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 政策条款"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 政策条款"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第二章 技术标准要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第二章 技术标准要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -470,7 +554,10 @@
           "severity": "中风险",
           "source_location": "政策条款；技术标准要求",
           "manual_review": false,
-          "aliases": ["技术标准引用与采购政策口径不一致", "拒绝进口项目仍优先绑定外标体系"]
+          "aliases": [
+            "技术标准引用与采购政策口径不一致",
+            "拒绝进口项目仍优先绑定外标体系"
+          ]
         }
       ]
     },
@@ -529,14 +616,24 @@
             "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
             "review_type": "技术标准引用一致性 / 潜在限制竞争",
             "severity": "中风险",
-            "source_locations": ["第一章 政策条款", "第二章 技术标准要求"],
-            "source_excerpts": ["政策口径：不接受投标人选用进口产品参与投标", "外标引用：BS EN 61000、EN55011"],
-            "topics": ["cross_topic"],
+            "source_locations": [
+              "第一章 政策条款",
+              "第二章 技术标准要求"
+            ],
+            "source_excerpts": [
+              "政策口径：不接受投标人选用进口产品参与投标",
+              "外标引用：BS EN 61000、EN55011"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["policy_technical_inconsistency"]
+          "failure_reason_codes": [
+            "policy_technical_inconsistency"
+          ]
         }
       }
     }
@@ -561,13 +658,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 采购政策"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 采购政策"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第二章 技术要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第二章 技术要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -579,7 +684,10 @@
           "severity": "中风险",
           "source_location": "采购政策；技术要求",
           "manual_review": false,
-          "aliases": ["技术标准引用与采购政策口径不一致", "拒绝进口项目仍优先绑定外标体系"]
+          "aliases": [
+            "技术标准引用与采购政策口径不一致",
+            "拒绝进口项目仍优先绑定外标体系"
+          ]
         }
       ]
     },
@@ -636,14 +744,24 @@
             "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
             "review_type": "技术标准引用一致性 / 潜在限制竞争",
             "severity": "中风险",
-            "source_locations": ["第一章 采购政策", "第二章 技术要求"],
-            "source_excerpts": ["政策口径：拒绝进口", "外标引用：IEC 61000、EN 60601、UL 60601"],
-            "topics": ["cross_topic"],
+            "source_locations": [
+              "第一章 采购政策",
+              "第二章 技术要求"
+            ],
+            "source_excerpts": [
+              "政策口径：拒绝进口",
+              "外标引用：IEC 61000、EN 60601、UL 60601"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["policy_technical_inconsistency"]
+          "failure_reason_codes": [
+            "policy_technical_inconsistency"
+          ]
         }
       }
     }
@@ -668,13 +786,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 政策条款"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 政策条款"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第二章 技术标准要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第二章 技术标准要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -755,13 +881,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 政策条款"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 政策条款"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第二章 技术标准要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第二章 技术标准要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -842,13 +976,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 采购政策"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 采购政策"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["1.规格及技术参数"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "1.规格及技术参数"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -933,15 +1075,26 @@
             "title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
             "review_type": "技术标准引用一致性 / 潜在限制竞争",
             "severity": "中风险",
-            "source_locations": ["1.规格及技术参数"],
-            "source_excerpts": ["1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"],
-            "topics": ["policy", "technical_standard"],
+            "source_locations": [
+              "1.规格及技术参数"
+            ],
+            "source_excerpts": [
+              "1.14 电磁影响：符合 BS EN 61000、GB/T 17626 及 EN55011 标准。"
+            ],
+            "topics": [
+              "policy",
+              "technical_standard"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["policy_technical_inconsistency"],
-          "comparison_failure_reason_codes": ["policy_technical_inconsistency"]
+          "failure_reason_codes": [
+            "policy_technical_inconsistency"
+          ],
+          "comparison_failure_reason_codes": [
+            "policy_technical_inconsistency"
+          ]
         }
       }
     }
@@ -966,13 +1119,21 @@
         "topic_coverages": [
           {
             "topic": "policy",
-            "required_titles": ["第一章 采购政策"],
-            "required_modules": ["policy"]
+            "required_titles": [
+              "第一章 采购政策"
+            ],
+            "required_modules": [
+              "policy"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["1.规格及技术参数"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "1.规格及技术参数"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -1064,13 +1225,21 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第一章 评审规则"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第一章 评审规则"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第三章 技术要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第三章 技术要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -1138,15 +1307,26 @@
             "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
             "review_type": "评审规则一致性 / 实质性条款标识完整性",
             "severity": "中风险",
-            "source_locations": ["第一章 评审规则；第三章 技术要求"],
-            "source_excerpts": ["评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。 （7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。"],
-            "topics": ["scoring", "technical_standard"],
+            "source_locations": [
+              "第一章 评审规则；第三章 技术要求"
+            ],
+            "source_excerpts": [
+              "评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。 （7）燃油标准，采用0号轻柴油，符合 GB252 或 BS2869 标准。"
+            ],
+            "topics": [
+              "scoring",
+              "technical_standard"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["star_marker_missing_for_mandatory_standard"],
-          "comparison_failure_reason_codes": ["star_marker_missing_for_mandatory_standard"]
+          "failure_reason_codes": [
+            "star_marker_missing_for_mandatory_standard"
+          ],
+          "comparison_failure_reason_codes": [
+            "star_marker_missing_for_mandatory_standard"
+          ]
         }
       }
     }
@@ -1171,13 +1351,21 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第一章 评审规则"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第一章 评审规则"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           },
           {
             "topic": "technical_standard",
-            "required_titles": ["第三章 技术要求"],
-            "required_modules": ["technical"]
+            "required_titles": [
+              "第三章 技术要求"
+            ],
+            "required_modules": [
+              "technical"
+            ]
           }
         ]
       },
@@ -1254,8 +1442,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1304,17 +1496,25 @@
             "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
             "review_type": "评分因素合规性 / 评审规则设置合法性",
             "severity": "中高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：评审内容：投标人针对本项目提供施工组织方案、项目验收移交衔接方案及安全保障措施。；评审标准：方案每体现1点加10分，最高得30分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["acceptance_plan_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["acceptance_plan_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -1334,8 +1534,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1393,8 +1597,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1443,17 +1651,25 @@
             "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
             "review_type": "评分因素合规性 / 评审规则设置合法性",
             "severity": "中高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：项目验收方案设计、验收标准及验收流程安排；验收资料准备节点明确、流程衔接合理，能体现项目验收组织能力；评价为优得60分；评价为良得30分；评价为中得10分；评价为差，不得分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["acceptance_plan_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["acceptance_plan_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -1473,8 +1689,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1523,17 +1743,25 @@
             "title": "将付款方式纳入评审因素，违反评审规则合规性要求",
             "review_type": "评分因素合规性 / 商务评分规则合法性",
             "severity": "中高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合规性-不得将付款方式作为评审因素。\n\n评分内容：全部满足要求的得80分。；付款周期短于招标文件要求或预付款比例更有利于采购人资金安排的，每项加10分，最高加20分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["payment_terms_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["payment_terms_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "payment_terms_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "payment_terms_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -1553,8 +1781,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1612,8 +1844,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1662,17 +1898,25 @@
             "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
             "review_type": "评分因素合规性 / 赠送非项目物资评分",
             "severity": "高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。\n\n评分内容：额外向采购人值班室赠送台式电脑、打印机各1套的，得100分。；仅承诺1.5小时（90分钟）内到达现场处理问题的，得50分；其他情况不得分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "gifts_or_unrelated_goods_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "gifts_or_unrelated_goods_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -1692,8 +1936,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1751,8 +1999,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1810,8 +2062,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1869,8 +2125,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1919,17 +2179,25 @@
             "title": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
             "review_type": "评分因素合规性 / 赠送非项目物资评分",
             "severity": "高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。\n\n评分内容：提供投标人承担过类似项目的销售安装业绩，且在项目履约中包含值班室办公设备配置或会议保障等综合服务内容的，每提供1个业绩得20分。；其它情况不得分，本项最高得100分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["gifts_or_unrelated_goods_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "gifts_or_unrelated_goods_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "gifts_or_unrelated_goods_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -1949,8 +2217,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -1999,17 +2271,25 @@
             "title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
             "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
             "severity": "高风险",
-            "source_locations": ["评审规则：第一章 评审规则；评分条款：第六章 评分办法"],
+            "source_locations": [
+              "评审规则：第一章 评审规则；评分条款：第六章 评分办法"
+            ],
             "source_excerpts": [
               "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：柴油发电机组制造商的投标的柴油发电机组，具备以下认证的。；具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得40分。；具备CNAS中国认可产品标志证书的，得20分，以上累计最高得分为100分。"
             ],
-            "topics": ["cross_topic"],
+            "topics": [
+              "cross_topic"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["specific_brand_or_supplier_in_scoring_forbidden"],
-          "comparison_failure_reason_codes": ["specific_brand_or_supplier_in_scoring_forbidden"]
+          "failure_reason_codes": [
+            "specific_brand_or_supplier_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "specific_brand_or_supplier_in_scoring_forbidden"
+          ]
         }
       }
     }
@@ -2029,8 +2309,12 @@
         "topic_coverages": [
           {
             "topic": "scoring",
-            "required_titles": ["第六章 评分办法"],
-            "required_modules": ["scoring"]
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
           }
         ]
       },
@@ -2088,8 +2372,12 @@
         "topic_coverages": [
           {
             "topic": "acceptance",
-            "required_titles": ["第五章 验收与交付要求"],
-            "required_modules": ["acceptance"]
+            "required_titles": [
+              "第五章 验收与交付要求"
+            ],
+            "required_modules": [
+              "acceptance"
+            ]
           }
         ]
       },
@@ -2138,17 +2426,25 @@
             "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
             "review_type": "需求合规性 / 验收检测费用转嫁",
             "severity": "高风险",
-            "source_locations": ["规则条款：第一章 需求合规规则；需求条款：第五章 验收与交付要求"],
+            "source_locations": [
+              "规则条款：第一章 需求合规规则；需求条款：第五章 验收与交付要求"
+            ],
             "source_excerpts": [
               "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：投标人的投标总价包括检测、相关部门验收、验收合格之前等所有含税费用。；投标人应自行计入系统正常、合法、安全运行及使用所必需的一切费用。"
             ],
-            "topics": ["acceptance"],
+            "topics": [
+              "acceptance"
+            ],
             "need_manual_review": false
           }
         ],
         "metadata": {
-          "failure_reason_codes": ["acceptance_testing_cost_shifted_to_bidder"],
-          "comparison_failure_reason_codes": ["acceptance_testing_cost_shifted_to_bidder"]
+          "failure_reason_codes": [
+            "acceptance_testing_cost_shifted_to_bidder"
+          ],
+          "comparison_failure_reason_codes": [
+            "acceptance_testing_cost_shifted_to_bidder"
+          ]
         }
       }
     }
@@ -2168,8 +2464,12 @@
         "topic_coverages": [
           {
             "topic": "acceptance",
-            "required_titles": ["第五章 验收与交付要求"],
-            "required_modules": ["acceptance"]
+            "required_titles": [
+              "第五章 验收与交付要求"
+            ],
+            "required_modules": [
+              "acceptance"
+            ]
           }
         ]
       },
@@ -2198,6 +2498,161 @@
                 "start_line": 20,
                 "end_line": 30,
                 "module": "acceptance"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_qualification_cancelled_or_non_mandatory_positive_011",
+    "document_name": "已取消或非强制资质进入资格门槛正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1101",
+            "title": "第二章 投标人资格要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 投标人资格要求"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-qualification-1101",
+          "title": "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险",
+          "review_type": "资格条件合规性 / 不当准入门槛",
+          "severity": "高风险",
+          "source_location": "第二章 投标人资格要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 投标人资格要求",
+            "start_line": 10,
+            "end_line": 20,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 投标人资格要求",
+                "start_line": 10,
+                "end_line": 20,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险",
+            "review_type": "资格条件合规性 / 不当准入门槛",
+            "severity": "高风险",
+            "source_locations": [
+              "资格条款：第二章 投标人资格要求；准入门槛：第二章 投标人资格要求"
+            ],
+            "source_excerpts": [
+              "资格要求：投标人资格要求：投标人须具备省级主管部门已明令取消的行业资质证书。\n\n门槛设置：未提供上述资质证书的，资格审查不通过。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": [
+            "cancelled_or_non_mandatory_qualification_as_gate"
+          ],
+          "comparison_failure_reason_codes": [
+            "cancelled_or_non_mandatory_qualification_as_gate"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_qualification_cancelled_or_non_mandatory_negative_legal_011",
+    "document_name": "法定强制许可资格条件负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1102",
+            "title": "第二章 投标人资格要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 投标人资格要求"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 投标人资格要求",
+            "start_line": 10,
+            "end_line": 18,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 投标人资格要求",
+                "start_line": 10,
+                "end_line": 18,
+                "module": "qualification"
               }
             ]
           }

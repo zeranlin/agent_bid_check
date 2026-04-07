@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-009",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_qualification_cancelled_or_non_mandatory_negative_legal_011",
+  "note": "现行法定强制许可资格要求不应触发的负样本。"
+}

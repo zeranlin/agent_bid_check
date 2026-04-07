@@ -329,6 +329,21 @@ def test_regression_acceptance_testing_cost_shift_samples_are_classified_correct
     assert negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_cancelled_or_non_mandatory_qualification_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_qualification_cancelled_or_non_mandatory_positive_011"])
+    negative = evaluate_sample(samples["regression_qualification_cancelled_or_non_mandatory_negative_legal_011"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["cancelled_or_non_mandatory_qualification_as_gate"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险"
+
+    assert negative["matched_risk_count"] == 0
+    assert negative["missed_risk_count"] == 0
+    assert negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

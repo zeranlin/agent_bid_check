@@ -862,6 +862,46 @@ def test_compare_review_artifacts_adds_acceptance_testing_cost_shift_risk() -> N
     assert comparison.metadata["failure_reason_codes"] == ["acceptance_testing_cost_shifted_to_bidder"]
 
 
+def test_compare_review_artifacts_adds_cancelled_or_non_mandatory_qualification_gate_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="qualification",
+            summary="资格条件专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖资格条件。",
+            metadata={
+                "selected_sections": [{"title": "第二章 投标人资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "qualification_requirement_present": True,
+                    "qualification_requirement_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "qualification_requirement_sentences": ["投标人资格要求：投标人须具备省级主管部门已明令取消的行业资质证书。"],
+                    "cancelled_or_non_mandatory_qualification_signal": True,
+                    "cancelled_or_non_mandatory_qualification_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "cancelled_or_non_mandatory_qualification_sentences": ["投标人须具备省级主管部门已明令取消的行业资质证书。"],
+                    "cancelled_or_non_mandatory_qualification_used_as_gate": True,
+                    "cancelled_or_non_mandatory_qualification_gate_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "cancelled_or_non_mandatory_qualification_gate_sentences": ["未提供上述资质证书的，资格审查不通过。"],
+                    "cancelled_or_non_mandatory_qualification_prohibition_context": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "资格条件合规性 / 不当准入门槛"
+    assert "已明令取消" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["cancelled_or_non_mandatory_qualification_as_gate"]
+
+
 def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_class_titles() -> None:
     baseline = V2StageArtifact(
         name="baseline",

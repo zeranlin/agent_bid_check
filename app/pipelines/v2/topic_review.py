@@ -18,6 +18,17 @@ SCORING_TIER_RE = re.compile(r"(优|良|中|差|一般)\s*(得|计)?\s*\d+\s*分
 SCORING_SUBJECTIVE_SIGNALS = ("综合打分", "综合印象打分", "由评委综合打分", "酌情计分", "结合项目实际确定")
 QUALIFICATION_LOCAL_SERVICE_RE = re.compile(r"(本市|当地|项目所在地).{0,8}(常设服务机构|服务机构|驻点|驻场)")
 QUALIFICATION_PERFORMANCE_RE = re.compile(r"(同类项目业绩不少于\d+项|近三年同类业绩不少于\d+项|项目负责人须具备.+(职称|社保|证书))")
+QUALIFICATION_REQUIREMENT_RE = re.compile(r"(资格条件|合格供应商条件|资格审查(?:表)?|投标人资格要求|供应商资格要求)")
+QUALIFICATION_GATE_RE = re.compile(
+    r"(作为资格条件|作为投标资格条件|作为合格供应商条件|资格审查(?:通过)?条件|投标人资格要求|供应商资格要求|"
+    r"未提供.{0,24}(资格审查不通过|投标无效)|不满足.{0,12}(不得投标|不得参与投标|资格审查不通过)|"
+    r"(应|须|必须)具备)"
+)
+QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE = re.compile(
+    r"(已取消(?:的)?(?:资质|资格)|已明令取消(?:的)?(?:资质|资格)?|国务院已明令取消(?:的)?(?:资质|资格)?|"
+    r"非强制(?:性)?(?:的)?(?:资质|资格)|行政机关非强制(?:性)?(?:的)?(?:资质|资格)?)"
+)
+QUALIFICATION_PROHIBITION_CONTEXT_RE = re.compile(r"(不得将|不得要求|严禁将)")
 TECHNICAL_STANDARD_MISMATCH_RE = re.compile(r"(人造草\s*GB\s*36246-2018|人工材料体育场地使用要求及检验方法（?GB/T\s*20033-2006）?)")
 TECHNICAL_STANDARD_OBSOLETE_RE = re.compile(r"GB/T\s*1040\.2-2006")
 TECHNICAL_STANDARD_METHOD_MISMATCH_RE = re.compile(
@@ -142,6 +153,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "gifts_or_unrelated_goods_in_scoring_forbidden": "评分项中要求赠送非项目物资",
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
     "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
+    "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件",
 }
 BUNDLED_RULE_SECTION_TITLES = {
     "star_marker": "内置规则库：实质性条款星标规则",
@@ -410,6 +422,65 @@ def _extract_import_policy_signals(sections: list[dict]) -> dict[str, object]:
         "import_policy_accept_phrases": accept_matches,
         "import_policy_sections": matched_sections,
         "import_policy_sentences": _dedupe_preserve(matched_sentences),
+    }
+
+
+def _extract_cancelled_or_non_mandatory_qualification_signals(sections: list[dict]) -> dict[str, object]:
+    requirement_sections: list[dict] = []
+    requirement_sentences: list[str] = []
+    signal_sections: list[dict] = []
+    signal_sentences: list[str] = []
+    gate_sections: list[dict] = []
+    gate_sentences: list[str] = []
+    qualification_requirement_present = False
+    cancelled_or_non_mandatory_qualification_signal = False
+    cancelled_or_non_mandatory_qualification_used_as_gate = False
+    cancelled_or_non_mandatory_qualification_prohibition_context = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        has_requirement = bool(QUALIFICATION_REQUIREMENT_RE.search(text))
+        has_signal = bool(QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE.search(text))
+        has_gate = bool(QUALIFICATION_GATE_RE.search(text)) or has_requirement
+        has_prohibition_context = bool(QUALIFICATION_PROHIBITION_CONTEXT_RE.search(text))
+
+        if has_requirement:
+            qualification_requirement_present = True
+            requirement_sections.extend(_normalize_signal_sections([section]))
+            requirement_sentences.extend(_find_matching_sentences(section, [QUALIFICATION_REQUIREMENT_RE]))
+
+        if has_signal:
+            cancelled_or_non_mandatory_qualification_signal = True
+            signal_sections.extend(_normalize_signal_sections([section]))
+            signal_sentences.extend(_find_matching_sentences(section, [QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE]))
+
+        if has_signal and has_gate:
+            cancelled_or_non_mandatory_qualification_used_as_gate = True
+            gate_sections.extend(_normalize_signal_sections([section]))
+            gate_sentences.extend(
+                _find_matching_sentences(section, [QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE, QUALIFICATION_GATE_RE])
+            )
+
+        if has_signal and has_prohibition_context:
+            cancelled_or_non_mandatory_qualification_prohibition_context = True
+
+    return {
+        "qualification_requirement_present": qualification_requirement_present,
+        "qualification_requirement_sections": _dedupe_signal_sections(requirement_sections),
+        "qualification_requirement_sentences": _dedupe_preserve(requirement_sentences),
+        "cancelled_or_non_mandatory_qualification_signal": cancelled_or_non_mandatory_qualification_signal,
+        "cancelled_or_non_mandatory_qualification_sections": _dedupe_signal_sections(signal_sections),
+        "cancelled_or_non_mandatory_qualification_sentences": _dedupe_preserve(signal_sentences),
+        "cancelled_or_non_mandatory_qualification_used_as_gate": cancelled_or_non_mandatory_qualification_used_as_gate,
+        "cancelled_or_non_mandatory_qualification_gate_sections": _dedupe_signal_sections(gate_sections),
+        "cancelled_or_non_mandatory_qualification_gate_sentences": _dedupe_preserve(gate_sentences),
+        "cancelled_or_non_mandatory_qualification_prohibition_context": cancelled_or_non_mandatory_qualification_prohibition_context,
     }
 
 
@@ -1461,6 +1532,8 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
     if definition.key in {"technical_standard", "qualification", "acceptance", "policy"}:
         signals.update(_extract_compliance_proof_signals(sections))
         signals.update(_extract_foreign_component_proof_signals(sections))
+    if definition.key == "qualification":
+        signals.update(_extract_cancelled_or_non_mandatory_qualification_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))

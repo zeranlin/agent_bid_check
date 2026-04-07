@@ -1,0 +1,104 @@
+rule_id: R-009
+rule_name: 已取消或非强制资质禁入资格条件识别
+rule_version: 1
+status: review
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: candidate_formalization
+  origin_desc: 基于 Task-G10 首批真实候选正式纳管结果，从 RC-001 拆出的资格条件侧正式规则
+  created_date: 2026-04-07
+  last_updated_date: 2026-04-07
+
+classification:
+  category: qualification_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别将国务院已取消或行政机关非强制资质、资格作为投标准入门槛的资格条件风险
+  reviewer_note: 需区分真实准入门槛与禁止性说明/政策背景，不得误报法定强制许可
+
+trigger_conditions:
+  all_of:
+    - 出现资格条件、合格供应商条件、资格审查表或投标人资格要求等准入相关位置
+    - 命中已取消资质、已取消资格、已明令取消、非强制资质、非强制资格或行政机关非强制等语义
+    - 相关语义被作为资格条件、准入门槛或资格审查通过条件
+  any_of:
+    - comparison.failure_reason_codes 命中 cancelled_or_non_mandatory_qualification_as_gate
+
+exclude_conditions:
+  any_of:
+    - 条款仅为禁止性说明、政策背景说明或规则提示，未实际设置资格门槛
+    - 条款要求的是现行法律法规明确规定的法定强制许可或法定准入资质
+
+downgrade_conditions:
+  any_of:
+    - 资质要求是否已取消或是否属于非强制事项仍需补充法定依据
+    - 条款语义存在歧义，无法确认其是否真正作为资格审查通过条件
+
+output:
+  formal_title: 将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险
+  pending_title: 资格条件中可能引入已取消或非强制资质资格要求，建议人工复核
+  excluded_title: 相关表述未实际构成资格门槛，不构成正式风险
+  formal_description: 采购文件在资格条件、合格供应商条件或资格审查表中，将已明令取消或行政机关非强制的资质、资格作为投标准入门槛，容易形成不当准入限制并影响公平竞争。
+  remediation_advice: 删除已取消或非强制资质、资格要求；仅保留与采购标的直接相关且具有明确法定依据的准入条件；如确有行业许可要求，应明确对应法定依据。
+
+evidence_hints:
+  keywords:
+    - 资格条件
+    - 合格供应商条件
+    - 资格审查表
+    - 投标人资格要求
+    - 已明令取消
+    - 非强制资质
+    - 行政机关非强制
+  sections:
+    - 资格条件
+    - 合格供应商条件
+    - 资格审查表
+
+samples:
+  positive:
+    - data/examples/rules/R-009/positive-01.json
+  negative:
+    - data/examples/rules/R-009/negative-01.json
+  replay:
+    - data/examples/rules/R-009/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+    - tests/test_rule_registry_r009.py
+  replay:
+    - tests/test_v2_regression_eval.py
+  report:
+    - tests/test_candidate_rule_governance.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-009.md
+  followup_tasks:
+    - docs/tasks/Task-G10-first-priority-formalization.md
+  acceptance_records:
+    - docs/trackers/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-07
+    change: 新增 R-009，承接已取消或非强制资质禁入资格条件风险识别
+    author: T
