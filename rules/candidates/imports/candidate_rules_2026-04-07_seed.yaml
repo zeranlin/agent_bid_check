@@ -1,0 +1,17 @@
+batch_id: CAND-IMPORT-2026-04-07-001
+source_name: 外部审查点样例批次
+source_path: rules/candidates/sources/external-review-points-seed-2026-04-07.md
+source_description: 用于 Task-G6 首轮候选规则治理样板搭建的种子批次。
+candidate_items:
+  - candidate_id: CR-001
+    source_rule_text: 不得将项目验收方案作为评审因素。
+    source_category: 评分因素合规性
+  - candidate_id: CR-002
+    source_rule_text: 针对冷链、生鲜等特定品类，可对温控运输轨迹进行条件化核验。
+    source_category: 品类条件型规则
+  - candidate_id: CR-003
+    source_rule_text: 应结合全文识别政策条款是否仅有标题、缺少实质正文。
+    source_category: 专题能力项
+  - candidate_id: CR-004
+    source_rule_text: 建议供应商提供暖场礼品提升服务感知。
+    source_category: 无效或不纳入项

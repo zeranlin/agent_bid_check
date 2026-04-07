@@ -1,0 +1,71 @@
+ledger_version: 1
+decisions:
+  - formal_rule
+  - conditional_rule
+  - capability_item
+  - drop
+entries:
+  - candidate_id: CR-001
+    source_name: 外部审查点样例批次
+    source_rule_text: 不得将项目验收方案作为评审因素。
+    source_category: 评分因素合规性
+    decision: formal_rule
+    decision_reason: 语义稳定、可形成明确触发条件与标准风险文案，已与现有 R-003 范围对齐。
+    target_rule_id: R-003
+    target_layer: formal_risks
+    profile_dependency: none
+    negative_conditions:
+      - 验收条款只出现在履约或合同章节，且不参与评分时不触发。
+    samples_status: seeded
+    tests_status: seeded
+    task_id: Task-G6
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-002
+    source_name: 外部审查点样例批次
+    source_rule_text: 针对冷链、生鲜等特定品类，可对温控运输轨迹进行条件化核验。
+    source_category: 品类条件型规则
+    decision: conditional_rule
+    decision_reason: 规则价值存在，但依赖采购品类和履约画像，不适合作为通用禁限项直接启用。
+    target_rule_id: ""
+    target_layer: pending_review_items
+    profile_dependency: 依赖冷链/生鲜等特定采购画像
+    negative_conditions:
+      - 非冷链或非温控履约项目不触发。
+    samples_status: missing
+    tests_status: missing
+    task_id: Task-G6
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-003
+    source_name: 外部审查点样例批次
+    source_rule_text: 应结合全文识别政策条款是否仅有标题、缺少实质正文。
+    source_category: 专题能力项
+    decision: capability_item
+    decision_reason: 该问题依赖章节召回完整性与证据质量判断，应由专题能力和证据拦截承接。
+    target_rule_id: ""
+    target_layer: capability
+    profile_dependency: 依赖结构召回与证据覆盖质量
+    negative_conditions:
+      - 已完整召回政策正文时不作为候选缺失问题处理。
+    samples_status: missing
+    tests_status: missing
+    task_id: Task-G6
+    status: triaged
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
+  - candidate_id: CR-004
+    source_name: 外部审查点样例批次
+    source_rule_text: 建议供应商提供暖场礼品提升服务感知。
+    source_category: 无效或不纳入项
+    decision: drop
+    decision_reason: 不属于当前项目合规审查规则范围，且缺乏明确治理价值。
+    target_rule_id: ""
+    target_layer: excluded_risks
+    profile_dependency: none
+    negative_conditions:
+      - 不进入候选规则纳管流程。
+    samples_status: missing
+    tests_status: missing
+    task_id: Task-G6
+    status: rejected
+    snapshot_id: SNAP-2026-04-07-bootstrap-001
