@@ -40,6 +40,7 @@
 | R-010 | 补齐“已取消资质资格认证禁入评分”识别 | 规则整改 | 已通过 | 已完成验收，规则、样本、测试已闭环，纳入首批新规则正式治理范围 |
 | R-011 | 补齐“资质证明材料原件及纸质证照要求边界”识别 | 规则整改 | 已通过 | 已完成验收，规则、样本、测试已闭环，纳入首批新规则正式治理范围 |
 | R-012 | 补齐“供应商主体身份与地域限制”识别 | 规则整改 | 已通过 | 已完成验收，规则、样本、测试与示例归档已闭环，纳入首批新规则正式治理范围 |
+| R-013 | 下线“缺失检测报告及认证资质要求”伪规则输出，阻断专题自由发挥误报进入正式风险 | 规则整改 | 已通过 | 已完成代码、测试与真实回放闭环，通过 M 验收 |
 | E-001 | 补齐“拒绝进口 vs 外标引用”相关样本与回归测试 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | E-002 | 补齐“二层 technical_standard 召回与去噪”监督样本 | 样本/评测整改 | 已通过 | 已为 R-001 提供支撑 |
 | W-001 | review-plus Web 链路重启与新结果复核 | Web/运行链路整改 | 已通过 | Web 新结果已与修复后规则对齐 |
@@ -247,6 +248,68 @@
 - 任务类型：规则整改
 - 当前状态：`已关闭`
 - 当前结论：已完成验收并正式关单
+
+### R-013
+
+- 任务名称：下线“缺失检测报告及认证资质要求”伪规则输出，阻断专题自由发挥误报进入正式风险
+- 任务类型：规则整改
+- 当前状态：`已通过`
+- 当前结论：已完成代码、测试与真实回放闭环，通过 M 验收
+
+#### 问题来源
+
+- 在运行 `20260408-162750-07e8e4d3` 中，系统输出了正式风险：`缺失检测报告及认证资质要求`
+- 该条并非正式规则库中的 `R-xxx`
+- 其来源是 `technical_standard` 专题输出的 `topic::缺失检测报告及认证资质要求`
+- 当前业务规则并不支持“只要引用标准，就必须要求 CMA/CNAS 检测报告或 CCC，否则构成正式风险”的通用结论
+
+#### M 当前判断
+
+- 该条属于专题层泛化推断过度，不应继续作为正式风险保留
+- 当前至少应禁止其进入 `formal_risks`
+- `CNAS` 证书评分、`CMA/CNAS` 检测资质、`CCC` 强制认证三类语义不得相互混推
+
+#### 整改目标
+
+1. 禁止 `topic::缺失检测报告及认证资质要求` 进入正式风险输出
+2. 阻断 compare / governance 将该类无正式规则支撑的专题文案再次转正
+3. 建立专题输出到正式风险的治理保护，避免类似伪规则标题继续进入 `formal_risks`
+4. 保持已有正式认证类风险不受误伤
+
+#### 验收标准
+
+1. 本标题不再进入正式风险列表
+2. 同类“引用标准 -> 自动推断缺失检测报告/CMA/CNAS/CCC”的泛化路径被拦住
+3. 已补自动化测试，覆盖本次柴油文件对应场景
+4. 不影响已纳管正式规则，如特定认证证书倾向性、特定发证机构限制等
+
+#### T 本轮回传
+
+- 新回放目录：`data/results/v2/20260408-r013f-rerun-170320`
+- 当前代码下重新生成的 `final_output.json` 与 `governed_output.json` 已确认：
+  - `缺失检测报告及认证资质要求` 不在 `formal_risks`
+  - `认证项权重偏高且与履约关联不足，存在倾向性评分风险` 仍在 `formal_risks`
+- 测试命令：
+  - `pytest -q tests/test_v2_output_governance.py -k 'missing_detection_report or pseudo_rule'`
+  - `pytest -q tests/test_v2_output_governance.py`
+- 真实回放命令：
+  - `python - <<'PY' ... tests/test_w002_real_file.py::_build_0330_result_topics + compare_review_artifacts + govern_comparison_artifact + build_v2_final_output ... PY`
+
+#### M 验收结论
+
+- 输出治理层已新增专题伪规则标题拦截，避免该条继续进入 `formal_risks`
+- 新真实回放目录 `20260408-r013f-rerun-170320` 已生成，且该标题不再出现在正式风险中
+- 真实认证类正式风险仍保留，未发生误伤
+- 测试已通过，当前任务满足通过线
+
+#### 参考材料
+
+- [R-013.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/tasks/R-013.md)
+- [final_output.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260408-162750-07e8e4d3/final_output.json)
+- [governed_output.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260408-162750-07e8e4d3/governed_output.json)
+- [technical_standard.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260408-162750-07e8e4d3/topic_reviews/technical_standard.json)
+- [rerun final_output.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260408-r013f-rerun-170320/final_output.json)
+- [rerun governed_output.json](https://github.com/zeranlin/agent_bid_check/blob/main/data/results/v2/20260408-r013f-rerun-170320/governed_output.json)
 
 ### DOC-001
 
