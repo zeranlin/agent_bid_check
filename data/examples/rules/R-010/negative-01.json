@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-010",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_scoring_cancelled_or_non_mandatory_negative_qualification_only_012",
+  "note": "已取消或非强制资质资格仅出现在资格条件、未进入评分因素的负样本。"
+}

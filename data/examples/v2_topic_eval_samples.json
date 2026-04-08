@@ -2407,5 +2407,105 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_scoring_cancelled_or_non_mandatory_positive_010",
+    "name": "topic_scoring_cancelled_or_non_mandatory_positive_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "评分标准中将已明令取消资质、资格、认证直接作为加分条件。",
+    "text": "第六章 评分办法\n评分内容：投标人具备国务院已明令取消的资质、资格、认证的，每项加5分，最高加15分。评审委员会按得分情况进行档次评价。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_cancelled_or_non_mandatory_candidate_expression_010",
+    "name": "topic_scoring_cancelled_or_non_mandatory_candidate_expression_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "真实候选表达应被识别出评分因素与已取消/非强制语义，并与评分挂钩。",
+    "text": "第一章 评审规则\n不得将国务院已明令取消的资质、资格、认证作为评审因素。\n第六章 评分标准\n评审标准：投标人提供国务院已明令取消的资质、资格、认证证明的，得10分；未提供不得分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_cancelled_or_non_mandatory_negative_qualification_only_010",
+    "name": "topic_scoring_cancelled_or_non_mandatory_negative_qualification_only_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "已取消或非强制资质语义仅出现在资格条件，不应被识别为评分风险。",
+    "text": "第二章 投标人资格要求\n投标人资格要求：不得将国务院已明令取消的或国家行政机关非强制的资质、资格作为资格条件。\n第六章 评分办法\n评分内容：项目实施方案完整的得10分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_scoring_cancelled_or_non_mandatory_negative_legal_010",
+    "name": "topic_scoring_cancelled_or_non_mandatory_negative_legal_010",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "scoring"
+    ],
+    "case_type": "negative",
+    "topic": "scoring",
+    "description": "法定强制许可类要求即便出现在评分描述中，也不应命中已取消/非强制语义。",
+    "text": "第六章 评分办法\n评分标准：投标人具备现行有效的特种设备生产许可证并提供法定许可证明材料的，作为基础合规说明；项目团队响应方案完整的得10分。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "scoring": {
+        "summary": "评分专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖评分条款。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

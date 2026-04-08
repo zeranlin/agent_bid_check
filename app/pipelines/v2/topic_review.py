@@ -29,6 +29,11 @@ QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE = re.compile(
     r"非强制(?:性)?(?:的)?(?:资质|资格)|行政机关非强制(?:性)?(?:的)?(?:资质|资格)?)"
 )
 QUALIFICATION_PROHIBITION_CONTEXT_RE = re.compile(r"(不得将|不得要求|严禁将)")
+SCORING_REQUIREMENT_RE = re.compile(r"(评分内容|评分标准|评分项|评审标准|评审因素|加分|得分|分值|档次评价)")
+SCORING_CANCELLED_OR_NON_MANDATORY_CREDENTIAL_RE = re.compile(
+    r"(已取消(?:的)?(?:资质|资格|认证)|已明令取消(?:的)?(?:资质|资格|认证)?|国务院已明令取消(?:的)?(?:资质|资格|认证)?|"
+    r"非强制(?:性)?(?:的)?(?:认证|资格|资质)|行政机关非强制(?:性)?(?:的)?(?:认证|资格|资质)?)"
+)
 TECHNICAL_STANDARD_MISMATCH_RE = re.compile(r"(人造草\s*GB\s*36246-2018|人工材料体育场地使用要求及检验方法（?GB/T\s*20033-2006）?)")
 TECHNICAL_STANDARD_OBSOLETE_RE = re.compile(r"GB/T\s*1040\.2-2006")
 TECHNICAL_STANDARD_METHOD_MISMATCH_RE = re.compile(
@@ -154,6 +159,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "specific_brand_or_supplier_in_scoring_forbidden": "以制造商特定认证证书作为高分条件",
     "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件",
+    "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素",
 }
 BUNDLED_RULE_SECTION_TITLES = {
     "star_marker": "内置规则库：实质性条款星标规则",
@@ -836,6 +842,70 @@ def _extract_specific_cert_or_supplier_scoring_signals(sections: list[dict]) -> 
         "specific_cert_or_supplier_scoring_sections": _dedupe_signal_sections(scoring_sections),
         "specific_cert_or_supplier_evidence": _dedupe_preserve(scoring_sentences),
         "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
+    }
+
+
+def _extract_cancelled_or_non_mandatory_scoring_credential_signals(sections: list[dict]) -> dict[str, object]:
+    scoring_sections: list[dict] = []
+    scoring_sentences: list[str] = []
+    signal_sections: list[dict] = []
+    signal_sentences: list[str] = []
+    linked_sections: list[dict] = []
+    linked_sentences: list[str] = []
+    scoring_requirement_present = False
+    cancelled_or_non_mandatory_scoring_credential_signal = False
+    cancelled_or_non_mandatory_scoring_credential_linked_to_score = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "\n".join(
+            part for part in (str(section.get("title", "")).strip(), str(section.get("excerpt", "")).strip(), str(section.get("body", "")).strip()) if part
+        )
+        if not text:
+            continue
+        matched_scoring_sentences: list[str] = []
+        matched_signal_sentences: list[str] = []
+        matched_linked_sentences: list[str] = []
+        for sentence in _section_sentences(section):
+            sentence_has_scoring_requirement = bool(SCORING_REQUIREMENT_RE.search(sentence))
+            sentence_has_signal = bool(SCORING_CANCELLED_OR_NON_MANDATORY_CREDENTIAL_RE.search(sentence))
+            sentence_has_score_link = bool(SCORING_SCORE_LINK_RE.search(sentence))
+
+            if sentence_has_scoring_requirement:
+                scoring_requirement_present = True
+                matched_scoring_sentences.append(sentence)
+
+            if sentence_has_signal and sentence_has_scoring_requirement:
+                cancelled_or_non_mandatory_scoring_credential_signal = True
+                matched_signal_sentences.append(sentence)
+
+            if sentence_has_signal and sentence_has_score_link:
+                cancelled_or_non_mandatory_scoring_credential_linked_to_score = True
+                matched_linked_sentences.append(sentence)
+
+        if matched_scoring_sentences:
+            scoring_sections.extend(_normalize_signal_sections([section]))
+            scoring_sentences.extend(matched_scoring_sentences)
+
+        if matched_signal_sentences:
+            signal_sections.extend(_normalize_signal_sections([section]))
+            signal_sentences.extend(matched_signal_sentences)
+
+        if matched_linked_sentences:
+            linked_sections.extend(_normalize_signal_sections([section]))
+            linked_sentences.extend(matched_linked_sentences)
+
+    return {
+        "scoring_requirement_present": scoring_requirement_present,
+        "scoring_requirement_sections": _dedupe_signal_sections(scoring_sections),
+        "scoring_requirement_sentences": _dedupe_preserve(scoring_sentences),
+        "cancelled_or_non_mandatory_scoring_credential_signal": cancelled_or_non_mandatory_scoring_credential_signal,
+        "cancelled_or_non_mandatory_scoring_credential_sections": _dedupe_signal_sections(signal_sections),
+        "cancelled_or_non_mandatory_scoring_credential_sentences": _dedupe_preserve(signal_sentences),
+        "cancelled_or_non_mandatory_scoring_credential_linked_to_score": cancelled_or_non_mandatory_scoring_credential_linked_to_score,
+        "cancelled_or_non_mandatory_scoring_credential_linked_sections": _dedupe_signal_sections(linked_sections),
+        "cancelled_or_non_mandatory_scoring_credential_linked_sentences": _dedupe_preserve(linked_sentences),
     }
 
 
@@ -1540,6 +1610,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_payment_terms_scoring_signals(sections))
         signals.update(_extract_gifts_or_unrelated_goods_scoring_signals(sections))
         signals.update(_extract_specific_cert_or_supplier_scoring_signals(sections))
+        signals.update(_extract_cancelled_or_non_mandatory_scoring_credential_signals(sections))
         signals.update(_extract_boundary_context_signals(sections))
     if definition.key == "technical_standard":
         signals.update(_extract_standard_reference_signals(sections))

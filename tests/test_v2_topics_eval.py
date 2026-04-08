@@ -250,6 +250,37 @@ def test_qualification_cancelled_or_non_mandatory_qualification_signals_are_extr
     assert capability_negative_signals["payment_terms_linked_to_score"] is False
 
 
+def test_scoring_cancelled_or_non_mandatory_credential_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_scoring_cancelled_or_non_mandatory_positive_010"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["scoring_requirement_present"] is True
+    assert positive_signals["cancelled_or_non_mandatory_scoring_credential_signal"] is True
+    assert positive_signals["cancelled_or_non_mandatory_scoring_credential_linked_to_score"] is True
+    assert any(("已明令取消" in item) or ("非强制" in item) for item in positive_signals["cancelled_or_non_mandatory_scoring_credential_sentences"])
+
+    candidate_expression = evaluate_sample(samples["topic_scoring_cancelled_or_non_mandatory_candidate_expression_010"])
+    candidate_signals = candidate_expression["target_topic_detail"]["structured_signals"]
+    assert candidate_signals["scoring_requirement_present"] is True
+    assert candidate_signals["cancelled_or_non_mandatory_scoring_credential_signal"] is True
+    assert candidate_signals["cancelled_or_non_mandatory_scoring_credential_linked_to_score"] is True
+    assert any("不得将国务院已明令取消的资质、资格、认证作为评审因素" in item for item in candidate_signals["cancelled_or_non_mandatory_scoring_credential_sentences"])
+
+    qualification_only_negative = evaluate_sample(samples["topic_scoring_cancelled_or_non_mandatory_negative_qualification_only_010"])
+    qualification_only_negative_signals = qualification_only_negative["target_topic_detail"]["structured_signals"]
+    assert qualification_only_negative_signals["scoring_requirement_present"] is True
+    assert qualification_only_negative_signals["cancelled_or_non_mandatory_scoring_credential_signal"] is False
+    assert qualification_only_negative_signals["cancelled_or_non_mandatory_scoring_credential_linked_to_score"] is False
+
+    legal_negative = evaluate_sample(samples["topic_scoring_cancelled_or_non_mandatory_negative_legal_010"])
+    legal_negative_signals = legal_negative["target_topic_detail"]["structured_signals"]
+    assert legal_negative_signals["scoring_requirement_present"] is True
+    assert legal_negative_signals["cancelled_or_non_mandatory_scoring_credential_signal"] is False
+    assert legal_negative_signals["cancelled_or_non_mandatory_scoring_credential_linked_to_score"] is False
+
+
 def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

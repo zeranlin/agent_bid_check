@@ -1,0 +1,106 @@
+rule_id: R-010
+rule_name: 已取消资质资格认证禁入评分识别
+rule_version: 1
+status: review
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: candidate_formalization
+  origin_desc: 基于 Task-G10 首批真实候选正式纳管结果，从 RC-002 拆出的评分因素侧正式规则
+  created_date: 2026-04-07
+  last_updated_date: 2026-04-07
+
+classification:
+  category: scoring_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别将国务院已取消或行政机关非强制的资质、资格、认证作为评分项、加分项或档次评价条件的合规风险
+  reviewer_note: 需区分资格条件侧禁入场景与评分因素侧禁入场景，不得误报法定强制许可或纯政策背景说明
+
+trigger_conditions:
+  all_of:
+    - 出现评分内容、评分标准、评审标准、得分条件、加分项或档次评价等评分位置
+    - 命中已取消资质、已取消资格、已取消认证、已明令取消、非强制认证、非强制资格或行政机关非强制等语义
+    - 相关语义被作为得分、加分、分值或档次评价条件
+  any_of:
+    - comparison.failure_reason_codes 命中 cancelled_or_non_mandatory_credential_in_scoring
+
+exclude_conditions:
+  any_of:
+    - 条款仅出现在资格条件、资格审查或准入门槛位置，未进入评分因素
+    - 条款要求的是现行法律法规明确规定的法定强制许可、法定准入资质或法定合规证明
+    - 条款仅为政策背景说明、禁止性提示或规则宣示，未与实际分值挂钩
+
+downgrade_conditions:
+  any_of:
+    - 条款语义存在歧义，无法确认相关资质资格认证是否真的与得分挂钩
+    - 对应资质资格认证是否已取消或是否属于非强制事项仍需补充法定依据
+
+output:
+  formal_title: 将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险
+  pending_title: 评分因素中可能引入已取消或非强制资质资格认证要求，建议人工复核
+  excluded_title: 相关表述未实际构成评分条件，不构成正式风险
+  formal_description: 采购文件在评分内容、评分标准、加分项或档次评价中，将已明令取消或行政机关非强制的资质、资格、认证作为得分条件，容易形成不当评分门槛并影响评审公平性。
+  remediation_advice: 删除已取消或非强制资质、资格、认证相关评分条件；评分因素仅保留与采购标的履约能力直接相关、可公平满足的评价指标；如确需引用法定许可或合规证明，应作为基础合规要求而非分值条件。
+
+evidence_hints:
+  keywords:
+    - 评分内容
+    - 评分标准
+    - 评审标准
+    - 加分
+    - 得分
+    - 已明令取消
+    - 非强制认证
+    - 行政机关非强制
+  sections:
+    - 评分办法
+    - 评分标准
+    - 评审标准
+
+samples:
+  positive:
+    - data/examples/rules/R-010/positive-01.json
+  negative:
+    - data/examples/rules/R-010/negative-01.json
+  replay:
+    - data/examples/rules/R-010/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+    - tests/test_rule_registry_r010.py
+  replay:
+    - tests/test_v2_regression_eval.py
+  report:
+    - tests/test_candidate_rule_governance.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-010.md
+  followup_tasks:
+    - docs/tasks/Task-G10-first-priority-formalization.md
+  acceptance_records:
+    - docs/trackers/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-07
+    change: 新增 R-010，承接已取消或非强制资质资格认证禁入评分因素风险识别
+    author: T

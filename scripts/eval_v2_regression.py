@@ -100,6 +100,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补资格条件侧已取消或非强制资质资格禁入门槛规则与资格条款的交叉校验。",
     },
+    "cancelled_or_non_mandatory_credential_in_scoring": {
+        "label": "已取消或非强制资质资格认证被违规作为评审因素",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补评分因素侧已取消或非强制资质资格认证禁入规则与评分条款的交叉校验。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

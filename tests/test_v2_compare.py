@@ -902,6 +902,48 @@ def test_compare_review_artifacts_adds_cancelled_or_non_mandatory_qualification_
     assert comparison.metadata["failure_reason_codes"] == ["cancelled_or_non_mandatory_qualification_as_gate"]
 
 
+def test_compare_review_artifacts_adds_cancelled_or_non_mandatory_credential_in_scoring_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="scoring",
+            summary="评分专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖评分办法。",
+            metadata={
+                "selected_sections": [{"title": "第六章 评分办法"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "scoring_requirement_present": True,
+                    "scoring_requirement_sections": [{"title": "第六章 评分办法", "section_id": "18-28"}],
+                    "scoring_requirement_sentences": ["评分内容：投标人具备国务院已明令取消的资质、资格、认证的，每项加5分，最高加15分。"],
+                    "cancelled_or_non_mandatory_scoring_credential_signal": True,
+                    "cancelled_or_non_mandatory_scoring_credential_sections": [{"title": "第六章 评分办法", "section_id": "18-28"}],
+                    "cancelled_or_non_mandatory_scoring_credential_sentences": ["投标人具备国务院已明令取消的资质、资格、认证的，每项加5分，最高加15分。"],
+                    "cancelled_or_non_mandatory_scoring_credential_linked_to_score": True,
+                    "cancelled_or_non_mandatory_scoring_credential_linked_sections": [{"title": "第六章 评分办法", "section_id": "18-28"}],
+                    "cancelled_or_non_mandatory_scoring_credential_linked_sentences": [
+                        "评分内容：投标人具备国务院已明令取消的资质、资格、认证的，每项加5分，最高加15分。",
+                        "评审委员会按得分情况进行档次评价。",
+                    ],
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "评分因素合规性 / 不当评分门槛"
+    assert "已明令取消" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["cancelled_or_non_mandatory_credential_in_scoring"]
+
+
 def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_class_titles() -> None:
     baseline = V2StageArtifact(
         name="baseline",

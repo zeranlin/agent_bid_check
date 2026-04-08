@@ -344,6 +344,26 @@ def test_regression_cancelled_or_non_mandatory_qualification_samples_are_classif
     assert negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_cancelled_or_non_mandatory_scoring_credential_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_scoring_cancelled_or_non_mandatory_positive_012"])
+    qualification_only_negative = evaluate_sample(samples["regression_scoring_cancelled_or_non_mandatory_negative_qualification_only_012"])
+    legal_negative = evaluate_sample(samples["regression_scoring_cancelled_or_non_mandatory_negative_legal_012"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["cancelled_or_non_mandatory_credential_in_scoring"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险"
+
+    assert qualification_only_negative["matched_risk_count"] == 0
+    assert qualification_only_negative["missed_risk_count"] == 0
+    assert qualification_only_negative["comparison_failure_reason_codes"] == []
+
+    assert legal_negative["matched_risk_count"] == 0
+    assert legal_negative["missed_risk_count"] == 0
+    assert legal_negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

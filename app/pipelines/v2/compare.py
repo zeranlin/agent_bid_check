@@ -23,6 +23,7 @@ STANDARD_RULE_ORDER = {
     "payment_terms_in_scoring_forbidden": 5,
     "gifts_or_unrelated_goods_in_scoring_forbidden": 6,
     "cancelled_or_non_mandatory_qualification_as_gate": 7,
+    "cancelled_or_non_mandatory_credential_in_scoring": 8,
 }
 STANDARD_RULE_TITLES = {
     "policy_technical_inconsistency": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
@@ -33,6 +34,7 @@ STANDARD_RULE_TITLES = {
     "payment_terms_in_scoring_forbidden": "将付款方式纳入评审因素，违反评审规则合规性要求",
     "gifts_or_unrelated_goods_in_scoring_forbidden": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险",
+    "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
 }
 STANDARD_CLUSTER_SUPPRESSION_RULES = {
     "acceptance_plan_in_scoring_forbidden": (
@@ -1240,6 +1242,48 @@ def _build_cancelled_or_non_mandatory_qualification_gate_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_cancelled_or_non_mandatory_credential_in_scoring_cluster(
+    *,
+    scoring_locations: list[str],
+    scoring_sentences: list[str],
+    linked_locations: list[str],
+    linked_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if scoring_locations:
+        source_location_parts.append("评分条款：" + "；".join(scoring_locations[:2]))
+    if linked_locations:
+        source_location_parts.append("得分挂钩：" + "；".join(linked_locations[:2]))
+
+    source_excerpt_parts = []
+    if scoring_sentences:
+        source_excerpt_parts.append("评分要求：" + "；".join(scoring_sentences[:2]))
+    if linked_sentences:
+        source_excerpt_parts.append("评分内容：" + "；".join(linked_sentences[:2]))
+
+    risk = RiskPoint(
+        title="将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
+        severity="高风险",
+        review_type="评分因素合规性 / 不当评分门槛",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "条款出现在评分内容、评分标准、评审标准或档次评价相关位置。",
+            "当前文件将已取消或行政机关非强制的资质、资格、认证要求作为得分、加分或档次评价条件。",
+            "该类要求不宜作为竞争性评分因素，容易形成不当评分门槛。",
+            "如据此评分，可能造成评审标准设置不合规并引发评审争议。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除已取消或非强制资质、资格、认证相关评分条件。",
+            "评分因素应仅保留与采购标的履约能力直接相关、可公平满足的合规指标。",
+            "如确需引用法定许可或合规证明，应作为资格条件或基础合规要求，不得直接与分值挂钩。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def _build_acceptance_testing_cost_shift_cluster(
     *,
     rule_locations: list[str],
@@ -1357,6 +1401,15 @@ def compare_review_artifacts(
     cancelled_or_non_mandatory_qualification_gate_locations: list[str] = []
     cancelled_or_non_mandatory_qualification_gate_sentences: list[str] = []
     cancelled_or_non_mandatory_qualification_prohibition_context = False
+    scoring_requirement_present = False
+    scoring_requirement_locations: list[str] = []
+    scoring_requirement_sentences: list[str] = []
+    cancelled_or_non_mandatory_scoring_credential_signal = False
+    cancelled_or_non_mandatory_scoring_credential_locations: list[str] = []
+    cancelled_or_non_mandatory_scoring_credential_sentences: list[str] = []
+    cancelled_or_non_mandatory_scoring_credential_linked_to_score = False
+    cancelled_or_non_mandatory_scoring_credential_linked_locations: list[str] = []
+    cancelled_or_non_mandatory_scoring_credential_linked_sentences: list[str] = []
 
     for risk in baseline_report.risk_points:
         key = _signature_key(risk)
@@ -1572,6 +1625,45 @@ def compare_review_artifacts(
             specific_cert_or_supplier_score_linked = specific_cert_or_supplier_score_linked or bool(
                 structured_signals.get("specific_cert_or_supplier_score_linked", False)
             )
+            scoring_requirement_present = scoring_requirement_present or bool(
+                structured_signals.get("scoring_requirement_present", False)
+            )
+            matched_scoring_requirement_sections = structured_signals.get("scoring_requirement_sections", [])
+            if isinstance(matched_scoring_requirement_sections, list):
+                scoring_requirement_locations.extend(_compact_titles(matched_scoring_requirement_sections, limit=2))
+            scoring_requirement_sentences.extend(
+                _compact_sentences(structured_signals.get("scoring_requirement_sentences", []), limit=3)
+                if isinstance(structured_signals.get("scoring_requirement_sentences", []), list)
+                else []
+            )
+            cancelled_or_non_mandatory_scoring_credential_signal = (
+                cancelled_or_non_mandatory_scoring_credential_signal
+                or bool(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_signal", False))
+            )
+            matched_cancelled_scoring_sections = structured_signals.get("cancelled_or_non_mandatory_scoring_credential_sections", [])
+            if isinstance(matched_cancelled_scoring_sections, list):
+                cancelled_or_non_mandatory_scoring_credential_locations.extend(
+                    _compact_titles(matched_cancelled_scoring_sections, limit=2)
+                )
+            cancelled_or_non_mandatory_scoring_credential_sentences.extend(
+                _compact_sentences(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_sentences", []), limit=3)
+                if isinstance(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_sentences", []), list)
+                else []
+            )
+            cancelled_or_non_mandatory_scoring_credential_linked_to_score = (
+                cancelled_or_non_mandatory_scoring_credential_linked_to_score
+                or bool(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_linked_to_score", False))
+            )
+            matched_linked_scoring_sections = structured_signals.get("cancelled_or_non_mandatory_scoring_credential_linked_sections", [])
+            if isinstance(matched_linked_scoring_sections, list):
+                cancelled_or_non_mandatory_scoring_credential_linked_locations.extend(
+                    _compact_titles(matched_linked_scoring_sections, limit=2)
+                )
+            cancelled_or_non_mandatory_scoring_credential_linked_sentences.extend(
+                _compact_sentences(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_linked_sentences", []), limit=3)
+                if isinstance(structured_signals.get("cancelled_or_non_mandatory_scoring_credential_linked_sentences", []), list)
+                else []
+            )
         if topic_key == "acceptance":
             acceptance_testing_cost_forbidden_to_bidder = acceptance_testing_cost_forbidden_to_bidder or bool(
                 structured_signals.get("acceptance_testing_cost_forbidden_to_bidder", False)
@@ -1664,6 +1756,12 @@ def compare_review_artifacts(
     cancelled_or_non_mandatory_qualification_sentences = dedupe(cancelled_or_non_mandatory_qualification_sentences)
     cancelled_or_non_mandatory_qualification_gate_locations = dedupe(cancelled_or_non_mandatory_qualification_gate_locations)
     cancelled_or_non_mandatory_qualification_gate_sentences = dedupe(cancelled_or_non_mandatory_qualification_gate_sentences)
+    scoring_requirement_locations = dedupe(scoring_requirement_locations)
+    scoring_requirement_sentences = dedupe(scoring_requirement_sentences)
+    cancelled_or_non_mandatory_scoring_credential_locations = dedupe(cancelled_or_non_mandatory_scoring_credential_locations)
+    cancelled_or_non_mandatory_scoring_credential_sentences = dedupe(cancelled_or_non_mandatory_scoring_credential_sentences)
+    cancelled_or_non_mandatory_scoring_credential_linked_locations = dedupe(cancelled_or_non_mandatory_scoring_credential_linked_locations)
+    cancelled_or_non_mandatory_scoring_credential_linked_sentences = dedupe(cancelled_or_non_mandatory_scoring_credential_linked_sentences)
     star_marker_offending_clauses = [
         item
         for item in star_marker_candidate_clauses
@@ -1809,6 +1907,23 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("cancelled_or_non_mandatory_qualification_as_gate")
+
+    if (
+        scoring_requirement_present
+        and cancelled_or_non_mandatory_scoring_credential_signal
+        and cancelled_or_non_mandatory_scoring_credential_linked_to_score
+    ):
+        cross_risk, cross_topic, cross_source_rule = _build_cancelled_or_non_mandatory_credential_in_scoring_cluster(
+            scoring_locations=scoring_requirement_locations or cancelled_or_non_mandatory_scoring_credential_locations,
+            scoring_sentences=scoring_requirement_sentences or cancelled_or_non_mandatory_scoring_credential_sentences,
+            linked_locations=cancelled_or_non_mandatory_scoring_credential_linked_locations or scoring_requirement_locations,
+            linked_sentences=cancelled_or_non_mandatory_scoring_credential_linked_sentences or cancelled_or_non_mandatory_scoring_credential_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("cancelled_or_non_mandatory_credential_in_scoring")
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     clusters = _filter_and_sort_clusters(clusters, triggered_rule_codes)

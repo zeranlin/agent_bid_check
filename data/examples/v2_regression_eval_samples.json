@@ -2666,5 +2666,223 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_scoring_cancelled_or_non_mandatory_positive_012",
+    "document_name": "已取消或非强制资质资格认证进入评分因素正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1201",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-scoring-1201",
+          "title": "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
+          "review_type": "评分因素合规性 / 不当评分门槛",
+          "severity": "高风险",
+          "source_location": "第六章 评分办法",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 18,
+            "end_line": 28,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 18,
+                "end_line": 28,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
+            "review_type": "评分因素合规性 / 不当评分门槛",
+            "severity": "高风险",
+            "source_locations": [
+              "评分条款：第六章 评分办法；得分挂钩：第六章 评分办法"
+            ],
+            "source_excerpts": [
+              "评分要求：评分内容：投标人具备国务院已明令取消的资质、资格、认证的，每项加5分，最高加15分。\n\n评分内容：评审委员会按得分情况进行档次评价。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": [
+            "cancelled_or_non_mandatory_credential_in_scoring"
+          ],
+          "comparison_failure_reason_codes": [
+            "cancelled_or_non_mandatory_credential_in_scoring"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_cancelled_or_non_mandatory_negative_qualification_only_012",
+    "document_name": "已取消或非强制资质仅出现在资格条件的负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1202",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 22,
+            "end_line": 30,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 22,
+                "end_line": 30,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_scoring_cancelled_or_non_mandatory_negative_legal_012",
+    "document_name": "法定强制许可评分描述负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-scoring-1203",
+            "title": "第六章 评分办法",
+            "module": "scoring"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "scoring",
+            "required_titles": [
+              "第六章 评分办法"
+            ],
+            "required_modules": [
+              "scoring"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第六章 评分办法",
+            "start_line": 15,
+            "end_line": 24,
+            "module": "scoring",
+            "module_scores": {
+              "scoring": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "scoring": {
+            "sections": [
+              {
+                "title": "第六章 评分办法",
+                "start_line": 15,
+                "end_line": 24,
+                "module": "scoring"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]
