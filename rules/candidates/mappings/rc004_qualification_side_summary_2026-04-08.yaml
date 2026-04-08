@@ -1,0 +1,58 @@
+candidate_id: RC-004
+task_id: Task-G13
+source_rule_text: 不得设定特定企业人员证书作为资格条件、评审因素
+ownership_recommendation:
+  route: propose_new_rule
+  conclusion: RC-004 资格条件侧不建议继续并入现有规则，建议后续按资格门槛新方向单独立项
+  reason:
+    - 评分因素侧已经明确由 R-006 承接，资格条件侧若继续并入会把评分加分与准入门槛两类治理对象混淆
+    - R-009 至 R-012 均有明确边界，当前没有一条现有规则能完整承接“特定企业人员证书作为资格门槛”的对象
+    - 资格门槛侧需要独立负样本和排除条件，否则容易误伤法定或常见人员持证要求
+  proposed_direction:
+    future_rule_direction: 特定企业人员证书被作为资格门槛的准入限制治理方向
+    why_not_r006: R-006 是评分因素侧规则，核心对象是评分中的特定认证、品牌或供应商倾向，不是资格门槛
+    why_not_r009_to_r012:
+      - R-009 处理已取消或非强制资质资格作为资格条件
+      - R-010 处理已取消或非强制资质资格认证进入评分
+      - R-011 处理原件和电子证照纸质化提交边界
+      - R-012 处理供应商主体身份与地域限制
+    future_rule_outline:
+      rule_name: 将特定企业人员证书作为资格条件，存在设置不当准入门槛风险
+      trigger_conditions:
+        - 条款位于资格条件、合格供应商条件或资格审查门槛
+        - 证书指向特定企业、特定厂商体系或封闭来源的人员证书
+        - 证书要求被明确作为投标准入或资格审查通过前提
+        - 缺少法定依据、现场安全依据或明确岗位职责依据
+      exclude_conditions:
+        - 属于法定或常见的项目负责人、现场作业人员持证要求
+        - 与电工、焊工、高处作业等现场安全职责直接相关
+        - 当前只能证明证书偏强，仍可能存在特定场景依据
+      formal_title: 将特定企业人员证书作为资格条件，存在设置不当准入门槛风险
+      remediation_advice: 删除特定企业或特定厂商体系人员证书作为准入门槛的设置，仅保留与履约直接相关且有明确依据的岗位持证要求
+  three_layer_summary:
+    正式风险: 2
+    待补证: 3
+    排除: 3
+relationship_matrix:
+  scoring_side:
+    owner_rule: R-006
+    note: 继续由评分侧规则承接，不在本任务范围内重复建设
+  qualification_side:
+    owner_rule: new_rule_direction
+    note: 建议单独治理，避免和评分侧逻辑混淆
+sample_digest:
+  positive_sample_ids:
+    - RC004-Q-P-001
+    - RC004-Q-P-002
+  negative_sample_ids:
+    - RC004-Q-N-001
+    - RC004-Q-N-002
+    - RC004-Q-N-003
+  boundary_sample_ids:
+    - RC004-Q-B-001
+    - RC004-Q-B-002
+    - RC004-Q-B-003
+delivery_note:
+  qualification_side_only: true
+  scoring_side_excluded: true
+  runtime_change_included: false

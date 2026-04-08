@@ -1,0 +1,87 @@
+batch_id: RC004-QUAL-SAMPLES-2026-04-08-001
+candidate_id: RC-004
+source_name: RC-004 资格条件侧边界样本集
+source_description: 面向资格条件、合格供应商条件、资格审查门槛场景的正样本、负样本与边界样本
+positive_samples:
+  - sample_id: RC004-Q-P-001
+    qualification_context: 资格条件
+    certificate_name: 柴油发电机组原厂高级维修工程师证书
+    certificate_holder: 企业人员
+    gate_usage: 作为投标人资格条件，未提供则资格审查不通过
+    necessity_level: 超出履约必要
+    qualification_side_match: 不当
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 将原厂体系下的特定企业人员证书直接设为资格门槛，明显超出一般履约必要性
+  - sample_id: RC004-Q-P-002
+    qualification_context: 合格供应商条件
+    certificate_name: 特定品牌售后服务工程师培训合格证书
+    certificate_holder: 企业人员
+    gate_usage: 作为合格供应商前提，未具备者不得参与投标
+    necessity_level: 超出履约必要
+    qualification_side_match: 不当
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 证书直接绑定特定品牌培训体系，属于以特定企业人员证书设置准入门槛
+negative_samples:
+  - sample_id: RC004-Q-N-001
+    qualification_context: 资格条件
+    certificate_name: 机电工程专业二级及以上建造师注册证书
+    certificate_holder: 项目负责人
+    gate_usage: 作为安装实施项目的项目负责人任职要求
+    necessity_level: 法定/常见必要
+    qualification_side_match: 合理
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 属于机电安装项目中法定且常见的项目负责人持证要求，不应误判为特定企业人员证书门槛
+  - sample_id: RC004-Q-N-002
+    qualification_context: 资格审查门槛
+    certificate_name: 特种作业操作证（低压电工作业）
+    certificate_holder: 现场作业人员
+    gate_usage: 作为涉及现场接电作业人员的资格审查要求
+    necessity_level: 法定/常见必要
+    qualification_side_match: 合理
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 与现场电工作业安全直接相关，属于法定或常见持证要求
+  - sample_id: RC004-Q-N-003
+    qualification_context: 资格条件
+    certificate_name: 特种作业操作证（焊接与热切割作业）
+    certificate_holder: 现场作业人员
+    gate_usage: 作为焊接安装人员的资格条件
+    necessity_level: 法定/常见必要
+    qualification_side_match: 合理
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 与安装实施中的焊接安全作业直接对应，属于常见合理门槛
+boundary_samples:
+  - sample_id: RC004-Q-B-001
+    qualification_context: 资格条件
+    certificate_name: 原厂授权服务工程师证书
+    certificate_holder: 企业人员
+    gate_usage: 作为维护保养型采购项目的资格条件
+    necessity_level: 场景化待确认
+    qualification_side_match: 可疑
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 证书名称较强，但若项目以原厂维保、深度诊断为主，仍可能存在一定场景依据
+  - sample_id: RC004-Q-B-002
+    qualification_context: 合格供应商条件
+    certificate_name: 控制系统集成工程师证书
+    certificate_holder: 企业人员
+    gate_usage: 作为控制系统改造项目的合格供应商条件
+    necessity_level: 场景化待确认
+    qualification_side_match: 可疑
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 证书名称看起来偏强，但若项目确含控制系统集成改造，仍可能与履约有关
+  - sample_id: RC004-Q-B-003
+    qualification_context: 资格审查门槛
+    certificate_name: 厂商认证调试工程师证书
+    certificate_holder: 企业人员
+    gate_usage: 作为高集成设备调试服务的资格审查前提
+    necessity_level: 场景化待确认
+    qualification_side_match: 可疑
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 若仅为一般设备安装则偏强，若确属特定厂商深度调试场景则可能存在合理性

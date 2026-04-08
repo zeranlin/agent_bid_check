@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from app.common.file_extract import extract_document_text
 
 import scripts.validate_rule_registry as validate_rule_registry
 
@@ -26,6 +27,14 @@ G9_TASK_PATH = ROOT / "docs" / "tasks" / "Task-G9-real-candidate-triage.md"
 G10_TASK_PATH = ROOT / "docs" / "tasks" / "Task-G10-first-priority-formalization.md"
 G10_GUIDE_PATH = ROOT / "docs" / "governance" / "candidate-rule-first-priority-formalization-guide.md"
 G10_PACKAGE_PATH = CANDIDATE_ROOT / "mappings" / "first_priority_formalization_package_2026-04-07.yaml"
+RC003_MODEL_PATH = CANDIDATE_ROOT / "mappings" / "rc003_industry_evidence_model_2026-04-08.yaml"
+RC003_SAMPLES_PATH = CANDIDATE_ROOT / "imports" / "rc003_industry_samples_2026-04-08.yaml"
+RC003_REPLAY_PATH = CANDIDATE_ROOT / "mappings" / "rc003_industry_replay_summary_2026-04-08.yaml"
+RC003_GUIDE_PATH = ROOT / "docs" / "governance" / "rc003-industry-evidence-model-2026-04-08.md"
+RC004_QUAL_MODEL_PATH = CANDIDATE_ROOT / "mappings" / "rc004_qualification_side_model_2026-04-08.yaml"
+RC004_QUAL_SAMPLES_PATH = CANDIDATE_ROOT / "imports" / "rc004_qualification_side_samples_2026-04-08.yaml"
+RC004_QUAL_SUMMARY_PATH = CANDIDATE_ROOT / "mappings" / "rc004_qualification_side_summary_2026-04-08.yaml"
+RC004_QUAL_GUIDE_PATH = ROOT / "docs" / "governance" / "rc004-qualification-side-model-2026-04-08.md"
 ALLOWED_DECISIONS = {"formal_rule", "conditional_rule", "capability_item", "drop"}
 REQUIRED_LEDGER_FIELDS = {
     "candidate_id",
@@ -44,6 +53,34 @@ REQUIRED_LEDGER_FIELDS = {
     "status",
     "snapshot_id",
 }
+RC003_REQUIRED_FIELDS = [
+    "procurement_object",
+    "procurement_scene",
+    "qualification_name",
+    "qualification_usage",
+    "demand_relevance",
+    "industry_match_level",
+    "evidence_sufficiency",
+    "decision_layer",
+]
+RC003_ALLOWED_RELEVANCE = {"与履约直接相关", "间接相关", "相关性不足"}
+RC003_ALLOWED_MATCH = {"行业匹配", "跨行业疑似错配", "明显错配"}
+RC003_ALLOWED_SUFFICIENCY = {"证据充分", "证据一般", "证据不足"}
+RC003_ALLOWED_LAYER = {"正式风险", "待补证", "排除"}
+RC004_QUAL_REQUIRED_FIELDS = [
+    "qualification_context",
+    "certificate_name",
+    "certificate_holder",
+    "gate_usage",
+    "necessity_level",
+    "qualification_side_match",
+    "evidence_sufficiency",
+    "decision_layer",
+]
+RC004_ALLOWED_CONTEXT = {"资格条件", "合格供应商条件", "资格审查门槛"}
+RC004_ALLOWED_HOLDER = {"企业人员", "项目负责人", "现场作业人员"}
+RC004_ALLOWED_NECESSITY = {"法定/常见必要", "场景化待确认", "超出履约必要"}
+RC004_ALLOWED_MATCH = {"合理", "可疑", "不当"}
 
 
 def test_candidate_rule_governance_directories_exist() -> None:
@@ -229,9 +266,135 @@ def test_first_priority_formalization_candidates_have_clear_ownership() -> None:
             assert item["strengthen_existing_rule"]["strengthen_scope"]
 
 
+def test_rc003_evidence_model_exists_and_has_required_fields() -> None:
+    payload = yaml.safe_load(RC003_MODEL_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-003"
+    assert payload["required_fields"] == RC003_REQUIRED_FIELDS
+    assert RC003_GUIDE_PATH.exists()
+
+
+def test_rc003_industry_logic_defines_three_decision_layers() -> None:
+    payload = yaml.safe_load(RC003_MODEL_PATH.read_text(encoding="utf-8"))
+    assert payload["industry_scope"] == ["柴油发电机组", "机电安装", "配套设备采购"]
+    assert payload["decision_layers"] == ["正式风险", "待补证", "排除"]
+    assert {"formal_risk", "pending_review", "exclude"} <= set(payload["decision_rules"])
+
+
+def test_rc003_samples_cover_positive_negative_and_boundary_cases() -> None:
+    payload = yaml.safe_load(RC003_SAMPLES_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-003"
+    assert payload["positive_samples"]
+    assert payload["negative_samples"]
+    assert payload["boundary_samples"]
+    for key in ("positive_samples", "negative_samples", "boundary_samples"):
+        for item in payload[key]:
+            assert set(RC003_REQUIRED_FIELDS) <= set(item), item
+            assert item["demand_relevance"] in RC003_ALLOWED_RELEVANCE
+            assert item["industry_match_level"] in RC003_ALLOWED_MATCH
+            assert item["evidence_sufficiency"] in RC003_ALLOWED_SUFFICIENCY
+            assert item["decision_layer"] in RC003_ALLOWED_LAYER
+
+
+def test_rc003_replay_summary_and_upgrade_recommendation_are_present() -> None:
+    payload = yaml.safe_load(RC003_REPLAY_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-003"
+    assert payload["real_replay"]
+    assert payload["industry_replay"]
+    assert payload["upgrade_recommendation"]["candidate_id"] == "RC-003"
+    assert isinstance(payload["upgrade_recommendation"]["recommend_r013"], bool)
+    assert payload["upgrade_recommendation"]["recommendation_reason"]
+
+
+def test_rc003_replay_summary_counts_match_sample_layers() -> None:
+    samples = yaml.safe_load(RC003_SAMPLES_PATH.read_text(encoding="utf-8"))
+    replay = yaml.safe_load(RC003_REPLAY_PATH.read_text(encoding="utf-8"))
+    expected = {"正式风险": 0, "待补证": 0, "排除": 0}
+    for key in ("positive_samples", "negative_samples", "boundary_samples"):
+        for item in samples[key]:
+            expected[item["decision_layer"]] += 1
+    assert replay["industry_replay"]["decision_counts"] == expected
+
+
+def test_rc003_real_replay_excerpt_matches_current_source_file() -> None:
+    replay = yaml.safe_load(RC003_REPLAY_PATH.read_text(encoding="utf-8"))
+    target_file = Path(replay["real_replay"]["target_file"])
+    text = extract_document_text(target_file)
+    assert replay["real_replay"]["observed_qualification"]["evidence_excerpt"] in text
+    assert replay["real_replay"]["observed_qualification"]["decision_layer"] == "排除"
+
+
+def test_rc003_upgrade_recommendation_currently_blocks_r013() -> None:
+    replay = yaml.safe_load(RC003_REPLAY_PATH.read_text(encoding="utf-8"))
+    assert replay["upgrade_recommendation"]["recommend_r013"] is False
+    assert replay["upgrade_recommendation"]["current_blockers"]
+
+
 def test_first_priority_formalization_avoids_duplicate_construction() -> None:
     payload = yaml.safe_load(G10_PACKAGE_PATH.read_text(encoding="utf-8"))
     absorbed_ids = {item["candidate_id"] for item in payload["already_absorbed_or_skip"]}
     candidate_ids = {item["candidate_id"] for item in payload["formalization_candidates"]}
     assert not (absorbed_ids & candidate_ids)
     assert any(item["ownership"]["route"] == "new_rule" for item in payload["formalization_candidates"])
+
+
+def test_rc004_qualification_side_model_exists_and_is_scoped_to_gate_only() -> None:
+    payload = yaml.safe_load(RC004_QUAL_MODEL_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-004"
+    assert payload["scope"]["included"] == [
+        "特定企业人员证书作为资格条件",
+        "特定企业人员证书作为合格供应商条件",
+        "特定企业人员证书作为资格审查通过门槛",
+    ]
+    assert "评分因素侧" in payload["scope"]["excluded"]
+    assert payload["required_fields"] == RC004_QUAL_REQUIRED_FIELDS
+    assert RC004_QUAL_GUIDE_PATH.exists()
+
+
+def test_rc004_qualification_side_model_explicitly_separates_from_scoring_side() -> None:
+    payload = yaml.safe_load(RC004_QUAL_MODEL_PATH.read_text(encoding="utf-8"))
+    boundary = payload["boundary_rules"]
+    assert boundary["qualification_side_only"] is True
+    assert boundary["scoring_side_owner"]["target_rule_id"] == "R-006"
+    assert "资格条件侧不并入 R-006" in boundary["ownership_split_note"]
+    assert "R-009" in boundary["not_covered_by_existing_rules"]
+    assert "R-012" in boundary["not_covered_by_existing_rules"]
+
+
+def test_rc004_qualification_side_samples_cover_positive_negative_and_boundary_cases() -> None:
+    payload = yaml.safe_load(RC004_QUAL_SAMPLES_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-004"
+    assert payload["positive_samples"]
+    assert payload["negative_samples"]
+    assert payload["boundary_samples"]
+    for key in ("positive_samples", "negative_samples", "boundary_samples"):
+        for item in payload[key]:
+            assert set(RC004_QUAL_REQUIRED_FIELDS) <= set(item), item
+            assert item["qualification_context"] in RC004_ALLOWED_CONTEXT
+            assert item["certificate_holder"] in RC004_ALLOWED_HOLDER
+            assert item["necessity_level"] in RC004_ALLOWED_NECESSITY
+            assert item["qualification_side_match"] in RC004_ALLOWED_MATCH
+            assert item["evidence_sufficiency"] in RC003_ALLOWED_SUFFICIENCY
+            assert item["decision_layer"] in RC003_ALLOWED_LAYER
+
+
+def test_rc004_qualification_side_negative_and_boundary_samples_cover_required_guardrails() -> None:
+    payload = yaml.safe_load(RC004_QUAL_SAMPLES_PATH.read_text(encoding="utf-8"))
+    negative_rationales = "\n".join(item["rationale"] for item in payload["negative_samples"])
+    negative_names = {item["certificate_name"] for item in payload["negative_samples"]}
+    boundary_names = {item["certificate_name"] for item in payload["boundary_samples"]}
+    assert "法定" in negative_rationales or "常见" in negative_rationales
+    assert any("建造师" in name for name in negative_names)
+    assert any("特种作业" in name or "电工" in name for name in negative_names)
+    assert any("厂商" in name or "原厂" in name or "集成" in name for name in boundary_names)
+
+
+def test_rc004_qualification_side_summary_has_single_explicit_ownership_conclusion() -> None:
+    payload = yaml.safe_load(RC004_QUAL_SUMMARY_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-004"
+    conclusion = payload["ownership_recommendation"]
+    assert conclusion["route"] in {"strengthen_existing_rule", "propose_new_rule"}
+    assert conclusion["route"] == "propose_new_rule"
+    assert conclusion["proposed_direction"]["why_not_r006"]
+    assert conclusion["proposed_direction"]["why_not_r009_to_r012"]
+    assert conclusion["proposed_direction"]["future_rule_direction"]
+    assert conclusion["three_layer_summary"] == {"正式风险": 2, "待补证": 3, "排除": 3}

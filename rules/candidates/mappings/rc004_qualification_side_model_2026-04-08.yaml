@@ -1,0 +1,113 @@
+candidate_id: RC-004
+model_version: 1
+task_id: Task-G13
+source_rule_text: 不得设定特定企业人员证书作为资格条件、评审因素
+scope:
+  included:
+    - 特定企业人员证书作为资格条件
+    - 特定企业人员证书作为合格供应商条件
+    - 特定企业人员证书作为资格审查通过门槛
+  excluded:
+    - 评分因素侧
+    - 一般项目负责人任职资格
+    - 与法定强制持证要求直接对应的场景
+required_fields:
+  - qualification_context
+  - certificate_name
+  - certificate_holder
+  - gate_usage
+  - necessity_level
+  - qualification_side_match
+  - evidence_sufficiency
+  - decision_layer
+field_definitions:
+  qualification_context:
+    - 资格条件
+    - 合格供应商条件
+    - 资格审查门槛
+  certificate_name: 被要求的人员证书名称，应保留证书具体表述，不用企业资质替代
+  certificate_holder:
+    - 企业人员
+    - 项目负责人
+    - 现场作业人员
+  gate_usage: 证书被如何使用，如作为投标准入门槛、资格审查通过条件、合格供应商前提
+  necessity_level:
+    - 法定/常见必要
+    - 场景化待确认
+    - 超出履约必要
+  qualification_side_match:
+    - 合理
+    - 可疑
+    - 不当
+  evidence_sufficiency:
+    - 证据充分
+    - 证据一般
+    - 证据不足
+  decision_layer:
+    - 正式风险
+    - 待补证
+    - 排除
+boundary_rules:
+  qualification_side_only: true
+  scoring_side_owner:
+    target_rule_id: R-006
+    note: 评分因素侧继续沿用 R-006 的倾向性评分补强方向，本模型不承接评分挂钩语义
+  ownership_split_note: 资格条件侧不并入 R-006；评分侧与资格门槛侧的治理对象不同，若继续共用同一规则会把“评分加分”与“准入门槛”混成一类
+  not_covered_by_existing_rules:
+    - R-009
+    - R-010
+    - R-011
+    - R-012
+  not_covered_reason:
+    R-009: R-009 只处理已取消或非强制资质资格作为资格条件，不处理特定企业人员证书被设为门槛
+    R-010: R-010 只处理已取消或非强制资质资格认证进入评分，不处理资格条件侧
+    R-011: R-011 聚焦原件或纸质证照提交边界，不处理证书内容本身是否不当
+    R-012: R-012 聚焦主体身份与地域限制，不处理人员证书门槛
+reasonable_certificate_reference:
+  - 机电安装场景下的机电工程专业建造师注册证书
+  - 涉及电气接入的特种作业操作证（电工作业）
+  - 涉及焊接、登高等施工安全的特种作业操作证
+  - 法律法规明确要求的注册安全工程师、注册消防工程师等岗位证书
+overreaching_certificate_reference:
+  - 原厂高级维修工程师证书直接作为投标资格条件
+  - 特定品牌培训合格证书直接作为合格供应商条件
+  - 特定厂商认证服务工程师证书直接作为资格审查通过前提
+decision_layers:
+  - 正式风险
+  - 待补证
+  - 排除
+decision_rules:
+  formal_risk:
+    prerequisites:
+      - qualification_context_is_gate
+      - certificate_targets_specific_enterprise_personnel
+      - evidence_sufficiency_is_sufficient
+    triggers:
+      - necessity_level_is_overreaching
+      - qualification_side_match_is_improper
+      - no_legal_or_common_delivery_basis_found
+    output_rule: 证书被明确设为资格门槛，且缺少法定或常见履约必要性时，落正式风险
+  pending_review:
+    prerequisites:
+      - qualification_context_is_gate
+    triggers:
+      - certificate_looks_strong_but_scene_may_support_it
+      - necessity_level_is_scene_dependent
+      - evidence_sufficiency_is_general
+    output_rule: 证书要求偏强但仍可能存在特定场景依据时，先落待补证
+  exclude:
+    triggers:
+      - legal_or_common_personnel_certificate_requirement
+      - certificate_relates_to_site_safety_or_clear_role_duty
+      - evidence_insufficient_to_prove_improper_gate
+    output_rule: 与法定履约、现场安全或明确岗位职责直接相关时，直接排除
+judgment_flow:
+  - 先确认是否属于资格条件、合格供应商条件或资格审查门槛，若是评分项则退出本模型
+  - 再确认证书是否指向企业内部、厂商体系或特定来源的人员证书，而非一般岗位任职资格
+  - 再判断证书要求是否具有法定依据、现场安全依据或明确岗位职责依据
+  - 最后结合证据强度与场景清晰度决定正式风险、待补证或排除
+non_goals:
+  - 不直接修改正式规则运行链路
+  - 不把评分因素侧重新纳入本任务
+  - 不因证书名称偏强就直接报正式风险
+  - 不把一般项目负责人任职资格直接等同于不当证书门槛
