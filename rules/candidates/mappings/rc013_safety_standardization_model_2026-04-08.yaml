@@ -1,0 +1,103 @@
+candidate_id: RC-013
+model_version: 1
+task_id: Task-G14
+source_rule_text: 不得设置安全生产标准化证书
+scene_scope:
+  - 柴油发电机组及机电安装
+  - 设备采购+安装实施混合场景
+  - 纯货物采购场景
+required_fields:
+  - procurement_object
+  - procurement_scene
+  - requirement_name
+  - requirement_usage
+  - safety_requirement_kind
+  - scene_relevance
+  - evidence_sufficiency
+  - decision_layer
+field_definitions:
+  procurement_object: 采购标的本身，应落到设备、系统或服务对象
+  procurement_scene: 采购场景，应说明是纯货物采购、安装实施、施工改造，还是货物+安装混合场景
+  requirement_name: 文件中被要求的具体安全类证书或资格名称
+  requirement_usage: 该要求的使用方式，如资格条件、合格供应商条件、资格审查依据
+  safety_requirement_kind:
+    - 安全生产标准化证书
+    - 安全生产许可证
+    - 法定安全资格
+  scene_relevance:
+    - 相关性不足
+    - 场景相关待确认
+    - 与施工实施直接相关
+  evidence_sufficiency:
+    - 证据充分
+    - 证据一般
+    - 证据不足
+  decision_layer:
+    - 正式风险
+    - 待补证
+    - 排除
+boundary_rules:
+  distinguish_objects:
+    - 安全生产标准化证书
+    - 安全生产许可证
+    - 与特定施工实施直接相关的法定安全资格
+  do_not_mix_standardization_with_permit: true
+  object_notes:
+    安全生产标准化证书: 更接近企业安全管理成熟度或标准化水平证明，不当然等于法定准入许可
+    安全生产许可证: 明确施工实施场景下可能直接相关的法定许可要求
+    法定安全资格: 指专职安全员、安全考核证、特种作业操作证等与现场施工安全职责直接相关的法定持证要求
+pure_goods_reference:
+  typical_position: 纯货物采购场景下，将安全生产标准化证书作为资格门槛通常偏强
+  reasoning:
+    - 货物供货本身不当然要求企业具备施工安全管理成熟度证明
+    - 纯货物交付场景与安全生产标准化证书的直接履约关联通常不足
+mixed_scene_reference:
+  typical_position: 货物+安装混合场景下，安全生产标准化证书可能与项目安全管理存在一定关联，但必要性不稳定
+  reasoning:
+    - 若安装实施、机房改造、吊装接电等内容明确，安全管理要求会更强
+    - 但安全生产标准化证书是否必须作为准入门槛，仍需结合施工深度和法定许可体系判断
+exclude_reference:
+  - 安全生产许可证（明确施工实施场景）
+  - 建筑施工企业专职安全生产管理人员安全生产考核合格证书
+  - 特种作业操作证（高压电工、焊接、高处作业）
+decision_layers:
+  - 正式风险
+  - 待补证
+  - 排除
+decision_rules:
+  formal_risk:
+    prerequisites:
+      - procurement_scene_is_pure_goods
+      - requirement_usage_is_gate
+      - requirement_name_is_standardization_certificate
+      - evidence_sufficiency_is_sufficient
+    triggers:
+      - scene_relevance_is_low
+      - no_installation_or_construction_basis
+    output_rule: 场景清楚且为纯货物采购时，将安全生产标准化证书直接作为资格门槛，可落正式风险
+  pending_review:
+    prerequisites:
+      - requirement_usage_is_gate
+      - requirement_name_is_standardization_certificate
+    triggers:
+      - procurement_scene_is_mixed
+      - installation_or_retrofit_may_exist
+      - scene_relevance_is_uncertain
+      - evidence_sufficiency_is_general
+    output_rule: 存在安装、改造或混合实施因素时，先落待补证，不直接判死
+  exclude:
+    triggers:
+      - requirement_name_is_safety_production_permit
+      - requirement_name_is_statutory_safety_qualification
+      - procurement_scene_is_clear_construction_implementation
+      - scene_relevance_is_direct_to_site_safety
+    output_rule: 条款要求的是法定安全许可或与明确施工实施职责直接相关的安全资格时，直接排除
+judgment_flow:
+  - 先确认要求对象究竟是安全生产标准化证书、安全生产许可证，还是法定安全资格
+  - 再确认 procurement_scene 是纯货物、安装实施，还是货物+安装混合场景
+  - 再判断该要求是否被用作资格门槛或审查依据
+  - 最后结合 scene_relevance 与 evidence_sufficiency 决定落入正式风险、待补证或排除
+non_goals:
+  - 不直接升级为全国通用正式规则
+  - 不把所有安全生产相关表述都视为风险
+  - 不把安全生产许可证与安全生产标准化证书混为一谈

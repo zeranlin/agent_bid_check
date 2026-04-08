@@ -1,0 +1,97 @@
+batch_id: RC013-SAMPLES-2026-04-08-001
+candidate_id: RC-013
+source_name: RC-013 安全生产标准化证书行业化样本集
+source_description: 面向纯货物采购、安装实施、货物+安装混合场景的正样本、负样本与边界样本
+positive_samples:
+  - sample_id: RC013-P-001
+    procurement_object: 柴油发电机组
+    procurement_scene: 纯货物采购
+    requirement_name: 安全生产标准化二级企业证书
+    requirement_usage: 资格条件
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 相关性不足
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 项目仅为设备供货，仍将安全生产标准化证书设为资格门槛，通常偏强
+  - sample_id: RC013-P-002
+    procurement_object: 配套设备采购
+    procurement_scene: 纯货物采购
+    requirement_name: 安全生产标准化三级证书
+    requirement_usage: 合格供应商条件
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 相关性不足
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 纯货物采购场景下以安全生产标准化证书作为合格供应商前提，缺少直接履约关联
+  - sample_id: RC013-P-003
+    procurement_object: 发电机组备品备件
+    procurement_scene: 纯货物采购
+    requirement_name: 安全生产标准化达标证书
+    requirement_usage: 资格审查依据
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 相关性不足
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 未见安装实施或施工改造内容，仅凭供货要求标准化证书不稳
+negative_samples:
+  - sample_id: RC013-N-001
+    procurement_object: 柴油发电机组及机房安装改造
+    procurement_scene: 安装实施
+    requirement_name: 安全生产许可证
+    requirement_usage: 资格条件
+    safety_requirement_kind: 安全生产许可证
+    scene_relevance: 与施工实施直接相关
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 明确施工实施场景下的法定安全许可要求，不应与标准化证书混淆
+  - sample_id: RC013-N-002
+    procurement_object: 机电设备安装
+    procurement_scene: 安装实施
+    requirement_name: 建筑施工企业专职安全生产管理人员安全生产考核合格证书
+    requirement_usage: 资格审查依据
+    safety_requirement_kind: 法定安全资格
+    scene_relevance: 与施工实施直接相关
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 对应现场施工安全管理职责的法定持证要求，属于合理安全资格要求
+  - sample_id: RC013-N-003
+    procurement_object: 高压接电施工
+    procurement_scene: 安装实施
+    requirement_name: 特种作业操作证（高压电工作业）
+    requirement_usage: 资格条件
+    safety_requirement_kind: 法定安全资格
+    scene_relevance: 与施工实施直接相关
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 与明确施工安全职责直接相关，不能误报为 RC-013 风险
+boundary_samples:
+  - sample_id: RC013-B-001
+    procurement_object: 柴油发电机组及附属安装
+    procurement_scene: 设备采购+安装实施混合场景
+    requirement_name: 安全生产标准化二级企业证书
+    requirement_usage: 资格条件
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 场景相关待确认
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 含安装实施因素，但证书必要性是否足以构成准入门槛仍不稳定
+  - sample_id: RC013-B-002
+    procurement_object: 机房配套设备及局部改造
+    procurement_scene: 货物+安装混合场景
+    requirement_name: 安全生产标准化证书
+    requirement_usage: 合格供应商条件
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 场景相关待确认
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 若改造深度较大可能有一定安全管理关联，但是否必须作为准入条件仍需补场景证据
+  - sample_id: RC013-B-003
+    procurement_object: 配电系统设备采购及现场调试
+    procurement_scene: 设备采购+安装实施混合场景
+    requirement_name: 安全生产标准化达标证书
+    requirement_usage: 资格审查依据
+    safety_requirement_kind: 安全生产标准化证书
+    scene_relevance: 场景相关待确认
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 涉及现场调试与接入，但与法定安全许可的边界尚需进一步拆清

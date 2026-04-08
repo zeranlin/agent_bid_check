@@ -1,0 +1,46 @@
+candidate_id: RC-013
+task_id: Task-G14
+industry_replay:
+  role: 主回放
+  source_batch: rules/candidates/imports/rc013_safety_standardization_samples_2026-04-08.yaml
+  decision_counts:
+    正式风险: 3
+    待补证: 3
+    排除: 3
+  scenario_coverage:
+    - 纯货物采购
+    - 安装实施
+    - 设备采购+安装实施混合场景
+  key_findings:
+    - 纯货物采购场景中将安全生产标准化证书设为资格门槛，可稳定落入正式风险
+    - 货物+安装混合场景中，安全生产标准化证书通常只能先落待补证
+    - 安全生产许可证和法定安全资格在明确施工实施场景下可稳定压在排除层
+  false_positive_observation: 行业样本下，安全生产许可证、专职安全员安全考核证和特种作业操作证均未被误判为正式风险
+  boundary_observation: 混合场景中的标准化证书要求仍存在争议，保留在待补证层更稳
+real_file_check:
+  role: 辅助核查
+  target_file: /Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx
+  check_focus:
+    - 当前柴油真实文件不作为 RC-013 的主证明材料
+    - 核查当前文件未出现安全生产标准化证书要求
+    - 核查当前文件不会因合理安装类要求被误报为 RC-013 正式风险
+  searched_excerpts:
+    - 柴油发电机组及相关配套机电设备采购及安装项目
+    - 建筑机电安装工程专业承包三级或以上资质
+  observed_findings:
+    safety_standardization_certificate_present: false
+    safety_production_permit_present: false
+    supporting_requirement_excerpt: 建筑机电安装工程专业承包三级或以上资质
+    conclusion: 当前柴油真实文件未检出安全生产标准化证书，也未检出安全生产许可证；现有安装类资质要求与履约直接相关，不构成 RC-013 主回放依据
+upgrade_recommendation:
+  candidate_id: RC-013
+  recommend_formal_rule: false
+  recommendation_reason: 当前模型已能在纯货物、安装实施、混合场景间区分正式风险、待补证与排除，但行业覆盖仍局限于柴油发电机组、机电安装和配套设备采购，尚不足以直接升级为全国化正式规则
+  current_blockers:
+    - 仍缺少更多工程类细分行业的真实正式风险命中样本
+    - 混合场景中安全生产标准化证书与安全生产许可证的边界还需更多真实样本验证
+    - 当前真实文件辅助核查只能证明误报可控，尚不能作为主命中证据
+  missing_samples:
+    - 土建改造类项目中安全生产标准化证书要求的真实争议样本
+    - 纯货物采购场景下真实命中的正式风险样本
+    - 其他行业如后勤设备、环保设备、信息化机房改造的混合场景样本
