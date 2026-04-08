@@ -1,0 +1,97 @@
+batch_id: RC014-SAMPLES-2026-04-08-001
+candidate_id: RC-014
+source_name: RC-014 证书暗含经营年限样本集
+source_description: 面向评分侧证书倾向性场景的正样本、负样本与边界样本
+positive_samples:
+  - sample_id: RC014-P-001
+    expression_pattern: 取得证书满X年
+    certificate_context: 评分项
+    certificate_name: 质量管理体系认证证书
+    time_constraint_expression: 取得质量管理体系认证证书满三年的得5分
+    implicit_business_age_signal: 明确
+    score_or_bias_linkage: 评分直接挂钩
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 通过取得证书满三年直接抬高市场进入时间和经营沉淀门槛
+  - sample_id: RC014-P-002
+    expression_pattern: 连续持有证书满X年
+    certificate_context: 评分项
+    certificate_name: 信息安全管理体系认证证书
+    time_constraint_expression: 连续持有信息安全管理体系认证证书五年以上的得满分
+    implicit_business_age_signal: 明确
+    score_or_bias_linkage: 评分直接挂钩
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 连续持证历史被直接转化为高分条件，实质上变相体现经营年限
+  - sample_id: RC014-P-003
+    expression_pattern: 发证日期早于某时间点
+    certificate_context: 倾向性证书条件
+    certificate_name: 服务认证证书
+    time_constraint_expression: 证书发证日期须早于2021年1月1日方可计分
+    implicit_business_age_signal: 明确
+    score_or_bias_linkage: 倾向性条件挂钩
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 发证日期前置要求会筛掉新进入市场的主体，形成隐性经营年限门槛
+negative_samples:
+  - sample_id: RC014-N-001
+    expression_pattern: 正常有效期校验
+    certificate_context: 合规有效性校验
+    certificate_name: 质量管理体系认证证书
+    time_constraint_expression: 证书在有效期内
+    implicit_business_age_signal: 无
+    score_or_bias_linkage: 仅合规校验
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 仅检查证书在有效期内，属于正常证书有效性校验，不构成经营年限门槛
+  - sample_id: RC014-N-002
+    expression_pattern: 正常有效期校验
+    certificate_context: 合规有效性校验
+    certificate_name: 环境管理体系认证证书
+    time_constraint_expression: 证书未过期
+    implicit_business_age_signal: 无
+    score_or_bias_linkage: 仅合规校验
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 仅为证书未过期的法定合规校验，不应误报为隐性年限门槛
+  - sample_id: RC014-N-003
+    expression_pattern: 正常有效期校验
+    certificate_context: 合规有效性校验
+    certificate_name: 职业健康安全管理体系认证证书
+    time_constraint_expression: 续期有效
+    implicit_business_age_signal: 无
+    score_or_bias_linkage: 仅合规校验
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 仅要求证书续期有效，属于法定合规校验和有效性确认
+boundary_samples:
+  - sample_id: RC014-B-001
+    expression_pattern: 发证日期早于某时间点
+    certificate_context: 评分项
+    certificate_name: 服务能力认证证书
+    time_constraint_expression: 发证日期早于投标截止日前12个月的得2分
+    implicit_business_age_signal: 可疑
+    score_or_bias_linkage: 评分直接挂钩
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 存在时间前置要求，但可能是想规避临时取证，是否构成经营年限门槛仍需看上下文
+  - sample_id: RC014-B-002
+    expression_pattern: 持证延续历史体现经营稳定性
+    certificate_context: 倾向性证书条件
+    certificate_name: 售后服务认证证书
+    time_constraint_expression: 以证书延续历史证明供应商经营稳定性
+    implicit_business_age_signal: 可疑
+    score_or_bias_linkage: 倾向性条件挂钩
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 已出现经营稳定性暗示，但是否等同于经营年限门槛仍需结合评分上下文判断
+  - sample_id: RC014-B-003
+    expression_pattern: 连续持有证书满X年
+    certificate_context: 评分项
+    certificate_name: 能源管理体系认证证书
+    time_constraint_expression: 连续持有证书满两年可加分
+    implicit_business_age_signal: 可疑
+    score_or_bias_linkage: 评分直接挂钩
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 连续持证历史可能隐含经营沉淀判断，但仍需看分值强度和上下文是否构成实质门槛

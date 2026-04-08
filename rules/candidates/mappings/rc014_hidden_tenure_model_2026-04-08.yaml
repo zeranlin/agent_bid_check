@@ -1,0 +1,111 @@
+candidate_id: RC-014
+model_version: 1
+task_id: Task-G15
+source_rule_text: 设置证书暗含经营年限要求
+ownership:
+  target_rule_id: R-006
+  sub_boundary: certificate_tenure_as_hidden_business_age
+  target_layer: formal_risks
+  why_r006: 本问题主场景是证书进入评分或形成倾向性证书条件，再通过持证时长或发证时间变相抬高经营年限门槛，最适合并入 R-006 的评分侧证书倾向性边界
+  why_not_r010: R-010 聚焦已取消或非强制资质资格认证进入评分，不覆盖通过证书历史变相体现经营年限的场景
+  recommend_new_rule: false
+scope:
+  primary_scene: 评分侧为主
+  included:
+    - 证书取得满若干年进入评分
+    - 连续持有证书满若干年进入评分
+    - 发证日期早于某一时间点形成倾向性证书条件
+    - 通过证书延续历史或持证时长变相评价经营稳定性
+  excluded:
+    - 一般资格条件侧年限问题
+    - 所有证书要求的泛化判断
+    - 所有经营年限问题的泛化判断
+required_fields:
+  - expression_pattern
+  - certificate_context
+  - certificate_name
+  - time_constraint_expression
+  - implicit_business_age_signal
+  - score_or_bias_linkage
+  - evidence_sufficiency
+  - decision_layer
+field_definitions:
+  expression_pattern:
+    - 取得证书满X年
+    - 连续持有证书满X年
+    - 发证日期早于某时间点
+    - 持证延续历史体现经营稳定性
+    - 正常有效期校验
+  certificate_context:
+    - 评分项
+    - 倾向性证书条件
+    - 合规有效性校验
+  certificate_name: 文件中被要求的证书、认证或资格名称
+  time_constraint_expression: 与发证时间、持证年限、连续持证历史、续期状态相关的原始表达
+  implicit_business_age_signal:
+    - 明确
+    - 可疑
+    - 无
+  score_or_bias_linkage:
+    - 评分直接挂钩
+    - 倾向性条件挂钩
+    - 仅合规校验
+  evidence_sufficiency:
+    - 证据充分
+    - 证据一般
+    - 证据不足
+  decision_layer:
+    - 正式风险
+    - 待补证
+    - 排除
+hidden_tenure_patterns:
+  - 取得该证书满三年得满分
+  - 连续持有相关认证证书五年以上加分
+  - 发证日期须早于某年某月某日
+  - 证书延续记录可证明供应商经营稳定性
+exclusion_rules:
+  normal_validity_checks:
+    - 证书在有效期内
+    - 证书未过期
+    - 续期有效
+    - 法定合规校验
+  exclusion_note: 仅要求证书处于有效期内、未过期、续期有效或满足法定合规校验时，不构成隐性经营年限门槛
+decision_layers:
+  - 正式风险
+  - 待补证
+  - 排除
+decision_rules:
+  formal_risk:
+    prerequisites:
+      - certificate_context_is_scoring_or_bias
+      - time_constraint_expression_present
+      - evidence_sufficiency_is_sufficient
+    triggers:
+      - implicit_business_age_signal_is_explicit
+      - score_or_bias_linkage_is_scoring_or_bias
+      - time_constraint_converts_certificate_to_tenure_gate
+    output_rule: 证书时间条件已明确变相要求经营年限或市场进入时长时，落正式风险
+  pending_review:
+    prerequisites:
+      - time_constraint_expression_present
+    triggers:
+      - implicit_business_age_signal_is_suspicious
+      - context_is_incomplete
+      - evidence_sufficiency_is_general
+    output_rule: 存在年限暗示，但无法确认是否真的被用来变相评价经营年限时，先落待补证
+  exclude:
+    triggers:
+      - expression_is_normal_validity_check
+      - expression_is_renewal_or_non_expiry_check
+      - expression_is_statutory_compliance_check
+      - score_or_bias_linkage_is_compliance_only
+    output_rule: 仅为正常证书有效性、续期或法定合规校验时，直接排除
+judgment_flow:
+  - 先确认条款是否处于评分项或形成倾向性证书条件，若仅为合规校验则优先排除
+  - 再提取发证时间、持证年限、连续持证历史等时间表达
+  - 再判断这些时间表达是否被用来变相评价经营沉淀、市场进入时间或经营稳定性
+  - 最后结合证据强度决定正式风险、待补证或排除
+non_goals:
+  - 不把正常证书有效性要求直接当作经营年限要求
+  - 不把法定证书有效期校验误报为倾向性门槛
+  - 不在本轮单独新立规则

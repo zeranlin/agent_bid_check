@@ -39,6 +39,10 @@ RC013_MODEL_PATH = CANDIDATE_ROOT / "mappings" / "rc013_safety_standardization_m
 RC013_SAMPLES_PATH = CANDIDATE_ROOT / "imports" / "rc013_safety_standardization_samples_2026-04-08.yaml"
 RC013_REPLAY_PATH = CANDIDATE_ROOT / "mappings" / "rc013_safety_standardization_replay_summary_2026-04-08.yaml"
 RC013_GUIDE_PATH = ROOT / "docs" / "governance" / "rc013-safety-standardization-model-2026-04-08.md"
+RC014_MODEL_PATH = CANDIDATE_ROOT / "mappings" / "rc014_hidden_tenure_model_2026-04-08.yaml"
+RC014_SAMPLES_PATH = CANDIDATE_ROOT / "imports" / "rc014_hidden_tenure_samples_2026-04-08.yaml"
+RC014_PACKAGE_PATH = CANDIDATE_ROOT / "mappings" / "rc014_hidden_tenure_strengthening_package_2026-04-08.yaml"
+RC014_GUIDE_PATH = ROOT / "docs" / "governance" / "rc014-hidden-tenure-model-2026-04-08.md"
 ALLOWED_DECISIONS = {"formal_rule", "conditional_rule", "capability_item", "drop"}
 REQUIRED_LEDGER_FIELDS = {
     "candidate_id",
@@ -97,6 +101,26 @@ RC013_REQUIRED_FIELDS = [
 ]
 RC013_ALLOWED_KIND = {"安全生产标准化证书", "安全生产许可证", "法定安全资格"}
 RC013_ALLOWED_RELEVANCE = {"相关性不足", "场景相关待确认", "与施工实施直接相关"}
+RC014_REQUIRED_FIELDS = [
+    "expression_pattern",
+    "certificate_context",
+    "certificate_name",
+    "time_constraint_expression",
+    "implicit_business_age_signal",
+    "score_or_bias_linkage",
+    "evidence_sufficiency",
+    "decision_layer",
+]
+RC014_ALLOWED_PATTERN = {
+    "取得证书满X年",
+    "连续持有证书满X年",
+    "发证日期早于某时间点",
+    "持证延续历史体现经营稳定性",
+    "正常有效期校验",
+}
+RC014_ALLOWED_CONTEXT = {"评分项", "倾向性证书条件", "合规有效性校验"}
+RC014_ALLOWED_SIGNAL = {"明确", "可疑", "无"}
+RC014_ALLOWED_LINKAGE = {"评分直接挂钩", "倾向性条件挂钩", "仅合规校验"}
 
 
 def test_candidate_rule_governance_directories_exist() -> None:
@@ -487,3 +511,54 @@ def test_rc013_real_file_check_is_supporting_only() -> None:
     for excerpt in replay["real_file_check"]["searched_excerpts"]:
         assert excerpt in text
     assert replay["real_file_check"]["role"] == "辅助核查"
+
+
+def test_rc014_hidden_tenure_model_exists_and_targets_r006_sub_boundary() -> None:
+    payload = yaml.safe_load(RC014_MODEL_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-014"
+    assert payload["ownership"]["target_rule_id"] == "R-006"
+    assert payload["ownership"]["sub_boundary"] == "certificate_tenure_as_hidden_business_age"
+    assert RC014_GUIDE_PATH.exists()
+
+
+def test_rc014_hidden_tenure_model_clearly_excludes_normal_validity_checks() -> None:
+    payload = yaml.safe_load(RC014_MODEL_PATH.read_text(encoding="utf-8"))
+    exclusions = payload["exclusion_rules"]["normal_validity_checks"]
+    assert exclusions == ["证书在有效期内", "证书未过期", "续期有效", "法定合规校验"]
+    assert payload["scope"]["primary_scene"] == "评分侧为主"
+    assert payload["ownership"]["target_rule_id"] != "R-010"
+
+
+def test_rc014_hidden_tenure_samples_cover_positive_negative_and_boundary_cases() -> None:
+    payload = yaml.safe_load(RC014_SAMPLES_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-014"
+    assert payload["positive_samples"]
+    assert payload["negative_samples"]
+    assert payload["boundary_samples"]
+    for key in ("positive_samples", "negative_samples", "boundary_samples"):
+        for item in payload[key]:
+            assert set(RC014_REQUIRED_FIELDS) <= set(item), item
+            assert item["expression_pattern"] in RC014_ALLOWED_PATTERN
+            assert item["certificate_context"] in RC014_ALLOWED_CONTEXT
+            assert item["implicit_business_age_signal"] in RC014_ALLOWED_SIGNAL
+            assert item["score_or_bias_linkage"] in RC014_ALLOWED_LINKAGE
+            assert item["evidence_sufficiency"] in RC003_ALLOWED_SUFFICIENCY
+            assert item["decision_layer"] in RC003_ALLOWED_LAYER
+
+
+def test_rc014_negative_and_boundary_samples_cover_required_guardrails() -> None:
+    payload = yaml.safe_load(RC014_SAMPLES_PATH.read_text(encoding="utf-8"))
+    negative_expressions = {item["time_constraint_expression"] for item in payload["negative_samples"]}
+    boundary_patterns = {item["expression_pattern"] for item in payload["boundary_samples"]}
+    assert {"证书在有效期内", "证书未过期", "续期有效"} <= negative_expressions
+    assert "法定合规校验" in "\n".join(item["rationale"] for item in payload["negative_samples"])
+    assert "发证日期早于某时间点" in boundary_patterns or "持证延续历史体现经营稳定性" in boundary_patterns
+
+
+def test_rc014_strengthening_package_writes_final_conclusion_to_r006_only() -> None:
+    payload = yaml.safe_load(RC014_PACKAGE_PATH.read_text(encoding="utf-8"))
+    assert payload["candidate_id"] == "RC-014"
+    assert payload["final_conclusion"]["target_rule_id"] == "R-006"
+    assert payload["final_conclusion"]["sub_boundary"] == "certificate_tenure_as_hidden_business_age"
+    assert payload["final_conclusion"]["recommend_new_rule"] is False
+    assert payload["final_conclusion"]["target_rule_id"] != "R-010"

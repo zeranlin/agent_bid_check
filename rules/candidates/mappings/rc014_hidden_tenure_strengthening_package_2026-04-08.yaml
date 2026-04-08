@@ -1,0 +1,45 @@
+candidate_id: RC-014
+task_id: Task-G15
+final_conclusion:
+  target_rule_id: R-006
+  sub_boundary: certificate_tenure_as_hidden_business_age
+  boundary_direction: R-006 评分侧证书倾向性边界下新增“隐性年限门槛”子类
+  recommend_new_rule: false
+  main_reason:
+    - 主场景是评分项或倾向性证书条件，而不是一般资格条件或一般经营年限条款
+    - 问题核心不是“已取消/非强制认证”，而是“通过证书历史变相抬高经营年限门槛”
+    - 并入 R-006 能与现有证书倾向性评分治理对象保持一致
+failure_code_recommendation:
+  rule_id: R-006
+  proposed_failure_code: R006-CERT-TENURE-HIDDEN-AGE
+  sub_boundary: certificate_tenure_as_hidden_business_age
+  detection_focus:
+    - 取得证书满X年
+    - 连续持有证书满X年
+    - 发证日期早于某时间点
+    - 通过证书延续历史或持证时长变相评价经营稳定性
+  exclude_focus:
+    - 证书在有效期内
+    - 证书未过期
+    - 续期有效
+    - 法定合规校验
+sample_digest:
+  positive_sample_ids:
+    - RC014-P-001
+    - RC014-P-002
+    - RC014-P-003
+  negative_sample_ids:
+    - RC014-N-001
+    - RC014-N-002
+    - RC014-N-003
+  boundary_sample_ids:
+    - RC014-B-001
+    - RC014-B-002
+    - RC014-B-003
+three_layer_summary:
+  正式风险: 3
+  待补证: 3
+  排除: 3
+followup_recommendation:
+  need_separate_rule_later: false
+  note: 当前先作为 R-006 子边界补强更稳，后续仅在资格条件侧也出现大量稳定真实样本时，再评估是否需要单独拆项
