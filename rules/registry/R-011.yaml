@@ -1,0 +1,105 @@
+rule_id: R-011
+rule_name: 资质证明材料原件及纸质证照要求边界识别
+rule_version: 1
+status: review
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: candidate_formalization
+  origin_desc: 基于 Task-G10 首批真实候选正式纳管结果，从 RC-015/RC-016 合并形成的材料提交边界正式规则
+  created_date: 2026-04-08
+  last_updated_date: 2026-04-08
+
+classification:
+  category: qualification_material_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别在投标阶段要求提交资质证明材料原件或电子证照纸质件的材料边界风险
+  reviewer_note: 需区分投标阶段提交门槛与中标后原件核验、法定核验场景，不得误报仅要求扫描件或电子查询方式的条款
+
+trigger_conditions:
+  all_of:
+    - 出现资格证明文件、证明材料、证照、证件、电子证照等材料提交位置
+    - 命中证照原件、证件原件、资质证明文件原件、电子证照纸质版、纸质证照等语义
+    - 相关语义被作为投标文件提交要求、资格审查材料要求或未提交即无效/不通过的门槛
+  any_of:
+    - comparison.failure_reason_codes 命中 original_or_paper_certificate_submission_gate
+
+exclude_conditions:
+  any_of:
+    - 条款属于法律法规明确要求的原件核验场景
+    - 条款仅要求中标后、质疑投诉阶段或现场核验阶段备查原件
+    - 条款仅要求提供电子证照查询方式、电子签章件、扫描件或复印件
+
+downgrade_conditions:
+  any_of:
+    - 条款未明确属于投标阶段还是后续核验阶段
+    - 原件或纸质件要求的法定依据尚需进一步核实
+
+output:
+  formal_title: 要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险
+  pending_title: 资质材料提交要求中可能存在原件或纸质证照门槛，建议人工复核
+  excluded_title: 相关表述属于合法核验或备查场景，不构成正式风险
+  formal_description: 采购文件在投标文件提交、资格审查或证明材料要求中，直接要求提交资质证明文件原件、证照原件或电子证照纸质件，并将其作为未提交即无效或不通过的门槛，容易突破电子化采购与材料提交边界。
+  remediation_advice: 删除无依据的原件和纸质件提交要求；优先采用电子证照、系统核验、电子签章件或扫描件；如确需核验，应明确为中标后或特定法定环节核验，不得前置为投标阶段门槛。
+
+evidence_hints:
+  keywords:
+    - 资格证明文件
+    - 证明材料
+    - 证照
+    - 证件
+    - 原件
+    - 纸质证照
+    - 电子证照
+  sections:
+    - 投标人资格要求
+    - 资格审查表
+    - 投标文件的编制
+
+samples:
+  positive:
+    - data/examples/rules/R-011/positive-01.json
+  negative:
+    - data/examples/rules/R-011/negative-01.json
+  replay:
+    - data/examples/rules/R-011/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+    - tests/test_rule_registry_r011.py
+  replay:
+    - tests/test_v2_regression_eval.py
+  report:
+    - tests/test_candidate_rule_governance.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-011.md
+  followup_tasks:
+    - docs/tasks/Task-G10-first-priority-formalization.md
+  acceptance_records:
+    - docs/trackers/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-08
+    change: 新增 R-011，承接资质证明材料原件及电子证照纸质件提交边界风险识别
+    author: T

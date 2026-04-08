@@ -2884,5 +2884,223 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_original_or_paper_certificate_submission_positive_013",
+    "document_name": "投标阶段要求原件或电子证照纸质件正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1301",
+            "title": "第二章 投标人资格要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 投标人资格要求"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-qualification-1301",
+          "title": "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险",
+          "review_type": "资格材料提交合规性 / 原件与纸质证照边界",
+          "severity": "高风险",
+          "source_location": "第二章 投标人资格要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 投标人资格要求",
+            "start_line": 10,
+            "end_line": 20,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 投标人资格要求",
+                "start_line": 10,
+                "end_line": 20,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险",
+            "review_type": "资格材料提交合规性 / 原件与纸质证照边界",
+            "severity": "高风险",
+            "source_locations": [
+              "材料提交要求：第二章 投标人资格要求；提交门槛：第二章 投标人资格要求"
+            ],
+            "source_excerpts": [
+              "材料要求：资格证明文件要求：投标人须提供资质证明文件原件、证照原件及电子证照纸质版。\n\n门槛设置：未提交原件或纸质证照的，资格审查不通过。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": [
+            "original_or_paper_certificate_submission_gate"
+          ],
+          "comparison_failure_reason_codes": [
+            "original_or_paper_certificate_submission_gate"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_original_or_paper_certificate_submission_negative_post_award_013",
+    "document_name": "中标后或备查阶段核验原件负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1302",
+            "title": "第三章 投标文件的编制",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第三章 投标文件的编制"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第三章 投标文件的编制",
+            "start_line": 30,
+            "end_line": 38,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 10
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第三章 投标文件的编制",
+                "start_line": 30,
+                "end_line": 38,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_original_or_paper_certificate_submission_negative_legal_013",
+    "document_name": "法定原件核验负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1303",
+            "title": "第二章 资格审查材料",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 资格审查材料"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 资格审查材料",
+            "start_line": 8,
+            "end_line": 16,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 10
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 资格审查材料",
+                "start_line": 8,
+                "end_line": 16,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

@@ -944,6 +944,47 @@ def test_compare_review_artifacts_adds_cancelled_or_non_mandatory_credential_in_
     assert comparison.metadata["failure_reason_codes"] == ["cancelled_or_non_mandatory_credential_in_scoring"]
 
 
+def test_compare_review_artifacts_adds_original_or_paper_certificate_submission_gate_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="qualification",
+            summary="资格条件专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖资格材料提交要求。",
+            metadata={
+                "selected_sections": [{"title": "第二章 投标人资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "qualification_material_submission_present": True,
+                    "qualification_material_submission_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "qualification_material_submission_sentences": ["资格证明文件要求：投标人须提供资质证明文件原件及电子证照纸质版。"],
+                    "original_or_paper_certificate_requirement_signal": True,
+                    "original_or_paper_certificate_requirement_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "original_or_paper_certificate_requirement_sentences": ["投标人须提供资质证明文件原件及电子证照纸质版。"],
+                    "original_or_paper_certificate_used_as_submission_gate": True,
+                    "original_or_paper_certificate_gate_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "original_or_paper_certificate_gate_sentences": ["未提交原件或纸质证照的，资格审查不通过。"],
+                    "original_or_paper_certificate_post_award_only": False,
+                    "original_or_paper_certificate_legal_verification_context": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "资格材料提交合规性 / 原件与纸质证照边界"
+    assert "原件" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["original_or_paper_certificate_submission_gate"]
+
+
 def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_class_titles() -> None:
     baseline = V2StageArtifact(
         name="baseline",

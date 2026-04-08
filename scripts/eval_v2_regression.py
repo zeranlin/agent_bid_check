@@ -106,6 +106,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补评分因素侧已取消或非强制资质资格认证禁入规则与评分条款的交叉校验。",
     },
+    "original_or_paper_certificate_submission_gate": {
+        "label": "资质证照原件或电子证照纸质件被违规设置为投标阶段提交门槛",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补资格材料提交边界规则，区分投标阶段门槛与中标后/法定核验场景。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

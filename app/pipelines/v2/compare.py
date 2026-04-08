@@ -24,6 +24,7 @@ STANDARD_RULE_ORDER = {
     "gifts_or_unrelated_goods_in_scoring_forbidden": 6,
     "cancelled_or_non_mandatory_qualification_as_gate": 7,
     "cancelled_or_non_mandatory_credential_in_scoring": 8,
+    "original_or_paper_certificate_submission_gate": 9,
 }
 STANDARD_RULE_TITLES = {
     "policy_technical_inconsistency": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
@@ -35,6 +36,7 @@ STANDARD_RULE_TITLES = {
     "gifts_or_unrelated_goods_in_scoring_forbidden": "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险",
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险",
     "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
+    "original_or_paper_certificate_submission_gate": "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险",
 }
 STANDARD_CLUSTER_SUPPRESSION_RULES = {
     "acceptance_plan_in_scoring_forbidden": (
@@ -1284,6 +1286,48 @@ def _build_cancelled_or_non_mandatory_credential_in_scoring_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_original_or_paper_certificate_submission_gate_cluster(
+    *,
+    submission_locations: list[str],
+    submission_sentences: list[str],
+    gate_locations: list[str],
+    gate_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if submission_locations:
+        source_location_parts.append("材料提交要求：" + "；".join(submission_locations[:2]))
+    if gate_locations:
+        source_location_parts.append("提交门槛：" + "；".join(gate_locations[:2]))
+
+    source_excerpt_parts = []
+    if submission_sentences:
+        source_excerpt_parts.append("材料要求：" + "；".join(submission_sentences[:2]))
+    if gate_sentences:
+        source_excerpt_parts.append("门槛设置：" + "；".join(gate_sentences[:2]))
+
+    risk = RiskPoint(
+        title="要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险",
+        severity="高风险",
+        review_type="资格材料提交合规性 / 原件与纸质证照边界",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "条款出现在资格证明文件、资格材料或投标文件提交要求相关位置。",
+            "当前文件要求提交资质证照原件或电子证照纸质件，并将其作为投标阶段材料门槛。",
+            "该类设置容易突破电子化采购与材料提交边界，增加不必要的纸质化要求。",
+            "如据此作资格审查或有效性判断，可能导致投标文件被不当否决并引发争议。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除无依据的资质证照原件或电子证照纸质件提交要求。",
+            "投标阶段优先采用电子证照、系统核验、电子签章件或清晰扫描件。",
+            "如确需核验原件，应明确为中标后或法定特定环节核验，不得前置为投标阶段门槛。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def _build_acceptance_testing_cost_shift_cluster(
     *,
     rule_locations: list[str],
@@ -1401,6 +1445,17 @@ def compare_review_artifacts(
     cancelled_or_non_mandatory_qualification_gate_locations: list[str] = []
     cancelled_or_non_mandatory_qualification_gate_sentences: list[str] = []
     cancelled_or_non_mandatory_qualification_prohibition_context = False
+    qualification_material_submission_present = False
+    qualification_material_submission_locations: list[str] = []
+    qualification_material_submission_sentences: list[str] = []
+    original_or_paper_certificate_requirement_signal = False
+    original_or_paper_certificate_requirement_locations: list[str] = []
+    original_or_paper_certificate_requirement_sentences: list[str] = []
+    original_or_paper_certificate_used_as_submission_gate = False
+    original_or_paper_certificate_gate_locations: list[str] = []
+    original_or_paper_certificate_gate_sentences: list[str] = []
+    original_or_paper_certificate_post_award_only = False
+    original_or_paper_certificate_legal_verification_context = False
     scoring_requirement_present = False
     scoring_requirement_locations: list[str] = []
     scoring_requirement_sentences: list[str] = []
@@ -1489,6 +1544,46 @@ def compare_review_artifacts(
             )
             cancelled_or_non_mandatory_qualification_prohibition_context = cancelled_or_non_mandatory_qualification_prohibition_context or bool(
                 structured_signals.get("cancelled_or_non_mandatory_qualification_prohibition_context", False)
+            )
+            qualification_material_submission_present = qualification_material_submission_present or bool(
+                structured_signals.get("qualification_material_submission_present", False)
+            )
+            matched_material_submission_sections = structured_signals.get("qualification_material_submission_sections", [])
+            if isinstance(matched_material_submission_sections, list):
+                qualification_material_submission_locations.extend(_compact_titles(matched_material_submission_sections, limit=2))
+            qualification_material_submission_sentences.extend(
+                _compact_sentences(structured_signals.get("qualification_material_submission_sentences", []), limit=3)
+                if isinstance(structured_signals.get("qualification_material_submission_sentences", []), list)
+                else []
+            )
+            original_or_paper_certificate_requirement_signal = original_or_paper_certificate_requirement_signal or bool(
+                structured_signals.get("original_or_paper_certificate_requirement_signal", False)
+            )
+            matched_original_requirement_sections = structured_signals.get("original_or_paper_certificate_requirement_sections", [])
+            if isinstance(matched_original_requirement_sections, list):
+                original_or_paper_certificate_requirement_locations.extend(_compact_titles(matched_original_requirement_sections, limit=2))
+            original_or_paper_certificate_requirement_sentences.extend(
+                _compact_sentences(structured_signals.get("original_or_paper_certificate_requirement_sentences", []), limit=3)
+                if isinstance(structured_signals.get("original_or_paper_certificate_requirement_sentences", []), list)
+                else []
+            )
+            original_or_paper_certificate_used_as_submission_gate = original_or_paper_certificate_used_as_submission_gate or bool(
+                structured_signals.get("original_or_paper_certificate_used_as_submission_gate", False)
+            )
+            matched_original_gate_sections = structured_signals.get("original_or_paper_certificate_gate_sections", [])
+            if isinstance(matched_original_gate_sections, list):
+                original_or_paper_certificate_gate_locations.extend(_compact_titles(matched_original_gate_sections, limit=2))
+            original_or_paper_certificate_gate_sentences.extend(
+                _compact_sentences(structured_signals.get("original_or_paper_certificate_gate_sentences", []), limit=3)
+                if isinstance(structured_signals.get("original_or_paper_certificate_gate_sentences", []), list)
+                else []
+            )
+            original_or_paper_certificate_post_award_only = original_or_paper_certificate_post_award_only or bool(
+                structured_signals.get("original_or_paper_certificate_post_award_only", False)
+            )
+            original_or_paper_certificate_legal_verification_context = (
+                original_or_paper_certificate_legal_verification_context
+                or bool(structured_signals.get("original_or_paper_certificate_legal_verification_context", False))
             )
         if topic_key == "technical_standard":
             foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
@@ -1756,6 +1851,12 @@ def compare_review_artifacts(
     cancelled_or_non_mandatory_qualification_sentences = dedupe(cancelled_or_non_mandatory_qualification_sentences)
     cancelled_or_non_mandatory_qualification_gate_locations = dedupe(cancelled_or_non_mandatory_qualification_gate_locations)
     cancelled_or_non_mandatory_qualification_gate_sentences = dedupe(cancelled_or_non_mandatory_qualification_gate_sentences)
+    qualification_material_submission_locations = dedupe(qualification_material_submission_locations)
+    qualification_material_submission_sentences = dedupe(qualification_material_submission_sentences)
+    original_or_paper_certificate_requirement_locations = dedupe(original_or_paper_certificate_requirement_locations)
+    original_or_paper_certificate_requirement_sentences = dedupe(original_or_paper_certificate_requirement_sentences)
+    original_or_paper_certificate_gate_locations = dedupe(original_or_paper_certificate_gate_locations)
+    original_or_paper_certificate_gate_sentences = dedupe(original_or_paper_certificate_gate_sentences)
     scoring_requirement_locations = dedupe(scoring_requirement_locations)
     scoring_requirement_sentences = dedupe(scoring_requirement_sentences)
     cancelled_or_non_mandatory_scoring_credential_locations = dedupe(cancelled_or_non_mandatory_scoring_credential_locations)
@@ -1907,6 +2008,25 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("cancelled_or_non_mandatory_qualification_as_gate")
+
+    if (
+        qualification_material_submission_present
+        and original_or_paper_certificate_requirement_signal
+        and original_or_paper_certificate_used_as_submission_gate
+        and not original_or_paper_certificate_post_award_only
+        and not original_or_paper_certificate_legal_verification_context
+    ):
+        cross_risk, cross_topic, cross_source_rule = _build_original_or_paper_certificate_submission_gate_cluster(
+            submission_locations=qualification_material_submission_locations or original_or_paper_certificate_requirement_locations,
+            submission_sentences=qualification_material_submission_sentences or original_or_paper_certificate_requirement_sentences,
+            gate_locations=original_or_paper_certificate_gate_locations or qualification_material_submission_locations,
+            gate_sentences=original_or_paper_certificate_gate_sentences or original_or_paper_certificate_requirement_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("original_or_paper_certificate_submission_gate")
 
     if (
         scoring_requirement_present

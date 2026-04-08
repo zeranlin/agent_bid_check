@@ -281,6 +281,43 @@ def test_scoring_cancelled_or_non_mandatory_credential_signals_are_extracted_cor
     assert legal_negative_signals["cancelled_or_non_mandatory_scoring_credential_linked_to_score"] is False
 
 
+def test_qualification_original_or_paper_certificate_submission_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_qualification_original_or_paper_submission_positive_011"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["qualification_material_submission_present"] is True
+    assert positive_signals["original_or_paper_certificate_requirement_signal"] is True
+    assert positive_signals["original_or_paper_certificate_used_as_submission_gate"] is True
+    assert any(("原件" in item) or ("纸质" in item) for item in positive_signals["original_or_paper_certificate_requirement_sentences"])
+
+    candidate_expression = evaluate_sample(samples["topic_qualification_original_or_paper_submission_candidate_expression_011"])
+    candidate_signals = candidate_expression["target_topic_detail"]["structured_signals"]
+    assert candidate_signals["qualification_material_submission_present"] is True
+    assert candidate_signals["original_or_paper_certificate_requirement_signal"] is True
+    assert candidate_signals["original_or_paper_certificate_used_as_submission_gate"] is True
+    assert any("不得要求提供有关资质证明文件、证照、证件原件" in item for item in candidate_signals["original_or_paper_certificate_requirement_sentences"])
+
+    post_award_negative = evaluate_sample(samples["topic_qualification_original_or_paper_submission_negative_post_award_011"])
+    post_award_negative_signals = post_award_negative["target_topic_detail"]["structured_signals"]
+    assert post_award_negative_signals["qualification_material_submission_present"] is True
+    assert post_award_negative_signals["original_or_paper_certificate_requirement_signal"] is True
+    assert post_award_negative_signals["original_or_paper_certificate_used_as_submission_gate"] is False
+
+    legal_negative = evaluate_sample(samples["topic_qualification_original_or_paper_submission_negative_legal_011"])
+    legal_negative_signals = legal_negative["target_topic_detail"]["structured_signals"]
+    assert legal_negative_signals["qualification_material_submission_present"] is True
+    assert legal_negative_signals["original_or_paper_certificate_requirement_signal"] is True
+    assert legal_negative_signals["original_or_paper_certificate_used_as_submission_gate"] is False
+
+    scan_only_negative = evaluate_sample(samples["topic_qualification_original_or_paper_submission_negative_scan_only_011"])
+    scan_only_negative_signals = scan_only_negative["target_topic_detail"]["structured_signals"]
+    assert scan_only_negative_signals["qualification_material_submission_present"] is True
+    assert scan_only_negative_signals["original_or_paper_certificate_requirement_signal"] is False
+    assert scan_only_negative_signals["original_or_paper_certificate_used_as_submission_gate"] is False
+
+
 def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}

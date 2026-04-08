@@ -29,6 +29,19 @@ QUALIFICATION_CANCELLED_OR_NON_MANDATORY_RE = re.compile(
     r"非强制(?:性)?(?:的)?(?:资质|资格)|行政机关非强制(?:性)?(?:的)?(?:资质|资格)?)"
 )
 QUALIFICATION_PROHIBITION_CONTEXT_RE = re.compile(r"(不得将|不得要求|严禁将)")
+QUALIFICATION_MATERIAL_SUBMISSION_RE = re.compile(
+    r"(资格证明文件|证明材料|资质证明文件|证照|证件|电子证照|扫描件|复印件|纸质版|纸质证照)"
+)
+ORIGINAL_OR_PAPER_CERTIFICATE_RE = re.compile(
+    r"(证照原件|证件原件|资质证明文件原件|有关资质证明文件、证照、证件原件|电子证照的纸质证照|"
+    r"电子证照纸质版|电子证照纸质件|纸质证照|须提供原件|必须提交原件|提交原件|提供原件)"
+)
+ORIGINAL_OR_PAPER_CERTIFICATE_GATE_RE = re.compile(
+    r"(投标文件提交要求|资格审查材料|证明文件要求|未提交.{0,24}(资格审查不通过|投标无效|视为无效|不得分)|"
+    r"资格审查不通过|投标无效|视为无效|必须提交|须提交|应提交)"
+)
+POST_AWARD_OR_BACKUP_CONTEXT_RE = re.compile(r"(中标后|签约前|原件备查|备查|质疑|投诉|核验|核查)")
+LEGAL_VERIFICATION_CONTEXT_RE = re.compile(r"(根据法律法规要求|法律法规明确要求|依法|法定)")
 SCORING_REQUIREMENT_RE = re.compile(r"(评分内容|评分标准|评分项|评审标准|评审因素|加分|得分|分值|档次评价)")
 SCORING_CANCELLED_OR_NON_MANDATORY_CREDENTIAL_RE = re.compile(
     r"(已取消(?:的)?(?:资质|资格|认证)|已明令取消(?:的)?(?:资质|资格|认证)?|国务院已明令取消(?:的)?(?:资质|资格|认证)?|"
@@ -160,6 +173,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "acceptance_testing_cost_shifted_to_bidder": "将验收产生的检测费用计入投标人承担范围",
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件",
     "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素",
+    "original_or_paper_certificate_submission_gate": "要求提供资质证照原件或电子证照纸质件",
 }
 BUNDLED_RULE_SECTION_TITLES = {
     "star_marker": "内置规则库：实质性条款星标规则",
@@ -487,6 +501,74 @@ def _extract_cancelled_or_non_mandatory_qualification_signals(sections: list[dic
         "cancelled_or_non_mandatory_qualification_gate_sections": _dedupe_signal_sections(gate_sections),
         "cancelled_or_non_mandatory_qualification_gate_sentences": _dedupe_preserve(gate_sentences),
         "cancelled_or_non_mandatory_qualification_prohibition_context": cancelled_or_non_mandatory_qualification_prohibition_context,
+    }
+
+
+def _extract_original_or_paper_certificate_submission_signals(sections: list[dict]) -> dict[str, object]:
+    requirement_sections: list[dict] = []
+    requirement_sentences: list[str] = []
+    signal_sections: list[dict] = []
+    signal_sentences: list[str] = []
+    gate_sections: list[dict] = []
+    gate_sentences: list[str] = []
+    qualification_material_submission_present = False
+    original_or_paper_certificate_requirement_signal = False
+    original_or_paper_certificate_used_as_submission_gate = False
+    original_or_paper_certificate_post_award_only = False
+    original_or_paper_certificate_legal_verification_context = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        matched_requirement_sentences: list[str] = []
+        matched_signal_sentences: list[str] = []
+        matched_gate_sentences: list[str] = []
+
+        for sentence in _section_sentences(section):
+            has_requirement = bool(QUALIFICATION_MATERIAL_SUBMISSION_RE.search(sentence))
+            has_signal = bool(ORIGINAL_OR_PAPER_CERTIFICATE_RE.search(sentence))
+            has_gate = bool(ORIGINAL_OR_PAPER_CERTIFICATE_GATE_RE.search(sentence))
+            has_post_award = bool(POST_AWARD_OR_BACKUP_CONTEXT_RE.search(sentence))
+            has_legal = bool(LEGAL_VERIFICATION_CONTEXT_RE.search(sentence))
+
+            if has_requirement:
+                qualification_material_submission_present = True
+                matched_requirement_sentences.append(sentence)
+
+            if has_signal:
+                original_or_paper_certificate_requirement_signal = True
+                matched_signal_sentences.append(sentence)
+                if has_post_award:
+                    original_or_paper_certificate_post_award_only = True
+                if has_legal:
+                    original_or_paper_certificate_legal_verification_context = True
+
+            if has_signal and has_gate and not has_post_award and not has_legal:
+                original_or_paper_certificate_used_as_submission_gate = True
+                matched_gate_sentences.append(sentence)
+
+        if matched_requirement_sentences:
+            requirement_sections.extend(_normalize_signal_sections([section]))
+            requirement_sentences.extend(matched_requirement_sentences)
+        if matched_signal_sentences:
+            signal_sections.extend(_normalize_signal_sections([section]))
+            signal_sentences.extend(matched_signal_sentences)
+        if matched_gate_sentences:
+            gate_sections.extend(_normalize_signal_sections([section]))
+            gate_sentences.extend(matched_gate_sentences)
+
+    return {
+        "qualification_material_submission_present": qualification_material_submission_present,
+        "qualification_material_submission_sections": _dedupe_signal_sections(requirement_sections),
+        "qualification_material_submission_sentences": _dedupe_preserve(requirement_sentences),
+        "original_or_paper_certificate_requirement_signal": original_or_paper_certificate_requirement_signal,
+        "original_or_paper_certificate_requirement_sections": _dedupe_signal_sections(signal_sections),
+        "original_or_paper_certificate_requirement_sentences": _dedupe_preserve(signal_sentences),
+        "original_or_paper_certificate_used_as_submission_gate": original_or_paper_certificate_used_as_submission_gate,
+        "original_or_paper_certificate_gate_sections": _dedupe_signal_sections(gate_sections),
+        "original_or_paper_certificate_gate_sentences": _dedupe_preserve(gate_sentences),
+        "original_or_paper_certificate_post_award_only": original_or_paper_certificate_post_award_only,
+        "original_or_paper_certificate_legal_verification_context": original_or_paper_certificate_legal_verification_context,
     }
 
 
@@ -1604,6 +1686,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
         signals.update(_extract_foreign_component_proof_signals(sections))
     if definition.key == "qualification":
         signals.update(_extract_cancelled_or_non_mandatory_qualification_signals(sections))
+        signals.update(_extract_original_or_paper_certificate_submission_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))

@@ -364,6 +364,26 @@ def test_regression_cancelled_or_non_mandatory_scoring_credential_samples_are_cl
     assert legal_negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_original_or_paper_certificate_submission_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_original_or_paper_certificate_submission_positive_013"])
+    post_award_negative = evaluate_sample(samples["regression_original_or_paper_certificate_submission_negative_post_award_013"])
+    legal_negative = evaluate_sample(samples["regression_original_or_paper_certificate_submission_negative_legal_013"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["original_or_paper_certificate_submission_gate"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险"
+
+    assert post_award_negative["matched_risk_count"] == 0
+    assert post_award_negative["missed_risk_count"] == 0
+    assert post_award_negative["comparison_failure_reason_codes"] == []
+
+    assert legal_negative["matched_risk_count"] == 0
+    assert legal_negative["missed_risk_count"] == 0
+    assert legal_negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])
