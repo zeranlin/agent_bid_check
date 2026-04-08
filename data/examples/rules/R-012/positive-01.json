@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-012",
+  "sample_role": "positive",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_supplier_identity_or_region_positive_014",
+  "note": "以主体身份或地域条件设置投标门槛的正样本。"
+}

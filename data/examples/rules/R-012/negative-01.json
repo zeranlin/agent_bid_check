@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-012",
+  "sample_role": "negative",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_supplier_identity_or_region_negative_post_award_service_014",
+  "note": "仅中标后本地服务响应安排的负样本。"
+}

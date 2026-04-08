@@ -32,6 +32,24 @@ QUALIFICATION_PROHIBITION_CONTEXT_RE = re.compile(r"(不得将|不得要求|严�
 QUALIFICATION_MATERIAL_SUBMISSION_RE = re.compile(
     r"(资格证明文件|证明材料|资质证明文件|证照|证件|电子证照|扫描件|复印件|纸质版|纸质证照)"
 )
+SUPPLIER_GATE_REQUIREMENT_RE = re.compile(
+    r"(资格条件|合格供应商条件|资格审查(?:表)?|投标人资格要求|合格供应商要求|供应商资格要求|"
+    r"投标准入门槛|合格供应商资质条款|资格要求|投标门槛)"
+)
+SUPPLIER_IDENTITY_OR_REGION_LIMIT_RE = re.compile(
+    r"(所有制形式|组织形式|注册地|所在地|分支机构|经营网点|某行政区域内|项目所在行政区域内|"
+    r"本地公司|本地分公司|设立分支机构|常设服务机构|服务网点)"
+)
+SUPPLIER_GATE_USE_RE = re.compile(
+    r"(作为资格条件|作为投标准入门槛|作为合格供应商条件|作为资格审查(?:通过)?条件|"
+    r"作为合格供应商资质条款|资格审查不通过|投标无效|未通过资格审查|"
+    r"不满足上述要求|不作为资格条件|不作为资格要求|不作为投标门槛|资格要求|投标门槛)"
+)
+SUPPLIER_POST_AWARD_OR_SERVICE_ONLY_RE = re.compile(
+    r"(中标后|履约阶段|服务响应|售后服务|驻场服务人员|安排驻场服务人员|安排服务人员)"
+)
+SUPPLIER_LEGAL_CONTEXT_RE = re.compile(r"(根据法律法规要求|依法设定|依法|法定|法律法规明确要求)")
+SUPPLIER_CONVENIENCE_ONLY_RE = re.compile(r"(为便于|便于沟通协调|优先考虑|建议供应商)")
 ORIGINAL_OR_PAPER_CERTIFICATE_RE = re.compile(
     r"(证照原件|证件原件|资质证明文件原件|有关资质证明文件、证照、证件原件|电子证照的纸质证照|"
     r"电子证照纸质版|电子证照纸质件|纸质证照|须提供原件|必须提交原件|提交原件|提供原件)"
@@ -174,6 +192,7 @@ TOPIC_FAILURE_REASON_LABELS = {
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件",
     "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素",
     "original_or_paper_certificate_submission_gate": "要求提供资质证照原件或电子证照纸质件",
+    "supplier_identity_or_region_limit_as_gate": "以供应商主体身份或地域条件设置准入门槛",
 }
 BUNDLED_RULE_SECTION_TITLES = {
     "star_marker": "内置规则库：实质性条款星标规则",
@@ -569,6 +588,75 @@ def _extract_original_or_paper_certificate_submission_signals(sections: list[dic
         "original_or_paper_certificate_gate_sentences": _dedupe_preserve(gate_sentences),
         "original_or_paper_certificate_post_award_only": original_or_paper_certificate_post_award_only,
         "original_or_paper_certificate_legal_verification_context": original_or_paper_certificate_legal_verification_context,
+    }
+
+
+def _extract_supplier_identity_or_region_gate_signals(sections: list[dict]) -> dict[str, object]:
+    requirement_sections: list[dict] = []
+    requirement_sentences: list[str] = []
+    signal_sections: list[dict] = []
+    signal_sentences: list[str] = []
+    gate_sections: list[dict] = []
+    gate_sentences: list[str] = []
+    supplier_gate_requirement_present = False
+    supplier_identity_or_region_limit_signal = False
+    supplier_identity_or_region_limit_used_as_gate = False
+    supplier_identity_or_region_post_award_service_only = False
+    supplier_identity_or_region_legal_context = False
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        matched_requirement_sentences: list[str] = []
+        matched_signal_sentences: list[str] = []
+        matched_gate_sentences: list[str] = []
+
+        for sentence in _section_sentences(section):
+            has_requirement = bool(SUPPLIER_GATE_REQUIREMENT_RE.search(sentence))
+            has_signal = bool(SUPPLIER_IDENTITY_OR_REGION_LIMIT_RE.search(sentence))
+            has_gate = bool(SUPPLIER_GATE_USE_RE.search(sentence)) or has_requirement
+            has_post_award = bool(SUPPLIER_POST_AWARD_OR_SERVICE_ONLY_RE.search(sentence))
+            has_legal = bool(SUPPLIER_LEGAL_CONTEXT_RE.search(sentence))
+            has_convenience = bool(SUPPLIER_CONVENIENCE_ONLY_RE.search(sentence))
+
+            if has_requirement:
+                supplier_gate_requirement_present = True
+                matched_requirement_sentences.append(sentence)
+
+            if has_signal:
+                supplier_identity_or_region_limit_signal = True
+                matched_signal_sentences.append(sentence)
+                if has_post_award:
+                    supplier_identity_or_region_post_award_service_only = True
+                if has_legal or has_convenience:
+                    supplier_identity_or_region_legal_context = True
+
+            if has_signal and has_gate and not has_post_award and not has_legal and not has_convenience:
+                supplier_identity_or_region_limit_used_as_gate = True
+                matched_gate_sentences.append(sentence)
+
+        if matched_requirement_sentences:
+            requirement_sections.extend(_normalize_signal_sections([section]))
+            requirement_sentences.extend(matched_requirement_sentences)
+        if matched_signal_sentences:
+            signal_sections.extend(_normalize_signal_sections([section]))
+            signal_sentences.extend(matched_signal_sentences)
+        if matched_gate_sentences:
+            gate_sections.extend(_normalize_signal_sections([section]))
+            gate_sentences.extend(matched_gate_sentences)
+
+    return {
+        "supplier_gate_requirement_present": supplier_gate_requirement_present,
+        "supplier_gate_requirement_sections": _dedupe_signal_sections(requirement_sections),
+        "supplier_gate_requirement_sentences": _dedupe_preserve(requirement_sentences),
+        "supplier_identity_or_region_limit_signal": supplier_identity_or_region_limit_signal,
+        "supplier_identity_or_region_limit_sections": _dedupe_signal_sections(signal_sections),
+        "supplier_identity_or_region_limit_sentences": _dedupe_preserve(signal_sentences),
+        "supplier_identity_or_region_limit_used_as_gate": supplier_identity_or_region_limit_used_as_gate,
+        "supplier_identity_or_region_gate_sections": _dedupe_signal_sections(gate_sections),
+        "supplier_identity_or_region_gate_sentences": _dedupe_preserve(gate_sentences),
+        "supplier_identity_or_region_post_award_service_only": supplier_identity_or_region_post_award_service_only,
+        "supplier_identity_or_region_legal_context": supplier_identity_or_region_legal_context,
     }
 
 
@@ -1687,6 +1775,7 @@ def _build_structured_signals(definition: TopicDefinition, sections: list[dict])
     if definition.key == "qualification":
         signals.update(_extract_cancelled_or_non_mandatory_qualification_signals(sections))
         signals.update(_extract_original_or_paper_certificate_submission_signals(sections))
+        signals.update(_extract_supplier_identity_or_region_gate_signals(sections))
     if definition.key == "scoring":
         signals.update(_extract_star_rule_signals(sections))
         signals.update(_extract_acceptance_plan_scoring_signals(sections))

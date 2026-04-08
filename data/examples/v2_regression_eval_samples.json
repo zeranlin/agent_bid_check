@@ -3102,5 +3102,223 @@
         }
       }
     }
+  },
+  {
+    "sample_id": "regression_supplier_identity_or_region_positive_014",
+    "document_name": "主体身份或地域条件作为资格门槛正样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1401",
+            "title": "第二章 投标人资格要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 投标人资格要求"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": [
+        {
+          "id": "risk-qualification-1401",
+          "title": "以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险",
+          "review_type": "资格条件合规性 / 主体身份与地域限制",
+          "severity": "高风险",
+          "source_location": "第二章 投标人资格要求",
+          "manual_review": false
+        }
+      ]
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 投标人资格要求",
+            "start_line": 10,
+            "end_line": 18,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 12
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 投标人资格要求",
+                "start_line": 10,
+                "end_line": 18,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [
+          {
+            "title": "以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险",
+            "review_type": "资格条件合规性 / 主体身份与地域限制",
+            "severity": "高风险",
+            "source_locations": [
+              "资格条款：第二章 投标人资格要求；准入门槛：第二章 投标人资格要求"
+            ],
+            "source_excerpts": [
+              "资格要求：投标人资格要求：供应商注册地须在本市，并在项目所在行政区域内设立分支机构或经营网点。\n\n门槛设置：不满足上述要求的，资格审查不通过。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "need_manual_review": false
+          }
+        ],
+        "metadata": {
+          "failure_reason_codes": [
+            "supplier_identity_or_region_limit_as_gate"
+          ],
+          "comparison_failure_reason_codes": [
+            "supplier_identity_or_region_limit_as_gate"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_supplier_identity_or_region_negative_post_award_service_014",
+    "document_name": "中标后本地服务响应安排负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1402",
+            "title": "第三章 商务要求",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第三章 商务要求"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第三章 商务要求",
+            "start_line": 22,
+            "end_line": 28,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 10
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第三章 商务要求",
+                "start_line": 22,
+                "end_line": 28,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
+  },
+  {
+    "sample_id": "regression_supplier_identity_or_region_negative_legal_014",
+    "document_name": "法定特殊地域设置负样本",
+    "gold": {
+      "structure": {
+        "required_sections": [
+          {
+            "id": "sec-qualification-1403",
+            "title": "第二章 资格条件",
+            "module": "qualification"
+          }
+        ],
+        "topic_coverages": [
+          {
+            "topic": "qualification",
+            "required_titles": [
+              "第二章 资格条件"
+            ],
+            "required_modules": [
+              "qualification"
+            ]
+          }
+        ]
+      },
+      "risks": []
+    },
+    "system": {
+      "document_map": {
+        "sections": [
+          {
+            "title": "第二章 资格条件",
+            "start_line": 8,
+            "end_line": 15,
+            "module": "qualification",
+            "module_scores": {
+              "qualification": 10
+            }
+          }
+        ]
+      },
+      "evidence_map": {
+        "topic_evidence_bundles": {
+          "qualification": {
+            "sections": [
+              {
+                "title": "第二章 资格条件",
+                "start_line": 8,
+                "end_line": 15,
+                "module": "qualification"
+              }
+            ]
+          }
+        }
+      },
+      "comparison": {
+        "clusters": [],
+        "metadata": {
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": []
+        }
+      }
+    }
   }
 ]

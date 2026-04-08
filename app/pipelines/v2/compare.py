@@ -25,6 +25,7 @@ STANDARD_RULE_ORDER = {
     "cancelled_or_non_mandatory_qualification_as_gate": 7,
     "cancelled_or_non_mandatory_credential_in_scoring": 8,
     "original_or_paper_certificate_submission_gate": 9,
+    "supplier_identity_or_region_limit_as_gate": 10,
 }
 STANDARD_RULE_TITLES = {
     "policy_technical_inconsistency": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
@@ -37,6 +38,7 @@ STANDARD_RULE_TITLES = {
     "cancelled_or_non_mandatory_qualification_as_gate": "将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险",
     "cancelled_or_non_mandatory_credential_in_scoring": "将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险",
     "original_or_paper_certificate_submission_gate": "要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险",
+    "supplier_identity_or_region_limit_as_gate": "以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险",
 }
 STANDARD_CLUSTER_SUPPRESSION_RULES = {
     "acceptance_plan_in_scoring_forbidden": (
@@ -1328,6 +1330,48 @@ def _build_original_or_paper_certificate_submission_gate_cluster(
     return risk, "cross_topic", "compare_rule"
 
 
+def _build_supplier_identity_or_region_gate_cluster(
+    *,
+    requirement_locations: list[str],
+    requirement_sentences: list[str],
+    gate_locations: list[str],
+    gate_sentences: list[str],
+) -> tuple[RiskPoint, str, str]:
+    source_location_parts = []
+    if requirement_locations:
+        source_location_parts.append("资格条款：" + "；".join(requirement_locations[:2]))
+    if gate_locations:
+        source_location_parts.append("门槛设置：" + "；".join(gate_locations[:2]))
+
+    source_excerpt_parts = []
+    if requirement_sentences:
+        source_excerpt_parts.append("资格要求：" + "；".join(requirement_sentences[:2]))
+    if gate_sentences:
+        source_excerpt_parts.append("限制条件：" + "；".join(gate_sentences[:2]))
+
+    risk = RiskPoint(
+        title="以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险",
+        severity="高风险",
+        review_type="资格条件合规性 / 主体身份与地域限制",
+        source_location="；".join(source_location_parts) if source_location_parts else "未发现",
+        source_excerpt="\n\n".join(source_excerpt_parts) if source_excerpt_parts else "未发现",
+        risk_judgment=[
+            "条款出现在资格条件、合格供应商条件或资格审查相关位置。",
+            "当前文件将供应商所有制形式、组织形式、注册地、所在地、分支机构或经营网点等要求作为准入门槛。",
+            "该类主体身份或地域限制通常与公平竞争要求冲突，容易形成对外地或非特定类型供应商的不当排斥。",
+            "如据此进行资格审查或投标有效性判断，可能限制竞争并引发资格审查争议。",
+        ],
+        legal_basis=["需人工复核"],
+        rectification=[
+            "删除与主体身份、地域范围直接挂钩的准入门槛设置。",
+            "如确有履约便利性要求，应改为中标后服务响应安排，不得前置为投标资格条件。",
+            "仅保留具有明确法定依据且与采购标的直接相关的资格要求，避免以注册地、网点或分支机构变相限制竞争。",
+        ],
+    )
+    risk.ensure_defaults()
+    return risk, "cross_topic", "compare_rule"
+
+
 def _build_acceptance_testing_cost_shift_cluster(
     *,
     rule_locations: list[str],
@@ -1456,6 +1500,17 @@ def compare_review_artifacts(
     original_or_paper_certificate_gate_sentences: list[str] = []
     original_or_paper_certificate_post_award_only = False
     original_or_paper_certificate_legal_verification_context = False
+    supplier_gate_requirement_present = False
+    supplier_gate_requirement_locations: list[str] = []
+    supplier_gate_requirement_sentences: list[str] = []
+    supplier_identity_or_region_limit_signal = False
+    supplier_identity_or_region_limit_locations: list[str] = []
+    supplier_identity_or_region_limit_sentences: list[str] = []
+    supplier_identity_or_region_limit_used_as_gate = False
+    supplier_identity_or_region_gate_locations: list[str] = []
+    supplier_identity_or_region_gate_sentences: list[str] = []
+    supplier_identity_or_region_post_award_service_only = False
+    supplier_identity_or_region_legal_context = False
     scoring_requirement_present = False
     scoring_requirement_locations: list[str] = []
     scoring_requirement_sentences: list[str] = []
@@ -1584,6 +1639,47 @@ def compare_review_artifacts(
             original_or_paper_certificate_legal_verification_context = (
                 original_or_paper_certificate_legal_verification_context
                 or bool(structured_signals.get("original_or_paper_certificate_legal_verification_context", False))
+            )
+            supplier_gate_requirement_present = supplier_gate_requirement_present or bool(
+                structured_signals.get("supplier_gate_requirement_present", False)
+            )
+            matched_supplier_requirement_sections = structured_signals.get("supplier_gate_requirement_sections", [])
+            if isinstance(matched_supplier_requirement_sections, list):
+                supplier_gate_requirement_locations.extend(_compact_titles(matched_supplier_requirement_sections, limit=2))
+            supplier_gate_requirement_sentences.extend(
+                _compact_sentences(structured_signals.get("supplier_gate_requirement_sentences", []), limit=3)
+                if isinstance(structured_signals.get("supplier_gate_requirement_sentences", []), list)
+                else []
+            )
+            supplier_identity_or_region_limit_signal = supplier_identity_or_region_limit_signal or bool(
+                structured_signals.get("supplier_identity_or_region_limit_signal", False)
+            )
+            matched_supplier_limit_sections = structured_signals.get("supplier_identity_or_region_limit_sections", [])
+            if isinstance(matched_supplier_limit_sections, list):
+                supplier_identity_or_region_limit_locations.extend(_compact_titles(matched_supplier_limit_sections, limit=2))
+            supplier_identity_or_region_limit_sentences.extend(
+                _compact_sentences(structured_signals.get("supplier_identity_or_region_limit_sentences", []), limit=3)
+                if isinstance(structured_signals.get("supplier_identity_or_region_limit_sentences", []), list)
+                else []
+            )
+            supplier_identity_or_region_limit_used_as_gate = supplier_identity_or_region_limit_used_as_gate or bool(
+                structured_signals.get("supplier_identity_or_region_limit_used_as_gate", False)
+            )
+            matched_supplier_gate_sections = structured_signals.get("supplier_identity_or_region_gate_sections", [])
+            if isinstance(matched_supplier_gate_sections, list):
+                supplier_identity_or_region_gate_locations.extend(_compact_titles(matched_supplier_gate_sections, limit=2))
+            supplier_identity_or_region_gate_sentences.extend(
+                _compact_sentences(structured_signals.get("supplier_identity_or_region_gate_sentences", []), limit=3)
+                if isinstance(structured_signals.get("supplier_identity_or_region_gate_sentences", []), list)
+                else []
+            )
+            supplier_identity_or_region_post_award_service_only = (
+                supplier_identity_or_region_post_award_service_only
+                or bool(structured_signals.get("supplier_identity_or_region_post_award_service_only", False))
+            )
+            supplier_identity_or_region_legal_context = (
+                supplier_identity_or_region_legal_context
+                or bool(structured_signals.get("supplier_identity_or_region_legal_context", False))
             )
         if topic_key == "technical_standard":
             foreign_refs.extend([str(item).strip() for item in structured_signals.get("foreign_standard_refs", []) if str(item).strip()])
@@ -1857,6 +1953,12 @@ def compare_review_artifacts(
     original_or_paper_certificate_requirement_sentences = dedupe(original_or_paper_certificate_requirement_sentences)
     original_or_paper_certificate_gate_locations = dedupe(original_or_paper_certificate_gate_locations)
     original_or_paper_certificate_gate_sentences = dedupe(original_or_paper_certificate_gate_sentences)
+    supplier_gate_requirement_locations = dedupe(supplier_gate_requirement_locations)
+    supplier_gate_requirement_sentences = dedupe(supplier_gate_requirement_sentences)
+    supplier_identity_or_region_limit_locations = dedupe(supplier_identity_or_region_limit_locations)
+    supplier_identity_or_region_limit_sentences = dedupe(supplier_identity_or_region_limit_sentences)
+    supplier_identity_or_region_gate_locations = dedupe(supplier_identity_or_region_gate_locations)
+    supplier_identity_or_region_gate_sentences = dedupe(supplier_identity_or_region_gate_sentences)
     scoring_requirement_locations = dedupe(scoring_requirement_locations)
     scoring_requirement_sentences = dedupe(scoring_requirement_sentences)
     cancelled_or_non_mandatory_scoring_credential_locations = dedupe(cancelled_or_non_mandatory_scoring_credential_locations)
@@ -2027,6 +2129,25 @@ def compare_review_artifacts(
         grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
         topic_signature_keys.add(key)
         triggered_rule_codes.append("original_or_paper_certificate_submission_gate")
+
+    if (
+        supplier_gate_requirement_present
+        and supplier_identity_or_region_limit_signal
+        and supplier_identity_or_region_limit_used_as_gate
+        and not supplier_identity_or_region_post_award_service_only
+        and not supplier_identity_or_region_legal_context
+    ):
+        cross_risk, cross_topic, cross_source_rule = _build_supplier_identity_or_region_gate_cluster(
+            requirement_locations=supplier_gate_requirement_locations or supplier_identity_or_region_limit_locations,
+            requirement_sentences=supplier_gate_requirement_sentences or supplier_identity_or_region_limit_sentences,
+            gate_locations=supplier_identity_or_region_gate_locations or supplier_gate_requirement_locations,
+            gate_sentences=supplier_identity_or_region_gate_sentences or supplier_identity_or_region_limit_sentences,
+        )
+        key = _signature_key(cross_risk)
+        signatures.append(_risk_to_signature(cross_risk, cross_topic, cross_source_rule))
+        grouped.setdefault(key, []).append((cross_risk, cross_topic, cross_source_rule))
+        topic_signature_keys.add(key)
+        triggered_rule_codes.append("supplier_identity_or_region_limit_as_gate")
 
     if (
         scoring_requirement_present

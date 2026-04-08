@@ -2632,5 +2632,130 @@
         "risk_points": []
       }
     }
+  },
+  {
+    "sample_id": "topic_qualification_supplier_identity_or_region_positive_012",
+    "name": "topic_qualification_supplier_identity_or_region_positive_012",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "资格条件要求本地注册地并在项目所在行政区域设立分支机构或经营网点，作为准入门槛。",
+    "text": "第二章 投标人资格要求\n投标人资格要求：供应商注册地须在本市，并在项目所在行政区域内设立分支机构或经营网点。不满足上述要求的，资格审查不通过。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖主体身份与地域要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_supplier_identity_or_region_candidate_expression_012",
+    "name": "topic_qualification_supplier_identity_or_region_candidate_expression_012",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "真实候选表达应被识别为主体身份/地域限制语义，并在资格门槛场景命中。",
+    "text": "第二章 合格供应商条件\n不得限定供应商所有制形式，不得限定供应商组织形式，不得限定供应商注册地或所在地或要求供应商在某行政区域内设立分支机构，不得设定供应商经营网点作为合格供应商资质条款。若不满足上述条件，资格审查不通过。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖主体身份与地域要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_supplier_identity_or_region_negative_post_award_service_012",
+    "name": "topic_qualification_supplier_identity_or_region_negative_post_award_service_012",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "仅要求中标后本地服务响应安排，不应视为投标门槛。",
+    "text": "第三章 商务要求\n为保证服务响应效率，中标后供应商应在项目所在地设立服务网点或安排驻场服务人员。投标阶段不作为资格条件。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖主体身份与地域要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_supplier_identity_or_region_negative_legal_012",
+    "name": "topic_qualification_supplier_identity_or_region_negative_legal_012",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "法律法规明确要求的特殊地域设置场景，不应直接命中正式风险。",
+    "text": "第二章 资格条件\n根据法律法规要求，供应商所在地须满足特定行政许可范围。投标人资格要求以依法设定的地域范围为准。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖主体身份与地域要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
+  },
+  {
+    "sample_id": "topic_qualification_supplier_identity_or_region_negative_convenience_only_012",
+    "name": "topic_qualification_supplier_identity_or_region_negative_convenience_only_012",
+    "topic_mode": "enhanced",
+    "topic_keys": [
+      "qualification"
+    ],
+    "case_type": "negative",
+    "topic": "qualification",
+    "description": "一般履约便利性说明，不构成资格条件。",
+    "text": "第三章 项目需求\n为便于沟通协调，建议供应商优先考虑在项目所在地安排服务人员或合作资源，但不作为资格要求或投标门槛。",
+    "expected_high_medium_titles": [],
+    "expected_technical_titles": [],
+    "mock_topic_outputs": {
+      "qualification": {
+        "summary": "资格条件专题完成。",
+        "need_manual_review": false,
+        "coverage_note": "已覆盖主体身份与地域要求。",
+        "missing_evidence": [
+          "未发现"
+        ],
+        "risk_points": []
+      }
+    }
   }
 ]

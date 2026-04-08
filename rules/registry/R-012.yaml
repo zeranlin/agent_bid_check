@@ -1,0 +1,107 @@
+rule_id: R-012
+rule_name: 供应商主体身份与地域限制识别
+rule_version: 1
+status: review
+
+owner:
+  reviewer: M
+  implementer: T
+
+source:
+  origin_type: candidate_formalization
+  origin_desc: 基于 Task-G10 首批真实候选正式纳管结果，从 RC-018/RC-019/RC-020/RC-021 合并形成的主体身份与地域限制正式规则
+  created_date: 2026-04-08
+  last_updated_date: 2026-04-08
+
+classification:
+  category: qualification_compliance
+  rule_type: risk_detection
+  target_level: formal
+  severity: high
+
+summary:
+  business_goal: 识别通过所有制形式、组织形式、注册地、所在地、分支机构或经营网点设置不当准入门槛的条款
+  reviewer_note: 需区分投标阶段准入门槛与中标后本地服务响应安排、法定特殊地域设置或一般履约便利性说明
+
+trigger_conditions:
+  all_of:
+    - 出现资格条件、合格供应商条件、资格审查条款或投标人资格要求等准入位置
+    - 命中所有制形式、组织形式、注册地、所在地、分支机构、经营网点、本地公司、本地分公司或某行政区域内等语义
+    - 相关语义被作为投标准入门槛、合格供应商条件或资格审查通过依据
+  any_of:
+    - comparison.failure_reason_codes 命中 supplier_identity_or_region_limit_as_gate
+
+exclude_conditions:
+  any_of:
+    - 条款仅要求中标后本地服务响应安排，未作为投标准入条件
+    - 条款属于法律法规明确要求的特殊地域设置场景
+    - 条款仅为一般履约便利性说明，未形成资格门槛
+
+downgrade_conditions:
+  any_of:
+    - 条款未明确属于投标阶段资格门槛还是中标后服务要求
+    - 特殊地域设置是否具有法定依据仍需进一步核实
+
+output:
+  formal_title: 以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险
+  pending_title: 主体身份或地域要求可能被设置为准入门槛，建议人工复核
+  excluded_title: 相关表述属于服务响应安排或合法特殊场景，不构成正式风险
+  formal_description: 采购文件在资格条件、合格供应商条件或资格审查条款中，通过所有制形式、组织形式、注册地、所在地、分支机构或经营网点等条件限制供应商准入，容易形成不当竞争限制。
+  remediation_advice: 删除所有制、组织形式、注册地、所在地、分支机构、经营网点等不当准入限制；仅保留与履约直接相关且有明确法定依据的要求；如确需本地服务保障，应改为中标后响应安排，不得前置为投标门槛。
+
+evidence_hints:
+  keywords:
+    - 资格条件
+    - 合格供应商条件
+    - 投标人资格要求
+    - 注册地
+    - 所在地
+    - 分支机构
+    - 经营网点
+    - 所有制形式
+    - 组织形式
+  sections:
+    - 投标人资格要求
+    - 合格供应商条件
+    - 资格审查表
+
+samples:
+  positive:
+    - data/examples/rules/R-012/positive-01.json
+  negative:
+    - data/examples/rules/R-012/negative-01.json
+  replay:
+    - data/examples/rules/R-012/replay-01.json
+
+tests:
+  unit:
+    - tests/test_v2_topics_eval.py
+    - tests/test_v2_compare.py
+    - tests/test_v2_regression_eval.py
+    - tests/test_rule_registry_r012.py
+  replay:
+    - tests/test_v2_regression_eval.py
+  report:
+    - tests/test_candidate_rule_governance.py
+
+task_refs:
+  remediation_tasks:
+    - docs/tasks/R-012.md
+  followup_tasks:
+    - docs/tasks/Task-G10-first-priority-formalization.md
+  acceptance_records:
+    - docs/trackers/v2-remediation-tracker.md
+
+activation:
+  approved_by: null
+  approved_date: null
+  effective_scope:
+    - mature
+    - web
+    - report
+
+history:
+  - version: 1
+    date: 2026-04-08
+    change: 新增 R-012，承接供应商主体身份与地域限制准入门槛风险识别
+    author: T

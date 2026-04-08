@@ -384,6 +384,26 @@ def test_regression_original_or_paper_certificate_submission_samples_are_classif
     assert legal_negative["comparison_failure_reason_codes"] == []
 
 
+def test_regression_supplier_identity_or_region_gate_samples_are_classified_correctly() -> None:
+    samples = {sample["sample_id"]: sample for sample in load_samples(Path("data/examples/v2_regression_eval_samples.json"))}
+    positive = evaluate_sample(samples["regression_supplier_identity_or_region_positive_014"])
+    post_award_service_negative = evaluate_sample(samples["regression_supplier_identity_or_region_negative_post_award_service_014"])
+    legal_negative = evaluate_sample(samples["regression_supplier_identity_or_region_negative_legal_014"])
+
+    assert positive["matched_risk_count"] == 1
+    assert positive["comparison_failure_reason_codes"] == ["supplier_identity_or_region_limit_as_gate"]
+    matched = positive["risks"]["matched_risks"][0]
+    assert matched["gold_title"] == "以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险"
+
+    assert post_award_service_negative["matched_risk_count"] == 0
+    assert post_award_service_negative["missed_risk_count"] == 0
+    assert post_award_service_negative["comparison_failure_reason_codes"] == []
+
+    assert legal_negative["matched_risk_count"] == 0
+    assert legal_negative["missed_risk_count"] == 0
+    assert legal_negative["comparison_failure_reason_codes"] == []
+
+
 def test_print_report_defaults_to_markdown(capsys) -> None:
     result = evaluate_sample(load_samples(Path("data/examples/v2_regression_eval_samples.json"))[1])
     outputs = collect_outputs([result])

@@ -112,6 +112,12 @@ FAILURE_CODEBOOK = {
         "category": "rule_conflict",
         "suggestion": "补资格材料提交边界规则，区分投标阶段门槛与中标后/法定核验场景。",
     },
+    "supplier_identity_or_region_limit_as_gate": {
+        "label": "供应商主体身份或地域条件被违规设置为准入门槛",
+        "layer": "compare",
+        "category": "rule_conflict",
+        "suggestion": "补主体身份/地域限制与资格门槛的交叉校验，区分投标准入、中标后服务响应和法定特殊场景。",
+    },
     "policy_technical_inconsistency": {
         "label": "采购政策与技术标准引用口径不一致",
         "layer": "compare",

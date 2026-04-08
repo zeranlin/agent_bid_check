@@ -1,0 +1,7 @@
+{
+  "rule_id": "R-012",
+  "sample_role": "replay",
+  "source_file": "data/examples/v2_regression_eval_samples.json",
+  "sample_id": "regression_supplier_identity_or_region_positive_014",
+  "note": "R-012 首轮端到端回放样本。"
+}

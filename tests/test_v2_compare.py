@@ -985,6 +985,47 @@ def test_compare_review_artifacts_adds_original_or_paper_certificate_submission_
     assert comparison.metadata["failure_reason_codes"] == ["original_or_paper_certificate_submission_gate"]
 
 
+def test_compare_review_artifacts_adds_supplier_identity_or_region_gate_risk() -> None:
+    baseline = V2StageArtifact(name="baseline", content="# 招标文件合规审查结果\n\n审查对象：`sample.docx`\n")
+    topics = [
+        TopicReviewArtifact(
+            topic="qualification",
+            summary="资格条件专题完成。",
+            risk_points=[],
+            need_manual_review=False,
+            coverage_note="已覆盖主体身份与地域限制要求。",
+            metadata={
+                "selected_sections": [{"title": "第二章 投标人资格要求"}],
+                "missing_evidence": [],
+                "structured_signals": {
+                    "supplier_gate_requirement_present": True,
+                    "supplier_gate_requirement_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "supplier_gate_requirement_sentences": ["投标人资格要求：供应商注册地须在本市，并在项目所在行政区域内设立分支机构或经营网点。"],
+                    "supplier_identity_or_region_limit_signal": True,
+                    "supplier_identity_or_region_limit_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "supplier_identity_or_region_limit_sentences": ["供应商注册地须在本市，并在项目所在行政区域内设立分支机构或经营网点。"],
+                    "supplier_identity_or_region_limit_used_as_gate": True,
+                    "supplier_identity_or_region_gate_sections": [{"title": "第二章 投标人资格要求", "section_id": "10-18"}],
+                    "supplier_identity_or_region_gate_sentences": ["不满足上述要求的，资格审查不通过。"],
+                    "supplier_identity_or_region_post_award_service_only": False,
+                    "supplier_identity_or_region_legal_context": False,
+                },
+            },
+        ),
+    ]
+
+    comparison = compare_review_artifacts("sample.docx", baseline, topics)
+    cluster = next(
+        item
+        for item in comparison.clusters
+        if item.title == "以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险"
+    )
+    assert cluster.severity == "高风险"
+    assert cluster.review_type == "资格条件合规性 / 主体身份与地域限制"
+    assert "注册地" in cluster.source_excerpts[0]
+    assert comparison.metadata["failure_reason_codes"] == ["supplier_identity_or_region_limit_as_gate"]
+
+
 def test_compare_review_artifacts_prioritizes_standard_titles_over_generic_same_class_titles() -> None:
     baseline = V2StageArtifact(
         name="baseline",

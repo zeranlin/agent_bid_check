@@ -318,6 +318,43 @@ def test_qualification_original_or_paper_certificate_submission_signals_are_extr
     assert scan_only_negative_signals["original_or_paper_certificate_used_as_submission_gate"] is False
 
 
+def test_qualification_supplier_identity_or_region_gate_signals_are_extracted_correctly() -> None:
+    sample_path = Path("data/examples/v2_topic_eval_samples.json")
+    samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
+
+    positive = evaluate_sample(samples["topic_qualification_supplier_identity_or_region_positive_012"])
+    positive_signals = positive["target_topic_detail"]["structured_signals"]
+    assert positive_signals["supplier_gate_requirement_present"] is True
+    assert positive_signals["supplier_identity_or_region_limit_signal"] is True
+    assert positive_signals["supplier_identity_or_region_limit_used_as_gate"] is True
+    assert any(("注册地" in item) or ("分支机构" in item) or ("经营网点" in item) for item in positive_signals["supplier_identity_or_region_limit_sentences"])
+
+    candidate_expression = evaluate_sample(samples["topic_qualification_supplier_identity_or_region_candidate_expression_012"])
+    candidate_signals = candidate_expression["target_topic_detail"]["structured_signals"]
+    assert candidate_signals["supplier_gate_requirement_present"] is True
+    assert candidate_signals["supplier_identity_or_region_limit_signal"] is True
+    assert candidate_signals["supplier_identity_or_region_limit_used_as_gate"] is True
+    assert any("不得限定供应商注册地或所在地或要求供应商在某行政区域内设立分支机构" in item for item in candidate_signals["supplier_identity_or_region_limit_sentences"])
+
+    post_award_service_negative = evaluate_sample(samples["topic_qualification_supplier_identity_or_region_negative_post_award_service_012"])
+    post_award_service_negative_signals = post_award_service_negative["target_topic_detail"]["structured_signals"]
+    assert post_award_service_negative_signals["supplier_gate_requirement_present"] is True
+    assert post_award_service_negative_signals["supplier_identity_or_region_limit_signal"] is True
+    assert post_award_service_negative_signals["supplier_identity_or_region_limit_used_as_gate"] is False
+
+    legal_negative = evaluate_sample(samples["topic_qualification_supplier_identity_or_region_negative_legal_012"])
+    legal_negative_signals = legal_negative["target_topic_detail"]["structured_signals"]
+    assert legal_negative_signals["supplier_gate_requirement_present"] is True
+    assert legal_negative_signals["supplier_identity_or_region_limit_signal"] is True
+    assert legal_negative_signals["supplier_identity_or_region_limit_used_as_gate"] is False
+
+    convenience_negative = evaluate_sample(samples["topic_qualification_supplier_identity_or_region_negative_convenience_only_012"])
+    convenience_negative_signals = convenience_negative["target_topic_detail"]["structured_signals"]
+    assert convenience_negative_signals["supplier_gate_requirement_present"] is True
+    assert convenience_negative_signals["supplier_identity_or_region_limit_signal"] is True
+    assert convenience_negative_signals["supplier_identity_or_region_limit_used_as_gate"] is False
+
+
 def test_scoring_gifts_rule_and_scoring_signals_are_extracted_correctly() -> None:
     sample_path = Path("data/examples/v2_topic_eval_samples.json")
     samples = {sample["sample_id"]: sample for sample in load_samples(sample_path)}
