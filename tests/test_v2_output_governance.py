@@ -5,7 +5,7 @@ import runpy
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import build_v2_final_output
 from app.web.v2_app import build_review_view_from_final_output
-from app.pipelines.v2.output_governance import govern_comparison_artifact
+from app.pipelines.v2.output_governance import govern_comparison_artifact, validate_governed_result
 from app.pipelines.v2.output_governance.identity import build_risk_family, build_risk_identity
 from app.pipelines.v2.output_governance.pipeline import _coerce_pending_or_excluded
 from app.pipelines.v2.output_governance.schemas import GovernanceClusterEnvelope
@@ -228,6 +228,178 @@ def test_output_governance_real_file_replay_matches_og2_target_matrix() -> None:
     assert "社保缴纳证明要求存在例外情形，需关注执行一致性" in excluded_titles
 
 
+def test_output_governance_can_promote_pending_candidate_to_formal() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                    "severity": "中高风险",
+                    "review_type": "评分因素合规性 / 评审规则设置合法性",
+                    "topic": "评分办法",
+                    "source_location": "评分条款",
+                    "source_excerpt": "验收方案优的得满分。",
+                    "reason": "compare 初步判成待补证。",
+                }
+            ]
+        },
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert [item.decision.canonical_title for item in governed.formal_risks] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
+    assert governed.pending_review_items == []
+
+
+def test_output_governance_can_promote_excluded_candidate_to_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[],
+        metadata={
+            "excluded_risks": [
+                {
+                    "title": "节能环保产品政策条款缺失",
+                    "severity": "中风险",
+                    "review_type": "政策条款审查",
+                    "source_location": "政策章节",
+                    "source_excerpt": "当前仅见政策章节召回不足。",
+                    "reason": "compare 初步排除了该项。",
+                }
+            ]
+        },
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert [item.decision.canonical_title for item in governed.pending_review_items] == ["节能环保产品政策条款缺失"]
+    assert governed.excluded_risks == []
+
+
+def test_output_governance_can_demote_formal_candidate_to_excluded() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="formal-1",
+                title="社保缴纳证明要求存在例外情形，需关注执行一致性",
+                severity="中风险",
+                review_type="资格条件审查",
+                source_locations=["资格条款"],
+                source_excerpts=["退休返聘人员可免提供社保，若供应商成立不足三个月也可说明替代。"],
+                topics=["qualification"],
+            )
+        ],
+        metadata={},
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert [item.decision.canonical_title for item in governed.excluded_risks] == ["社保缴纳证明要求存在例外情形，需关注执行一致性"]
+    assert governed.formal_risks == []
+
+
+def test_output_governance_resolves_same_family_conflict_between_formal_and_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="formal-acceptance",
+                title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                severity="高风险",
+                review_type="评分因素合规性审查",
+                source_locations=["评分条款A"],
+                source_excerpts=["验收方案优的得满分。"],
+                topics=["scoring"],
+                source_rules=["compare_rule:R-003"],
+            )
+        ],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                    "severity": "需人工复核",
+                    "review_type": "评分因素合规性审查",
+                    "topic": "评分办法",
+                    "source_location": "评分条款B",
+                    "source_excerpt": "验收方案作为评分依据。",
+                    "reason": "另一来源仍给了待补证。",
+                }
+            ]
+        },
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert [item.decision.canonical_title for item in governed.formal_risks] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
+    assert governed.pending_review_items == []
+
+
+def test_output_governance_resolves_same_family_conflict_between_pending_and_excluded() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "节能环保产品政策条款缺失",
+                    "severity": "需人工复核",
+                    "review_type": "政策条款审查",
+                    "topic": "政策条款",
+                    "source_location": "政策条款A",
+                    "source_excerpt": "政策条款未完整召回。",
+                    "reason": "当前仅能确认政策章节召回不足。",
+                }
+            ],
+            "excluded_risks": [
+                {
+                    "title": "节能环保产品政策落实条款缺失",
+                    "severity": "中风险",
+                    "review_type": "政策条款审查",
+                    "source_location": "政策条款B",
+                    "source_excerpt": "该表述其实是公告承接字段，暂不作为正式风险。",
+                    "reason": "边界提示项，建议排除。",
+                }
+            ],
+        },
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert governed.formal_risks == []
+    assert [item.decision.canonical_title for item in governed.pending_review_items] == ["节能环保产品政策条款缺失"]
+    assert governed.excluded_risks == []
+
+
+def test_output_governance_resolves_same_family_conflict_across_all_three_layers() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="formal-template",
+                title="验收时点约定缺失，导致验收流程不可操作",
+                severity="中风险",
+                review_type="合同模板边界审查",
+                source_locations=["合同模板A"],
+                source_excerpts=["到货后的 ____ 个工作日内组织验收。"],
+                topics=["acceptance"],
+            )
+        ],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "验收流程关键时点留白",
+                    "severity": "需人工复核",
+                    "review_type": "合同模板边界审查",
+                    "topic": "验收条款",
+                    "source_location": "合同模板B",
+                    "source_excerpt": "安装调试完毕后的 ____ 个工作日内组织验收。",
+                    "reason": "compare 另一来源给了待补证。",
+                }
+            ],
+            "excluded_risks": [
+                {
+                    "title": "验收时点约定缺失，导致验收流程不可操作",
+                    "severity": "中风险",
+                    "review_type": "合同模板边界审查",
+                    "source_location": "合同模板C",
+                    "source_excerpt": "检测通过后___个工作日内。",
+                    "reason": "模板占位符，建议排除。",
+                }
+            ],
+        },
+    )
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    assert governed.formal_risks == []
+    assert governed.pending_review_items == []
+    assert [item.decision.canonical_title for item in governed.excluded_risks] == ["验收时点约定缺失，导致验收流程不可操作"]
+
+
 def test_output_governance_real_file_gate_keeps_final_output_and_web_cards_consistent() -> None:
     ns = runpy.run_path("tests/test_w002_real_file.py")
     saved_file, structure, baseline, topics = ns["_build_0330_result_topics"]()
@@ -252,3 +424,24 @@ def test_output_governance_real_file_gate_keeps_final_output_and_web_cards_consi
     ]
     assert final_output["summary"]["manual_review_titles"] == [item["title"] for item in final_output["pending_review_items"]]
     assert all(item["title"] not in formal_titles for item in final_output["excluded_risks"])
+    family_layers: dict[str, set[str]] = {}
+    for layer in ("formal_risks", "pending_review_items", "excluded_risks"):
+        for item in final_output["governance"][layer]:
+            family_key = item["family"]["family_key"]
+            family_layers.setdefault(family_key, set()).add(layer)
+    assert all(len(layers) == 1 for layers in family_layers.values())
+
+
+def test_build_v2_final_output_rejects_cross_layer_family_conflicts() -> None:
+    comparison = _build_sample_comparison()
+    governed = govern_comparison_artifact("sample.docx", comparison)
+    duplicated = governed.pending_review_items[0]
+    duplicated.family.family_key = governed.formal_risks[0].family.family_key
+    duplicated.family.canonical_title = governed.formal_risks[0].family.canonical_title
+
+    try:
+        validate_governed_result(governed)
+    except ValueError as exc:
+        assert "cross-layer family conflicts remain after governance" in str(exc)
+    else:
+        raise AssertionError("expected cross-layer family conflict gate to reject invalid governed result")

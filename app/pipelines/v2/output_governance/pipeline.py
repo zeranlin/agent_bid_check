@@ -79,6 +79,85 @@ def _merge_governed_risks(items: list[GovernedRisk]) -> list[GovernedRisk]:
     return list(merged.values())
 
 
+def _is_preserved_input_layer(item: GovernedRisk) -> bool:
+    return item.decision.governance_reason.startswith("未触发治理层纠偏规则，暂保留 compare 初始层级。")
+
+
+def _merge_into_winner(winner: GovernedRisk, covered: GovernedRisk) -> GovernedRisk:
+    winner.severity = pick_higher_severity(winner.severity, covered.severity)
+    winner.source_locations = list(dict.fromkeys([*winner.source_locations, *covered.source_locations]))
+    winner.source_excerpts = list(dict.fromkeys([*winner.source_excerpts, *covered.source_excerpts]))
+    winner.risk_judgment = list(dict.fromkeys([*winner.risk_judgment, *covered.risk_judgment]))
+    winner.legal_basis = list(dict.fromkeys([*winner.legal_basis, *covered.legal_basis]))
+    winner.rectification = list(dict.fromkeys([*winner.rectification, *covered.rectification]))
+    winner.source_rules = list(dict.fromkeys([*winner.source_rules, *covered.source_rules]))
+    winner.identity.source_topics = list(dict.fromkeys([*winner.identity.source_topics, *covered.identity.source_topics]))
+    winner.identity.evidence_anchors = list(
+        dict.fromkeys([*winner.identity.evidence_anchors, *covered.identity.evidence_anchors])
+    )
+    winner.identity.document_span = list(dict.fromkeys([*winner.identity.document_span, *covered.identity.document_span]))
+    winner.family.source_topics = list(dict.fromkeys([*winner.family.source_topics, *covered.family.source_topics]))
+    winner.need_manual_review = winner.need_manual_review or covered.need_manual_review
+    return winner
+
+
+def _pick_family_winner(items: list[GovernedRisk]) -> GovernedRisk:
+    formal_items = [item for item in items if item.decision.target_layer == "formal_risks"]
+    pending_items = [item for item in items if item.decision.target_layer == "pending_review_items"]
+    excluded_items = [item for item in items if item.decision.target_layer == "excluded_risks"]
+
+    deterministic_formal = [
+        item for item in formal_items if not item.need_manual_review and item.severity != "需人工复核"
+    ]
+    explicit_excluded = [item for item in excluded_items if not _is_preserved_input_layer(item)]
+
+    if deterministic_formal:
+        return sorted(deterministic_formal, key=lambda item: -len(item.source_rules))[0]
+    if explicit_excluded:
+        return sorted(explicit_excluded, key=lambda item: -len(item.source_locations))[0]
+    if pending_items:
+        return sorted(pending_items, key=lambda item: -len(item.source_locations))[0]
+    if formal_items:
+        return sorted(formal_items, key=lambda item: -len(item.source_locations))[0]
+    return sorted(excluded_items, key=lambda item: -len(item.source_locations))[0]
+
+
+def _resolve_cross_layer_conflicts(items: list[GovernedRisk]) -> list[GovernedRisk]:
+    by_family: dict[str, list[GovernedRisk]] = {}
+    for item in items:
+        by_family.setdefault(item.family.family_key, []).append(item)
+
+    resolved: list[GovernedRisk] = []
+    for family_items in by_family.values():
+        if len(family_items) == 1:
+            resolved.append(family_items[0])
+            continue
+        winner = _pick_family_winner(family_items)
+        covered_layers = sorted({item.decision.target_layer for item in family_items if item is not winner})
+        covered_titles = [item.decision.canonical_title for item in family_items if item is not winner]
+        for item in family_items:
+            if item is winner:
+                continue
+            winner = _merge_into_winner(winner, item)
+        covered_text = "、".join(covered_layers) if covered_layers else "无"
+        covered_titles_text = "；".join(dict.fromkeys(covered_titles)) if covered_titles else "无"
+        winner.decision.governance_reason = (
+            f"同一风险家族跨层冲突已仲裁，最终保留为 {winner.decision.target_layer}，"
+            f"覆盖层级：{covered_text}，吸收标题：{covered_titles_text}。"
+        )
+        resolved.append(winner)
+    return resolved
+
+
+def validate_governed_result(result: GovernedResult) -> None:
+    family_layers: dict[str, set[str]] = {}
+    for item in result.iter_all():
+        family_layers.setdefault(item.family.family_key, set()).add(item.decision.target_layer)
+    conflicts = {family: sorted(layers) for family, layers in family_layers.items() if len(layers) > 1}
+    if conflicts:
+        raise ValueError(f"cross-layer family conflicts remain after governance: {conflicts}")
+
+
 def govern_comparison_artifact(document_name: str, comparison) -> GovernedResult:
     governance_input = GovernanceInput(document_name=document_name, comparison=comparison)
     result = GovernedResult(
@@ -89,14 +168,21 @@ def govern_comparison_artifact(document_name: str, comparison) -> GovernedResult
             "excluded_count": len(comparison.metadata.get("excluded_risks", [])) if isinstance(comparison.metadata, dict) else 0,
         },
     )
-    governed_formal = [_govern_envelope(GovernanceClusterEnvelope.from_cluster(cluster)) for cluster in comparison.clusters]
+    governed_formal = []
+    for cluster in comparison.clusters:
+        envelope = GovernanceClusterEnvelope.from_cluster(cluster)
+        envelope.governance_reason = "由 compare formal 候选进入输出治理层。"
+        governed_formal.append(_govern_envelope(envelope))
     pending_items = comparison.metadata.get("pending_review_items", []) if isinstance(comparison.metadata, dict) else []
     excluded_items = comparison.metadata.get("excluded_risks", []) if isinstance(comparison.metadata, dict) else []
     governed_pending = [_govern_envelope(_coerce_pending_or_excluded(item, "pending_review_items")) for item in pending_items]
     governed_excluded = [_govern_envelope(_coerce_pending_or_excluded(item, "excluded_risks")) for item in excluded_items]
-    all_items = _merge_governed_risks([*governed_formal, *governed_pending, *governed_excluded])
+    all_items = _resolve_cross_layer_conflicts(
+        _merge_governed_risks([*governed_formal, *governed_pending, *governed_excluded])
+    )
     result.formal_risks = [item for item in all_items if item.decision.target_layer == "formal_risks"]
     result.pending_review_items = [item for item in all_items if item.decision.target_layer == "pending_review_items"]
     result.excluded_risks = [item for item in all_items if item.decision.target_layer == "excluded_risks"]
     result.input_summary["governance_input"] = governance_input.to_dict()
+    validate_governed_result(result)
     return result

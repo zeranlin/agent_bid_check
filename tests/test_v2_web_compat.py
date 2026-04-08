@@ -6,6 +6,7 @@ from pathlib import Path
 
 from app.common.markdown_utils import parse_review_markdown
 from app.web.v2_app import (
+    _is_governed_final_output,
     build_comparison_view,
     build_review_view,
     build_review_view_from_final_output,
@@ -351,6 +352,27 @@ def test_build_review_view_from_final_output_clears_manual_placeholder_for_deter
     assert "需人工复核" not in card["legal_basis"]
 
 
+def test_is_governed_final_output_rejects_cross_layer_family_conflicts() -> None:
+    final_output = {
+        "formal_risks": [],
+        "governance": {
+            "formal_risks": [
+                {
+                    "family": {"family_key": "shared-family"},
+                }
+            ],
+            "pending_review_items": [
+                {
+                    "family": {"family_key": "shared-family"},
+                }
+            ],
+            "excluded_risks": [],
+        },
+    }
+
+    assert _is_governed_final_output(final_output) is False
+
+
 def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: Path, monkeypatch) -> None:
     run_dir = tmp_path / "single-source-run"
     run_dir.mkdir()
@@ -417,11 +439,16 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
                     "manual_review_titles": [],
                 },
                 "basis_summary": ["正式依据"],
-                "governance": {
-                    "formal_risks": [{"identity": {"rule_id": "compare::formal-risk"}}],
-                    "pending_review_items": [],
-                    "excluded_risks": [],
-                },
+                    "governance": {
+                        "formal_risks": [
+                            {
+                                "identity": {"rule_id": "compare::formal-risk"},
+                                "family": {"family_key": "formal-risk"},
+                            }
+                        ],
+                        "pending_review_items": [],
+                        "excluded_risks": [],
+                    },
             },
             ensure_ascii=False,
         ),

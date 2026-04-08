@@ -549,6 +549,20 @@ def _is_governed_final_output(final_output: dict) -> bool:
     required = {"formal_risks", "pending_review_items", "excluded_risks"}
     if not required.issubset(governance.keys()):
         return False
+    family_layers: dict[str, set[str]] = {}
+    for layer in required:
+        items = governance.get(layer, [])
+        if not isinstance(items, list):
+            return False
+        for item in items:
+            if not isinstance(item, dict):
+                return False
+            family = str(item.get("family", {}).get("family_key", "")).strip()
+            if not family:
+                return False
+            family_layers.setdefault(family, set()).add(layer)
+    if any(len(layers) > 1 for layers in family_layers.values()):
+        return False
     return isinstance(final_output.get("formal_risks", []), list)
 
 

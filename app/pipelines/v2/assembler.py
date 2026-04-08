@@ -8,7 +8,7 @@ from app.common.parser import parse_review_markdown
 from app.common.schemas import ReviewReport, RiskPoint
 
 from .compare import compare_review_artifacts
-from .output_governance import govern_comparison_artifact
+from .output_governance import govern_comparison_artifact, validate_governed_result
 from .output_governance.schemas import GovernedResult
 from .schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
@@ -184,6 +184,7 @@ def build_v2_final_output(
 ) -> dict:
     comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
     governance = governance or govern_comparison_artifact(document_name, comparison)
+    validate_governed_result(governance)
     report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance)
     return {
         "subject": report.subject,
