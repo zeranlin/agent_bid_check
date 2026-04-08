@@ -58,7 +58,7 @@ STANDARD_CLUSTER_SUPPRESSION_RULES = {
 TITLE_IMPORT_CONSISTENCY_RE = re.compile(
     r"(技术标准引用与采购政策口径不一致|燃油标准引用错误及滞后风险|标准引用格式混乱且版本缺失|"
     r"标准编号与名称引用混乱且缺失版本信息|燃油标准引用可能涉及废止或滞后版本|"
-    r"燃油标准引用非国标且可能失效)"
+    r"燃油标准引用非国标且可能失效|燃油标准引用可能涉及废止版本)"
 )
 TITLE_CERT_SCORING_RE = re.compile(
     r"(以制造商特定认证证书作为高分条件|产品认证指定特定协会|评分标准中.?制造商发电机组资质证书要求特定认证|"
@@ -72,12 +72,18 @@ TITLE_SCORING_CLARITY_RE = re.compile(
 TITLE_PERSONNEL_SCORING_RE = re.compile(
     r"(评分项分值设置畸高，人员职称与业绩分值占比过大|项目负责人评分中“学历”和“职称”分值权重过高|"
     r"人员评分中学历、职称及证书要求分值过高，可能构成过高门槛|"
-    r"项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理)"
+    r"项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理|"
+    r"项目负责人学历及职称要求过高，可能构成不合理限制|"
+    r"项目负责人评分项分值畸高且设置不合理，存在重复评价和倾向性风险)"
 )
 TITLE_REGIONAL_PERFORMANCE_RE = re.compile(
-    r"(业绩要求限定特定行政区域，排斥外地供应商|业绩评分限定特定行政区域，存在地域排斥风险)"
+    r"(业绩要求限定特定行政区域，排斥外地供应商|业绩评分限定特定行政区域，存在地域排斥风险|"
+    r"业绩评分限定特定行政区域，存在地域歧视和排斥潜在投标人风险)"
 )
-TITLE_GUARANTEE_RATIO_RE = re.compile(r"(履约保证金比例严重超标|履约保证金比例过高，增加供应商负担)")
+TITLE_GUARANTEE_RATIO_RE = re.compile(r"(履约保证金比例严重超标|履约保证金比例过高，增加供应商负担|履约保证金比例过高，加重供应商负担)")
+TITLE_ACCEPTANCE_TESTING_COST_RE = re.compile(
+    r"(验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|将验收阶段检测费用笼统计入投标总价，存在合规风险)"
+)
 TITLE_CONTRACT_TEMPLATE_RE = re.compile(
     r"(关键合同条款数值缺失|合同验收时点留白|违约责任与赔偿条款缺失|"
     r"关键商务条款数据缺失，合同无法执行|履约保证金退还期限未定，存在资金占用风险|验收标准模糊，采购人单方裁量权过大)"
@@ -86,13 +92,14 @@ TITLE_INTERNAL_SCORE_WEIGHT_RE = re.compile(
     r"(三体系认证分值设置过高|分值设置畸高|企业证书（三体系）评分分值设置过高，存在排斥中小企业风险)"
 )
 TITLE_POLICY_MISSING_RE = re.compile(r"(中小企业扶持政策落实条款缺失|节能环保产品政策落实条款缺失)")
+TITLE_ECO_POLICY_MISSING_RE = re.compile(r"(节能环保产品政策条款缺失|节能环保产品政策落实条款缺失)")
 TITLE_POLICY_GUIDANCE_RE = re.compile(
     r"(中小企业声明函填写指引中未明确.?采购标的所属行业.?|中小企业声明函填写指引中关于.?不重复享受.?)"
 )
 TITLE_CERT_MISSING_RE = re.compile(r"(检测认证要求表述缺失)")
 TITLE_ANNOUNCEMENT_RE = re.compile(r"(澄清/修改截止时间未明确填写|澄清/修改事项截止时间未明确填写)")
 TITLE_IMPORT_ITSELF_RE = re.compile(r"(进口产品禁止性规定表述过于绝对|进口产品禁止条款表述过于绝对，未预留法定例外)")
-TITLE_SOCIAL_SECURITY_RE = re.compile(r"(人员社保要求存在特殊豁免)")
+TITLE_SOCIAL_SECURITY_RE = re.compile(r"(人员社保要求存在特殊豁免|社保缴纳证明要求存在例外情形，需关注执行一致性)")
 TITLE_BRAND_DISCLOSURE_RE = re.compile(r"(指定具体品牌和型号要求不明确)")
 TITLE_DIMENSION_RE = re.compile(r"(双电源切换柜.*(尺寸要求过于具体|尺寸允许偏差过大))")
 TITLE_THIRD_PARTY_TESTING_RE = re.compile(r"(未明确第三方检测要求)")
@@ -137,6 +144,8 @@ TITLE_GENERIC_SCORING_RE = re.compile(
     r"项目负责人学历、职称及相关经验被纳入评分因素，需进一步论证其与项目履约能力的直接关联性|"
     r"评分标准中“拟安排的项目负责人情况”设置学历、职称及经验累计得分，可能构成以不合理条件限制竞争)"
 )
+TITLE_CERT_WEIGHT_RE = re.compile(r"(综合实力评分中体系认证要求设置不合理，存在.?全有或全无.?风险)")
+TITLE_POLICY_INCOMPLETE_RE = re.compile(r"(残疾人福利性单位及监狱企业政策表述不完整)")
 TITLE_BOUNDARY_LIGHT_RE = re.compile(
     r"(澄清截止时间未明确填写|采购标的所属行业未明确，影响中小企业声明函填写|"
     r"人员社保证明要求存在特殊豁免，需防范虚假人员风险|社保证明要求存在特殊豁免条款，需防范规避监管风险|"
@@ -332,7 +341,10 @@ def _detect_standard_rule_code(cluster: MergedRiskCluster) -> str:
     for code, standard_title in STANDARD_RULE_TITLES.items():
         if title == standard_title:
             return code
-    if title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险":
+    if title in {
+        "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险",
+        "拒绝进口 vs 外标/国外部件引用矛盾风险",
+    }:
         return "policy_technical_inconsistency"
     if title == "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险":
         return "specific_brand_or_supplier_in_scoring_forbidden"
@@ -401,15 +413,17 @@ def _filter_and_sort_clusters(
 
 def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> MergedRiskCluster:
     title_map = {
-        "import_consistency": "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险",
+        "import_consistency": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "acceptance_testing_cost": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
         "cert_scoring": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
-        "scoring_clarity": "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险",
-        "personnel_scoring": "项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理",
+        "scoring_clarity": "评分描述量化口径不足，存在评审一致性风险",
+        "personnel_scoring": "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
         "regional_performance": "业绩评分限定特定行政区域，存在地域排斥风险",
         "guarantee_ratio": "履约保证金比例严重超标",
     }
     review_type_map = {
         "import_consistency": "采购政策/技术标准/验收口径一致性审查",
+        "acceptance_testing_cost": "需求合规性 / 验收费用边界审查",
         "cert_scoring": "评分因素合规性 / 限定特定认证或发证机构",
         "scoring_clarity": "评分标准清晰性 / 量化口径一致性审查",
         "personnel_scoring": "评分因素不相关/限制竞争",
@@ -435,7 +449,14 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
     if group_key == "import_consistency":
         merged.risk_judgment = dedupe(
             [
-                "文件中的非进口采购口径、国外标准引用及国外部件/原产地相关表述并存，容易导致供应商对可投范围和验收依据理解不一致。"
+                "文件一方面明确不接受进口产品，另一方面又在技术标准、燃油标准或部件表述中引入外标/国外部件口径，容易造成供应商对可投范围和验收依据理解冲突。"
+            ]
+            + merged.risk_judgment
+        )
+    if group_key == "acceptance_testing_cost":
+        merged.risk_judgment = dedupe(
+            [
+                "同一组条款同时体现“检测/相关部门验收费用”与“计入投标总价”的表述，问题核心应统一收敛为费用边界不清和潜在转嫁风险。"
             ]
             + merged.risk_judgment
         )
@@ -449,14 +470,14 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
     if group_key == "scoring_clarity":
         merged.risk_judgment = dedupe(
             [
-                "该评分项同时使用分点覆盖和档次评价表达，但计算关系、量化口径和判定边界说明不够清晰。"
+                "该评分项同时使用分点覆盖和档次评价表达，但量化口径、计算关系和判定边界说明仍不够清晰，容易影响评审一致性。"
             ]
             + merged.risk_judgment
         )
     if group_key == "personnel_scoring":
         merged.risk_judgment = dedupe(
             [
-                "项目负责人学历、职称、证书及相关经验被集中赋予高分，需重点审查其与项目履约能力的直接关联性及累计分值是否过高。"
+                "项目负责人学历、职称、证书及相关经验被集中赋予高分，存在重复评价、累计分值过高以及与履约直接关联不足的复合风险。"
             ]
             + merged.risk_judgment
         )
@@ -480,6 +501,8 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
 def _cluster_group_key(title: str) -> str:
     if TITLE_IMPORT_CONSISTENCY_RE.search(title):
         return "import_consistency"
+    if TITLE_ACCEPTANCE_TESTING_COST_RE.search(title):
+        return "acceptance_testing_cost"
     if TITLE_CERT_SCORING_RE.search(title):
         return "cert_scoring"
     if TITLE_SCORING_CLARITY_RE.search(title):
@@ -715,6 +738,18 @@ def _refine_clusters_for_maturity(
             excluded_risks.append(_build_excluded_item(cluster, "该结论主要基于评分项内部满分口径，未结合总分权重折算，不再作为正式风险输出。"))
             continue
 
+        if TITLE_CERT_WEIGHT_RE.search(title):
+            cluster.title = "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+            cluster.risk_judgment = dedupe(
+                [
+                    "体系认证被赋予较高分值，容易形成“高分集中于证书齐备供应商”的评分导向。",
+                    "当前问题核心不在于小项满分写法，而在于认证项权重偏高且与项目履约能力的直接关联不足。"
+                ]
+                + cluster.risk_judgment
+            )
+            refined.append(cluster)
+            continue
+
         if TITLE_SHORT_WINDOW_RE.search(title):
             excluded_risks.append(_build_excluded_item(cluster, "近三年左右的业绩窗口不默认认定为时间过短，本条先从正式风险中移除。"))
             continue
@@ -728,6 +763,16 @@ def _refine_clusters_for_maturity(
         if title == "中小企业扶持政策价格扣除比例缺失":
             pending_review_items.append(_build_pending_item(cluster, "政策条款"))
             pending_review_items[-1]["reason"] = "当前仅召回到中小企业政策语境和声明函指引，未稳定召回价格扣除比例缺失的硬证据，先转为待补证复核项。"
+            continue
+
+        if TITLE_POLICY_INCOMPLETE_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "政策条款"))
+            pending_review_items[-1]["reason"] = "当前更像政策配套表述是否完整的问题，证据不足以直接作为正式风险定性，先转为待补证复核项。"
+            continue
+
+        if TITLE_ECO_POLICY_MISSING_RE.search(title):
+            pending_review_items.append(_build_pending_item(cluster, "政策条款"))
+            pending_review_items[-1]["reason"] = "当前仅能确认节能环保政策章节召回不足，尚不足以直接认定为正式风险，先转为待补证复核项。"
             continue
 
         if TITLE_POLICY_GUIDANCE_RE.search(title) and (

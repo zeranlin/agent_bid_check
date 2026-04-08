@@ -417,9 +417,18 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
                     "manual_review_titles": [],
                 },
                 "basis_summary": ["正式依据"],
+                "governance": {
+                    "formal_risks": [{"identity": {"rule_id": "compare::formal-risk"}}],
+                    "pending_review_items": [],
+                    "excluded_risks": [],
+                },
             },
             ensure_ascii=False,
         ),
+        encoding="utf-8",
+    )
+    (run_dir / "governed_output.json").write_text(
+        json.dumps({"formal_risks": [{"decision": {"canonical_title": "正式风险标题"}}]}, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -433,3 +442,63 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
     assert result["review_view"]["all_cards"][0]["title"] == "正式风险标题"
     assert result["review_view"]["all_cards"][0]["source_location"] == "正式位置"
     assert result["final_output"]["excluded_risks"][0]["title"] == "已剔除项"
+    assert result["output_admission"]["final_output_governed"] is True
+    assert result["governed_output"]["formal_risks"][0]["decision"]["canonical_title"] == "正式风险标题"
+
+
+def test_load_result_by_run_id_blocks_ungoverned_output_from_product_cards(tmp_path: Path, monkeypatch) -> None:
+    run_dir = tmp_path / "ungoverned-run"
+    run_dir.mkdir()
+    (run_dir / "review.md").write_text(
+        """
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 风险点1：旧标题
+
+- 问题定性：高风险
+- 审查类型：旧类型
+- 原文位置：旧位置
+- 原文摘录：旧摘录
+- 风险判断：
+  - 旧判断
+- 法律/政策依据：
+  - 旧依据
+- 整改建议：
+  - 旧建议
+""".strip(),
+        encoding="utf-8",
+    )
+    (run_dir / "v2_overview.json").write_text(json.dumps({}, ensure_ascii=False), encoding="utf-8")
+    (run_dir / "final_output.json").write_text(
+        json.dumps(
+            {
+                "formal_risks": [
+                    {
+                        "title": "旧标题",
+                        "severity": "高风险",
+                        "review_type": "旧类型",
+                        "source_location": "旧位置",
+                        "source_excerpt": "旧摘录",
+                        "risk_judgment": ["旧判断"],
+                        "legal_basis": ["旧依据"],
+                        "rectification": ["旧建议"],
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr("app.web.v2_app.find_run_dir", lambda run_id: run_dir if run_id == "ungoverned-run" else None)
+
+    app = create_app()
+    with app.test_request_context():
+        result = load_result_by_run_id("ungoverned-run")
+
+    assert result is not None
+    assert result["output_admission"]["final_output_governed"] is False
+    assert result["review_view"]["all_cards"] == []
+    assert result["review_view"]["total"] == 0

@@ -540,6 +540,18 @@ def build_review_view_from_final_output(final_output: dict, comparison: dict | N
     }
 
 
+def _is_governed_final_output(final_output: dict) -> bool:
+    if not isinstance(final_output, dict):
+        return False
+    governance = final_output.get("governance")
+    if not isinstance(governance, dict):
+        return False
+    required = {"formal_risks", "pending_review_items", "excluded_risks"}
+    if not required.issubset(governance.keys()):
+        return False
+    return isinstance(final_output.get("formal_risks", []), list)
+
+
 def build_comparison_view(comparison: dict) -> dict:
     if not isinstance(comparison, dict) or not any(
         key in comparison
@@ -696,6 +708,13 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             final_output = json.loads(final_output_path.read_text(encoding="utf-8"))
         except Exception:
             final_output = {}
+    governed_output = {}
+    governed_output_path = run_dir / "governed_output.json"
+    if governed_output_path.exists():
+        try:
+            governed_output = json.loads(governed_output_path.read_text(encoding="utf-8"))
+        except Exception:
+            governed_output = {}
     topics: list[dict] = []
     if topic_dir.exists():
         for path in sorted(topic_dir.glob("*.json")):
@@ -708,7 +727,15 @@ def load_result_by_run_id(run_id: str) -> dict | None:
                 continue
     topic_view = build_topic_view(topics, overview)
     report = parse_review_markdown(final_markdown)
-    review_view = build_review_view_from_final_output(final_output, comparison) if final_output else build_review_view(report, comparison)
+    output_admission = {
+        "governed_result_available": bool(governed_output),
+        "final_output_governed": _is_governed_final_output(final_output),
+    }
+    review_view = (
+        build_review_view_from_final_output(final_output, comparison)
+        if output_admission["final_output_governed"]
+        else build_review_view(parse_review_markdown(""), comparison=None)
+    )
     return {
         "run_id": run_id,
         "created_at": meta.get("created_at", ""),
@@ -719,6 +746,8 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "overview": overview,
         "comparison": comparison,
         "final_output": final_output,
+        "governed_output": governed_output,
+        "output_admission": output_admission,
         "comparison_view": build_comparison_view(comparison),
         "topics": topics,
         "topic_view": topic_view,
@@ -735,6 +764,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             "evidence_map": url_for("download_plus_file", run_id=run_id, kind="evidence_map"),
             "comparison": url_for("download_plus_file", run_id=run_id, kind="comparison"),
             "overview": url_for("download_plus_file", run_id=run_id, kind="overview"),
+            "governed_output": url_for("download_plus_file", run_id=run_id, kind="governed_output"),
         },
     }
 
@@ -947,6 +977,7 @@ def create_app() -> Flask:
             "evidence_map": ("evidence_map.json", "application/json"),
             "comparison": ("comparison.json", "application/json"),
             "overview": ("v2_overview.json", "application/json"),
+            "governed_output": ("governed_output.json", "application/json"),
         }
         if run_dir is None or kind not in mapping:
             return redirect(url_for("review_plus_page"))

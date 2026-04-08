@@ -11,6 +11,7 @@ from .assembler import assemble_v2_report, build_v2_final_output, build_v2_overv
 from .baseline import run_baseline_review
 from .compare import compare_review_artifacts, comparison_to_json
 from .evidence import build_evidence_map
+from .output_governance import govern_comparison_artifact
 from .schemas import V2ReviewArtifacts
 from .structure import build_structure_map
 from .topic_review import run_topic_reviews
@@ -73,7 +74,8 @@ def review_document_v2(
     if progress_callback:
         progress_callback("report_structuring", "正在合并三层结果并生成统一审查报告。")
     comparison = compare_review_artifacts(input_path.name, baseline, topics)
-    final_markdown = assemble_v2_report(input_path.name, baseline, structure, topics, comparison=comparison)
+    governance = govern_comparison_artifact(input_path.name, comparison)
+    final_markdown = assemble_v2_report(input_path.name, baseline, structure, topics, comparison=comparison, governance=governance)
     return V2ReviewArtifacts(
         extracted_text=extracted_text,
         baseline=baseline,
@@ -82,6 +84,7 @@ def review_document_v2(
         final_markdown=final_markdown,
         evidence=evidence,
         comparison=comparison,
+        governance=governance,
     )
 
 
@@ -94,6 +97,11 @@ def save_review_artifacts_v2(artifacts: V2ReviewArtifacts, output_dir: Path) -> 
         (output_dir / "evidence_map.json").write_text(artifacts.evidence.content, encoding="utf-8")
     if artifacts.comparison is not None:
         (output_dir / "comparison.json").write_text(comparison_to_json(artifacts.comparison), encoding="utf-8")
+        if artifacts.governance is not None:
+            (output_dir / "governed_output.json").write_text(
+                json.dumps(artifacts.governance.to_dict(), ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
         (output_dir / "final_output.json").write_text(
             json.dumps(
                 build_v2_final_output(
@@ -102,6 +110,7 @@ def save_review_artifacts_v2(artifacts: V2ReviewArtifacts, output_dir: Path) -> 
                     artifacts.structure,
                     artifacts.topics,
                     comparison=artifacts.comparison,
+                    governance=artifacts.governance,
                 ),
                 ensure_ascii=False,
                 indent=2,

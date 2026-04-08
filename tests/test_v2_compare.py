@@ -153,7 +153,7 @@ def test_assemble_v2_report_summary_uses_final_layered_results_only() -> None:
         clusters=[
             MergedRiskCluster(
                 cluster_id="cluster-1",
-                title="非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险",
+                title="拒绝进口 vs 外标/国外部件引用矛盾风险",
                 severity="高风险",
                 review_type="采购政策/技术标准/验收口径一致性审查",
                 source_locations=["政策条款：二、申请人的资格要求", "技术条款：1.规格及技术参数"],
@@ -189,7 +189,7 @@ def test_assemble_v2_report_summary_uses_final_layered_results_only() -> None:
     assert "澄清截止时间未明确填写" not in summary_section
     assert "qualification:" not in summary_section
     assert "performance_staff:" not in summary_section
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in summary_section
     assert "具体资格条款缺失，无法判断是否存在排斥性要求" in report
     assert "- 需人工复核事项：" in summary_section
 
@@ -275,7 +275,7 @@ def test_compare_review_artifacts_adds_policy_technical_inconsistency_risk() -> 
     ]
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     titles = [cluster.title for cluster in comparison.clusters]
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in titles
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in titles
     assert comparison.metadata["failure_reason_codes"] == ["policy_technical_inconsistency"]
     assert comparison.metadata["comparison_failure_reason_codes"] == ["policy_technical_inconsistency"]
 
@@ -1349,7 +1349,7 @@ def test_compare_review_artifacts_prefers_policy_topic_locations_over_qualificat
     cluster = next(
         item
         for item in comparison.clusters
-        if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+        if item.title == "拒绝进口 vs 外标/国外部件引用矛盾风险"
     )
     assert cluster.source_locations == ["政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数"]
 
@@ -1766,7 +1766,7 @@ def test_compare_review_artifacts_enriches_import_consistency_with_foreign_compo
 
     comparison = compare_review_artifacts("sample.docx", baseline, topics)
     cluster = next(
-        item for item in comparison.clusters if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+        item for item in comparison.clusters if item.title == "拒绝进口 vs 外标/国外部件引用矛盾风险"
     )
     assert any("部件/验收条款：五、商务要求" in location for location in cluster.source_locations)
     assert any("原产地证明" in excerpt for excerpt in cluster.source_excerpts)

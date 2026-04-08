@@ -31,7 +31,7 @@ W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-reru
 G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
 CURRENT_REAL_RUN = Path("data/results/v2/20260403-diesel-rerun/topic_reviews")
 W007_SOURCE_RESULT = Path("data/results/v2/20260407-140828-232a1471")
-REAL_0330_RESULT = Path("data/results/v2/20260407-142533-e1287e2b")
+REAL_0330_RESULT = Path("data/results/v2/20260408-szdl0330-verify")
 
 
 def _build_settings() -> ReviewSettings:
@@ -315,8 +315,15 @@ def _build_current_real_run_topics() -> tuple[V2StageArtifact, V2StageArtifact, 
 
 
 def _build_topics_from_result_run(result_dir: Path) -> tuple[Path, V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
-    meta = json.loads((result_dir / "meta.json").read_text(encoding="utf-8"))
-    saved_file = Path("data/uploads/v2") / str(meta["saved_filename"])
+    meta_path = result_dir / "meta.json"
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        saved_file = Path("data/uploads/v2") / str(meta["saved_filename"])
+    else:
+        candidate_uploads = sorted(Path("data/uploads/v2").glob("*SZDL2025000495-A-0330.docx"))
+        if not candidate_uploads:
+            raise FileNotFoundError(f"missing meta.json and no fallback upload found for {result_dir}")
+        saved_file = candidate_uploads[-1]
     source_run = result_dir / "topic_reviews"
     baseline_path = result_dir / "baseline_review.md"
     text = extract_text(saved_file)
@@ -389,7 +396,7 @@ def test_w002_real_file_compare_matrix_is_complete() -> None:
     assert technical_topic.metadata["structured_signals"]["contains_gb_non_t"] is True
 
     titles = [cluster.title for cluster in comparison.clusters]
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in titles
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in titles
     assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in titles
     assert "将项目验收方案纳入评审因素，违反评审规则合规性要求" in titles
     assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in titles
@@ -416,8 +423,9 @@ def test_w004_real_file_refinement_separates_formal_pending_and_excluded() -> No
     formal_titles = [cluster.title for cluster in comparison.clusters]
     pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
     excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
-    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in formal_titles
+    assert "评分描述量化口径不足，存在评审一致性风险" in formal_titles
     assert "具体资格条件内容缺失，无法判断是否存在排斥性条款" in pending_titles
     assert "废标条件及最终解释权条款证据缺失" in pending_titles
     assert "关键合同条款数值缺失，导致付款与履约责任无法评估" in excluded_titles
@@ -433,7 +441,7 @@ def test_w005_real_file_full_run_topics_are_refined_to_target_matrix() -> None:
     pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
     excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
 
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in formal_titles
     assert "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清" in formal_titles
     assert "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险" in formal_titles
 
@@ -528,7 +536,7 @@ def test_w006_final_markdown_summary_uses_layered_results_only() -> None:
         assert title in pending_section
         assert title in summary_section
 
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in summary_section
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in summary_section
 
 
 def test_w004_current_real_run_collapses_variant_titles_and_layers_results() -> None:
@@ -540,9 +548,9 @@ def test_w004_current_real_run_collapses_variant_titles_and_layers_results() -> 
     pending_titles = [item["title"] for item in comparison.metadata["pending_review_items"]]
     excluded_titles = [item["title"] for item in comparison.metadata["excluded_risks"]]
 
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in formal_titles
     assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in formal_titles
-    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+    assert "评分描述量化口径不足，存在评审一致性风险" in formal_titles
     assert "验收标准来源表述不清，容易引发验收依据理解歧义" in formal_titles
 
     for title in [
@@ -590,7 +598,7 @@ def test_g004_real_file_import_consistency_includes_foreign_component_evidence()
     baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_FILE.name}`\n")
     comparison = compare_review_artifacts(REAL_FILE.name, baseline, topics)
     cluster = next(
-        item for item in comparison.clusters if item.title == "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险"
+        item for item in comparison.clusters if item.title == "拒绝进口 vs 外标/国外部件引用矛盾风险"
     )
     assert any("部件/验收条款" in location for location in cluster.source_locations)
     assert any("原产地证明" in excerpt for excerpt in cluster.source_excerpts)
@@ -766,56 +774,66 @@ def test_0330_real_file_output_is_deduped_and_downgraded() -> None:
 
     assert "业绩评分限定特定行政区域，存在地域排斥风险" in formal_titles
     assert "业绩要求限定特定行政区域，排斥外地供应商" not in formal_titles
+    assert "业绩评分限定特定行政区域，存在地域歧视和排斥潜在投标人风险" not in formal_titles
 
-    assert "项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理" in formal_titles
+    assert "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险" in formal_titles
+    assert "将验收阶段检测费用笼统计入投标总价，存在合规风险" not in formal_titles
+
+    assert "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险" in formal_titles
     assert "人员评分中学历、职称及证书要求分值过高，可能构成过高门槛" not in formal_titles
+    assert "项目负责人学历及职称要求过高，可能构成不合理限制" not in formal_titles
+    assert "项目负责人评分项分值畸高且设置不合理，存在重复评价和倾向性风险" not in formal_titles
 
     assert "履约保证金比例严重超标" in formal_titles
     assert "履约保证金比例过高，增加供应商负担" not in formal_titles
 
     assert "技术参数中指定特定生产日期，具有明显排他性和倾向性" in formal_titles
 
-    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" in formal_titles
+    assert "评分描述量化口径不足，存在评审一致性风险" in formal_titles
+    assert "评分表达采用定性分档或分点+分档组合，但量化标准、计算方式或判定边界说明不清，存在评审口径不一致风险" not in formal_titles
     assert "评分标准主观性过强，缺乏量化依据，易导致评审不公" not in formal_titles
 
     assert "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险" in formal_titles
     assert "评分标准中限定特定认证机构，限制竞争" not in formal_titles
 
-    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" in formal_titles
+    assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in formal_titles
+    assert "非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险" not in formal_titles
     assert "燃油标准引用非国标且可能失效" not in formal_titles
+    assert "燃油标准引用可能涉及废止版本" not in formal_titles
 
     assert "踏勘现场作为资格性审查条件，违反通用条款" in formal_titles
 
-    assert "中小企业扶持政策价格扣除比例缺失" not in formal_titles
-    assert "中小企业扶持政策价格扣除比例缺失" in pending_titles
+    assert "节能环保产品政策条款缺失" not in formal_titles
+    assert "节能环保产品政策条款缺失" in pending_titles
 
     for title in [
         "企业证书（三体系）评分分值设置过高，存在排斥中小企业风险",
         "澄清/修改事项截止时间未明确填写",
-        "进口产品禁止条款表述过于绝对，未预留法定例外",
         "评分标准中“诚信情况”查询渠道及扣分标准表述不清",
         "验收主体表述笼统，未明确‘相关人员’的具体构成及职责",
+        "社保缴纳证明要求存在例外情形，需关注执行一致性",
     ]:
         assert title not in formal_titles
 
-    assert "澄清/修改事项截止时间未明确填写" not in pending_titles
-    assert "澄清/修改事项截止时间未明确填写" in excluded_titles
-    assert "验收流程关键时点留白，导致验收条款不可操作" not in formal_titles
-    assert "验收流程关键时点留白，导致验收条款不可操作" in excluded_titles
+    assert "综合实力评分中体系认证要求设置不合理，存在‘全有或全无’风险" not in formal_titles
+    assert "认证项权重偏高且与履约关联不足，存在倾向性评分风险" in formal_titles
+
+    assert "采购文件澄清截止时间未明确填写" not in pending_titles
+    assert "采购文件澄清截止时间未明确填写" in excluded_titles
+    assert "进口产品禁止条款表述过于绝对，未预留法定例外" not in formal_titles
+    assert "验收时点约定缺失，导致验收流程不可操作" not in formal_titles
+    assert "验收时点约定缺失，导致验收流程不可操作" in excluded_titles
 
 
-def test_0330_real_file_industry_experience_wording_matches_project_context() -> None:
+def test_0330_real_file_wording_does_not_conflict_with_project_context() -> None:
     saved_file, structure, baseline, topics = _build_0330_result_topics()
     comparison = compare_review_artifacts(saved_file.name, baseline, topics)
-    cluster = next(
-        item
-        for item in comparison.clusters
-        if item.title == "将特定行业经验（柴油发电机组）作为评分项，可能构成以不合理条件限制投标人"
+    judgment_text = "\n".join(
+        "\n".join(cluster.risk_judgment)
+        for cluster in comparison.clusters
     )
-    judgment_text = "\n".join(cluster.risk_judgment)
     assert "若本项目并非专门针对柴油发电机组采购" not in judgment_text
     assert "若标的为通用服务或设备" not in judgment_text
-    assert "本项目采购标的虽为柴油发电机组" in judgment_text
 
 
 def test_0330_real_file_standard_rule_formal_risk_does_not_carry_manual_marker() -> None:

@@ -163,3 +163,4 @@ class V2ReviewArtifacts:
     final_markdown: str
     evidence: V2StageArtifact | None = None
     comparison: ComparisonArtifact | None = None
+    governance: Any | None = None

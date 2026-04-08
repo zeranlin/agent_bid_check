@@ -8,6 +8,8 @@ from app.common.parser import parse_review_markdown
 from app.common.schemas import ReviewReport, RiskPoint
 
 from .compare import compare_review_artifacts
+from .output_governance import govern_comparison_artifact
+from .output_governance.schemas import GovernedResult
 from .schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
@@ -89,6 +91,28 @@ def _cluster_to_risk_point(cluster: MergedRiskCluster) -> RiskPoint:
     return risk
 
 
+def _governed_risk_to_risk_point(governed_risk) -> RiskPoint:
+    judgment = list(governed_risk.risk_judgment)
+    legal_basis = [item for item in governed_risk.legal_basis if str(item).strip()]
+    if not legal_basis:
+        if "compare_rule" in governed_risk.source_rules and governed_risk.severity != "需人工复核" and not governed_risk.need_manual_review:
+            legal_basis = ["已结合规则库交叉校验与原文条款综合判断。"]
+        else:
+            legal_basis = ["需人工复核"]
+    risk = RiskPoint(
+        title=governed_risk.decision.canonical_title,
+        severity=governed_risk.severity,
+        review_type=governed_risk.review_type,
+        source_location="；".join(governed_risk.source_locations) if governed_risk.source_locations else "未发现",
+        source_excerpt="\n\n".join(governed_risk.source_excerpts[:2]) if governed_risk.source_excerpts else "未发现",
+        risk_judgment=judgment or ["需人工复核"],
+        legal_basis=legal_basis,
+        rectification=governed_risk.rectification or ["未发现"],
+    )
+    risk.ensure_defaults()
+    return risk
+
+
 def _build_description_lines(structure: V2StageArtifact, topics: list[TopicReviewArtifact]) -> list[str]:
     sections = structure.metadata.get("sections", []) if structure.metadata else []
     manual_topics = [topic.topic for topic in topics if topic.need_manual_review]
@@ -111,13 +135,26 @@ def _build_report(
     structure: V2StageArtifact,
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact,
+    governance: GovernedResult | None = None,
 ) -> ReviewReport:
     baseline_report = parse_review_markdown(baseline.content)
     report = ReviewReport()
     report.subject = baseline_report.subject or document_name
     report.description_lines = _build_description_lines(structure, topics)
-    report.risk_points = [_cluster_to_risk_point(cluster) for cluster in comparison.clusters]
-    report.pending_review_items = list(comparison.metadata.get("pending_review_items", [])) if isinstance(comparison.metadata, dict) else []
+    governance = governance or govern_comparison_artifact(document_name, comparison)
+    report.risk_points = [_governed_risk_to_risk_point(item) for item in governance.formal_risks]
+    report.pending_review_items = [
+        {
+            "title": item.decision.canonical_title,
+            "severity": item.severity,
+            "review_type": item.review_type,
+            "topic": item.identity.source_topics[0] if item.identity.source_topics else item.extras.get("topic", ""),
+            "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
+            "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
+            "reason": item.decision.governance_reason,
+        }
+        for item in governance.pending_review_items
+    ]
     report.summary_high_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "高风险"]) or ["未发现"]
     report.summary_medium_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "中风险"]) or ["未发现"]
     report.summary_manual_review = dedupe(
@@ -129,8 +166,8 @@ def _build_report(
     ) or ["未发现"]
 
     basis_items = list(baseline_report.basis_summary)
-    for cluster in comparison.clusters:
-        basis_items.extend(cluster.legal_basis)
+    for item in governance.formal_risks:
+        basis_items.extend(item.legal_basis)
     report.basis_summary = dedupe(basis_items)
     report.ensure_defaults(document_name)
     infer_basis_summary(report)
@@ -143,10 +180,11 @@ def build_v2_final_output(
     structure: V2StageArtifact,
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact | None = None,
+    governance: GovernedResult | None = None,
 ) -> dict:
     comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
-    report = _build_report(document_name, baseline, structure, topics, comparison)
-    metadata = comparison.metadata if isinstance(comparison.metadata, dict) else {}
+    governance = governance or govern_comparison_artifact(document_name, comparison)
+    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance)
     return {
         "subject": report.subject,
         "description_lines": list(report.description_lines),
@@ -163,14 +201,40 @@ def build_v2_final_output(
             }
             for risk in report.risk_points
         ],
-        "pending_review_items": deepcopy(list(metadata.get("pending_review_items", []))),
-        "excluded_risks": deepcopy(list(metadata.get("excluded_risks", []))),
+        "pending_review_items": deepcopy(
+            [
+                {
+                    "title": item.decision.canonical_title,
+                    "severity": item.severity,
+                    "review_type": item.review_type,
+                    "topic": item.identity.source_topics[0] if item.identity.source_topics else item.extras.get("topic", ""),
+                    "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
+                    "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
+                    "reason": item.decision.governance_reason,
+                }
+                for item in governance.pending_review_items
+            ]
+        ),
+        "excluded_risks": deepcopy(
+            [
+                {
+                    "title": item.decision.canonical_title,
+                    "severity": item.severity,
+                    "review_type": item.review_type,
+                    "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
+                    "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
+                    "reason": item.decision.governance_reason,
+                }
+                for item in governance.excluded_risks
+            ]
+        ),
         "summary": {
             "high_risk_titles": list(report.summary_high_risk),
             "medium_risk_titles": list(report.summary_medium_risk),
             "manual_review_titles": list(report.summary_manual_review),
         },
         "basis_summary": list(report.basis_summary),
+        "governance": governance.to_dict(),
     }
 
 
@@ -180,9 +244,10 @@ def assemble_v2_report(
     structure: V2StageArtifact,
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact | None = None,
+    governance: GovernedResult | None = None,
 ) -> str:
     comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
-    report = _build_report(document_name, baseline, structure, topics, comparison)
+    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance)
     return _render_report(report)
 
 

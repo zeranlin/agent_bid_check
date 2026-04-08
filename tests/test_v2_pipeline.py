@@ -178,6 +178,8 @@ def test_build_v2_final_output_uses_comparison_as_single_source() -> None:
     assert final_output["summary"]["high_risk_titles"] == ["正式风险标题"]
     assert final_output["summary"]["manual_review_titles"] == ["待补证项"]
     assert [item["title"] for item in final_output["excluded_risks"]] == ["已剔除项"]
+    assert "governance" in final_output
+    assert final_output["governance"]["formal_risks"][0]["decision"]["canonical_title"] == "正式风险标题"
 
 
 def test_topic_taxonomy_and_active_topics_contract() -> None:
