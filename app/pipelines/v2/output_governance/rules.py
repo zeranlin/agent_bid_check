@@ -93,6 +93,13 @@ EXCLUDED_RULES: list[tuple[re.Pattern[str], str]] = [
     ),
 ]
 
+TOPIC_ONLY_FORMAL_BLOCKLIST: list[tuple[re.Pattern[str], str]] = [
+    (
+        re.compile(r"(缺失检测报告及认证资质要求)"),
+        "该条仅为 technical_standard 专题泛化推断标题，当前无正式规则支撑，不得进入正式风险，治理层直接下沉为已剔除误报。",
+    ),
+]
+
 
 def infer_family(title: str) -> tuple[str, str]:
     normalized = str(title).strip()
@@ -113,6 +120,13 @@ def merge_reason_for_family(family_key: str) -> str:
     return reasons.get(family_key, "同一风险家族存在近义候选，治理层已归并为单一主标题。")
 
 
+def _is_topic_only_candidate(envelope: GovernanceClusterEnvelope) -> bool:
+    source_rules = [str(rule).strip() for rule in envelope.source_rules if str(rule).strip()]
+    if not source_rules:
+        return True
+    return all(rule == "topic" for rule in source_rules)
+
+
 def decide_target_layer(envelope: GovernanceClusterEnvelope) -> tuple[GovernanceLayer, str]:
     title = str(envelope.title).strip()
     source_blob = "\n".join([title, *envelope.source_excerpts, *envelope.source_locations])
@@ -120,6 +134,10 @@ def decide_target_layer(envelope: GovernanceClusterEnvelope) -> tuple[Governance
     for pattern, reason in FORMAL_RULES:
         if pattern.search(source_blob):
             return "formal_risks", reason
+    if input_layer == "formal_risks" and _is_topic_only_candidate(envelope):
+        for pattern, reason in TOPIC_ONLY_FORMAL_BLOCKLIST:
+            if pattern.search(source_blob):
+                return "excluded_risks", reason
     for pattern, reason in EXCLUDED_RULES:
         if pattern.search(source_blob):
             return "excluded_risks", reason

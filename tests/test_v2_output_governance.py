@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import runpy
+from pathlib import Path
 
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import build_v2_final_output
@@ -445,3 +447,64 @@ def test_build_v2_final_output_rejects_cross_layer_family_conflicts() -> None:
         assert "cross-layer family conflicts remain after governance" in str(exc)
     else:
         raise AssertionError("expected cross-layer family conflict gate to reject invalid governed result")
+
+
+def test_output_governance_blocks_topic_pseudo_rule_missing_detection_report_from_formal() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="pseudo-topic-1",
+                title="缺失检测报告及认证资质要求",
+                severity="高风险",
+                review_type="检测认证要求审查",
+                source_locations=["证据1、证据2、证据3"],
+                source_excerpts=["全文未提及检测报告、CMA、CNAS、认证证书等要求。"],
+                risk_judgment=[
+                    "技术参数中引用了多项标准，但未要求供应商提供具备CMA/CNAS资质的第三方检测机构出具的检测报告。",
+                    "未明确是否要求产品通过CCC认证或其他强制性认证。",
+                ],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governed = govern_comparison_artifact("sample.docx", comparison)
+
+    assert [item.decision.canonical_title for item in governed.formal_risks] == []
+    assert [item.decision.canonical_title for item in governed.excluded_risks] == ["缺失检测报告及认证资质要求"]
+
+
+def test_output_governance_real_replay_blocks_topic_pseudo_rule_for_diesel_case() -> None:
+    comparison_payload = json.loads(
+        Path("data/results/v2/20260408-162750-07e8e4d3/comparison.json").read_text(encoding="utf-8")
+    )
+    target_cluster = next(
+        cluster for cluster in comparison_payload["clusters"] if cluster["title"] == "缺失检测报告及认证资质要求"
+    )
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id=target_cluster["cluster_id"],
+                title=target_cluster["title"],
+                severity=target_cluster["severity"],
+                review_type=target_cluster["review_type"],
+                source_locations=target_cluster["source_locations"],
+                source_excerpts=target_cluster["source_excerpts"],
+                risk_judgment=target_cluster["risk_judgment"],
+                legal_basis=target_cluster["legal_basis"],
+                rectification=target_cluster["rectification"],
+                topics=target_cluster["topics"],
+                source_rules=target_cluster["source_rules"],
+                need_manual_review=target_cluster["need_manual_review"],
+            )
+        ],
+        metadata={},
+    )
+
+    governed = govern_comparison_artifact("SZDL2025000495-A-0330.docx", comparison)
+
+    assert not any(item.decision.canonical_title == "缺失检测报告及认证资质要求" for item in governed.formal_risks)
+    blocked = next(item for item in governed.excluded_risks if item.decision.canonical_title == "缺失检测报告及认证资质要求")
+    assert blocked.identity.rule_id == "topic::缺失检测报告及认证资质要求"
