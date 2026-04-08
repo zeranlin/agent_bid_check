@@ -447,19 +447,18 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
         need_manual_review=any(cluster.need_manual_review for cluster in clusters),
     )
     if group_key == "import_consistency":
-        merged.risk_judgment = dedupe(
-            [
-                "文件一方面明确不接受进口产品，另一方面又在技术标准、燃油标准或部件表述中引入外标/国外部件口径，容易造成供应商对可投范围和验收依据理解冲突。"
-            ]
-            + merged.risk_judgment
-        )
+        merged.risk_judgment = [
+            "文件一方面明确不接受进口产品，另一方面又在技术标准、部件或验收口径中引入外标/国外部件表述，容易造成供应商对可投范围和验收依据理解冲突。",
+            "如直接绑定外标体系或要求国外部件提供原产地证明、进货渠道证明等材料，且未说明等效标准、等效部件或可接受范围，容易放大采购政策口径与技术、验收口径的不一致。",
+            "该类问题核心在于非进口项目中引入外标/国外部件表述所形成的理解冲突和潜在竞争限制。",
+            "标准版本、编号或格式问题仅能作为该主风险的补充佐证，不应盖过主风险本身。",
+        ]
     if group_key == "acceptance_testing_cost":
-        merged.risk_judgment = dedupe(
-            [
-                "同一组条款同时体现“检测/相关部门验收费用”与“计入投标总价”的表述，问题核心应统一收敛为费用边界不清和潜在转嫁风险。"
-            ]
-            + merged.risk_judgment
-        )
+        merged.risk_judgment = [
+            "同一组条款将检测、相关部门验收等费用笼统纳入投标总价，问题核心应收敛为费用边界不清和潜在转嫁风险。",
+            "当前条款未区分履约自检、试运行成本与验收阶段第三方/法定检测费用，容易引发费用承担边界争议。",
+            "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
+        ]
     if group_key == "cert_scoring":
         merged.risk_judgment = dedupe(
             [
@@ -468,12 +467,11 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
             + merged.risk_judgment
         )
     if group_key == "scoring_clarity":
-        merged.risk_judgment = dedupe(
-            [
-                "该评分项同时使用分点覆盖和档次评价表达，但量化口径、计算关系和判定边界说明仍不够清晰，容易影响评审一致性。"
-            ]
-            + merged.risk_judgment
-        )
+        merged.risk_judgment = [
+            "该评分项同时使用分点覆盖和档次评价表达，但量化口径、计算关系和判定边界说明仍不够清晰，容易影响评审一致性。",
+            "评分标准仍以“清晰”“较清晰”“模糊”“操作性强”等定性描述为主，缺少可直接对照的量化判定标准。",
+            "不同档次之间分值差距较大，但缺少清晰的区分依据，容易影响评审一致性和结果稳定性。",
+        ]
     if group_key == "personnel_scoring":
         merged.risk_judgment = dedupe(
             [

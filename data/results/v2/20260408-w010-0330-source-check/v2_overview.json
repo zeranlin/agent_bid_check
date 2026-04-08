@@ -1,0 +1,35 @@
+{
+  "structure_sections": 249,
+  "evidence_bundles": 0,
+  "comparison_available": true,
+  "topics": [
+    {
+      "topic": "policy",
+      "summary": "policy real-file replay",
+      "risk_count": 0,
+      "need_manual_review": false,
+      "coverage_note": "真实文件回放测试"
+    },
+    {
+      "topic": "scoring",
+      "summary": "scoring real-file replay",
+      "risk_count": 0,
+      "need_manual_review": false,
+      "coverage_note": "真实文件回放测试"
+    },
+    {
+      "topic": "technical_standard",
+      "summary": "technical_standard real-file replay",
+      "risk_count": 0,
+      "need_manual_review": false,
+      "coverage_note": "真实文件回放测试"
+    },
+    {
+      "topic": "acceptance",
+      "summary": "acceptance real-file replay",
+      "risk_count": 0,
+      "need_manual_review": false,
+      "coverage_note": "真实文件回放测试"
+    }
+  ]
+}

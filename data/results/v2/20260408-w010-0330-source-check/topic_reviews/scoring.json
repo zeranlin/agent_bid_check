@@ -1,0 +1,250 @@
+{
+  "topic": "scoring",
+  "summary": "scoring real-file replay",
+  "risk_points": [],
+  "need_manual_review": false,
+  "coverage_note": "真实文件回放测试",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "二、评审标准：",
+        "start_line": 200,
+        "end_line": 215,
+        "module": "scoring"
+      },
+      {
+        "title": "一、评分内容：",
+        "start_line": 261,
+        "end_line": 276,
+        "module": "scoring"
+      },
+      {
+        "title": "（二） 评分标准",
+        "start_line": 309,
+        "end_line": 326,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容",
+        "start_line": 327,
+        "end_line": 331,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容：",
+        "start_line": 368,
+        "end_line": 369,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容：",
+        "start_line": 395,
+        "end_line": 399,
+        "module": "scoring"
+      },
+      {
+        "title": "评分准则",
+        "start_line": 409,
+        "end_line": 508,
+        "module": "policy"
+      }
+    ],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "structured_signals": {
+      "star_required_for_gb_non_t": true,
+      "star_required_for_mandatory_standard": true,
+      "star_rule_sections": [
+        {
+          "section_id": "builtin:star_marker",
+          "title": "内置规则库：实质性条款星标规则",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "star_rule_sentences": [
+        "评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。"
+      ],
+      "acceptance_plan_forbidden_in_scoring": true,
+      "acceptance_plan_rule_sections": [
+        {
+          "section_id": "builtin:acceptance_plan_scoring",
+          "title": "内置规则库：评分因素合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "acceptance_plan_rule_sentences": [
+        "评审规则合规性-不得将项目验收方案作为评审因素。"
+      ],
+      "scoring_contains_acceptance_plan": true,
+      "acceptance_plan_scoring_sections": [
+        {
+          "section_id": "200-215",
+          "title": "二、评审标准：",
+          "start_line": 200,
+          "end_line": 215,
+          "module": "scoring"
+        }
+      ],
+      "acceptance_plan_scoring_sentences": [
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分",
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分",
+        "2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分",
+        "3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分",
+        "4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。 3"
+      ],
+      "acceptance_plan_linked_to_score": true,
+      "payment_terms_forbidden_in_scoring": true,
+      "payment_terms_rule_sections": [
+        {
+          "section_id": "builtin:payment_terms_scoring",
+          "title": "内置规则库：商务评分合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "payment_terms_rule_sentences": [
+        "评审规则合规性-不得将付款方式作为评审因素。"
+      ],
+      "scoring_contains_payment_terms": false,
+      "payment_terms_scoring_sections": [],
+      "payment_terms_scoring_sentences": [],
+      "payment_terms_linked_to_score": false,
+      "gifts_or_unrelated_goods_forbidden_in_scoring": true,
+      "gifts_or_goods_rule_sections": [
+        {
+          "section_id": "builtin:gifts_scoring",
+          "title": "内置规则库：评分因素相关性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "gifts_or_goods_rule_sentences": [
+        "评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"
+      ],
+      "scoring_contains_gifts_or_unrelated_goods": false,
+      "gifts_or_goods_scoring_sections": [],
+      "gifts_or_goods_scoring_sentences": [],
+      "gifts_or_goods_linked_to_score": false,
+      "specific_brand_or_supplier_forbidden_in_scoring": true,
+      "specific_brand_or_supplier_rule_sections": [
+        {
+          "section_id": "builtin:specific_brand_scoring",
+          "title": "内置规则库：评分因素公平竞争",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "specific_brand_or_supplier_rule_sentences": [
+        "评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。"
+      ],
+      "scoring_contains_specific_cert_or_supplier_signal": true,
+      "specific_cert_or_supplier_scoring_sections": [
+        {
+          "section_id": "395-399",
+          "title": "（一） 评分内容：",
+          "start_line": 395,
+          "end_line": 399,
+          "module": "scoring"
+        }
+      ],
+      "specific_cert_or_supplier_evidence": [
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分",
+        "2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+      ],
+      "specific_cert_or_supplier_score_linked": true,
+      "scoring_requirement_present": true,
+      "scoring_requirement_sections": [
+        {
+          "section_id": "200-215",
+          "title": "二、评审标准：",
+          "start_line": 200,
+          "end_line": 215,
+          "module": "scoring"
+        },
+        {
+          "section_id": "261-276",
+          "title": "一、评分内容：",
+          "start_line": 261,
+          "end_line": 276,
+          "module": "scoring"
+        },
+        {
+          "section_id": "309-326",
+          "title": "（二） 评分标准",
+          "start_line": 309,
+          "end_line": 326,
+          "module": "scoring"
+        },
+        {
+          "section_id": "327-331",
+          "title": "（一） 评分内容",
+          "start_line": 327,
+          "end_line": 331,
+          "module": "scoring"
+        },
+        {
+          "section_id": "368-369",
+          "title": "（一） 评分内容：",
+          "start_line": 368,
+          "end_line": 369,
+          "module": "scoring"
+        },
+        {
+          "section_id": "395-399",
+          "title": "（一） 评分内容：",
+          "start_line": 395,
+          "end_line": 399,
+          "module": "scoring"
+        },
+        {
+          "section_id": "409-508",
+          "title": "评分准则",
+          "start_line": 409,
+          "end_line": 508,
+          "module": "policy"
+        }
+      ],
+      "scoring_requirement_sentences": [
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；",
+        "4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。",
+        "一、评分内容： 拟安排项目负责人为投标单位员工（以社保为准） ，否则本项不得分。",
+        "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分， 其他情况不得分，本小项最高得 30 分。",
+        "以上得分可以累计， 最高得分 100 分。",
+        "（二） 评分标准 评审委员会根据响应情况进行打分， 全部满足要求的得100 分，每负偏离一项扣20 分， 最低得 0 分。",
+        "（一） 评分内容 1.投标人具有质量管理体系认证证书；",
+        "（一） 评分内容： 1、提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准） 在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。",
+        "以上累计最高得分为 100 分。",
+        "评分准则 4 1 诚信情况 5 根据《深圳市财政局关于印发<深圳市财政局政府采购供应商信用信息管理办法>的通知》（深财规〔2023〕3 号）相关规定，如供应商在全国范围内存在因政府采购违法、违规行为受到财政部门罚款等一般行政处罚信息，或者存在该办法第十一条所称在本市集中采购活动中的一般违法失信行为记录信息， 且在公示期内的， 本项不得分，否则得 100 分。"
+      ],
+      "cancelled_or_non_mandatory_scoring_credential_signal": false,
+      "cancelled_or_non_mandatory_scoring_credential_sections": [],
+      "cancelled_or_non_mandatory_scoring_credential_sentences": [],
+      "cancelled_or_non_mandatory_scoring_credential_linked_to_score": false,
+      "cancelled_or_non_mandatory_scoring_credential_linked_sections": [],
+      "cancelled_or_non_mandatory_scoring_credential_linked_sentences": [],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

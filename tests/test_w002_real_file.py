@@ -26,6 +26,7 @@ from app.web.v2_app import build_review_view, build_review_view_from_final_outpu
 REAL_FILE = Path("data/uploads/v2/20260401-124322-9d7d80-SZDL2025000495-A.docx")
 R008_REAL_FILE = Path("data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0323.docx")
 R004_REAL_FILE = Path("data/uploads/v2/20260330-205046-b7fabf-SZDL2025000495-A-0323.docx")
+REAL_0330_SOURCE_FILE = Path("/Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx")
 W005_SOURCE_RUN = Path("data/results/v2/20260402-100336-szdl2025000495a-mature-review/topic_reviews")
 W006_SOURCE_RUN = Path("data/results/v2/20260402-120909-w005f-default-entry-rerun/topic_reviews")
 G005_SOURCE_RUN = Path("data/results/v2/20260402-g004-feedback-loop-rerun/topic_reviews")
@@ -372,6 +373,10 @@ def _build_topics_from_result_run(result_dir: Path) -> tuple[Path, V2StageArtifa
 
 def _build_0330_result_topics() -> tuple[Path, V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
     return _build_topics_from_result_run(REAL_0330_RESULT)
+
+
+def _build_0330_source_topics() -> tuple[V2StageArtifact, V2StageArtifact, list[TopicReviewArtifact]]:
+    return _build_topics_for_file(REAL_0330_SOURCE_FILE)
 
 
 def test_w002_real_file_compare_matrix_is_complete() -> None:
@@ -834,6 +839,51 @@ def test_0330_real_file_wording_does_not_conflict_with_project_context() -> None
     )
     assert "若本项目并非专门针对柴油发电机组采购" not in judgment_text
     assert "若标的为通用服务或设备" not in judgment_text
+
+
+def test_0330_real_file_wording_is_tightened_for_risks_1_5_10() -> None:
+    saved_file, structure, baseline, topics = _build_0330_result_topics()
+    comparison = compare_review_artifacts(saved_file.name, baseline, topics)
+    clusters = {cluster.title: cluster for cluster in comparison.clusters}
+
+    import_cluster = clusters["拒绝进口 vs 外标/国外部件引用矛盾风险"]
+    assert import_cluster.risk_judgment[0] == "文件一方面明确不接受进口产品，另一方面又在技术标准、部件或验收口径中引入外标/国外部件表述，容易造成供应商对可投范围和验收依据理解冲突。"
+    assert any("标准版本、编号或格式问题仅能作为该主风险的补充佐证，不应盖过主风险本身。" == item for item in import_cluster.risk_judgment)
+    assert not any("GB 252 标准已多次更新" in item for item in import_cluster.risk_judgment)
+
+    acceptance_cluster = clusters["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert acceptance_cluster.risk_judgment == [
+        "同一组条款将检测、相关部门验收等费用笼统纳入投标总价，问题核心应收敛为费用边界不清和潜在转嫁风险。",
+        "当前条款未区分履约自检、试运行成本与验收阶段第三方/法定检测费用，容易引发费用承担边界争议。",
+        "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
+    ]
+
+    scoring_cluster = clusters["评分描述量化口径不足，存在评审一致性风险"]
+    assert scoring_cluster.risk_judgment == [
+        "该评分项同时使用分点覆盖和档次评价表达，但量化口径、计算关系和判定边界说明仍不够清晰，容易影响评审一致性。",
+        "评分标准仍以“清晰”“较清晰”“模糊”“操作性强”等定性描述为主，缺少可直接对照的量化判定标准。",
+        "不同档次之间分值差距较大，但缺少清晰的区分依据，容易影响评审一致性和结果稳定性。",
+    ]
+    assert not any("自由裁量权过大" in item for item in scoring_cluster.risk_judgment)
+
+
+def test_0330_source_file_does_not_contain_gifts_clause_or_hit_gifts_risk() -> None:
+    text = extract_text(REAL_0330_SOURCE_FILE)
+    for needle in ["赠送", "台式电脑", "打印机", "值班室", "各1套"]:
+        assert needle not in text
+
+    structure, evidence, topics = _build_0330_source_topics()
+    baseline = V2StageArtifact(name="baseline", content=f"# 招标文件合规审查结果\n\n审查对象：`{REAL_0330_SOURCE_FILE.name}`\n")
+    comparison = compare_review_artifacts(REAL_0330_SOURCE_FILE.name, baseline, topics)
+
+    scoring_topic = next(topic for topic in topics if topic.topic == "scoring")
+    assert scoring_topic.metadata["structured_signals"]["scoring_contains_gifts_or_unrelated_goods"] is False
+    assert scoring_topic.metadata["structured_signals"]["gifts_or_goods_linked_to_score"] is False
+    assert scoring_topic.metadata["structured_signals"]["gifts_or_goods_scoring_sentences"] == []
+    assert all(
+        cluster.title != "评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险"
+        for cluster in comparison.clusters
+    )
 
 
 def test_0330_real_file_standard_rule_formal_risk_does_not_carry_manual_marker() -> None:

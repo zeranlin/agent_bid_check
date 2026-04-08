@@ -1,0 +1,108 @@
+{
+  "topic": "policy",
+  "summary": "policy real-file replay",
+  "risk_points": [],
+  "need_manual_review": false,
+  "coverage_note": "真实文件回放测试",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "二、申请人的资格要求",
+        "start_line": 658,
+        "end_line": 681,
+        "module": "procedure"
+      },
+      {
+        "title": "（二）中小企业声明函、残疾人福利性单位声明函及监狱企业声明函",
+        "start_line": 1590,
+        "end_line": 1652,
+        "module": "policy"
+      },
+      {
+        "title": "5.2 投标人资格要求",
+        "start_line": 3368,
+        "end_line": 3421,
+        "module": "procedure"
+      }
+    ],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "structured_signals": {
+      "import_policy": "reject_import",
+      "import_policy_reject_phrases": [
+        "不接受投标人选用进口产品"
+      ],
+      "import_policy_accept_phrases": [],
+      "import_policy_sections": [
+        {
+          "section_id": "658-681",
+          "title": "二、申请人的资格要求",
+          "start_line": 658,
+          "end_line": 681,
+          "module": "procedure"
+        }
+      ],
+      "import_policy_sentences": [
+        "本项目不接受联合体投标， 不接受投标人选用进口产品参与投标， 不允许转包、分包"
+      ],
+      "policy_discount_present": true,
+      "policy_discount_sections": [
+        {
+          "section_id": "658-681",
+          "title": "二、申请人的资格要求",
+          "start_line": 658,
+          "end_line": 681,
+          "module": "procedure"
+        },
+        {
+          "section_id": "1590-1652",
+          "title": "（二）中小企业声明函、残疾人福利性单位声明函及监狱企业声明函",
+          "start_line": 1590,
+          "end_line": 1652,
+          "module": "policy"
+        }
+      ],
+      "policy_discount_sentences": [
+        "不接受同一总公司（或总所授权两家或以上分公司（或分所） 同时参与本项目投标， 也不接受总公司（或总所与分公司（或分所） 同时参与本项目投标， 如出现上述情形， 该两家或以上供应商的投标文件均按无效投标处理） 2.落实政府采购政策需满足的资格要求： 本项目不属于专门面向中小企业采购的项目。",
+        "（二）中小企业声明函、残疾人福利性单位声明函及监狱企业声明函 填写指引： 1、该部分内容由投标人根据自身实际情况填写，不符合要求的投标人可以不填写或直接删除相应的声明函。",
+        "2、该部分内容填写需要参考的相关文件： (1)财政部《政府采购促进中小企业发展管理办法》（财库〔2020〕46 号）；",
+        "(2)《工业和信息化部、国家统计局、国家发展和改革委员会、财政部关于印发中小企业划型标准规定的通知》（工信部联企业〔2011〕300 号，以下简称 300 号文）。",
+        "4、声明函具体填写要求： （1）声明是中小企业须填写《中小企业声明函》的以下内容： 第一处，在“采购人名称”下划线处如实填写采购人名称；",
+        "第四处， 在“招标文件中明确的所属行业”下划线处填写采购标的对应的中小企业划分标准所属行业（所属行业可在招标文件第一册第二章“对通用条款的补充内容及其他关键信息”章节查看）；",
+        "在“中型企业、小型企业、微型企业”下划线处如实依照 300 号文填写相应的企业类型；"
+      ],
+      "eco_policy_present": false,
+      "eco_policy_sections": [],
+      "eco_policy_sentences": [],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": true,
+      "electronic_procurement_sections": [
+        {
+          "section_id": "1590-1652",
+          "title": "（二）中小企业声明函、残疾人福利性单位声明函及监狱企业声明函",
+          "start_line": 1590,
+          "end_line": 1652,
+          "module": "policy"
+        }
+      ],
+      "electronic_procurement_sentences": [
+        "声明函不需要盖章或签字；"
+      ],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": [],
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": []
+    }
+  }
+}

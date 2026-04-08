@@ -1,0 +1,108 @@
+{
+  "topic": "acceptance",
+  "summary": "acceptance real-file replay",
+  "risk_points": [],
+  "need_manual_review": false,
+  "coverage_note": "真实文件回放测试",
+  "metadata": {
+    "selected_sections": [
+      {
+        "title": "（二）其他商务要求",
+        "start_line": 1319,
+        "end_line": 1387,
+        "module": "technical"
+      },
+      {
+        "title": "设备验收",
+        "start_line": 1408,
+        "end_line": 1453,
+        "module": "acceptance"
+      },
+      {
+        "title": "第五条   交货和验收",
+        "start_line": 3186,
+        "end_line": 3221,
+        "module": "contract"
+      }
+    ],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "structured_signals": {
+      "compliance_proof_present": true,
+      "compliance_proof_sections": [
+        {
+          "section_id": "1319-1387",
+          "title": "（二）其他商务要求",
+          "start_line": 1319,
+          "end_line": 1387,
+          "module": "technical"
+        },
+        {
+          "section_id": "1408-1453",
+          "title": "设备验收",
+          "start_line": 1408,
+          "end_line": 1453,
+          "module": "acceptance"
+        }
+      ],
+      "compliance_proof_sentences": [
+        "4.投标人必须对所投机组提供机组合格证书（原件）和制造厂有效三包条例证书。",
+        "★3.国内生产的部件必须有国家有关部门的认证合格证， 强制认证产品必须有 3C 认证。",
+        "4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。"
+      ],
+      "foreign_component_requirement_present": true,
+      "foreign_component_sections": [
+        {
+          "section_id": "1408-1453",
+          "title": "设备验收",
+          "start_line": 1408,
+          "end_line": 1453,
+          "module": "acceptance"
+        }
+      ],
+      "foreign_component_sentences": [
+        "4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。"
+      ],
+      "acceptance_testing_cost_forbidden_to_bidder": true,
+      "acceptance_testing_cost_rule_sections": [
+        {
+          "section_id": "builtin:acceptance_testing_cost",
+          "title": "内置规则库：需求合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "acceptance_testing_cost_rule_sentences": [
+        "需求合规性-不得要求中标人承担验收产生的检测费用。"
+      ],
+      "demand_contains_acceptance_testing_cost_signal": true,
+      "acceptance_testing_cost_sections": [
+        {
+          "section_id": "1319-1387",
+          "title": "（二）其他商务要求",
+          "start_line": 1319,
+          "end_line": 1387,
+          "module": "technical"
+        }
+      ],
+      "acceptance_testing_cost_evidence": [
+        "2 基本要求 ★1.本项目为交钥匙项目：投标人的投标总价包括货物设计、生产（采购）、包装、运输至指定位置、装卸、安装 （排风、供油、尾气喷淋系统、接地、排烟管、电缆安装等）、检测、调试、试运行、培训、相关部门验收、验收合格之前及质保期内的首次维护保养 （含更换机油及耗材） 及整机质量保修三年或累计运行 1000 小时（时间先到之一终止） 、备品备件、专用工具等所有含税费用， 同时投标人应自行计入系统正常、合法、安全运行及使用所必需的所有设备、版权、专利等一切费用。"
+      ],
+      "acceptance_testing_cost_shifted_to_bidder": true,
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}
