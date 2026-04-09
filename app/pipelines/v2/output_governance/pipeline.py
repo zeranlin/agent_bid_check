@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .identity import build_risk_family, build_risk_identity
-from .rules import decide_target_layer, merge_reason_for_family, pick_higher_severity
+from .rules import apply_family_severity_floor, decide_target_layer, merge_reason_for_family, pick_higher_severity
 from .schemas import GovernedResult, GovernedRisk, GovernanceClusterEnvelope, GovernanceDecision, GovernanceInput
 
 
@@ -31,6 +31,7 @@ def _govern_envelope(envelope: GovernanceClusterEnvelope) -> GovernedRisk:
     family = build_risk_family(envelope)
     identity = build_risk_identity(envelope, family)
     target_layer, governance_reason = decide_target_layer(envelope)
+    normalized_severity = apply_family_severity_floor(family.family_key, envelope.severity)
     decision = GovernanceDecision(
         target_layer=target_layer,
         governance_reason=governance_reason,
@@ -42,7 +43,7 @@ def _govern_envelope(envelope: GovernanceClusterEnvelope) -> GovernedRisk:
         family=family,
         decision=decision,
         review_type=envelope.review_type,
-        severity=envelope.severity,
+        severity=normalized_severity,
         source_locations=list(envelope.source_locations),
         source_excerpts=list(envelope.source_excerpts),
         risk_judgment=list(envelope.risk_judgment),

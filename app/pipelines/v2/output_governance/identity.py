@@ -21,7 +21,13 @@ def _anchor_hash(text: str) -> str:
 
 
 def build_risk_family(envelope: GovernanceClusterEnvelope) -> RiskFamily:
-    family_key, canonical_title = infer_family(envelope.title)
+    family_key, canonical_title = infer_family(
+        envelope.title,
+        envelope.review_type,
+        *envelope.source_excerpts,
+        *envelope.risk_judgment,
+        *envelope.source_locations,
+    )
     return RiskFamily(
         family_key=_slug(family_key),
         canonical_title=canonical_title,

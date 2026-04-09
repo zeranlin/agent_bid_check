@@ -10,6 +10,8 @@ from app.common.schemas import ReviewReport, RiskPoint
 from .compare import compare_review_artifacts
 from .output_governance import govern_comparison_artifact, validate_governed_result
 from .output_governance.schemas import GovernedResult
+from .risk_admission import admit_governance_result, validate_admitted_result
+from .risk_admission.schemas import AdmissionCandidate, AdmissionResult
 from .schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
@@ -113,6 +115,31 @@ def _governed_risk_to_risk_point(governed_risk) -> RiskPoint:
     return risk
 
 
+def _admitted_risk_to_risk_point(candidate: AdmissionCandidate, governed_risk=None) -> RiskPoint:
+    if governed_risk is None:
+        risk = RiskPoint(
+            title=candidate.title,
+            severity=candidate.severity,
+            review_type=candidate.review_type,
+            source_location="；".join(candidate.source_locations) if candidate.source_locations else "未发现",
+            source_excerpt="\n\n".join(candidate.source_excerpts[:2]) if candidate.source_excerpts else "未发现",
+            risk_judgment=["已通过 risk_admission 准入层裁决。"],
+            legal_basis=["需结合 risk_admission / output_governance 留痕查看。"],
+            rectification=["未发现"],
+        )
+        risk.ensure_defaults()
+        return risk
+
+    risk = _governed_risk_to_risk_point(governed_risk)
+    risk.title = candidate.title
+    risk.severity = candidate.severity
+    risk.review_type = candidate.review_type or risk.review_type
+    risk.source_location = "；".join(candidate.source_locations) if candidate.source_locations else risk.source_location
+    risk.source_excerpt = "\n\n".join(candidate.source_excerpts[:2]) if candidate.source_excerpts else risk.source_excerpt
+    risk.ensure_defaults()
+    return risk
+
+
 def _build_description_lines(structure: V2StageArtifact, topics: list[TopicReviewArtifact]) -> list[str]:
     sections = structure.metadata.get("sections", []) if structure.metadata else []
     manual_topics = [topic.topic for topic in topics if topic.need_manual_review]
@@ -136,24 +163,32 @@ def _build_report(
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact,
     governance: GovernedResult | None = None,
+    admission: AdmissionResult | None = None,
 ) -> ReviewReport:
     baseline_report = parse_review_markdown(baseline.content)
     report = ReviewReport()
     report.subject = baseline_report.subject or document_name
     report.description_lines = _build_description_lines(structure, topics)
     governance = governance or govern_comparison_artifact(document_name, comparison)
-    report.risk_points = [_governed_risk_to_risk_point(item) for item in governance.formal_risks]
+    admission = admission or admit_governance_result(document_name, comparison, governance)
+    governed_by_rule = {item.identity.rule_id: item for item in governance.iter_all()}
+    report.risk_points = [
+        _admitted_risk_to_risk_point(item, governed_by_rule.get(item.rule_id))
+        for item in admission.formal_risks
+    ]
+    for risk in report.risk_points:
+        risk.ensure_defaults()
     report.pending_review_items = [
         {
-            "title": item.decision.canonical_title,
+            "title": item.title,
             "severity": item.severity,
             "review_type": item.review_type,
-            "topic": item.identity.source_topics[0] if item.identity.source_topics else item.extras.get("topic", ""),
+            "topic": item.extras.get("topic", ""),
             "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
             "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
-            "reason": item.decision.governance_reason,
+            "reason": admission.decisions[item.rule_id].admission_reason,
         }
-        for item in governance.pending_review_items
+        for item in admission.pending_review_items
     ]
     report.summary_high_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "高风险"]) or ["未发现"]
     report.summary_medium_risk = dedupe([risk.title for risk in report.risk_points if risk.severity == "中风险"]) or ["未发现"]
@@ -181,11 +216,14 @@ def build_v2_final_output(
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact | None = None,
     governance: GovernedResult | None = None,
+    admission: AdmissionResult | None = None,
 ) -> dict:
     comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
     governance = governance or govern_comparison_artifact(document_name, comparison)
+    admission = admission or admit_governance_result(document_name, comparison, governance)
     validate_governed_result(governance)
-    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance)
+    validate_admitted_result(admission)
+    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance, admission=admission)
     return {
         "subject": report.subject,
         "description_lines": list(report.description_lines),
@@ -205,28 +243,28 @@ def build_v2_final_output(
         "pending_review_items": deepcopy(
             [
                 {
-                    "title": item.decision.canonical_title,
+                    "title": item.title,
                     "severity": item.severity,
                     "review_type": item.review_type,
-                    "topic": item.identity.source_topics[0] if item.identity.source_topics else item.extras.get("topic", ""),
+                    "topic": item.extras.get("topic", ""),
                     "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
                     "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
-                    "reason": item.decision.governance_reason,
+                    "reason": admission.decisions[item.rule_id].admission_reason,
                 }
-                for item in governance.pending_review_items
+                for item in admission.pending_review_items
             ]
         ),
         "excluded_risks": deepcopy(
             [
                 {
-                    "title": item.decision.canonical_title,
+                    "title": item.title,
                     "severity": item.severity,
                     "review_type": item.review_type,
                     "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
                     "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
-                    "reason": item.decision.governance_reason,
+                    "reason": admission.decisions[item.rule_id].admission_reason,
                 }
-                for item in governance.excluded_risks
+                for item in admission.excluded_risks
             ]
         ),
         "summary": {
@@ -236,6 +274,7 @@ def build_v2_final_output(
         },
         "basis_summary": list(report.basis_summary),
         "governance": governance.to_dict(),
+        "risk_admission": admission.to_dict(),
     }
 
 
@@ -246,9 +285,10 @@ def assemble_v2_report(
     topics: list[TopicReviewArtifact],
     comparison: ComparisonArtifact | None = None,
     governance: GovernedResult | None = None,
+    admission: AdmissionResult | None = None,
 ) -> str:
     comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
-    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance)
+    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance, admission=admission)
     return _render_report(report)
 
 

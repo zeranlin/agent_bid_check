@@ -15,7 +15,7 @@ FAMILY_RULES: list[tuple[str, re.Pattern[str], str]] = [
     ),
     (
         "import_consistency",
-        re.compile(r"(拒绝进口|国外标准|国外部件|采购政策口径|燃油标准引用可能涉及废止版本|非进口项目中出现国外标准)"),
+        re.compile(r"(拒绝进口|国外标准|国外部件|采购政策口径|燃油标准引用可能涉及废止版本|非进口项目中出现国外标准|电磁兼容标准引用格式混乱且编号不完整)"),
         "拒绝进口 vs 外标/国外部件引用矛盾风险",
     ),
     (
@@ -58,7 +58,22 @@ FAMILY_RULES: list[tuple[str, re.Pattern[str], str]] = [
         re.compile(r"(验收流程关键时点留白|验收时点约定缺失，导致验收流程不可操作)"),
         "验收时点约定缺失，导致验收流程不可操作",
     ),
+    (
+        "software_copyright_competition",
+        re.compile(r"(信息化软件服务能力|软件著作权登记证书|著作权人为投标人)"),
+        "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争",
+    ),
+    (
+        "no_crime_submission_timing",
+        re.compile(r"(无犯罪证明|合同签订后的三个月内提供|无效投标处理)"),
+        "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险",
+    ),
 ]
+
+SEVERITY_FLOORS: dict[str, str] = {
+    "software_copyright_competition": "中风险",
+    "no_crime_submission_timing": "中风险",
+}
 
 FORMAL_RULES: list[tuple[re.Pattern[str], str]] = [
     (
@@ -101,13 +116,21 @@ TOPIC_ONLY_FORMAL_BLOCKLIST: list[tuple[re.Pattern[str], str]] = [
 ]
 
 
-def infer_family(title: str) -> tuple[str, str]:
+def infer_family(title: str, *context_parts: str) -> tuple[str, str]:
     normalized = str(title).strip()
+    source_blob = "\n".join(part for part in [normalized, *[str(part).strip() for part in context_parts]] if str(part).strip())
     for family_key, pattern, canonical_title in FAMILY_RULES:
-        if pattern.search(normalized):
+        if pattern.search(source_blob):
             return family_key, canonical_title
     fallback = re.sub(r"\s+", "-", normalized.lower()) or "unclassified-risk"
     return fallback, normalized
+
+
+def apply_family_severity_floor(family_key: str, severity: str) -> str:
+    floor = SEVERITY_FLOORS.get(family_key)
+    if not floor:
+        return severity
+    return floor if SEVERITY_RANK.get(floor, -1) > SEVERITY_RANK.get(severity, -1) else severity
 
 
 def merge_reason_for_family(family_key: str) -> str:
