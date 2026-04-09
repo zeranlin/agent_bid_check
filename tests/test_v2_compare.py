@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.common.schemas import RiskPoint
-from app.pipelines.v2.assembler import assemble_v2_report
+from app.pipelines.v2.assembler import assemble_v2_report, build_v2_final_output
 from app.pipelines.v2.compare import _compact_sentences, compare_review_artifacts
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
@@ -192,6 +192,64 @@ def test_assemble_v2_report_summary_uses_final_layered_results_only() -> None:
     assert "拒绝进口 vs 外标/国外部件引用矛盾风险" in summary_section
     assert "具体资格条款缺失，无法判断是否存在排斥性要求" in report
     assert "- 需人工复核事项：" in summary_section
+
+
+def test_assemble_v2_report_basis_summary_uses_admission_formal_only() -> None:
+    baseline = V2StageArtifact(
+        name="baseline",
+        content="""
+# 招标文件合规审查结果
+
+审查对象：`sample.docx`
+
+## 主要依据汇总
+
+- 旧基线依据，不应继续进入正式依据汇总
+""".strip(),
+    )
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="formal-1",
+                title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                severity="高风险",
+                review_type="评分因素合规性审查",
+                source_locations=["评分条款A"],
+                source_excerpts=["验收方案优的得满分。"],
+                risk_judgment=["正式风险仍应保留。"],
+                legal_basis=["正式依据：评审因素应与采购需求和合同履约相关。"],
+                rectification=["删除验收方案评分项。"],
+                topics=["scoring"],
+                source_rules=["compare_rule:R-003"],
+            ),
+            MergedRiskCluster(
+                cluster_id="downgraded-1",
+                title="检测报告及认证资质要求缺失或表述不明",
+                severity="中风险",
+                review_type="检测认证要求审查",
+                source_locations=["技术条款：设备验收"],
+                source_excerpts=["未见关于第三方检测报告、CMA/CNAS 资质或 CCC 认证的具体条款。"],
+                risk_judgment=["需人工确认验收章节是否补充了相关检测要求。"],
+                legal_basis=["降级依据：这条不应留在 basis_summary。"],
+                rectification=["补充检测要求。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    final_output = build_v2_final_output(
+        "sample.docx",
+        baseline,
+        V2StageArtifact(name="structure", metadata={}),
+        [],
+        comparison=comparison,
+    )
+
+    assert "正式依据：评审因素应与采购需求和合同履约相关。" in final_output["basis_summary"]
+    assert "旧基线依据，不应继续进入正式依据汇总" not in final_output["basis_summary"]
+    assert "降级依据：这条不应留在 basis_summary。" not in final_output["basis_summary"]
 
 
 def test_compare_review_artifacts_enriches_coverage_analysis() -> None:

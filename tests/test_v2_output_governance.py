@@ -57,6 +57,79 @@ def _build_sample_comparison() -> ComparisonArtifact:
     )
 
 
+def _build_w012_cert_scoring_comparison() -> ComparisonArtifact:
+    return ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="cert-main",
+                title="以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+                severity="高风险",
+                review_type="评分因素合规性 / 限定特定认证或发证机构",
+                source_locations=["评分内容A"],
+                source_excerpts=["省级标准协会颁发的采用国际标准产品确认证书和采用国际标准产品标志证书，每项40分。"],
+                risk_judgment=["主风险应保留。"],
+                legal_basis=["不得限定或者指定特定供应商。"],
+                rectification=["删除特定发证机构限定。"],
+                topics=["cross_topic", "baseline"],
+                source_rules=["compare_rule", "baseline"],
+            ),
+            MergedRiskCluster(
+                cluster_id="cert-support-1",
+                title="以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+                severity="高风险",
+                review_type="评分项合规性审查",
+                source_locations=["评分内容B"],
+                source_excerpts=["CNAS中国认可产品标志证书得20分，本小项最高100分。"],
+                risk_judgment=["这是同一组评分证据中的证书侧佐证。"],
+                legal_basis=["非强制认证不宜作为高分门槛。"],
+                rectification=["删除特定证书高分条件。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="cert-support-2",
+                title="评分标准中要求特定非强制性认证证书，具有倾向性",
+                severity="中风险",
+                review_type="技术参数倾向性/评分因素不相关",
+                source_locations=["评分内容C"],
+                source_excerpts=["省级标准协会颁发的证书效力不一。"],
+                risk_judgment=["这是同一组评分证据中的非强制认证佐证。"],
+                legal_basis=["不得以非强制认证限制竞争。"],
+                rectification=["删除非强制性认证要求。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
+            ),
+            MergedRiskCluster(
+                cluster_id="cert-support-3",
+                title="综合实力评分中三项体系认证要求过于刚性，可能排斥中小企业",
+                severity="中风险",
+                review_type="证书奖项审查",
+                source_locations=["评分内容D"],
+                source_excerpts=["每具备一项证书得35分，两项70分，三项100分。"],
+                risk_judgment=["这是同一组认证组合门槛/权重佐证。"],
+                legal_basis=["认证项权重不宜畸高。"],
+                rectification=["压缩认证项分值。"],
+                topics=["performance_staff"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="cert-support-4",
+                title="指定特定认证机构，具有排他性",
+                severity="中风险",
+                review_type="评分项合规性审查",
+                source_locations=["评分内容E"],
+                source_excerpts=["要求由特定协会或认证机构出具相关认证证明。"],
+                risk_judgment=["这是同一组评分证据中的发证机构侧佐证。"],
+                legal_basis=["不得限定特定认证机构。"],
+                rectification=["删除特定机构限定。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+
 def test_output_governance_objects_can_be_constructed() -> None:
     envelope = GovernanceClusterEnvelope(
         layer="formal_risks",
@@ -220,11 +293,14 @@ def test_output_governance_real_file_replay_matches_og2_target_matrix() -> None:
     pending_titles = [item.decision.canonical_title for item in governed.pending_review_items]
     excluded_titles = [item.decision.canonical_title for item in governed.excluded_risks]
 
-    assert len(formal_titles) == 18
+    assert len(formal_titles) == 17
     assert formal_titles.count("业绩评分限定特定行政区域，存在地域排斥风险") == 1
     assert formal_titles.count("验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险") == 1
     assert formal_titles.count("履约保证金比例严重超标") == 1
     assert formal_titles.count("项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险") == 1
+    assert formal_titles.count("以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险") == 1
+    assert "以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" not in formal_titles
+    assert "指定特定认证机构，具有排他性" not in formal_titles
     assert "残疾人福利性单位及监狱企业政策表述不完整" in pending_titles
     assert "节能环保产品政策条款缺失" in pending_titles
     assert "社保缴纳证明要求存在例外情形，需关注执行一致性" in excluded_titles
@@ -508,3 +584,15 @@ def test_output_governance_real_replay_blocks_topic_pseudo_rule_for_diesel_case(
     assert not any(item.decision.canonical_title == "缺失检测报告及认证资质要求" for item in governed.formal_risks)
     blocked = next(item for item in governed.excluded_risks if item.decision.canonical_title == "缺失检测报告及认证资质要求")
     assert blocked.identity.rule_id == "topic::缺失检测报告及认证资质要求"
+
+
+def test_output_governance_absorbs_certification_scoring_supporting_risks_into_single_main_risk() -> None:
+    governed = govern_comparison_artifact("diesel.docx", _build_w012_cert_scoring_comparison())
+
+    formal_titles = [item.decision.canonical_title for item in governed.formal_risks]
+
+    assert formal_titles.count("以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险") == 1
+    assert "以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" not in formal_titles
+    assert "评分标准中要求特定非强制性认证证书，具有倾向性" not in formal_titles
+    assert "综合实力评分中三项体系认证要求过于刚性，可能排斥中小企业" not in formal_titles
+    assert "指定特定认证机构，具有排他性" not in formal_titles

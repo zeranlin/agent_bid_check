@@ -11,6 +11,10 @@ FUJIAN_RA3_RUN = Path("data/results/v2/20260409-ra3f-fujian-091728/final_output.
 DIESEL_RA3_RUN = Path("data/results/v2/20260409-ra3f-diesel-091728/final_output.json")
 FUJIAN_W011_RUN = Path("data/results/v2/20260409-w011-fujian/final_output.json")
 DIESEL_W011_RUN = Path("data/results/v2/20260409-w011-diesel/final_output.json")
+FUJIAN_W012_RUN = Path("data/results/v2/20260409-w012-fujian/final_output.json")
+DIESEL_W012_RUN = Path("data/results/v2/20260409-w012-diesel/final_output.json")
+FUJIAN_W013_RUN = Path("data/results/v2/20260409-w013-fujian/final_output.json")
+DIESEL_W013_RUN = Path("data/results/v2/20260409-w013-diesel/final_output.json")
 
 
 def _load_output(path: Path) -> dict:
@@ -103,3 +107,54 @@ def test_w011_final_output_markdown_and_web_are_consistent(monkeypatch) -> None:
     assert set(final_titles) == set(markdown_titles) == set(web_titles)
     assert "检测报告及认证资质要求缺失或表述不明" not in web_titles
     assert "电磁兼容标准引用格式混乱且编号不完整" not in web_titles
+
+
+def test_w012_diesel_replay_keeps_single_certification_main_risk(monkeypatch) -> None:
+    data = _load_output(DIESEL_W012_RUN)
+    formal_titles = [item.get("title") for item in data.get("formal_risks", [])]
+
+    assert formal_titles.count("以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险") == 1
+    assert "以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险" not in formal_titles
+    assert "评分标准中要求特定非强制性认证证书，具有倾向性" not in formal_titles
+    assert "指定特定认证机构，具有排他性" not in formal_titles
+    assert "综合实力评分中三项体系认证‘全有或全无’设置不合理" not in formal_titles
+
+    run_dir = DIESEL_W012_RUN.parent
+    monkeypatch.setattr("app.web.v2_app.find_run_dir", lambda run_id: run_dir if run_id == "w012-diesel" else None)
+    app = create_app()
+    with app.test_request_context():
+        result = load_result_by_run_id("w012-diesel")
+    assert result is not None
+    web_titles = [
+        item["title"]
+        for item in result["review_view"]["all_cards"]
+        if "认证" in item["title"] or "证书" in item["title"] or "发证机构" in item["title"]
+    ]
+    assert [title for title in formal_titles if "认证" in title or "证书" in title or "发证机构" in title] == web_titles
+
+
+def test_w013_basis_summary_uses_admission_formal_only_for_fujian() -> None:
+    run_dir = FUJIAN_W013_RUN.parent
+    final_output = _load_output(FUJIAN_W013_RUN)
+    markdown = parse_review_markdown((run_dir / "final_review.md").read_text(encoding="utf-8"))
+
+    assert final_output["basis_summary"] == markdown.basis_summary
+    assert "《政府采购需求管理办法》第二十一条：履约验收方案应当包括验收主体、验收方式、验收标准、验收程序等内容。" not in final_output["basis_summary"]
+
+
+def test_w013_basis_summary_uses_admission_formal_only_for_diesel(monkeypatch) -> None:
+    run_dir = DIESEL_W013_RUN.parent
+    final_output = _load_output(DIESEL_W013_RUN)
+    markdown = parse_review_markdown((run_dir / "final_review.md").read_text(encoding="utf-8"))
+
+    assert final_output["basis_summary"] == markdown.basis_summary
+    assert "《强制性产品认证管理规定》：列入目录的产品必须经过认证。" not in final_output["basis_summary"]
+
+    monkeypatch.setattr("app.web.v2_app.find_run_dir", lambda run_id: run_dir if run_id == "w013-diesel" else None)
+    app = create_app()
+    with app.test_request_context():
+        result = load_result_by_run_id("w013-diesel")
+    assert result is not None
+    web_titles = [item["title"] for item in result["review_view"]["all_cards"]]
+    formal_titles = [item["title"] for item in final_output["formal_risks"]]
+    assert set(web_titles) == set(formal_titles)

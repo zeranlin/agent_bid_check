@@ -200,9 +200,9 @@ def _build_report(
         ]
     ) or ["未发现"]
 
-    basis_items = list(baseline_report.basis_summary)
-    for item in governance.formal_risks:
-        basis_items.extend(item.legal_basis)
+    basis_items: list[str] = []
+    for risk in report.risk_points:
+        basis_items.extend(risk.legal_basis)
     report.basis_summary = dedupe(basis_items)
     report.ensure_defaults(document_name)
     infer_basis_summary(report)
