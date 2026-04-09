@@ -1,0 +1,15 @@
+{
+  "run_id": "20260409-ar2-fuzhou",
+  "document_id": "DOC-FUZHOU-DORM-20260409",
+  "tracker_ledger_path": "docs/trackers/v2-real-replay-issue-ledger.yaml",
+  "issue_ids": [
+    "RR-FUZHOU-20260409-001",
+    "RR-FUZHOU-20260409-002",
+    "RR-FUZHOU-20260409-003"
+  ],
+  "task_ids": [
+    "W-014",
+    "Task-AR2"
+  ],
+  "acceptance_result": "已通过"
+}

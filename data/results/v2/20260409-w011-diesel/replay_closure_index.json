@@ -1,0 +1,14 @@
+{
+  "run_id": "20260409-w011-diesel",
+  "document_id": "DOC-DIESEL-0330-20260409",
+  "tracker_ledger_path": "docs/trackers/v2-real-replay-issue-ledger.yaml",
+  "issue_ids": [
+    "RR-DIESEL-20260409-001",
+    "RR-DIESEL-20260409-002"
+  ],
+  "task_ids": [
+    "R-013",
+    "W-011"
+  ],
+  "acceptance_result": "已通过"
+}

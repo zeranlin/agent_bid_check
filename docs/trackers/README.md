@@ -8,9 +8,15 @@
 - backlog
 - 路线图
 - 长期推进计划
+- 真实回放问题级闭环台账
 
 特点：
 
 - 会被持续修改
 - 强依赖状态字段
 - 更偏“项目推进视角”而不是“单次任务视角”
+
+当前关键文档：
+
+- `v2-remediation-tracker.md`：V2 任务总台账
+- `v2-real-replay-issue-ledger.yaml`：真实文件问题级闭环单源

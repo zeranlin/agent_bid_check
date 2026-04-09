@@ -1,0 +1,141 @@
+ledger_id: V2-REAL-REPLAY-CLOSURE-001
+single_source: docs/trackers
+owner: M
+maintainer: T
+purpose: >
+  统一管理真实文件回放问题，从“问题识别 -> 根因定位 -> 整改任务 -> 回放验证 -> 验收回写”
+  形成问题级闭环，不再依赖口头记忆和临时整理。
+
+fields_definition:
+  problem_type:
+    allowed_values: ["误报", "漏报", "错层", "重复", "风险文案偏差", "规则归属错误", "证据映射错误"]
+  root_cause_layer:
+    allowed_values: ["compare", "output_governance", "risk_admission", "assembler_web"]
+  target_action:
+    allowed_values: ["删除", "下沉", "升格", "改写", "拆分", "合并"]
+  acceptance_status:
+    allowed_values: ["待下发", "整改中", "待验收", "已通过", "未通过", "已关闭"]
+  rule_ids_note: >
+    若问题已有正式规则归属，则填写正式规则编号；若问题属于治理/映射类问题且暂无正式规则，
+    统一填写“无正式规则”，并在 root_cause_tags 中补充治理标签。
+
+acceptance_baseline_template:
+  required_fields:
+    - 当前风险标题
+    - 当前层级
+    - M复核结论
+    - 目标动作
+    - 根因层级
+    - 对应规则编号
+    - 对应任务单编号
+    - 验收状态
+    - 验证通过回放
+
+result_run_index:
+  20260409-ar2-fuzhou:
+    document_id: DOC-FUZHOU-DORM-20260409
+    result_dir: data/results/v2/20260409-ar2-fuzhou
+    issue_ids:
+      - RR-FUZHOU-20260409-001
+      - RR-FUZHOU-20260409-002
+      - RR-FUZHOU-20260409-003
+    task_ids:
+      - W-014
+      - Task-AR2
+    acceptance_result: 已通过
+  20260409-w011-diesel:
+    document_id: DOC-DIESEL-0330-20260409
+    result_dir: data/results/v2/20260409-w011-diesel
+    issue_ids:
+      - RR-DIESEL-20260409-001
+      - RR-DIESEL-20260409-002
+    task_ids:
+      - R-013
+      - W-011
+    acceptance_result: 已通过
+
+issues:
+  - issue_id: RR-FUZHOU-20260409-001
+    document_id: DOC-FUZHOU-DORM-20260409
+    document_name: （埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx
+    problem_type: 证据映射错误
+    current_risk_title: 商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险
+    current_layer: formal_risks
+    m_review_conclusion: 删除正式风险
+    target_action: 合并
+    root_cause_layer: output_governance
+    root_cause_tags: ["title_remap", "sample_cluster", "evidence_topic_mismatch"]
+    rule_ids: ["无正式规则"]
+    task_ids: ["W-014"]
+    replay_run_ids: ["20260409-ar2-fuzhou"]
+    replay_result_dirs: ["data/results/v2/20260409-ar2-fuzhou"]
+    acceptance_status: 已通过
+    acceptance_result: 已从正式风险中删除，并回归样品风险簇治理
+
+  - issue_id: RR-FUZHOU-20260409-002
+    document_id: DOC-FUZHOU-DORM-20260409
+    document_name: （埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx
+    problem_type: 错层
+    current_risk_title: 商务条款中采购人单方变更权过大且结算方式不明
+    current_layer: pending_review_items
+    m_review_conclusion: 升为正式风险
+    target_action: 升格
+    root_cause_layer: risk_admission
+    root_cause_tags: ["contract_balance", "hard_risk_promotion"]
+    rule_ids: ["无正式规则"]
+    task_ids: ["W-014"]
+    replay_run_ids: ["20260409-ar2-fuzhou"]
+    replay_result_dirs: ["data/results/v2/20260409-ar2-fuzhou"]
+    acceptance_status: 已通过
+    acceptance_result: 已稳定升格为正式风险，并在真实回放中保留
+
+  - issue_id: RR-FUZHOU-20260409-003
+    document_id: DOC-FUZHOU-DORM-20260409
+    document_name: （埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx
+    problem_type: 错层
+    current_risk_title: 验收时间条款留白，导致履约验收时点不明确，存在操作风险
+    current_layer: formal_risks
+    m_review_conclusion: 移入排除
+    target_action: 下沉
+    root_cause_layer: risk_admission
+    root_cause_tags: ["template_placeholder", "acceptance_clause", "boundary_gate"]
+    rule_ids: ["无正式规则"]
+    task_ids: ["W-014"]
+    replay_run_ids: ["20260409-ar2-fuzhou"]
+    replay_result_dirs: ["data/results/v2/20260409-ar2-fuzhou"]
+    acceptance_status: 已通过
+    acceptance_result: 已识别为模板留白类边界问题，排除出正式风险
+
+  - issue_id: RR-DIESEL-20260409-001
+    document_id: DOC-DIESEL-0330-20260409
+    document_name: "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+    problem_type: 误报
+    current_risk_title: 缺失检测报告及认证资质要求
+    current_layer: formal_risks
+    m_review_conclusion: 删除正式风险
+    target_action: 删除
+    root_cause_layer: risk_admission
+    root_cause_tags: ["topic_pseudo_rule", "technical_standard", "no_formal_rule_support"]
+    rule_ids: ["R-013"]
+    task_ids: ["R-013"]
+    replay_run_ids: ["20260409-w011-diesel"]
+    replay_result_dirs: ["data/results/v2/20260409-w011-diesel"]
+    acceptance_status: 已通过
+    acceptance_result: 已阻断 topic 伪规则进入正式风险，真实回放中不再转正
+
+  - issue_id: RR-DIESEL-20260409-002
+    document_id: DOC-DIESEL-0330-20260409
+    document_name: "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+    problem_type: 重复
+    current_risk_title: 电磁兼容标准引用格式混乱且编号不完整
+    current_layer: formal_risks
+    m_review_conclusion: 合并输出
+    target_action: 合并
+    root_cause_layer: output_governance
+    root_cause_tags: ["supporting_risk_absorption", "main_support_merge", "title_single_source"]
+    rule_ids: ["R-001"]
+    task_ids: ["W-011"]
+    replay_run_ids: ["20260409-w011-diesel"]
+    replay_result_dirs: ["data/results/v2/20260409-w011-diesel"]
+    acceptance_status: 已通过
+    acceptance_result: 已吸收到主风险“拒绝进口 vs 外标/国外部件引用矛盾风险”，不再并列正式输出
