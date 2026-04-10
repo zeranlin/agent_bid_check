@@ -47,6 +47,12 @@ output:
   formal_description: 评分标准将付款周期、预付款比例或付款节点与加分直接挂钩，违反付款方式不得纳入评分的规则要求。
   remediation_advice: 将付款方式相关内容移出评分项，统一作为合同商务条款约定。
 
+formal_admission:
+  family_key: payment_terms_scoring
+  canonical_title: 将付款方式纳入评审因素，违反评审规则合规性要求
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 不得将付款方式作为评审因素

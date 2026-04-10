@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-regional_performance
+status: active
+canonical_title: 业绩评分限定特定行政区域，存在地域排斥风险
+family_key: regional_performance
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口地域业绩限定 family 的运行事实源。
+rationale:
+  migration_reason: 标题、family_key、真实 replay 与 formal 准入行为均已稳定，不应继续依赖 supplemental。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

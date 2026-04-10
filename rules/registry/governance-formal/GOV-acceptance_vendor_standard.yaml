@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-acceptance_vendor_standard
+status: active
+canonical_title: 验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险
+family_key: acceptance_vendor_standard
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口厂家验收标准与样品验收 family 的运行事实源。
+rationale:
+  migration_reason: 标题、family_key、whitelist 行为与福州真实 replay 已稳定，不应继续长期依赖 supplemental。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

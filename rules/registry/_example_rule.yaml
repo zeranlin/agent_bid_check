@@ -47,6 +47,12 @@ output:
   formal_description: 这是一个用于治理骨架校验的示例正式输出文案。
   remediation_advice: 按真实规则补齐正式文案、整改建议和层级口径。
 
+formal_admission:
+  family_key: example_formal_family
+  canonical_title: 示例正式风险标题
+  allow_formal: false
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 示例关键词
@@ -91,4 +97,3 @@ history:
     date: 2026-04-02
     change: 初始示例规则创建
     author: T
-

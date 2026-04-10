@@ -7,8 +7,7 @@ from typing import Literal
 
 import yaml
 
-from app.governance.rule_registry import load_rule_file
-from app.pipelines.v2.output_governance.rules import infer_family
+from app.governance.rule_registry import load_registry_rules, validate_formal_admission_sources
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
@@ -65,43 +64,48 @@ def _normalize_rule_id(rule_id: str) -> str:
 @lru_cache(maxsize=1)
 def load_formal_registry_index() -> FormalRegistryIndex:
     governance_payload = _load_yaml(FORMAL_ADMISSION_REGISTRY_PATH)
-    registry_overrides = {
-        str(item.get("rule_id", "")).strip(): item
-        for item in governance_payload.get("registry_overrides", [])
-        if isinstance(item, dict) and str(item.get("rule_id", "")).strip()
-    }
+    registry_rules = load_registry_rules(RULE_REGISTRY_ROOT)
+    consistency_errors = validate_formal_admission_sources(registry_rules, governance_payload)
+    if consistency_errors:
+        raise ValueError("formal admission source inconsistency: " + " | ".join(consistency_errors))
 
     by_rule_id: dict[str, FormalRegistryEntry] = {}
     by_family_key: dict[str, FormalRegistryEntry] = {}
     by_title: dict[str, FormalRegistryEntry] = {}
 
-    for path in sorted(RULE_REGISTRY_ROOT.glob("R-*.yaml")):
-        payload = load_rule_file(path)
+    for payload in registry_rules:
         rule_id = str(payload.get("rule_id", "")).strip()
-        title = str(payload.get("output", {}).get("formal_title", "")).strip()
+        status = str(payload.get("status", "")).strip()
+        if str(payload.get("entry_type", "")).strip() == "governance_formal":
+            title = str(payload.get("canonical_title", "")).strip()
+            family_key = str(payload.get("family_key", "")).strip()
+            canonical_title = title
+            allow_formal = bool(payload.get("allow_formal", False))
+            requires_hard_evidence = bool(payload.get("requires_hard_evidence", True))
+        else:
+            title = str(payload.get("output", {}).get("formal_title", "")).strip()
+            if str(payload.get("classification", {}).get("target_level", "")).strip() != "formal":
+                continue
+            formal_admission = payload.get("formal_admission", {})
+            family_key = str(formal_admission.get("family_key", "")).strip()
+            canonical_title = str(formal_admission.get("canonical_title", "")).strip()
+            allow_formal = bool(formal_admission.get("allow_formal", False))
+            requires_hard_evidence = bool(formal_admission.get("requires_hard_evidence", True))
         if not rule_id or not title:
             continue
-        if str(payload.get("classification", {}).get("target_level", "")).strip() != "formal":
-            continue
-
-        override = registry_overrides.get(rule_id, {})
-        inferred_family, inferred_title = infer_family(title, title)
-        family_key = str(override.get("family_key") or inferred_family).strip()
-        canonical_title = str(override.get("canonical_title") or inferred_title or title).strip()
-        status = str(payload.get("status", "")).strip()
         entry = FormalRegistryEntry(
             rule_id=rule_id,
             family_key=family_key,
             canonical_title=canonical_title,
             status=status,
             source="registry",
-            allow_formal=status == "active",
-            requires_hard_evidence=bool(override.get("requires_hard_evidence", True)),
+            allow_formal=allow_formal,
+            requires_hard_evidence=requires_hard_evidence,
         )
         by_rule_id[rule_id] = entry
-        by_family_key.setdefault(family_key, entry)
-        by_title.setdefault(title, entry)
-        by_title.setdefault(canonical_title, entry)
+        by_family_key[family_key] = entry
+        by_title[title] = entry
+        by_title[canonical_title] = entry
 
     for item in governance_payload.get("supplemental_families", []):
         if not isinstance(item, dict):

@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-supervision_termination_imbalance
+status: active
+canonical_title: 履约监督与解除条件失衡
+family_key: supervision_termination_imbalance
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口履约监督与解除条件失衡 family 的运行事实源。
+rationale:
+  migration_reason: 文案收口、标题稳定和 replay 结果已成熟，可进入 registry 主源治理。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

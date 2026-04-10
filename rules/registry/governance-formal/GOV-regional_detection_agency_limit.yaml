@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-regional_detection_agency_limit
+status: active
+canonical_title: 检测报告限定福建省检测机构，存在检测机构地域限制风险
+family_key: regional_detection_agency_limit
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口检测机构地域限制 family 的运行事实源。
+rationale:
+  migration_reason: 已从旧混合标题中拆分并在福州真实 replay 中稳定输出。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

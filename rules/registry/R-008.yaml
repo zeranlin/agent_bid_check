@@ -50,6 +50,12 @@ output:
   formal_description: 评分条款将向采购人额外赠送与采购标的无关的物资作为加分条件，实质上是以赠品或附加利益影响评审结果，不属于围绕履约能力、技术响应或服务能力设置的正当评分因素。
   remediation_advice: 删除赠送台式电脑、打印机、办公设备等与项目采购无关物资的加分条件；评分因素应仅围绕采购标的履约能力、技术响应、实施组织和服务保障能力设置。
 
+formal_admission:
+  family_key: gifted_non_project_goods_scoring
+  canonical_title: 评分项中要求赠送非项目物资，存在明显不当加分和评审合规风险
+  allow_formal: false
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 不得要求提供赠品

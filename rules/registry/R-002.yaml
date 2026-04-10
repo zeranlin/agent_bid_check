@@ -48,6 +48,12 @@ output:
   formal_description: 评审规则已要求相关条款加注星标，但正文命中 GB 非 GB/T 或国家强制标准时未见相应标识，存在废标边界不清风险。
   remediation_advice: 若条款属于实质性要求，应加注星标；否则需同步修订评审规则说明。
 
+formal_admission:
+  family_key: mandatory_standard_star
+  canonical_title: 强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 含有GB（不含GB/T）
@@ -98,4 +104,3 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-

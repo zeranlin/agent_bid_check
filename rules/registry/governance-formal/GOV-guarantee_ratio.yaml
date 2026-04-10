@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-guarantee_ratio
+status: active
+canonical_title: 履约保证金比例严重超标
+family_key: guarantee_ratio
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口履约保证金超标 family 的运行事实源。
+rationale:
+  migration_reason: family_key、canonical_title 与去重治理口径已稳定，且具备 formal 准入硬证据要求。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

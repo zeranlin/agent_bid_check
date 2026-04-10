@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-personnel_scoring
+status: active
+canonical_title: 项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险
+family_key: personnel_scoring
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口项目负责人评分簇的运行事实源。
+rationale:
+  migration_reason: OG/Q2 去重后 family 已稳定，柴油真实 replay 可复核 formal 来源链。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

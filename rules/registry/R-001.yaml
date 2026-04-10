@@ -40,11 +40,17 @@ downgrade_conditions:
     - 仅命中背景介绍，未形成采购、技术或验收约束
 
 output:
-  formal_title: 非进口项目中出现国外标准/国外部件相关表述，存在采购政策口径、技术标准口径、验收口径不一致风险
+  formal_title: 拒绝进口 vs 外标/国外部件引用矛盾风险
   pending_title: 外标引用与采购政策口径可能存在不一致，建议人工复核
   excluded_title: 外标引用仅为参考性说明，不构成正式风险
   formal_description: 非进口采购口径、国外标准引用及国外部件相关表述并存，容易导致供应商对可投范围和验收依据理解不一致。
   remediation_advice: 明确采用国标/行标或说明等效标准可接受，避免形成政策与技术口径冲突。
+
+formal_admission:
+  family_key: import_consistency
+  canonical_title: 拒绝进口 vs 外标/国外部件引用矛盾风险
+  allow_formal: true
+  requires_hard_evidence: true
 
 evidence_hints:
   keywords:
@@ -96,4 +102,3 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-

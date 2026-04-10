@@ -47,6 +47,12 @@ output:
   formal_description: 评审规则已明确不得将项目验收方案作为评审因素，但当前评分项将验收方案或验收资料安排与得分直接挂钩。
   remediation_advice: 将验收方案相关内容移出评分项，若确需提出要求应调整至履约或验收管理条款。
 
+formal_admission:
+  family_key: acceptance_scheme_scoring
+  canonical_title: 将项目验收方案纳入评审因素，违反评审规则合规性要求
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 不得将项目验收方案作为评审因素
@@ -98,4 +104,3 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-

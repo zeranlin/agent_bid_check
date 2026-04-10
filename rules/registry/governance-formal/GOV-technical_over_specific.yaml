@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-technical_over_specific
+status: active
+canonical_title: 技术参数过细且特征化，存在指向性风险
+family_key: technical_over_specific
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口技术参数过细簇的运行事实源。
+rationale:
+  migration_reason: canonical_title、变体标题治理与福州 replay 已稳定，不应再由 supplemental 兜底。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

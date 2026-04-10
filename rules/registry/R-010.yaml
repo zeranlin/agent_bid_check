@@ -1,7 +1,7 @@
 rule_id: R-010
 rule_name: 已取消资质资格认证禁入评分识别
 rule_version: 1
-status: review
+status: active
 
 owner:
   reviewer: M
@@ -49,6 +49,12 @@ output:
   formal_description: 采购文件在评分内容、评分标准、加分项或档次评价中，将已明令取消或行政机关非强制的资质、资格、认证作为得分条件，容易形成不当评分门槛并影响评审公平性。
   remediation_advice: 删除已取消或非强制资质、资格、认证相关评分条件；评分因素仅保留与采购标的履约能力直接相关、可公平满足的评价指标；如确需引用法定许可或合规证明，应作为基础合规要求而非分值条件。
 
+formal_admission:
+  family_key: cancelled_or_non_mandatory_credential_scoring
+  canonical_title: 将已取消或非强制资质资格认证作为评审因素，存在评分设置不合规风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 评分内容
@@ -92,8 +98,8 @@ task_refs:
     - docs/trackers/v2-remediation-tracker.md
 
 activation:
-  approved_by: null
-  approved_date: null
+  approved_by: M
+  approved_date: 2026-04-08
   effective_scope:
     - mature
     - web

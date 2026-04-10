@@ -48,6 +48,12 @@ output:
   formal_description: 评分条件通过办公设备配置、会议保障等与采购无直接关联的隐性附加内容换取加分，属于不当附加交易条件。
   remediation_advice: 删除无关商品或无关服务加分条件，仅保留与采购标的直接相关的能力评价指标。
 
+formal_admission:
+  family_key: unrelated_goods_scoring
+  canonical_title: 将无关商品或无关服务作为评分条件，存在不当附加交易和评审合规风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 不得要求提供赠品

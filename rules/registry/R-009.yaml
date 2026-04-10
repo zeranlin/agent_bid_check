@@ -1,7 +1,7 @@
 rule_id: R-009
 rule_name: 已取消或非强制资质禁入资格条件识别
 rule_version: 1
-status: review
+status: active
 
 owner:
   reviewer: M
@@ -48,6 +48,12 @@ output:
   formal_description: 采购文件在资格条件、合格供应商条件或资格审查表中，将已明令取消或行政机关非强制的资质、资格作为投标准入门槛，容易形成不当准入限制并影响公平竞争。
   remediation_advice: 删除已取消或非强制资质、资格要求；仅保留与采购标的直接相关且具有明确法定依据的准入条件；如确有行业许可要求，应明确对应法定依据。
 
+formal_admission:
+  family_key: cancelled_or_non_mandatory_qualification_gate
+  canonical_title: 将已取消或非强制资质资格作为资格条件，存在设置不当准入门槛风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 资格条件
@@ -90,8 +96,8 @@ task_refs:
     - docs/trackers/v2-remediation-tracker.md
 
 activation:
-  approved_by: null
-  approved_date: null
+  approved_by: M
+  approved_date: 2026-04-08
   effective_scope:
     - mature
     - web

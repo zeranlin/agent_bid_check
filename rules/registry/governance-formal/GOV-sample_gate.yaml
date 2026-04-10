@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-sample_gate
+status: active
+canonical_title: 样品要求过细且评审规则失衡，存在样品门槛风险
+family_key: sample_gate
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口样品门槛风险簇的运行事实源。
+rationale:
+  migration_reason: 已完成 W-014 去重与标题收口，真实 replay 稳定命中且 formal 行为可复核。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

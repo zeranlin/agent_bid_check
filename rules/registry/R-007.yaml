@@ -47,6 +47,12 @@ output:
   formal_description: 条款将检测、相关部门验收等费用笼统纳入投标总价，未区分正常履约成本与验收阶段专项检测费用，存在潜在转嫁风险。
   remediation_advice: 明确区分履约自检、试运行与验收阶段检测费用，补充检测类型、承担主体和合规依据。
 
+formal_admission:
+  family_key: acceptance_testing_cost
+  canonical_title: 验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 不得要求中标人承担验收产生的检测费用
@@ -98,4 +104,3 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-

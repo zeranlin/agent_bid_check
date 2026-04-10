@@ -47,6 +47,12 @@ output:
   formal_description: 评分项以特定认证证书、特定发证机构或制造商身份设置高分条件，容易形成倾向性评分和限制竞争。
   remediation_advice: 删除特定认证体系和特定发证机构加分条件，改为与采购标的直接相关的通用能力指标。
 
+formal_admission:
+  family_key: certification_scoring_bundle
+  canonical_title: 以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 省级标准协会
@@ -97,4 +103,3 @@ history:
     date: 2026-04-02
     change: G-003 首批规则迁移入库
     author: T
-

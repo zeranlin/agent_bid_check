@@ -1,7 +1,7 @@
 rule_id: R-011
 rule_name: 资质证明材料原件及纸质证照要求边界识别
 rule_version: 1
-status: review
+status: active
 
 owner:
   reviewer: M
@@ -49,6 +49,12 @@ output:
   formal_description: 采购文件在投标文件提交、资格审查或证明材料要求中，直接要求提交资质证明文件原件、证照原件或电子证照纸质件，并将其作为未提交即无效或不通过的门槛，容易突破电子化采购与材料提交边界。
   remediation_advice: 删除无依据的原件和纸质件提交要求；优先采用电子证照、系统核验、电子签章件或扫描件；如确需核验，应明确为中标后或特定法定环节核验，不得前置为投标阶段门槛。
 
+formal_admission:
+  family_key: original_or_paper_certificate_submission_gate
+  canonical_title: 要求提供资质证照原件或电子证照纸质件，存在材料提交边界设置不当风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 资格证明文件
@@ -91,8 +97,8 @@ task_refs:
     - docs/trackers/v2-remediation-tracker.md
 
 activation:
-  approved_by: null
-  approved_date: null
+  approved_by: M
+  approved_date: 2026-04-08
   effective_scope:
     - mature
     - web

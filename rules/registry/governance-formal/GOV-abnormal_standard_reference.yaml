@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-abnormal_standard_reference
+status: active
+canonical_title: 技术参数存在错误或异常标准引用，可能导致技术要求失真
+family_key: abnormal_standard_reference
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从 supplemental 过渡层迁入 registry 主源，收口错误或异常标准引用 family 的运行事实源。
+rationale:
+  migration_reason: 已完成混合标题拆分与独立输出，formal 标题和来源链稳定。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

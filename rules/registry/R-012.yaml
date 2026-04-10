@@ -1,7 +1,7 @@
 rule_id: R-012
 rule_name: 供应商主体身份与地域限制识别
 rule_version: 1
-status: review
+status: active
 
 owner:
   reviewer: M
@@ -49,6 +49,12 @@ output:
   formal_description: 采购文件在资格条件、合格供应商条件或资格审查条款中，通过所有制形式、组织形式、注册地、所在地、分支机构或经营网点等条件限制供应商准入，容易形成不当竞争限制。
   remediation_advice: 删除所有制、组织形式、注册地、所在地、分支机构、经营网点等不当准入限制；仅保留与履约直接相关且有明确法定依据的要求；如确需本地服务保障，应改为中标后响应安排，不得前置为投标门槛。
 
+formal_admission:
+  family_key: supplier_identity_or_region_limit_gate
+  canonical_title: 以供应商主体身份或地域条件设置准入门槛，存在限制竞争风险
+  allow_formal: true
+  requires_hard_evidence: true
+
 evidence_hints:
   keywords:
     - 资格条件
@@ -93,8 +99,8 @@ task_refs:
     - docs/trackers/v2-remediation-tracker.md
 
 activation:
-  approved_by: null
-  approved_date: null
+  approved_by: M
+  approved_date: 2026-04-08
   effective_scope:
     - mature
     - web
