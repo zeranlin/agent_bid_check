@@ -1,0 +1,41 @@
+items:
+  - item: GOV-brand_bias_scoring
+    current_dependency_type:
+      whitelist_bound: false
+      case_replay_bound: false
+    terminal_decision: prepare_standalone_rule_task
+    reason: 业务价值存在，但当前缺少跨文件真实 replay、独立规则边界和样本责任归属，不适合继续作为 runtime formal 主源。
+    exits_runtime_formal_source: true
+    followup_task_needed: true
+    followup_path: 后续如继续推进，应单独开品牌倾向性评分条款正式纳管任务。
+    historical_case_explanation: 当前无稳定历史 formal 主运行链路依赖，不影响既有柴油/福州主 replay。
+  - item: GOV-software_copyright_competition
+    current_dependency_type:
+      whitelist_bound: true
+      case_replay_bound: true
+    terminal_decision: retire_from_runtime_formal_source
+    reason: 当前 formal 成立主要依赖福建个案标题稳定与 whitelist 保护，缺少跨文件稳定 replay、独立 family 边界和非个案样本，不能继续作为 runtime 主源资格。
+    exits_runtime_formal_source: true
+    followup_task_needed: false
+    followup_path: 如未来补足跨文件证据与规则边界，再单独评估是否重新立项。
+    historical_case_explanation: 关停的是 runtime 主源资格，不否认历史福建个案曾产出 formal 结果；旧 run 仍作为历史验收记录保留。
+  - item: GOV-no_crime_submission_timing
+    current_dependency_type:
+      whitelist_bound: true
+      case_replay_bound: true
+    terminal_decision: retire_from_runtime_formal_source
+    reason: 当前 formal 成立同样主要依赖个案标题与 whitelist，缺少跨文件边界样本和独立治理材料，不应长期保留为 runtime formal 主源。
+    exits_runtime_formal_source: true
+    followup_task_needed: false
+    followup_path: 若后续补齐跨文件样本与法理边界，再考虑独立任务。
+    historical_case_explanation: 历史福建个案 run 继续保留为已发生结果，但不再反向证明当前 runtime 主源合法性。
+  - item: GOV-remote_decrypt_unfair
+    current_dependency_type:
+      whitelist_bound: false
+      case_replay_bound: true
+    terminal_decision: prepare_standalone_rule_task
+    reason: 业务价值高，但当前异常时长、异常后果与程序条款显失公平阈值仍不稳，适合退出 runtime 主源并转专项立项准备。
+    exits_runtime_formal_source: true
+    followup_task_needed: true
+    followup_path: 后续应单独开程序条款异常阈值与远程解密显失公平专项任务。
+    historical_case_explanation: 历史福州个案中的相关分析结论仍保留在旧 run 中，但不再占用长期 runtime 主源。

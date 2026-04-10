@@ -23,6 +23,11 @@ Q3_DIESEL_RUN = Path("data/results/v2/20260410-q3-diesel/final_output.json")
 Q3_FUZHOU_RUN = Path("data/results/v2/20260410-q3-fuzhou/final_output.json")
 Q4_DIESEL_RUN = Path("data/results/v2/20260410-q4-diesel/final_output.json")
 Q4_FUZHOU_RUN = Path("data/results/v2/20260410-q4-fuzhou/final_output.json")
+Q6_DIESEL_RUN = Path("data/results/v2/20260410-q6-diesel/final_output.json")
+Q6_FUZHOU_RUN = Path("data/results/v2/20260410-q6-fuzhou/final_output.json")
+Q7_DIESEL_RUN = Path("data/results/v2/20260410-q7-diesel/final_output.json")
+Q7_FUZHOU_RUN = Path("data/results/v2/20260410-q7-fuzhou/final_output.json")
+Q7_FUJIAN_RUN = Path("data/results/v2/20260410-q7-fujian/final_output.json")
 
 
 def _load_output(path: Path) -> dict:
@@ -400,3 +405,114 @@ def test_q4_fuzhou_replay_keeps_formal_pool_stable_and_uses_registry_driven_gate
     web_titles = [item["title"] for item in result["review_view"]["all_cards"]]
     markdown_titles = [item.title for item in parse_review_markdown((run_dir / "final_review.md").read_text(encoding="utf-8")).risk_points]
     assert set(web_titles) == set(formal_titles) == set(markdown_titles)
+
+
+def test_q6_diesel_replay_keeps_formal_pool_stable_and_uses_registry_main_source() -> None:
+    run_dir = Q6_DIESEL_RUN.parent
+    final_output = _load_output(Q6_DIESEL_RUN)
+    admission = _load_output(run_dir / "risk_admission_output.json")
+
+    formal_titles = [item["title"] for item in final_output["formal_risks"]]
+    assert formal_titles == [
+        "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+        "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "业绩评分限定特定行政区域，存在地域排斥风险",
+        "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
+    ]
+
+    region_item = next(item for item in admission["formal_risks"] if item["title"] == "业绩评分限定特定行政区域，存在地域排斥风险")
+    personnel_item = next(item for item in admission["formal_risks"] if item["title"] == "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险")
+    region_decision = admission["decisions"][region_item["rule_id"]]
+    personnel_decision = admission["decisions"][personnel_item["rule_id"]]
+
+    assert region_decision["formal_gate_registry_rule_id"] == "GOV-regional_performance"
+    assert region_decision["formal_gate_registry_source"] == "registry"
+    assert personnel_decision["formal_gate_registry_rule_id"] == "GOV-personnel_scoring"
+    assert personnel_decision["formal_gate_registry_source"] == "registry"
+
+
+def test_q6_fuzhou_replay_keeps_formal_pool_stable_and_uses_registry_main_source() -> None:
+    run_dir = Q6_FUZHOU_RUN.parent
+    final_output = _load_output(Q6_FUZHOU_RUN)
+    admission = _load_output(run_dir / "risk_admission_output.json")
+
+    formal_titles = [item["title"] for item in final_output["formal_risks"]]
+    assert formal_titles == [
+        "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "技术参数存在错误或异常标准引用，可能导致技术要求失真",
+        "检测报告限定福建省检测机构，存在检测机构地域限制风险",
+        "样品要求过细且评审规则失衡，存在样品门槛风险",
+        "商务条款中采购人单方变更权过大且结算方式不明",
+        "技术参数过细且特征化，存在指向性风险",
+        "履约监督与解除条件失衡",
+        "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+    ]
+
+    abnormal_item = next(item for item in admission["formal_risks"] if item["title"] == "技术参数存在错误或异常标准引用，可能导致技术要求失真")
+    sample_item = next(item for item in admission["formal_risks"] if item["title"] == "样品要求过细且评审规则失衡，存在样品门槛风险")
+    technical_item = next(item for item in admission["formal_risks"] if item["title"] == "技术参数过细且特征化，存在指向性风险")
+    abnormal_decision = admission["decisions"][abnormal_item["rule_id"]]
+    sample_decision = admission["decisions"][sample_item["rule_id"]]
+    technical_decision = admission["decisions"][technical_item["rule_id"]]
+
+    assert abnormal_decision["formal_gate_registry_rule_id"] == "GOV-abnormal_standard_reference"
+    assert abnormal_decision["formal_gate_registry_source"] == "registry"
+    assert sample_decision["formal_gate_registry_rule_id"] == "GOV-sample_gate"
+    assert sample_decision["formal_gate_registry_source"] == "registry"
+    assert technical_decision["formal_gate_registry_rule_id"] == "GOV-technical_over_specific"
+    assert technical_decision["formal_gate_registry_source"] == "registry"
+
+
+def test_q7_diesel_replay_keeps_formal_pool_stable_without_runtime_supplemental() -> None:
+    q6 = _load_output(Q6_DIESEL_RUN)
+    q7 = _load_output(Q7_DIESEL_RUN)
+    admission = _load_output(Q7_DIESEL_RUN.parent / "risk_admission_output.json")
+
+    assert [item["title"] for item in q7["formal_risks"]] == [item["title"] for item in q6["formal_risks"]]
+    for title in [
+        "业绩评分限定特定行政区域，存在地域排斥风险",
+        "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
+    ]:
+        item = next(i for i in admission["formal_risks"] if i["title"] == title)
+        decision = admission["decisions"][item["rule_id"]]
+        assert decision["formal_gate_registry_source"] == "registry"
+
+
+def test_q7_fuzhou_replay_keeps_formal_pool_stable_without_runtime_supplemental() -> None:
+    q6 = _load_output(Q6_FUZHOU_RUN)
+    q7 = _load_output(Q7_FUZHOU_RUN)
+    admission = _load_output(Q7_FUZHOU_RUN.parent / "risk_admission_output.json")
+
+    assert [item["title"] for item in q7["formal_risks"]] == [item["title"] for item in q6["formal_risks"]]
+    for title in [
+        "样品要求过细且评审规则失衡，存在样品门槛风险",
+        "技术参数过细且特征化，存在指向性风险",
+        "技术参数存在错误或异常标准引用，可能导致技术要求失真",
+    ]:
+        item = next(i for i in admission["formal_risks"] if i["title"] == title)
+        decision = admission["decisions"][item["rule_id"]]
+        assert decision["formal_gate_registry_source"] == "registry"
+
+
+def test_q7_fujian_replay_retired_items_no_longer_pollute_runtime_formal_source() -> None:
+    final_output = _load_output(Q7_FUJIAN_RUN)
+    admission = _load_output(Q7_FUJIAN_RUN.parent / "risk_admission_output.json")
+
+    formal_titles = {item["title"] for item in final_output["formal_risks"]}
+    pending_titles = {item["title"] for item in final_output["pending_review_items"]}
+
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in formal_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in formal_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
+
+    info_item = next(i for i in admission["pending_review_items"] if i["title"] == "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争")
+    crime_item = next(i for i in admission["pending_review_items"] if i["title"] == "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险")
+    info_decision = admission["decisions"][info_item["rule_id"]]
+    crime_decision = admission["decisions"][crime_item["rule_id"]]
+
+    assert info_decision["formal_gate_rule"] == "registry_mapping_missing_block"
+    assert crime_decision["formal_gate_rule"] == "registry_mapping_missing_block"

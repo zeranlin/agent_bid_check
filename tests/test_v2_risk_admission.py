@@ -364,7 +364,7 @@ def test_formal_gate_trace_fields_exist_for_formal_output() -> None:
     assert decision.formal_gate_registry_resolution in {"matched", "missing", "mismatch"}
 
 
-def test_formal_registry_index_combines_registry_and_governance_config() -> None:
+def test_formal_registry_index_after_q7_uses_registry_as_runtime_single_source() -> None:
     clear_formal_registry_cache()
     index = load_formal_registry_index()
 
@@ -375,8 +375,33 @@ def test_formal_registry_index_combines_registry_and_governance_config() -> None
     assert import_entry.source == "registry"
     assert import_entry.allow_formal is True
     assert regional_entry.rule_id == "GOV-regional_performance"
-    assert regional_entry.source == "governance_config"
+    assert regional_entry.source == "registry"
     assert regional_entry.allow_formal is True
+    assert "R-001" in index.by_rule_id
+    assert "GOV-software_copyright_competition" not in index.by_rule_id
+
+
+def test_formal_registry_index_uses_registry_as_primary_source_for_formal_rules() -> None:
+    clear_formal_registry_cache()
+    index = load_formal_registry_index()
+
+    assert index.by_rule_id["R-001"].family_key == "import_consistency"
+    assert index.by_rule_id["R-001"].canonical_title == "拒绝进口 vs 外标/国外部件引用矛盾风险"
+    assert index.by_rule_id["R-001"].source == "registry"
+    assert "GOV-regional_performance" in index.by_rule_id
+
+
+def test_formal_registry_index_prefers_registry_for_migrated_governance_formal_items() -> None:
+    clear_formal_registry_cache()
+    index = load_formal_registry_index()
+
+    sample_entry = index.by_rule_id["GOV-sample_gate"]
+    tech_entry = index.by_rule_id["GOV-technical_over_specific"]
+
+    assert sample_entry.source == "registry"
+    assert sample_entry.family_key == "sample_gate"
+    assert tech_entry.source == "registry"
+    assert tech_entry.canonical_title == "技术参数过细且特征化，存在指向性风险"
 
 
 def test_infer_evidence_kind_recognizes_subcontract_template() -> None:
@@ -437,10 +462,14 @@ def test_body_clause_hard_risk_is_not_misclassified_as_template() -> None:
     admission = admit_governance_result("fujian.docx", comparison, governance)
 
     formal_titles = {item.title for item in admission.formal_risks}
-    body_item = next(item for item in admission.formal_risks if item.title == "评分标准中设置特定品牌倾向性条款")
+    pending_titles = {item.title for item in admission.pending_review_items}
+    body_item = next(item for item in admission.pending_review_items if item.title == "评分标准中设置特定品牌倾向性条款")
+    body_decision = admission.decisions[body_item.rule_id]
 
-    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" not in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
     assert body_item.evidence_kind == "scoring_clause"
+    assert body_decision.formal_gate_rule == "registry_mapping_missing_block"
 
 
 def test_reminder_items_are_downgraded_to_pending_review() -> None:
@@ -453,7 +482,8 @@ def test_reminder_items_are_downgraded_to_pending_review() -> None:
 
     assert "专门面向中小企业采购的评审细节需确认" in pending_titles
     assert "人员配置数量及证书要求需结合项目规模评估" in pending_titles
-    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" not in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
 
 
 def test_fujian_template_misreport_is_blocked_by_current_admission_rules() -> None:
@@ -469,12 +499,13 @@ def test_fujian_template_misreport_is_blocked_by_current_admission_rules() -> No
 
     formal_titles = {item.title for item in admission.formal_risks}
     excluded_titles = {item.title for item in admission.excluded_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
 
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" in excluded_titles
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" not in formal_titles
-    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in formal_titles
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
 
 
 def test_missing_type_risk_is_downgraded_from_formal() -> None:
@@ -554,19 +585,22 @@ def test_formal_gate_order_applies_downgrade_before_whitelist() -> None:
     assert decision.formal_gate_exception_whitelist_hit is False
 
 
-def test_formal_gate_whitelist_can_keep_stable_formal_risk() -> None:
+def test_formal_gate_no_longer_uses_whitelist_as_runtime_source_for_software_copyright_case() -> None:
     comparison = _build_w011_fujian_stability_comparison()
     governance = govern_comparison_artifact("fujian.docx", comparison)
     admission = admit_governance_result("fujian.docx", comparison, governance)
 
     decision = admission.decisions["topic::software_copyright_competition"]
 
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in {
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in {
         item.title for item in admission.formal_risks
     }
-    assert decision.formal_gate_passed is True
-    assert decision.formal_gate_rule == "formal_whitelist"
-    assert decision.formal_gate_exception_whitelist_hit is True
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in {
+        item.title for item in admission.pending_review_items
+    }
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "registry_mapping_missing_block"
+    assert decision.formal_gate_exception_whitelist_hit is False
 
 
 def test_formal_gate_blocks_absorbed_supporting_item_before_formal_admission() -> None:
@@ -795,6 +829,36 @@ def test_formal_gate_whitelist_can_survive_weak_source_downgrade_rules() -> None
     assert decision.formal_gate_rule == "formal_whitelist"
 
 
+def test_formal_gate_whitelist_accepts_fuzhou_contract_variant_title() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="whitelist-contract-variant",
+                title="商务条款赋予采购人单方面变更权且结算方式不明",
+                severity="中风险",
+                review_type="商务条款失衡",
+                source_locations=["商务条款 8.3、13.3"],
+                source_excerpts=["采购人可单方面调整款式、尺寸、颜色，中标价不变。"],
+                risk_judgment=["采购人单方面变更权过大，结算口径不清。"],
+                legal_basis=["合同权利义务应保持公平。"],
+                rectification=["补充价格调整和协商机制。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    admission = admit_governance_result("fuzhou-school-dorm.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert [item.title for item in admission.formal_risks] == ["商务条款中采购人单方变更权过大且结算方式不明"]
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_exception_whitelist_hit is True
+    assert decision.formal_gate_rule == "formal_whitelist"
+
+
 def test_fujian_titles_and_severity_are_stabilized() -> None:
     comparison = _build_w011_fujian_stability_comparison()
     governance = govern_comparison_artifact("fujian.docx", comparison)
@@ -811,10 +875,11 @@ def test_fujian_titles_and_severity_are_stabilized() -> None:
 
     formal_by_title = {item["title"]: item for item in final_output["formal_risks"]}
 
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in formal_by_title
-    assert formal_by_title["评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争"]["severity"] == "中风险"
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_by_title
-    assert formal_by_title["商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险"]["severity"] == "中风险"
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in formal_by_title
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in formal_by_title
+    pending_titles = {item["title"] for item in final_output["pending_review_items"]}
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
 
 
 def test_assembler_consumes_risk_admission_output_only() -> None:
@@ -869,7 +934,7 @@ def test_w014_risk_admission_demotes_wrong_layer_items_and_promotes_real_hard_ri
     pending_titles = {item.title for item in admission.pending_review_items}
     excluded_titles = {item.title for item in admission.excluded_risks}
 
-    assert "商务条款中采购人单方调整权过大且结算方式不明" in formal_titles
+    assert "商务条款中采购人单方变更权过大且结算方式不明" in formal_titles
     assert "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险" in formal_titles
     assert "缺乏预付款安排，资金压力较大" not in formal_titles
     assert "开标记录签字确认的默认认可条款" not in formal_titles
@@ -877,7 +942,8 @@ def test_w014_risk_admission_demotes_wrong_layer_items_and_promotes_real_hard_ri
     assert "缺乏预付款安排，资金压力较大" in pending_titles or "缺乏预付款安排，资金压力较大" in excluded_titles
     assert "开标记录签字确认的默认认可条款" in excluded_titles
     assert "远程开标解密时限及后果条款的合理性审查" in pending_titles
-    assert "远程开标解密时限及后果条款显失公平" in formal_titles
+    assert "远程开标解密时限及后果条款显失公平" not in formal_titles
+    assert "远程开标解密时限及后果条款显失公平" in pending_titles
     assert "验收时间条款留白，导致验收安排不明确" in excluded_titles
 
 
