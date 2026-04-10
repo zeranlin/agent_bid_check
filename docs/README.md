@@ -57,6 +57,7 @@ docs/
 - 总台账： [v2-remediation-tracker.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/trackers/v2-remediation-tracker.md)
 - 任务单目录： [tasks/](https://github.com/zeranlin/agent_bid_check/blob/main/docs/tasks)
 - 规则治理入口： [governance/README.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/README.md)
+- 风险准入治理收口文档： [v2-risk-admission-architecture-adjustment.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/v2-risk-admission-architecture-adjustment.md)
 - 文档治理方案： [docs-directory-governance-plan.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-directory-governance-plan.md)
 - 现状分类映射： [docs-inventory-mapping.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-inventory-mapping.md)
 - 迁移执行清单： [docs-migration-checklist.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-migration-checklist.md)
@@ -98,3 +99,13 @@ docs/
 3. 小范围残余链接、说明文案和验收回写持续收口
 
 后续迁移与收尾批次继续按 [docs-migration-checklist.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/docs-migration-checklist.md) 执行。
+
+## 7. 当前治理阶段
+
+当前项目已完成 `Q1 ~ Q7` 风险准入治理收口线，整体进入“规则持续纳管 + 客户反馈持续闭环”的常态治理阶段。
+
+对当前状态的理解建议是：
+
+1. 架构收口线已完成
+2. 规则建设不会停止
+3. 后续新增问题继续优先通过总台账、任务单和真实文件 replay 来闭环

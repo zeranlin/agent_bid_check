@@ -1,5 +1,31 @@
 # V2 风险准入层架构调整方案
 
+## 0. 实施状态
+
+本方案对应的实施链路已经完成首轮收官，当前不再是“待实施方案”，而是“已完成架构落地并经过真实文件回放验证的治理文档”。
+
+已完成的实施与验收链路包括：
+
+1. `Task-AR3`
+- 已完成真实回放根因闭环单源、回放索引与最小样例建设
+
+2. `Task-RA1 ~ Task-RA3`
+- 已完成 `risk_admission` 骨架接入、模板/边界证据硬门禁、提醒项/证据不足项降级与真实回放门禁
+
+3. `Task-Q1 ~ Task-Q7`
+- 已完成 formal 准入门禁、主风险吸收与去重、formal 池收紧、registry 单源联动、主源收口、supplemental 压缩与最终 runtime supplemental 关闭
+
+当前架构结论：
+
+- `compare` 负责候选发现，不负责最终层级裁决
+- `output_governance` 负责标准化、归并、吸收留痕，不负责最终层级裁决
+- `risk_admission` 是唯一三分层出口
+- `rules/registry/` 已成为 formal 主源
+- `rules/registry/governance-formal/` 承接治理型主源条目
+- runtime supplemental 已关闭，`whitelist` 不再作为长期主源资格证明
+
+Q 线收官后，本方案进入“稳定运行 + 持续反馈治理”阶段。
+
 ## 1. 背景
 
 近期基于真实文件的持续复核表明，当前系统暴露出的核心问题，已经不再只是“某条规则没识别到”，而是“专题发现结果会直接冲进正式风险输出”。
@@ -321,7 +347,39 @@ app/pipelines/v2/risk_admission/
 
 ## 14. 实施建议
 
-建议拆成三张任务单推进：
+以下任务已全部完成并通过验收：
+
+1. `Task-RA1`
+- 风险准入层骨架搭建
+
+2. `Task-RA2`
+- 模板/协议/声明函边界识别与硬排除
+
+3. `Task-RA3`
+- 提醒项 / 证据不足项降级机制与真实文件回放门禁
+
+4. `Task-Q1`
+- formal 准入首轮门禁落地
+
+5. `Task-Q2`
+- 主风险吸收与附属项去重门禁落地
+
+6. `Task-Q3`
+- 正式风险池收紧为“稳定家族 + 正文硬证据”双门禁
+
+7. `Task-Q4`
+- formal 准入与规则注册表联动
+
+8. `Task-Q5`
+- formal 主源继续向 `rules/registry` 收口
+
+9. `Task-Q6`
+- governance-formal 主源迁入 `rules/registry/governance-formal/`
+
+10. `Task-Q7`
+- 剩余 supplemental 过渡项终局处理，runtime supplemental 正式关闭
+
+本节保留原始实施拆分逻辑，主要用于回溯实施顺序：
 
 1. `Task-RA1`
 - 风险准入层骨架搭建
@@ -357,3 +415,24 @@ app/pipelines/v2/risk_admission/
 `继续保留 V2 主识别能力 + 新增独立 risk_admission 风险准入层`
 
 这是当前阶段最有性价比、也最能直接提升“正式风险可信度”的架构调整方向。
+
+## 17. 收官结果
+
+截至 `Task-Q7` 验收完成，V2 风险准入治理线已经完成本轮主目标，可以按“架构收口线已完成”口径收官。
+
+本轮收官结果包括：
+
+1. `compare` 已去裁决化
+2. `output_governance` 已去最终分层裁决化
+3. `risk_admission` 已成为唯一正式风险出口
+4. formal 准入已从代码白名单推进到 registry 主源
+5. governance-formal 条目已进入 `rules/registry/governance-formal/`
+6. runtime supplemental 已关闭
+7. `whitelist` 仅保留历史保护作用，不再作为长期 formal 主源资格
+8. 柴油 / 福州 / 福建 replay 已覆盖关键收口点
+
+因此，后续工作重心不再是继续开新的 Q 线，而是：
+
+1. 继续按真实文件与客户反馈推进 `R / W / G` 线任务
+2. 对 `prepare_standalone_rule_task` 类型条目按业务价值再决定是否单独立项
+3. 持续维护规则注册表、回放门禁和台账一致性

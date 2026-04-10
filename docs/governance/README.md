@@ -61,6 +61,12 @@
   - 统一 M 验收模板
   - 统一台账状态更新与关单规范
 
+- 文件： [task-acceptance-and-doc-sync-mechanism.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-acceptance-and-doc-sync-mechanism.md)
+- 作用：
+  - 定义“验收完成后必须同步台账和治理文档”的强制机制
+  - 区分技术完成、replay 完成和管理完成
+  - 明确总台账、任务单、治理文档的回写顺序
+
 ### 2.4 规则总目录模板
 
 - 文件： [rule-catalog-template.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-catalog-template.md)
@@ -79,7 +85,9 @@
    - 理解新规则如何进入治理流程
 3. 再看 [task-and-acceptance-templates.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-and-acceptance-templates.md)
    - 理解任务单怎么下发、怎么验收
-4. 最后看 [rule-catalog-template.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-catalog-template.md)
+4. 再看 [task-acceptance-and-doc-sync-mechanism.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/task-acceptance-and-doc-sync-mechanism.md)
+   - 理解为什么“通过”必须伴随文档回写
+5. 最后看 [rule-catalog-template.md](https://github.com/zeranlin/agent_bid_check/blob/main/docs/governance/rule-catalog-template.md)
    - 理解规则最终如何正式入库
 
 ## 4. 使用建议
