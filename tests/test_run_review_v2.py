@@ -18,6 +18,7 @@ def _build_dummy_artifacts() -> V2ReviewArtifacts:
         topics=[],
         final_markdown="# dummy",
         evidence=stage,
+        evidence_layer=None,
         comparison=None,
     )
 

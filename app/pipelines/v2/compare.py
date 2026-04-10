@@ -279,7 +279,7 @@ def _compact_preferred_sentences(sentences: list[str], preferred_re: re.Pattern[
     return _compact_sentences(ordered, limit=limit)
 
 
-def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str) -> RiskSignature:
+def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str, evidence_ids: list[str] | None = None) -> RiskSignature:
     risk.ensure_defaults()
     return RiskSignature(
         topic=topic,
@@ -290,6 +290,7 @@ def _risk_to_signature(risk: RiskPoint, topic: str, source_rule: str) -> RiskSig
         severity=risk.severity,
         source_rule=source_rule,
         source_excerpt=risk.source_excerpt,
+        evidence_ids=list(evidence_ids or []),
     )
 
 
@@ -306,11 +307,12 @@ def _risk_to_dict(risk: RiskPoint, topic: str, source_rule: str) -> dict:
     }
 
 
-def _build_cluster(cluster_id: str, items: list[tuple[RiskPoint, str, str]]) -> MergedRiskCluster:
+def _build_cluster(cluster_id: str, items: list[tuple]) -> MergedRiskCluster:
     risks = [item[0] for item in items]
     severities = [risk.severity for risk in risks]
     topics = [item[1] for item in items]
     source_rules = [item[2] for item in items]
+    evidence_ids = dedupe([evidence_id for item in items for evidence_id in (item[3] if len(item) > 3 and isinstance(item[3], list) else []) if str(evidence_id).strip()])
 
     conflict_notes: list[str] = []
     explicit = sorted({severity for severity in severities if severity != "需人工复核"}, key=lambda item: SEVERITY_ORDER[item], reverse=True)
@@ -331,9 +333,26 @@ def _build_cluster(cluster_id: str, items: list[tuple[RiskPoint, str, str]]) -> 
         rectification=dedupe([item for risk in risks for item in risk.rectification]),
         topics=dedupe(topics),
         source_rules=dedupe(source_rules),
+        evidence_ids=evidence_ids,
         conflict_notes=conflict_notes,
         need_manual_review=any(risk.severity == "需人工复核" for risk in risks) or bool(conflict_notes),
     )
+
+
+def _topic_selected_evidence_ids(topic: TopicReviewArtifact) -> list[str]:
+    if not topic.metadata:
+        return []
+    selected_ids = topic.metadata.get("selected_evidence_ids", [])
+    if isinstance(selected_ids, list):
+        return [str(item).strip() for item in selected_ids if str(item).strip()]
+    selected_sections = topic.metadata.get("selected_sections", [])
+    if not isinstance(selected_sections, list):
+        return []
+    return [
+        str(section.get("evidence_id", "")).strip()
+        for section in selected_sections
+        if isinstance(section, dict) and str(section.get("evidence_id", "")).strip()
+    ]
 
 
 def _detect_standard_rule_code(cluster: MergedRiskCluster) -> str:
@@ -415,6 +434,7 @@ def _merge_cluster_group(group_key: str, clusters: list[MergedRiskCluster]) -> M
         rectification=dedupe([item for cluster in clusters for item in cluster.rectification]),
         topics=dedupe([item for cluster in clusters for item in cluster.topics]),
         source_rules=dedupe([item for cluster in clusters for item in cluster.source_rules]),
+        evidence_ids=dedupe([item for cluster in clusters for item in cluster.evidence_ids]),
         conflict_notes=dedupe([item for cluster in clusters for item in cluster.conflict_notes]),
         need_manual_review=any(cluster.need_manual_review for cluster in clusters),
     )
@@ -1334,11 +1354,12 @@ def compare_review_artifacts(
         baseline_signature_keys.add(key)
 
     for topic in topics:
+        topic_evidence_ids = _topic_selected_evidence_ids(topic)
         for risk in topic.risk_points:
             key = _signature_key(risk)
-            signature = _risk_to_signature(risk, topic.topic, "topic")
+            signature = _risk_to_signature(risk, topic.topic, "topic", topic_evidence_ids)
             signatures.append(signature)
-            grouped.setdefault(key, []).append((risk, topic.topic, "topic"))
+            grouped.setdefault(key, []).append((risk, topic.topic, "topic", topic_evidence_ids))
             topic_signature_keys.add(key)
     for view in topic_signal_views:
         topic_key = str(view.get("topic", "")).strip()

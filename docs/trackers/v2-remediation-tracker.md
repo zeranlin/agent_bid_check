@@ -94,6 +94,17 @@
 | Task-Q5 | formal 准入单源继续收口为“规则治理主源”，并清理 admission 侧临时治理配置 | 治理架构实施 | 已通过 | 已完成 formal_admission 字段回收到 rules/registry 主源、supplemental 过渡层收缩、一致性校验落地与真实 replay 稳定性验证，并通过 M 验收 |
 | Task-Q6 | supplemental 过渡层压缩与“唯一物理主源”收口整改 | 治理架构实施 | 已通过 | 已完成 governance-formal 主源层落入 rules/registry、supplemental 显著压缩、迁移决策表与治理信号校验落地，且柴油/福州 replay 稳定未回退，通过 M 验收 |
 | Task-Q7 | 剩余 supplemental 过渡项终局处理与治理门禁收官整改 | 治理架构实施 | 已通过 | 已完成剩余 supplemental 项终局处理、runtime supplemental 关闭、whitelist 依赖项退出 formal 主源、治理门禁升级与多文件 replay 验证，并通过 M 验收 |
+| Task-EP1 | 证据层骨架搭建 | 架构重构 / 证据层 | 已通过 | 已完成统一 Evidence schema、最小主链路接通、trace 保留与柴油 replay 验证，通过 M 验收 |
+| Task-EP2 | 证据来源分类补齐 | 架构重构 / 证据层 | 已通过 | 已完成 source_kind 分类接入主链路、模板/留白/提醒来源 trace 与柴油/福建福州 replay 验证，通过 M 验收 |
+| Task-EP3 | 证据业务分类补齐 | 架构重构 / 证据层 | 已通过 | 已完成 business_domain 分类接入与关键边界稳定化，柴油/福州 replay 未回退，通过 M 验收 |
+| Task-EP4 | 条款角色与硬证据判定补齐 | 架构重构 / 证据层 | 已通过 | 已完成 clause_role / evidence_strength / hard_evidence 接入主链路，并完成后续消费验证与 replay 验证，通过 M 验收 |
+| Task-PB1 | 问题层骨架搭建 | 架构重构 / 问题层 | 已通过 | 已完成 problem 对象模型、problem_id 稳定生成与 admission 改消费问题对象，真实 replay 通过 M 验收 |
+| Task-PB2 | 同簇候选归并与主副吸收 | 架构重构 / 问题层 | 已通过 | 已完成同簇候选归并、主副吸收、trace 保留与真实 replay 收敛，通过 M 验收 |
+| Task-PB3 | 跨专题问题归并与跨层冲突收口 | 架构重构 / 问题层 | 已通过 | 已完成跨专题归并、冲突输入收集与 admission 唯一 winner 收口，柴油/福州 replay 通过 M 验收 |
+| Task-PB4 | 跨专题一致性冲突识别补强 | 架构重构 / 问题层 | 已通过 | 已完成 conflict problem 建模、冲突双方吸收替代与高价值冲突 replay 验证，通过 M 验收 |
+| Task-PU1 | 发布层 final snapshot 单源化 | 架构重构 / 发布层 | 已通过 | 已完成 final_snapshot 单源化，Web/Markdown/history/API 统一消费并完成一致性验证，通过 M 验收 |
+| Task-GR1 | 真实文件 replay 基线重建 | 架构重构 / 治理回放 | 已通过 | 已完成柴油/福建/福州三文件 replay 基线主配置、runner、门禁测试与标准产物输出，通过 M 验收 |
+| Task-GR2 | 分层问题登记与任务归因机制 | 架构重构 / 治理回放 | 已通过 | 已完成反馈归因主账本、轻量归因器、分层任务建议与样例验证，通过 M 验收 |
 | Task-OG1 | 输出治理骨架搭建 | 治理架构实施 | 已通过 | 已建立输出治理层模块边界、治理对象模型与最小链路，并通过 M 验收 |
 | Task-OG2 | 风险归并与分层裁决 | 治理架构实施 | 已通过 | 经 `Task-OG2-F` 补强后，已完成风险归并、三分层裁决与真实文件去重/降级收敛，并通过 M 验收 |
 | Task-OG3 | 最终输出准入与真实文件门禁 | 治理架构实施 | 已通过 | 经 `Task-OG3-F` 补强后，已完成成品页准入控制、三端一致性与真实文件门禁，并通过 M 验收 |

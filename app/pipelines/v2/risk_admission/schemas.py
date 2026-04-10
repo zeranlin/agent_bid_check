@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Literal
 
 from app.pipelines.v2.output_governance.schemas import GovernedRisk
+from app.pipelines.v2.problem_layer.models import Problem
 
 
 EvidenceKind = Literal[
@@ -98,12 +99,81 @@ class AdmissionCandidate:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_problem(
+        cls,
+        problem: Problem,
+        *,
+        evidence_kind: EvidenceKind,
+        source_type: AdmissionSourceType,
+    ) -> "AdmissionCandidate":
+        primary = problem.primary_candidate
+        merged_locations = list(
+            dict.fromkeys(
+                location
+                for item in [primary, *problem.supporting_candidates]
+                for location in item.source_locations
+            )
+        )
+        merged_excerpts = list(
+            dict.fromkeys(
+                excerpt
+                for item in [primary, *problem.supporting_candidates]
+                for excerpt in item.source_excerpts
+            )
+        )
+        merged_source_rules = list(
+            dict.fromkeys(
+                rule
+                for item in [primary, *problem.supporting_candidates]
+                for rule in item.source_rules
+            )
+        )
+        return cls(
+            rule_id=primary.identity.rule_id,
+            risk_family=problem.family_key,
+            title=problem.canonical_title,
+            review_type=primary.review_type,
+            severity=primary.severity,
+            evidence_kind=evidence_kind,
+            source_type=source_type,
+            governance_reason=primary.decision.governance_reason,
+            source_locations=merged_locations,
+            source_excerpts=merged_excerpts,
+            source_rules=merged_source_rules,
+            extras={
+                **dict(primary.extras),
+                "problem_id": problem.problem_id,
+                "problem_rule_ids": list(problem.rule_ids),
+                "problem_source_rules": list(merged_source_rules),
+                "problem_evidence_ids": list(problem.evidence_ids),
+                "problem_topic_sources": list(problem.topic_sources),
+                "problem_supporting_candidate_rule_ids": [item.identity.rule_id for item in problem.supporting_candidates],
+                "problem_supporting_candidate_titles": [item.decision.canonical_title for item in problem.supporting_candidates],
+                "merged_topic_sources": list(problem.merged_topic_sources),
+                "merged_family_keys": list(problem.merged_family_keys),
+                "cross_topic_merge_reason": problem.cross_topic_merge_reason,
+                "layer_conflict_inputs": list(problem.layer_conflict_inputs),
+                "final_problem_resolution": dict(problem.final_problem_resolution),
+                "problem_kind": problem.problem_kind,
+                "conflict_type": problem.conflict_type,
+                "left_side": dict(problem.left_side),
+                "right_side": dict(problem.right_side),
+                "conflict_reason": dict(problem.conflict_reason),
+                "conflict_evidence_links": list(problem.conflict_evidence_links),
+                "problem_trace": dict(problem.trace),
+                "governance_proposed_title": primary.decision.proposed_title,
+                "governance_canonical_title": primary.decision.canonical_title,
+            },
+        )
+
 
 @dataclass
 class AdmissionInput:
     document_name: str
     comparison_summary: dict[str, Any] = field(default_factory=dict)
     governance_summary: dict[str, Any] = field(default_factory=dict)
+    problem_summary: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

@@ -1,0 +1,326 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "cluster_count": 2,
+    "pending_count": 0,
+    "excluded_count": 0,
+    "governance_input": {
+      "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+      "comparison": {
+        "signatures": [
+          {
+            "topic": "scoring",
+            "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+            "source_locations": [
+              "（一） 评分内容（第 328-332 行）"
+            ],
+            "source_excerpt_hash": "807c6caa55395f62",
+            "severity": "高风险",
+            "source_rule": "topic",
+            "source_excerpt": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。",
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ]
+          },
+          {
+            "topic": "scoring",
+            "title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+            "review_type": "评分项合规性审查",
+            "source_locations": [
+              "（一） 评分内容（第 328-332 行）"
+            ],
+            "source_excerpt_hash": "807c6caa55395f62",
+            "severity": "中风险",
+            "source_rule": "topic",
+            "source_excerpt": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。",
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ]
+          }
+        ],
+        "clusters": [
+          {
+            "cluster_id": "cluster-1",
+            "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "severity": "高风险",
+            "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+            "source_locations": [
+              "（一） 评分内容（第 328-332 行）"
+            ],
+            "source_excerpts": [
+              "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+            ],
+            "risk_judgment": [
+              "主风险应保留。"
+            ],
+            "legal_basis": [
+              "不得限定或者指定特定认证机构。"
+            ],
+            "rectification": [
+              "删除特定认证机构限定。"
+            ],
+            "topics": [
+              "scoring"
+            ],
+            "source_rules": [
+              "topic"
+            ],
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ],
+            "conflict_notes": [],
+            "need_manual_review": false
+          },
+          {
+            "cluster_id": "cluster-2",
+            "title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+            "severity": "中风险",
+            "review_type": "评分项合规性审查",
+            "source_locations": [
+              "（一） 评分内容（第 328-332 行）"
+            ],
+            "source_excerpts": [
+              "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+            ],
+            "risk_judgment": [
+              "这是同一组评分证据中的权重侧佐证。"
+            ],
+            "legal_basis": [
+              "认证项权重不宜畸高。"
+            ],
+            "rectification": [
+              "压缩认证项分值。"
+            ],
+            "topics": [
+              "scoring"
+            ],
+            "source_rules": [
+              "topic"
+            ],
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ],
+            "conflict_notes": [],
+            "need_manual_review": false
+          }
+        ],
+        "conflicts": [],
+        "coverage_summary": {
+          "baseline_risk_count": 0,
+          "topic_risk_count": 2,
+          "cluster_count": 2,
+          "topic_count": 1,
+          "baseline_only_count": 0,
+          "topic_only_count": 2,
+          "coverage_gap_count": 1,
+          "topic_summaries": [
+            {
+              "topic": "scoring",
+              "risk_count": 2,
+              "need_manual_review": false,
+              "selected_section_count": 1,
+              "missing_modules": []
+            }
+          ]
+        },
+        "comparison_summary": {
+          "conflict_count": 0,
+          "manual_review_count": 1,
+          "duplicate_reduction": 0,
+          "triggered_rule_codes": [],
+          "pending_review_count": 0,
+          "excluded_risk_count": 0
+        },
+        "baseline_only_risks": [],
+        "topic_only_risks": [
+          {
+            "topic": "scoring",
+            "source_rule": "topic",
+            "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "severity": "高风险",
+            "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+            "source_location": "（一） 评分内容（第 328-332 行）",
+            "source_excerpt": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+          },
+          {
+            "topic": "scoring",
+            "source_rule": "topic",
+            "title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+            "severity": "中风险",
+            "review_type": "评分项合规性审查",
+            "source_location": "（一） 评分内容（第 328-332 行）",
+            "source_excerpt": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+          }
+        ],
+        "missing_topic_coverage": [],
+        "manual_review_items": [
+          "基线层未发现风险，但专题层发现多个风险点，建议人工复核专题补充发现。"
+        ],
+        "coverage_gaps": [
+          {
+            "topic": "cross_check",
+            "type": "baseline_topic_gap",
+            "items": [],
+            "message": "基线层与专题层差异较大，建议人工复核专题新增问题。"
+          }
+        ],
+        "metadata": {
+          "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+          "failure_reason_codes": [],
+          "comparison_failure_reason_codes": [],
+          "import_policy": "mixed_or_unclear",
+          "foreign_standard_refs": [],
+          "cn_standard_refs": [],
+          "has_equivalent_standard_clause": false,
+          "acceptance_plan_forbidden_in_scoring": true,
+          "acceptance_plan_linked_to_score": false,
+          "payment_terms_forbidden_in_scoring": true,
+          "payment_terms_linked_to_score": false,
+          "gifts_or_unrelated_goods_forbidden_in_scoring": true,
+          "gifts_or_goods_linked_to_score": false,
+          "specific_brand_or_supplier_forbidden_in_scoring": true,
+          "specific_cert_or_supplier_score_linked": false,
+          "acceptance_testing_cost_forbidden_to_bidder": false,
+          "acceptance_testing_cost_shifted_to_bidder": false,
+          "pending_review_items": [],
+          "excluded_risks": []
+        }
+      }
+    }
+  },
+  "governed_candidates": [
+    {
+      "identity": {
+        "rule_id": "topic::certification_scoring_bundle",
+        "risk_family": "certification_scoring_bundle",
+        "source_topics": [
+          "scoring"
+        ],
+        "evidence_anchors": [
+          "807c6caa5539"
+        ],
+        "document_span": [
+          "（一） 评分内容（第 328-332 行）"
+        ]
+      },
+      "family": {
+        "family_key": "certification_scoring_bundle",
+        "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "source_topics": [
+          "scoring"
+        ]
+      },
+      "decision": {
+        "governance_reason": "由 compare 候选风险进入输出治理层。",
+        "proposed_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+      },
+      "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+      "severity": "高风险",
+      "source_locations": [
+        "（一） 评分内容（第 328-332 行）"
+      ],
+      "source_excerpts": [
+        "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+      ],
+      "risk_judgment": [
+        "主风险应保留。"
+      ],
+      "legal_basis": [
+        "不得限定或者指定特定认证机构。"
+      ],
+      "rectification": [
+        "删除特定认证机构限定。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "need_manual_review": false,
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ]
+      }
+    },
+    {
+      "identity": {
+        "rule_id": "topic::cert_weight",
+        "risk_family": "cert_weight",
+        "source_topics": [
+          "scoring"
+        ],
+        "evidence_anchors": [
+          "807c6caa5539"
+        ],
+        "document_span": [
+          "（一） 评分内容（第 328-332 行）"
+        ]
+      },
+      "family": {
+        "family_key": "cert_weight",
+        "canonical_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+        "source_topics": [
+          "scoring"
+        ]
+      },
+      "decision": {
+        "governance_reason": "由 compare 候选风险进入输出治理层。",
+        "proposed_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+        "canonical_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+      },
+      "review_type": "评分项合规性审查",
+      "severity": "中风险",
+      "source_locations": [
+        "（一） 评分内容（第 328-332 行）"
+      ],
+      "source_excerpts": [
+        "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+      ],
+      "risk_judgment": [
+        "这是同一组评分证据中的权重侧佐证。"
+      ],
+      "legal_basis": [
+        "认证项权重不宜畸高。"
+      ],
+      "rectification": [
+        "压缩认证项分值。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "need_manual_review": false,
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ]
+      }
+    }
+  ]
+}

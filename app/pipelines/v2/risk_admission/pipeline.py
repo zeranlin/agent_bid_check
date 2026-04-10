@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from app.pipelines.v2.output_governance import govern_comparison_artifact
 from app.pipelines.v2.output_governance.schemas import GovernedResult
+from app.pipelines.v2.problem_layer import build_problem_layer
+from app.pipelines.v2.problem_layer.models import ProblemLayerResult
 
-from .decision_engine import admit_governed_risk
+from .decision_engine import admit_governed_risk, admit_problem
 from .schemas import AdmissionInput, AdmissionResult
 
 
@@ -29,6 +31,17 @@ def validate_admitted_result(result: AdmissionResult) -> None:
 
 def admit_governance_result(document_name: str, comparison, governance: GovernedResult | None = None) -> AdmissionResult:
     governance = governance or govern_comparison_artifact(document_name, comparison)
+    problems = build_problem_layer(document_name, governance)
+    return admit_problem_result(document_name, comparison, problems, governance)
+
+
+def admit_problem_result(
+    document_name: str,
+    comparison,
+    problems: ProblemLayerResult,
+    governance: GovernedResult | None = None,
+) -> AdmissionResult:
+    governance = governance or govern_comparison_artifact(document_name, comparison)
     admission_input = AdmissionInput(
         document_name=document_name,
         comparison_summary={
@@ -39,13 +52,21 @@ def admit_governance_result(document_name: str, comparison, governance: Governed
         governance_summary={
             "candidate_count": len(governance.governed_candidates),
         },
+        problem_summary={
+            "problem_count": len(problems.problems),
+        },
     )
     result = AdmissionResult(
         document_name=document_name,
-        input_summary={"admission_input": admission_input.to_dict()},
+        input_summary={
+            "admission_input": admission_input.to_dict(),
+            "comparison_summary": dict(admission_input.comparison_summary),
+            "governance_summary": dict(admission_input.governance_summary),
+            "problem_summary": dict(admission_input.problem_summary),
+        },
     )
-    for governed_risk in governance.governed_candidates:
-        candidate, decision = admit_governed_risk(governed_risk)
+    for problem in problems.problems:
+        candidate, decision = admit_problem(problem)
         result.decisions[candidate.rule_id] = decision
         if decision.target_layer == "formal_risks":
             result.formal_risks.append(candidate)

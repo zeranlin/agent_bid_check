@@ -1,0 +1,51 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "candidate_count_before_problem_layer": 1,
+  "problem_count_after_problem_layer": 1,
+  "formal_count": 1,
+  "pending_count": 0,
+  "excluded_count": 0,
+  "cross_topic_merge_example": {
+    "problem_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+    "merged_topic_sources": [
+      "technical_standard",
+      "policy"
+    ],
+    "cross_topic_merge_reason": "技术标准专题与政策专题同时命中同一进口口径矛盾，问题层按白名单跨专题合并为单一问题。"
+  },
+  "layer_conflict_example": {
+    "inputs": [
+      {
+        "source_bucket": "formal_risks",
+        "candidate_rule_id": "topic::import_consistency",
+        "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "family_key": "import_consistency",
+        "topic_sources": [
+          "technical_standard",
+          "policy"
+        ]
+      },
+      {
+        "source_bucket": "pending_review_items",
+        "candidate_rule_id": "topic::import_consistency",
+        "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "family_key": "import_consistency",
+        "topic_sources": [
+          "technical_standard",
+          "policy"
+        ]
+      }
+    ],
+    "final_problem_resolution": {
+      "target_layer": "formal_risks",
+      "winner_input_bucket": "formal_risks",
+      "winner_rule_id": "topic::import_consistency",
+      "winner_basis": "problem_conflict_resolution_priority",
+      "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+    }
+  },
+  "formal_titles": [
+    "拒绝进口 vs 外标/国外部件引用矛盾风险"
+  ]
+}

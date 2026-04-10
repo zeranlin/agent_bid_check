@@ -1,0 +1,102 @@
+suite_id: V2-REAL-REPLAY-BASELINE-001
+single_source: docs/trackers
+owner: M
+maintainer: T
+purpose: >
+  统一维护关键真实文件 replay 基线，作为后续规则、治理、问题层、发布层变更的回归底座。
+  基线按文件维度定义 should_report / should_not_report / should_pending，并由 replay runner 自动校验。
+
+documents:
+  - document_id: DOC-DIESEL-0330-BASELINE
+    document_name: "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+    file_path: "../../../test_target/zf/埋点测试案例和结果/[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx"
+    topic_mode: mature
+    seed_result_dir: "../../data/results/v2/20260410-q7-diesel"
+    result_dir: "../../data/results/v2/gr1-diesel-baseline"
+    notes:
+      - 当前柴油基线以 q7 稳定回放为 seed，重点保护 import conflict、认证主风险和检测费用主风险。
+      - “赠送与采购无关物资风险”当前未纳入此份柴油 0330 文件正式基线，后续若正式纳管再补 should_report。
+      - 模板留白与程序边界项应继续停留在 excluded 或不进入 formal。
+    baseline_assertions:
+      should_report:
+        - id: diesel-import-conflict
+          title: "拒绝进口 vs 外标/国外部件引用矛盾风险"
+          family_key: import_consistency
+        - id: diesel-cert-main
+          title: "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+          family_key: certification_scoring_bundle
+        - id: diesel-acceptance-cost
+          title: "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+          family_key: acceptance_testing_cost
+      should_not_report:
+        - id: diesel-template-acceptance-placeholder
+          title: "验收时点约定缺失，导致验收流程不可操作"
+          family_key: acceptance_template_placeholder
+        - id: diesel-e-bid-capacity-boundary
+          title: "电子投标文件容量限制可能增加投标负担"
+      should_pending:
+        - id: diesel-missing-detection
+          title: "检测报告及认证资质要求缺失或表述不明"
+          family_key: missing_detection_or_cert_requirement
+        - id: diesel-scoring-clarity
+          title: "评分描述量化口径不足，存在评审一致性风险"
+          family_key: scoring_clarity
+
+  - document_id: DOC-FUJIAN-PROPERTY-BASELINE
+    document_name: "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx"
+    file_path: "../../../test_target/福建/（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx"
+    topic_mode: mature
+    seed_result_dir: "../../data/results/v2/20260409-w013-fujian"
+    result_dir: "../../data/results/v2/gr1-fujian-baseline"
+    notes:
+      - 福建物业基线当前采用 w013 稳定 seed，重点保护正文硬风险，同时阻断模板/后续合同确定类误报。
+      - 该文件的提醒项、证据不足项应继续停留在 pending，不得直接抬入 formal。
+      - 后续若福建链路继续收紧，可在不打坏正文硬风险前提下迭代 seed run。
+    baseline_assertions:
+      should_report:
+        - id: fujian-brand-bias
+          title: "评分标准中设置特定品牌倾向性条款"
+        - id: fujian-tech-brand
+          title: "技术参数中关于“实验服清洗服务”的设备品牌指定风险"
+      should_not_report:
+        - id: fujian-template-acceptance
+          title: "验收标准模糊且依赖后续合同确定，存在需求条款合规风险"
+      should_pending:
+        - id: fujian-acceptance-pending
+          title: "验收流程与考核机制表述笼统，缺乏可操作性"
+        - id: fujian-policy-reminder
+          title: "专门面向中小企业采购的评审细节需确认"
+
+  - document_id: DOC-FUZHOU-DORM-BASELINE
+    document_name: "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx"
+    file_path: "../../../test_target/福建/（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx"
+    topic_mode: mature
+    seed_result_dir: "../../data/results/v2/20260410-q7-fuzhou"
+    result_dir: "../../data/results/v2/gr1-fuzhou-baseline"
+    notes:
+      - 福州一中基线重点保护样品门槛、厂家验收标准、商务失衡、履约监督失衡、技术参数过细等正式风险。
+      - “无犯罪证明”误映射标题、模板留白、开标签字默认认可等条目不应再进入 formal。
+      - 远程开标解密时限、缺乏预付款安排等边界项应继续停留在 pending。
+    baseline_assertions:
+      should_report:
+        - id: fuzhou-sample-gate
+          title: "样品要求过细且评审规则失衡，存在样品门槛风险"
+          family_key: sample_gate
+        - id: fuzhou-acceptance-standard
+          title: "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"
+          family_key: acceptance_vendor_standard
+        - id: fuzhou-contract-change
+          title: "商务条款中采购人单方变更权过大且结算方式不明"
+          family_key: contract_change_imbalance
+      should_not_report:
+        - id: fuzhou-no-crime-mislabel
+          title: "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险"
+        - id: fuzhou-sign-default-acceptance
+          title: "开标记录签字确认的默认认可条款"
+        - id: fuzhou-template-acceptance-placeholder
+          title: "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性"
+      should_pending:
+        - id: fuzhou-no-prepayment
+          title: "缺乏预付款安排，资金压力较大"
+        - id: fuzhou-remote-decrypt
+          title: "远程开标解密时限及后果条款的合理性审查"

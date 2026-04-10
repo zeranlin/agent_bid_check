@@ -1,0 +1,109 @@
+{
+  "document_id": "DOC-FUZHOU-DORM-BASELINE",
+  "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
+  "baseline_assertions": {
+    "should_report": [
+      {
+        "assertion_id": "fuzhou-sample-gate",
+        "assertion": {
+          "id": "fuzhou-sample-gate",
+          "title": "样品要求过细且评审规则失衡，存在样品门槛风险",
+          "family_key": "sample_gate"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fuzhou-acceptance-standard",
+        "assertion": {
+          "id": "fuzhou-acceptance-standard",
+          "title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+          "family_key": "acceptance_vendor_standard"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fuzhou-contract-change",
+        "assertion": {
+          "id": "fuzhou-contract-change",
+          "title": "商务条款中采购人单方变更权过大且结算方式不明",
+          "family_key": "contract_change_imbalance"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      }
+    ],
+    "should_pending": [
+      {
+        "assertion_id": "fuzhou-no-prepayment",
+        "assertion": {
+          "id": "fuzhou-no-prepayment",
+          "title": "缺乏预付款安排，资金压力较大"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fuzhou-remote-decrypt",
+        "assertion": {
+          "id": "fuzhou-remote-decrypt",
+          "title": "远程开标解密时限及后果条款的合理性审查"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      }
+    ],
+    "should_not_report": [
+      {
+        "assertion_id": "fuzhou-no-crime-mislabel",
+        "assertion": {
+          "id": "fuzhou-no-crime-mislabel",
+          "title": "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [],
+        "matched": true
+      },
+      {
+        "assertion_id": "fuzhou-sign-default-acceptance",
+        "assertion": {
+          "id": "fuzhou-sign-default-acceptance",
+          "title": "开标记录签字确认的默认认可条款"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [
+          "excluded_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fuzhou-template-acceptance-placeholder",
+        "assertion": {
+          "id": "fuzhou-template-acceptance-placeholder",
+          "title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [
+          "excluded_risks"
+        ],
+        "matched": true
+      }
+    ]
+  }
+}

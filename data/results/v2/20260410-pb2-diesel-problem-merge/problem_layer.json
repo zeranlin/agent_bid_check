@@ -1,0 +1,168 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "governed_candidate_count": 2,
+    "problem_count": 1,
+    "absorbed_candidate_count": 1
+  },
+  "problems": [
+    {
+      "problem_id": "problem-2d8725d052f6",
+      "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+      "family_key": "certification_scoring_bundle",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::certification_scoring_bundle",
+          "risk_family": "certification_scoring_bundle",
+          "source_topics": [
+            "scoring"
+          ],
+          "evidence_anchors": [
+            "807c6caa5539"
+          ],
+          "document_span": [
+            "（一） 评分内容（第 328-332 行）"
+          ]
+        },
+        "family": {
+          "family_key": "certification_scoring_bundle",
+          "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+          "source_topics": [
+            "scoring"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+          "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+        },
+        "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+        "severity": "高风险",
+        "source_locations": [
+          "（一） 评分内容（第 328-332 行）"
+        ],
+        "source_excerpts": [
+          "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+        ],
+        "risk_judgment": [
+          "主风险应保留。"
+        ],
+        "legal_basis": [
+          "不得限定或者指定特定认证机构。"
+        ],
+        "rectification": [
+          "删除特定认证机构限定。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [
+        {
+          "identity": {
+            "rule_id": "topic::cert_weight",
+            "risk_family": "cert_weight",
+            "source_topics": [
+              "scoring"
+            ],
+            "evidence_anchors": [
+              "807c6caa5539"
+            ],
+            "document_span": [
+              "（一） 评分内容（第 328-332 行）"
+            ]
+          },
+          "family": {
+            "family_key": "cert_weight",
+            "canonical_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+            "source_topics": [
+              "scoring"
+            ]
+          },
+          "decision": {
+            "governance_reason": "由 compare 候选风险进入输出治理层。",
+            "proposed_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险",
+            "canonical_title": "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+          },
+          "review_type": "评分项合规性审查",
+          "severity": "中风险",
+          "source_locations": [
+            "（一） 评分内容（第 328-332 行）"
+          ],
+          "source_excerpts": [
+            "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+          ],
+          "risk_judgment": [
+            "这是同一组评分证据中的权重侧佐证。"
+          ],
+          "legal_basis": [
+            "认证项权重不宜畸高。"
+          ],
+          "rectification": [
+            "压缩认证项分值。"
+          ],
+          "source_rules": [
+            "topic"
+          ],
+          "need_manual_review": false,
+          "extras": {
+            "compare_source_bucket": "formal_risks",
+            "compare_source_buckets": [
+              "formal_risks"
+            ]
+          }
+        }
+      ],
+      "evidence_ids": [
+        "807c6caa5539"
+      ],
+      "topic_sources": [
+        "scoring"
+      ],
+      "rule_ids": [
+        "topic::certification_scoring_bundle",
+        "topic::cert_weight"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::certification_scoring_bundle",
+          "topic::cert_weight"
+        ],
+        "source_candidate_titles": [
+          "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+          "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+        ],
+        "source_evidence_ids": [
+          "807c6caa5539"
+        ],
+        "source_topics": [
+          "scoring"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "certification_scoring_bundle",
+        "problem_family_keys": [
+          "certification_scoring_bundle",
+          "cert_weight"
+        ],
+        "problem_merge_reason": "特定认证证书、特定发证机构与认证权重属于同一评分问题簇，问题层统一保留一个主问题并吸收附属评分说明。",
+        "primary_selection_reason": "优先保留预设主 family，其次保留风险级别更高、证据锚点更完整的候选作为主问题。",
+        "absorbed_supporting_titles": [
+          "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+        ],
+        "absorbed_supporting_rule_ids": [
+          "topic::cert_weight"
+        ],
+        "problem_id_seed": "certification_scoring_bundle|以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险|cert_weight,certification_scoring_bundle|topic::cert_weight,topic::certification_scoring_bundle|807c6caa5539"
+      }
+    }
+  ]
+}

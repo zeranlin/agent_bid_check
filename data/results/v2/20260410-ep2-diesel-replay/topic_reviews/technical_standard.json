@@ -1,0 +1,517 @@
+{
+  "topic": "technical_standard",
+  "summary": "招标文件在技术参数中引用了多项标准，存在标准编号与名称表述不规范、标准有效性存疑（GB252 已废止）以及标准引用格式混乱（BS EN 与 GB/T 混排）的风险。同时，未明确检测报告及认证资质的具体要求，存在验收依据模糊的隐患。",
+  "risk_points": [
+    {
+      "title": "燃油标准引用已废止标准 GB252",
+      "severity": "高风险",
+      "review_type": "标准有效性审查",
+      "source_location": "证据 2，第 1125-1178 行，第（7）项",
+      "source_excerpt": "（7）燃油标准，采用 0 号轻柴油，符合 GB252 或 BS2869 标准。",
+      "risk_judgment": [
+        "GB 252-2011《普通柴油》已被 GB 19147-2016《车用柴油》及后续版本替代，且 GB 252-2011 已于 2018 年 12 月 28 日废止。",
+        "引用已废止标准作为采购技术要求，可能导致履约验收无据可依，或引发供应商对标准适用性的争议。",
+        "BS2869 为英国标准，若项目在中国境内实施，应优先引用现行有效的中国国家标准（GB）。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国标准化法》第二十七条：国家实行标准实施信息反馈和评估机制。",
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。（引申：引用失效标准属于技术规格不严谨，可能影响公平竞争）"
+      ],
+      "rectification": [
+        "将 GB252 更新为现行有效的国家标准，如 GB 19147-2016《车用柴油》或 GB 252-2015（若适用，需核实最新状态，通常推荐 GB 19147）。",
+        "建议删除 BS2869 或明确其作为参考标准，优先采用中国国家标准。"
+      ]
+    },
+    {
+      "title": "电磁兼容标准引用格式混乱且编号不完整",
+      "severity": "中风险",
+      "review_type": "标准规范性审查",
+      "source_location": "证据 1 及证据 3，第 1.14 项",
+      "source_excerpt": "1.14 电磁影响：符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+      "risk_judgment": [
+        "标准编号表述不规范：'BS EN 61000 GB/T 17626' 将英国/欧洲标准（BS EN）与中国国家标准（GB/T）混写，且未注明具体部分号（如 GB/T 17626.2 等），导致标准指向不明。",
+        "GB/T 17626 系列标准对应 IEC 61000-4 系列，而 BS EN 61000 通常指代整个系列，两者并列且未细分，存在逻辑混淆。",
+        "EN55011 为欧洲标准，未注明是否等同采用为 GB 标准，且未提供具体版本年份，可能导致验收时标准版本不一致。",
+        "标准引用不清晰可能导致供应商投标时依据不同版本标准，造成履约偏差。"
+      ],
+      "legal_basis": [
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第二十条：采购人或者采购代理机构应当根据采购项目的特点和采购需求编制招标文件。",
+        "《标准化法》关于标准编号和引用的规范性要求。"
+      ],
+      "rectification": [
+        "明确引用中国国家标准，如 GB/T 17626 系列（电磁兼容 试验和测量技术）及 GB 4824（工业、科学和医疗射频设备电磁骚扰特性）或 GB/T 17626 对应部分。",
+        "补全标准的具体部分号（如 GB/T 17626.2-2018）和发布年份。",
+        "若需引用国际标准，应明确注明标准全称及版本，并说明与国内标准的对应关系。"
+      ]
+    },
+    {
+      "title": "检测报告及认证资质要求缺失或表述模糊",
+      "severity": "中风险",
+      "review_type": "检测认证要求审查",
+      "source_location": "证据 1、2、3（全文未明确提及检测报告要求）",
+      "source_excerpt": "（证据片段中仅列出了技术参数和标准符合性，未见对检测报告、CMA/CNAS 资质或认证证书的具体要求）",
+      "risk_judgment": [
+        "文件仅要求产品符合特定标准（如 GB/T 17626, GB 19147 等），但未明确是否要求供应商提供第三方检测机构出具的检测报告。",
+        "未明确检测报告是否需具备 CMA（中国计量认证）或 CNAS（中国合格评定国家认可委员会）资质，可能导致验收时报告效力争议。",
+        "对于柴油发电机组等关键设备，通常涉及强制性认证（如 CCC）或行业特定认证，文件未明确是否要求提供相关证书。",
+        "缺乏明确的检测认证要求，可能导致验收环节缺乏客观依据，增加履约风险。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法》第二十二条：供应商参加政府采购活动应当具备履行合同的所必需的设备和专业技术能力。",
+        "《检验检测机构资质认定管理办法》：向社会出具具有证明作用的数据和结果的检验检测机构，应当取得资质认定（CMA）。"
+      ],
+      "rectification": [
+        "在技术规格或验收标准章节中，明确是否要求提供第三方检测报告。",
+        "若要求检测报告，应明确检测机构需具备 CMA 或 CNAS 资质。",
+        "核实柴油发电机组是否属于 CCC 强制认证目录，若是，应明确要求提供 CCC 证书。",
+        "补充验收环节对检测报告的具体要求（如报告有效期、检测项目覆盖范围等）。"
+      ]
+    }
+  ],
+  "need_manual_review": false,
+  "coverage_note": "本专题基于 technical 模块召回的 3 个证据片段进行审查。证据主要覆盖技术参数中的标准引用。未覆盖 acceptance 模块，无法确认验收环节对检测报告、CMA/CNAS 资质及认证证书的具体要求，建议人工复核验收章节。",
+  "metadata": {
+    "topic_label": "技术标准与检测",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "1.规格及技术参数",
+        "start_line": 1001,
+        "end_line": 1091,
+        "module": "technical"
+      },
+      {
+        "title": "（5） ▲排量： ≥50L",
+        "start_line": 1125,
+        "end_line": 1178,
+        "module": "technical"
+      },
+      {
+        "title": "1.规格及技术参数",
+        "start_line": 2143,
+        "end_line": 2281,
+        "module": "technical"
+      }
+    ],
+    "selected_evidence_ids": [],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "failure_reasons": [
+      "foreign_standard_conflict"
+    ],
+    "failure_reason_labels": [
+      "拒绝进口与外标直引存在潜在冲突"
+    ],
+    "evidence_bundle": {
+      "sections": [
+        {
+          "title": "1.规格及技术参数",
+          "start_line": 1001,
+          "end_line": 1091,
+          "body": "1.规格及技术参数\n\n\n1.1  ★额定功率： 1000KW（能够满足 48 小时或以上连续运行）， 即在此功率下每年运行不超过 300 小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行，比如油箱容量（允许不停机加油）、散热能力等。\n\n\n1.2 输出电压： 400V/230V （三相四线）\n\n\n1.3 频率： 50Hz\n\n\n1.4 转速： 1500RPM\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n1.6▲  100%常用功率负载柴油消耗量： ≤290L/h\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n1.8 频率降：   ≤±0～5%\n\n\n1.9  瞬态电压偏差及电压稳定时间：≤-15%～20%，并于 3 秒内稳定。\n\n\n1.10 瞬态频率偏差及频率稳定时间： ≤10%,  并于 5 秒内稳定。\n\n\n1.11  电压波动率：≤±1%\n\n\n1.12 频率波动率： ≤±0.5%\n\n\n1.13 电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n1.14 电磁影响： 符合 BS  EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n1.15 输出电压可调范围： ≥±5%\n\n\n1.16 机组自启动成功率： ≥98%\n\n\n2.主要机组性能要求\n\n\n2.1  自动调整频率和电压。\n\n\n2.2 实现蓄电池自动充电。\n\n\n2.3 自动维持应急机组的准备运行状态。\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n2.5 按自动控制指令或遥控指令实现自动停机。\n\n\n2.6 设有过载、短路、过速（或过频） 、冷却水温度过高。机油压力过低报警信号等项保护装置， 并有对过电压、欠电压、失压、低速（或低频）、燃油箱油面过低报警信号等方面的保护装置。\n\n\n2.7 机组在无人值守的情况下连续运行8 小时。\n\n\n2.8 手动要求：\n\n\n（1）机组的启动和停机、调频和调压、送电和供电等应能手动控制。\n\n\n（2）自动停机和手动停机均应有正常停机和紧急停机两种。\n\n\n\n\n\n\n序 号\n货物\n名称",
+          "excerpt": "1.规格及技术参数\n\n\n1.1  ★额定功率： 1000KW（能够满足 48 小时或以上连续运行）， 即在此功率下每年运行不超过 300 小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行，比如油箱容量（允许不停机加油）、散热能力等。\n\n\n1.2 输出电压： 400V/230V （三相四线）\n\n\n1.3 频率： 50Hz\n\n\n1.4 转速： 1500RPM\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n1.6▲  100%常用功率负载柴油消耗量： ≤290L/h\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n1.8 频率降：   ≤±0～5%\n\n\n1.9  瞬态电压偏差及电压稳定时间：≤-15%～20%，并于 3 秒内稳定。\n\n\n1.10 瞬态频率偏差及频率稳定时间： ≤10%,  并于 5 秒内稳定。\n\n\n1.11  电压波动率：≤±1%\n\n\n1.12 频率波动率： ≤±0.5%\n\n\n1.13 电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n1.14 电磁影响： 符合 BS  EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n1.15 输出电压可调范围： ≥±5%\n\n\n1.16 机组自启动成功率： ≥98%\n\n\n2.主要机组性能要求\n\n\n2.1  自动调整频率和电压。\n\n\n2.2 实现蓄电池自动充电。\n\n\n2.3 自动维持应急机组的准备运行状态。\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n2.5 按自动控制指令或遥控指令实现自动停机。\n\n\n2.6 设有过载、短路、过速（或过频） 、冷却水温度过高。机油压力过低报警信号等项保护装置， 并有对过电压、欠电压、失压、低速（或低频）、燃油箱",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 13,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 13,
+          "keywords": [
+            "技术",
+            "参数",
+            "标准"
+          ],
+          "heading_level": 2,
+          "source": "rule_split",
+          "evidence_id": "evidence-9689980301",
+          "location": "1.规格及技术参数（第 1001-1091 行）",
+          "source_kind": "body_clause",
+          "source_kind_trace": {
+            "source_kind": "body_clause",
+            "rule": "default_body_clause",
+            "reason": "未命中特殊来源规则，按正文条款处理。",
+            "signals": [
+              "1.规格及技术参数",
+              "rule_split"
+            ]
+          }
+        },
+        {
+          "title": "（5） ▲排量： ≥50L",
+          "start_line": 1125,
+          "end_line": 1178,
+          "body": "（5） ▲排量： ≥50L\n\n\n（6）起动方式： 24V 蓄电池自动启动。\n\n\n（7）燃油标准， 采用 0 号轻柴油，符合 GB252  或 BS2869 标准。\n\n\n（8）调速器系统，采用电子式调速器。\n\n\n（9）润滑系统： 由柴油机本身带动的齿轮泵。\n\n\n（10）排风散热系统采用闭式循环水冷却系统。环境+45℃以下,机组冷却系统均能保持正常。\n\n\n3.2 发电机 （投标文件中应提供品牌、规格和型号）：\n\n\n（1） ▲投标产品应选用原装产品，生产日期必须是 2025 年。\n\n\n（2） ★额定功率： ≥1000KW （满足 24 小时或以上连续运行功率）；\n\n\n（3） ★  额定转速： 1500RPM；\n\n\n（4）额定电压： 400V/230V （三相四线）；\n\n\n（5）  频率： 50Hz；\n\n\n（6）额定电流： ≥1800A；\n\n\n（7）功率因数：   0.8 （滞后）；\n\n\n（8）结构型式： 无刷自励磁、带自动稳压装置 AVR、单轴承。\n\n\n（9）冷却方式： 自带冷却装置。\n\n\n（10）绝缘等级：转子、定子线圈均为 H 级。\n\n\n（11）防护等级： IP21。",
+          "excerpt": "（5） ▲排量： ≥50L\n\n\n（6）起动方式： 24V 蓄电池自动启动。\n\n\n（7）燃油标准， 采用 0 号轻柴油，符合 GB252  或 BS2869 标准。\n\n\n（8）调速器系统，采用电子式调速器。\n\n\n（9）润滑系统： 由柴油机本身带动的齿轮泵。\n\n\n（10）排风散热系统采用闭式循环水冷却系统。环境+45℃以下,机组冷却系统均能保持正常。\n\n\n3.2 发电机 （投标文件中应提供品牌、规格和型号）：\n\n\n（1） ▲投标产品应选用原装产品，生产日期必须是 2025 年。\n\n\n（2） ★额定功率： ≥1000KW （满足 24 小时或以上连续运行功率）；\n\n\n（3） ★  额定转速： 1500RPM；\n\n\n（4）额定电压： 400V/230V （三相四线）；\n\n\n（5）  频率： 50Hz；\n\n\n（6）额定电流： ≥1800A；\n\n\n（7）功率因数：   0.8 （滞后）；\n\n\n（8）结构型式： 无刷自励磁、带自动稳压装置 AVR、单轴承。\n\n\n（9）冷却方式： 自带冷却装置。\n\n\n（10）绝缘等级：转子、定子线圈均为 H 级。\n\n\n（11）防护等级： IP21。",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 4,
+            "procedure": 2,
+            "policy": 0
+          },
+          "confidence": 4,
+          "keywords": [
+            "标准",
+            "品牌",
+            "型号"
+          ],
+          "heading_level": 3,
+          "source": "rule_split",
+          "evidence_id": "evidence-a24d9f149f",
+          "location": "（5） ▲排量： ≥50L（第 1125-1178 行）",
+          "source_kind": "body_clause",
+          "source_kind_trace": {
+            "source_kind": "body_clause",
+            "rule": "default_body_clause",
+            "reason": "未命中特殊来源规则，按正文条款处理。",
+            "signals": [
+              "（5） ▲排量： ≥50L",
+              "rule_split"
+            ]
+          }
+        },
+        {
+          "title": "1.规格及技术参数",
+          "start_line": 2143,
+          "end_line": 2281,
+          "body": "1.规格及技术参数\n\n\n\n\n\n1.1  ★额定功率： 1000KW （能够满足 48 小时或以上连续运行），即在此功率下每年运行不超过  300  小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行， 比如油箱容量（允许不停机加油） 、散热能力等。\n\n\n\n\n\n1.2 输出电压： 400V/230V（三相四线）\n\n\n\n\n\n1.3 频率： 50Hz\n\n\n\n\n\n1.4 转速： 1500RPM\n\n\n\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n\n\n\n1.6▲   100%常用功率负载柴油消耗量：≤290L/h\n\n\n\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n\n\n\n1.8 频率降：   ≤±0～5%\n\n\n\n\n\n1.9   瞬态电压偏差及电压稳定时间： ≤-15%～20%， 并于 3 秒内稳定。\n\n\n\n\n\n1.10  瞬态频率偏差及频率稳定时间：≤10%,  并于 5 秒内稳定。\n\n\n\n\n\n1.11  电压波动率：≤±1%\n\n\n\n\n\n1.12 频率波动率：≤±0.5%\n\n\n\n\n\n1.13  电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n\n\n\n1.14 电磁影响： 符合 BS EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n\n\n\n1.15 输出电压可调范围：≥±5%\n\n\n\n\n\n1.16 机组自启动成功率：≥98%\n\n\n\n\n\n2.主要机组性能要求\n\n\n\n\n\n2.1  自动调整频率和电压。\n\n\n\n\n\n2.2 实现蓄电池自动充电。\n\n\n\n\n\n2.3  自动维持应急机组的准备运行状态。\n\n\n\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n\n\n\n\n\n\n\n序 号\n货物\n名称",
+          "excerpt": "1.规格及技术参数\n\n\n\n\n\n1.1  ★额定功率： 1000KW （能够满足 48 小时或以上连续运行），即在此功率下每年运行不超过  300  小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行， 比如油箱容量（允许不停机加油） 、散热能力等。\n\n\n\n\n\n1.2 输出电压： 400V/230V（三相四线）\n\n\n\n\n\n1.3 频率： 50Hz\n\n\n\n\n\n1.4 转速： 1500RPM\n\n\n\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n\n\n\n1.6▲   100%常用功率负载柴油消耗量：≤290L/h\n\n\n\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n\n\n\n1.8 频率降：   ≤±0～5%\n\n\n\n\n\n1.9   瞬态电压偏差及电压稳定时间： ≤-15%～20%， 并于 3 秒内稳定。\n\n\n\n\n\n1.10  瞬态频率偏差及频率稳定时间：≤10%,  并于 5 秒内稳定。\n\n\n\n\n\n1.11  电压波动率：≤±1%\n\n\n\n\n\n1.12 频率波动率：≤±0.5%\n\n\n\n\n\n1.13  电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n\n\n\n1.14 电磁影响： 符合 BS EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n\n\n\n1.15 输出电压可调范围：≥±5%\n\n\n\n\n\n1.16 机组自启动成功率：≥98%\n\n\n\n\n\n2.主要机组性能要求\n\n\n\n\n\n2.1  自动调整频率和电压。\n\n\n\n\n\n2.2 实现蓄电池自动充电。\n\n\n\n\n\n2.3  自动维持应急机组的准备运行状态。\n\n\n\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n\n\n\n\n\n\n\n序 号\n货物\n名称",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 13,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 13,
+          "keywords": [
+            "技术",
+            "参数",
+            "标准"
+          ],
+          "heading_level": 2,
+          "source": "rule_split",
+          "evidence_id": "evidence-c68581f8a2",
+          "location": "1.规格及技术参数（第 2143-2281 行）",
+          "source_kind": "body_clause",
+          "source_kind_trace": {
+            "source_kind": "body_clause",
+            "rule": "default_body_clause",
+            "reason": "未命中特殊来源规则，按正文条款处理。",
+            "signals": [
+              "1.规格及技术参数",
+              "rule_split"
+            ]
+          }
+        }
+      ],
+      "evidence_ids": [
+        "evidence-9689980301",
+        "evidence-a24d9f149f",
+        "evidence-c68581f8a2"
+      ],
+      "missing_hints": [
+        "未覆盖模块：acceptance。",
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=technical,acceptance；关键词=标准,规范,GB,GB/T,检测,CMA,CNAS,认证,报告；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "技术标准与检测",
+        "topic_aliases": [
+          "标准引用",
+          "检测认证"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "标准引用",
+            "标准名称编号一致性",
+            "标准有效性",
+            "检测报告",
+            "认证要求"
+          ],
+          "out_of_scope": [
+            "品牌型号倾向",
+            "纯评分规则",
+            "付款节点"
+          ],
+          "primary_modules": [
+            "technical",
+            "acceptance"
+          ],
+          "secondary_modules": [],
+          "ownership_rule": "只处理标准、规范、检测认证及其有效性问题，不处理品牌型号倾向或评分分值。",
+          "merge_hints": [
+            "若标准要求直接形成验收门槛，仍由 technical_standard 主归属，acceptance 只看验收机制。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "technical",
+            "score": 13.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "标准",
+              "GB",
+              "GB/T"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "2143-2281",
+            "score": 179,
+            "reasons": [
+              "主模块命中 technical",
+              "正文命中 6 次关键词",
+              "标题层级 2",
+              "专题特殊加权 106",
+              "外标命中 2 处",
+              "国标命中 1 处",
+              "技术参数标题优先"
+            ],
+            "keywords": [
+              "标准",
+              "GB",
+              "GB/T"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall",
+        "missing_hints": [
+          "未覆盖模块：acceptance。",
+          "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+        ],
+        "recall_query": "模块=technical,acceptance；关键词=标准,规范,GB,GB/T,检测,CMA,CNAS,认证,报告；策略=模块+标题+正文+相邻上下文"
+      }
+    },
+    "topic_coverage": {
+      "topic": "technical_standard",
+      "covered_modules": [
+        "technical"
+      ],
+      "covered_section_ids": [
+        "2143-2281",
+        "1001-1091",
+        "1125-1178"
+      ],
+      "missing_modules": [
+        "acceptance"
+      ],
+      "missing_hints": [
+        "未覆盖模块：acceptance。",
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": true,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": [],
+      "foreign_standard_refs": [
+        "BS  EN  61000",
+        "EN55011",
+        "BS EN  61000"
+      ],
+      "cn_standard_refs": [
+        "GB/T  17626",
+        "GB252"
+      ],
+      "has_equivalent_standard_clause": false,
+      "standard_system_mix": "mixed_cn_foreign",
+      "foreign_standard_has_version": false,
+      "foreign_standard_sections": [
+        {
+          "section_id": "1001-1091",
+          "title": "1.规格及技术参数",
+          "start_line": 1001,
+          "end_line": 1091,
+          "module": "technical"
+        },
+        {
+          "section_id": "2143-2281",
+          "title": "1.规格及技术参数",
+          "start_line": 2143,
+          "end_line": 2281,
+          "module": "technical"
+        }
+      ],
+      "foreign_standard_sentences": [
+        "1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准"
+      ],
+      "cn_standard_sections": [
+        {
+          "section_id": "1001-1091",
+          "title": "1.规格及技术参数",
+          "start_line": 1001,
+          "end_line": 1091,
+          "module": "technical"
+        },
+        {
+          "section_id": "1125-1178",
+          "title": "（5） ▲排量： ≥50L",
+          "start_line": 1125,
+          "end_line": 1178,
+          "module": "technical"
+        },
+        {
+          "section_id": "2143-2281",
+          "title": "1.规格及技术参数",
+          "start_line": 2143,
+          "end_line": 2281,
+          "module": "technical"
+        }
+      ],
+      "cn_standard_sentences": [
+        "1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准",
+        "符合 GB252 或 BS2869 标准"
+      ],
+      "equivalent_standard_sections": [],
+      "equivalent_standard_sentences": [],
+      "contains_gb_non_t": true,
+      "contains_gbt": true,
+      "contains_mandatory_standard": false,
+      "gb_non_t_sections": [
+        {
+          "section_id": "1125-1178",
+          "title": "（5） ▲排量： ≥50L",
+          "start_line": 1125,
+          "end_line": 1178,
+          "module": "technical"
+        }
+      ],
+      "gb_non_t_sentences": [
+        "（5） ▲排量： ≥50L （6）起动方式： 24V 蓄电池自动启动。 （7）燃油标准， 采用 0 号轻柴油，符合 GB252 或 BS2869 标准。 （8）调速器系统，采用电子式调速器"
+      ],
+      "gbt_sections": [
+        {
+          "section_id": "1001-1091",
+          "title": "1.规格及技术参数",
+          "start_line": 1001,
+          "end_line": 1091,
+          "module": "technical"
+        },
+        {
+          "section_id": "2143-2281",
+          "title": "1.规格及技术参数",
+          "start_line": 2143,
+          "end_line": 2281,
+          "module": "technical"
+        }
+      ],
+      "gbt_sentences": [
+        "三相平衡负载， 最大总波形畸变≤8.0% 1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准。 1.15 输出电压可调范围： ≥±5% 1.16 机组自启动成功率： ≥98% 2.主要机组性能要求 2.1 自动调整频率和电压",
+        "三相平衡负载， 最大总波形畸变≤8.0% 1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准。 1.15 输出电压可调范围：≥±5% 1.16 机组自启动成功率：≥98% 2.主要机组性能要求 2.1 自动调整频率和电压"
+      ],
+      "mandatory_standard_sections": [],
+      "mandatory_standard_sentences": [],
+      "has_star_marker": false,
+      "standard_clause_flags": [
+        {
+          "section_id": "1001-1091",
+          "title": "1.规格及技术参数",
+          "start_line": 1001,
+          "end_line": 1091,
+          "clause_text": "三相平衡负载， 最大总波形畸变≤8.0% 1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准。 1.15 输出电压可调范围： ≥±5% 1.16 机组自启动成功率： ≥98% 2.主要机组性能要求 2.1 自动调整频率和电压",
+          "contains_gb_non_t": false,
+          "contains_gbt": true,
+          "contains_mandatory_standard": false,
+          "has_star_marker": false
+        },
+        {
+          "section_id": "1125-1178",
+          "title": "（5） ▲排量： ≥50L",
+          "start_line": 1125,
+          "end_line": 1178,
+          "clause_text": "（5） ▲排量： ≥50L （6）起动方式： 24V 蓄电池自动启动。 （7）燃油标准， 采用 0 号轻柴油，符合 GB252 或 BS2869 标准。 （8）调速器系统，采用电子式调速器",
+          "contains_gb_non_t": true,
+          "contains_gbt": false,
+          "contains_mandatory_standard": false,
+          "has_star_marker": false
+        },
+        {
+          "section_id": "2143-2281",
+          "title": "1.规格及技术参数",
+          "start_line": 2143,
+          "end_line": 2281,
+          "clause_text": "三相平衡负载， 最大总波形畸变≤8.0% 1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准。 1.15 输出电压可调范围：≥±5% 1.16 机组自启动成功率：≥98% 2.主要机组性能要求 2.1 自动调整频率和电压",
+          "contains_gb_non_t": false,
+          "contains_gbt": true,
+          "contains_mandatory_standard": false,
+          "has_star_marker": false
+        }
+      ],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": true,
+      "brand_disclosure_sections": [
+        {
+          "section_id": "1125-1178",
+          "title": "（5） ▲排量： ≥50L",
+          "start_line": 1125,
+          "end_line": 1178,
+          "module": "technical"
+        }
+      ],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

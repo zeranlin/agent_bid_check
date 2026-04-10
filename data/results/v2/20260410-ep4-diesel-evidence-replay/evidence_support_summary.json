@@ -1,0 +1,455 @@
+{
+  "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "evidence_count": 28,
+  "clause_role_counts": {
+    "reminder": 3,
+    "gate": 1,
+    "scoring_factor": 6,
+    "supporting_material": 11,
+    "acceptance_basis": 3,
+    "technical_requirement": 3,
+    "commercial_obligation": 1
+  },
+  "evidence_strength_counts": {
+    "weak": 5,
+    "strong": 12,
+    "medium": 11
+  },
+  "hard_evidence_counts": {
+    "true": 12,
+    "false": 16
+  },
+  "focused_examples": [
+    {
+      "evidence_id": "evidence-72a152aca3",
+      "title": "5.2 投标人资格要求",
+      "source_kind": "body_clause",
+      "business_domain": "qualification",
+      "clause_role": "gate",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "5.2 投标人资格要求（第 3368-3421 行）",
+      "excerpt": "5.2 投标人资格要求\n参加本项目的投标人应具备的资格条件详见本项目招标公告中   “投标人资格要求”（即申请人的资格要求）的内容。\n5.3 联合体投标\n5.3.1    以下有关联合体投标的条款仅适用于允许投标人组成联合体投标的项目。\n5.3.2    由两个或两个以上的自然人、法人或者其他组织可以组成一个联合体，以一个供应商的身份共同投标时，应符合以下原则：\n（1）投标联合体各方参加政府采购活动应当具备下列条件：\n1、具有独立承担民事责任的能力；\n2、有良好的商业信誉和健全的财务会计制度；\n3、具有履行合同所必需的设备和专业技术能力；\n4、有依法缴纳税收和社会保障资金的良好记录；\n5、参加政府采购活动前三年内，在经营活动中没有重大违法记录；\n6、法律、行政法规规定的其他条件。\n（2）在投标截止前，投标联合体各方均应注册成采购代理机构供应商；\n（3）联合体中有同类资质的供应商按照联合体分工承担相同工作的， 应当按照资质等级较低的供应商确定资质等级；\n（4）是否允许联合体参加投标，应当由采购人和采购代理机构根据项目的实际情况和潜在供应商的数量自主决定，如果决定接受联合体投标则应当在招标公告中明示；\n（5）投标人的投标文件及中标后签署的合同协议对联合体各方均具法律约束力；\n（6）联合体各方应当签订联合体投标协议，明确约定各方拟承担的工作和责任，并将该协议随投标文件一并递交给采购代理机构；\n（7）联合体中标后，联合体各方应当共同与采购人签订合同，就中标项目向采购人承担连带责任；\n（8）以联合体形式参加政府采购活动的， 联合体各方不得再单独参加或者与其他供应商另外组成联合体参加同一合同项下的政府采购活动，出现上述情况者，其投标和与此有关联合体、总包单位的投标将被拒绝；\n（9）本通用条款中“投标人”一词亦指联合体各方， 专用条款另有规定或说明的除外。\n\n\n\n\n\n6． 政策导向\n6.",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "gate",
+          "rule": "qualification_title_gate_pattern",
+          "reason": "标题直接命中资格门槛语境，优先按准入门槛处理。",
+          "signals": [
+            "5.2 投标人资格要求",
+            "资格标题"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "5.2 投标人资格要求",
+            "gate",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "5.2 投标人资格要求",
+            "qualification",
+            "gate",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "qualification",
+          "clause_role": "gate",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-da8b848d81",
+      "title": "一、评分内容：",
+      "source_kind": "body_clause",
+      "business_domain": "performance_staff",
+      "clause_role": "scoring_factor",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "一、评分内容：（第 261-276 行）",
+      "excerpt": "一、评分内容：\n拟安排项目负责人为投标单位员工（以社保为准） ，否则本项不得分。\n1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分， 其他情况不得分，本小项最高得 30 分。\n2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。\n\n\n\n\n\n\n\n\n\n\n3.具有PMP项目经理证书的，得15分，具有柴油发电机组同类项目经验的， 得 15 分， 本小项最高得 30 分。\n以上得分可以累计， 最高得分 100 分。",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "scoring_factor",
+          "rule": "scoring_factor_pattern",
+          "reason": "命中评分分值、加分或不得分表达。",
+          "signals": [
+            "一、评分内容：",
+            "评分动作"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "一、评分内容：",
+            "scoring_factor",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "一、评分内容：",
+            "performance_staff",
+            "scoring_factor",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "performance_staff",
+          "clause_role": "scoring_factor",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-852f0527cd",
+      "title": "设备验收",
+      "source_kind": "body_clause",
+      "business_domain": "acceptance",
+      "clause_role": "acceptance_basis",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "设备验收（第 1408-1453 行）",
+      "excerpt": "设备验收\n1. 中标人应给出项目详细的验收方案，包括验收项目、验收标准，验收实施办法等。\n\n\n2.符合国家以及所投发电机组安装、调试规范要求。\n\n\n★3.国内生产的部件必须有国家有关部门的认证合格证， 强制认证产品必须有 3C 认证。\n\n\n4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。\n\n\n5.验收由采购人、中标人及相关人员依国家有关标准/合同及有关的附件要求进行。\n\n\n6.验收完毕由采购人及中标人在验收报告上签名确认。\n\n\n\n\n\n\n\n6\n\n\n\n\n\n\n\n设备安装要求\n★1.投标人需具备建筑机电安装工程专业承包三级或以上资质的， 提供资质证书扫描件， 安排的项目负责人必须具备： 机电工程专业二级或以上建造师资质证书， 提供建造师的资质扫描件。\n\n\n2.在设备安装、调试、试运行期间， 必须至少有一名现场专业技术人员负责指导安装、调试、试运行并负责与采购人联系相关工作。该技术人员必须为柴油发电机制造商厂的专业工程师， 有指导安装、调试同类设备 5 年以上工作经验。技术人员不满足相关要求的，投标人应按照采购人要求立即予以更换。\n\n\n3. 中标人应在合同签定后  10  天内按要求向采购人设计单位提供所有预埋件图纸及有关说明，并与设计单位进行配合，在埋件预埋提供所有预埋件， 供施工单位负责预埋，并满足施工进度。\n\n\n4.设备的每个部分须考虑防火、防压、耐用、防漏电、容易清洁等日常维修， 并且以符合本文件所提规范为原则。\n\n\n5.积极配合采购人、安装单位工作、圆满解决安装、调试、试运行中的有关问题。",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "acceptance_basis",
+          "rule": "acceptance_basis_pattern",
+          "reason": "命中验收标准、检测或组织验收表达。",
+          "signals": [
+            "设备验收",
+            "验收依据"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "设备验收",
+            "acceptance_basis",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "设备验收",
+            "acceptance",
+            "acceptance_basis",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "acceptance",
+          "clause_role": "acceptance_basis",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-5249e58bb6",
+      "title": "设备验收",
+      "source_kind": "body_clause",
+      "business_domain": "acceptance",
+      "clause_role": "acceptance_basis",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "设备验收（第 2981-3077 行）",
+      "excerpt": "设备验收\n1. 中标人应给出项目详细的验收方案， 包括验收项目、验收标准，验收实施办法等。\n\n\n\n\n\n2. 符合国家以及所投发电机组安装、调试规范要求。\n\n\n\n\n\n★3.国内生产的部件必须有国家有关部门的认证合格证，强制认证产品必须有 3C 认证。\n\n\n\n\n\n4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。\n\n\n\n\n\n5.验收由采购人、中标人及相关人员依国家有关标准/合同及有关的附件要求进行。\n\n\n\n\n\n6.验收完毕由采购人及中标人在验收报告上签名确认。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n6\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n设备安装要求\n★1.投标人需具备建筑机电安装工程专业承包三级或以上资质的， 提供资质证书扫描件， 安排的项目负责人必须具备： 机电工程专业二级或以上建造师资质证书， 提供建造师的资质扫描件。\n\n\n\n\n\n2.在设备安装、调试、试运行期间， 必须至少有一名现场专业技术人员负责指导安装、调试、试运行并负责与采购人联系相关工作。该技术人员必须为柴油发电机制造商厂的专业工程师， 有指导安装、调试同类设备 5 年以上工作经验。技术人员不满足相关要求的，投标人应按照采购人要求立即予以更换。\n\n\n\n\n\n3. 中标人应在合同签定后  10天内按要求向采购人设计单位提供所有预埋件图纸及有关说明， 并与设计单位进行配合， 在埋件预埋提供所有预埋件， 供施工单位负责预埋， 并满足施工进度。\n\n\n\n\n\n4. 设备的每个部分须考虑防火、防压、耐用、防漏电、容易清洁等日常维修， 并且以符合本文件所提规范为原则。\n\n\n\n\n\n\n\n\n\n序号\n目录",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "acceptance_basis",
+          "rule": "acceptance_basis_pattern",
+          "reason": "命中验收标准、检测或组织验收表达。",
+          "signals": [
+            "设备验收",
+            "验收依据"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "设备验收",
+            "acceptance_basis",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "设备验收",
+            "acceptance",
+            "acceptance_basis",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "acceptance",
+          "clause_role": "acceptance_basis",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-9689980301",
+      "title": "1.规格及技术参数",
+      "source_kind": "body_clause",
+      "business_domain": "technical_standard",
+      "clause_role": "technical_requirement",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "1.规格及技术参数（第 1001-1091 行）",
+      "excerpt": "1.规格及技术参数\n\n\n1.1  ★额定功率： 1000KW（能够满足 48 小时或以上连续运行）， 即在此功率下每年运行不超过 300 小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行，比如油箱容量（允许不停机加油）、散热能力等。\n\n\n1.2 输出电压： 400V/230V （三相四线）\n\n\n1.3 频率： 50Hz\n\n\n1.4 转速： 1500RPM\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n1.6▲  100%常用功率负载柴油消耗量： ≤290L/h\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n1.8 频率降：   ≤±0～5%\n\n\n1.9  瞬态电压偏差及电压稳定时间：≤-15%～20%，并于 3 秒内稳定。\n\n\n1.10 瞬态频率偏差及频率稳定时间： ≤10%,  并于 5 秒内稳定。\n\n\n1.11  电压波动率：≤±1%\n\n\n1.12 频率波动率： ≤±0.5%\n\n\n1.13 电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n1.14 电磁影响： 符合 BS  EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n1.15 输出电压可调范围： ≥±5%\n\n\n1.16 机组自启动成功率： ≥98%\n\n\n2.主要机组性能要求\n\n\n2.1  自动调整频率和电压。\n\n\n2.2 实现蓄电池自动充电。\n\n\n2.3 自动维持应急机组的准备运行状态。\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n2.5 按自动控制指令或遥控指令实现自动停机。\n\n\n2.6 设有过载、短路、过速（或过频） 、冷却水温度过高。机油压力过低报警信号等项保护装置， 并有对过电压、欠电压、失压、低速（或低频）、燃油箱",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "technical_requirement",
+          "rule": "technical_requirement_pattern",
+          "reason": "命中技术参数、标准符合或强制满足表达。",
+          "signals": [
+            "1.规格及技术参数",
+            "技术要求"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "1.规格及技术参数",
+            "technical_requirement",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "1.规格及技术参数",
+            "technical_standard",
+            "technical_requirement",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "technical_standard",
+          "clause_role": "technical_requirement",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-c68581f8a2",
+      "title": "1.规格及技术参数",
+      "source_kind": "body_clause",
+      "business_domain": "technical_standard",
+      "clause_role": "technical_requirement",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "1.规格及技术参数（第 2143-2281 行）",
+      "excerpt": "1.规格及技术参数\n\n\n\n\n\n1.1  ★额定功率： 1000KW （能够满足 48 小时或以上连续运行），即在此功率下每年运行不超过  300  小时。能够满足 24 小时或以上连续运行是指其他配套设备能够满足机组连续运行， 比如油箱容量（允许不停机加油） 、散热能力等。\n\n\n\n\n\n1.2 输出电压： 400V/230V（三相四线）\n\n\n\n\n\n1.3 频率： 50Hz\n\n\n\n\n\n1.4 转速： 1500RPM\n\n\n\n\n\n1.5 功率因数： 0.8 （滞后）\n\n\n\n\n\n1.6▲   100%常用功率负载柴油消耗量：≤290L/h\n\n\n\n\n\n1.7 稳态电压偏差：≤±1%\n\n\n\n\n\n1.8 频率降：   ≤±0～5%\n\n\n\n\n\n1.9   瞬态电压偏差及电压稳定时间： ≤-15%～20%， 并于 3 秒内稳定。\n\n\n\n\n\n1.10  瞬态频率偏差及频率稳定时间：≤10%,  并于 5 秒内稳定。\n\n\n\n\n\n1.11  电压波动率：≤±1%\n\n\n\n\n\n1.12 频率波动率：≤±0.5%\n\n\n\n\n\n1.13  电压波形： 电路开路,最大总波形畸变≤3%； 三相平衡负载， 最大总波形畸变≤8.0%\n\n\n\n\n\n1.14 电磁影响： 符合 BS EN  61000 GB/T  17626 及  EN55011 标准。\n\n\n\n\n\n1.15 输出电压可调范围：≥±5%\n\n\n\n\n\n1.16 机组自启动成功率：≥98%\n\n\n\n\n\n2.主要机组性能要求\n\n\n\n\n\n2.1  自动调整频率和电压。\n\n\n\n\n\n2.2 实现蓄电池自动充电。\n\n\n\n\n\n2.3  自动维持应急机组的准备运行状态。\n\n\n\n\n\n2.4 按自动控制指令或遥控指令实现自动启动； 一个启动循环包括三次启动(3-6 次可调)，三次启动失败，机组自动停机并发出报警信号。\n\n\n\n\n\n\n\n\n\n序 号\n货物\n名称",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "technical_requirement",
+          "rule": "technical_requirement_pattern",
+          "reason": "命中技术参数、标准符合或强制满足表达。",
+          "signals": [
+            "1.规格及技术参数",
+            "技术要求"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "1.规格及技术参数",
+            "technical_requirement",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "1.规格及技术参数",
+            "technical_standard",
+            "technical_requirement",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "technical_standard",
+          "clause_role": "technical_requirement",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-97410f9c6d",
+      "title": "付款方式",
+      "source_kind": "body_clause",
+      "business_domain": "commercial",
+      "clause_role": "commercial_obligation",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "付款方式（第 2919-2954 行）",
+      "excerpt": "付款方式\n1.双方合同签订后， 收到中标人合规发票 15 个工作日采购人支付合同总价  30%给中标人。\n\n\n\n\n\n2. 中标人所提供的全部货物达到合同及合同附件所有要求送达采购人现场， 中标人方提供等额合规发票给采购人，采购人收到发票后 15 个工作日支付合同总的  50%给中标人。\n\n\n\n\n\n3. 工程全部安装调试完成经采购人现场验收合格设备正常运行三个月后收到中标人合规发票 15 个工作日支付合同总价的 20%给中标人。\n\n\n\n\n\n4\n货物运\n输及包\n装方式\n要求\n合同中所有的货物均须由中标供应商自行运往设备安装场所， 不论设备从何处购置、采用何种方式运输， 采购人不承担任何责任及相关费用。中标供应商应当自行处理货物\n\n\n\n\n\n\n\n\n\n序号\n目录",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "commercial_obligation",
+          "rule": "commercial_obligation_pattern",
+          "reason": "命中付款、结算、交货或履约保证金义务表达。",
+          "signals": [
+            "付款方式",
+            "商务义务"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "付款方式",
+            "commercial_obligation",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "付款方式",
+            "commercial",
+            "commercial_obligation",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "commercial",
+          "clause_role": "commercial_obligation",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-7d0c5a1ad1",
+      "title": "六、其他补充事宜",
+      "source_kind": "reminder_clause",
+      "business_domain": "technical",
+      "clause_role": "supporting_material",
+      "evidence_strength": "weak",
+      "hard_evidence": false,
+      "location": "六、其他补充事宜（第 720-758 行）",
+      "excerpt": "六、其他补充事宜\n\n1.本项目实行网上投标，采用电子投标文件。\n2.报名操作：投标人如确定参加投标，首先要在深圳政府采购网上报名投标，方法为登录深圳政府采购智慧(监管)平台  （http://zfcg.szggzy.com:808 1/ ）网后点击“招标公告”选中要报名标段点击“我要报名”或“待办 →邀请提醒”；如果网上报名后上传了投标文件，又不参加投标，应再到【我的项\n目】→【项目流程】→【递交投标(应答)文件】→【上传投标文件】功能点中进行“撤标”操作；如果是未注册为深圳政府采购的供应商，请访问深圳公共资源交易中心（统一用户中心 https://trade.szggzy.com/ggzy/center/#/log in） ,先办理注册手续（注册咨询： 0755-36568999） ,再进行投标报名。在网上报名后，点击“我的项目 →项目流程”中进行招标文件的下载。\n3.开标操作：投标人可以登录“深圳政府采购智慧(监管)平台  （http://z fcg.szggzy.com:8081/）网站”，在系统登录首页面即可查看开标情况。\n4.投标操作：具体操作为登录“深圳政府采购智慧(监管)平台  （http://z fcg.szggzy.com:8081/）  网站”，用“我的项目 →项目流程 →递交投标(应答)文件 →上传投标文件”功能点上传投标文件。本项目电子投标文件最大容量为 100MB，超过此容量的文件将被拒绝。\n5.采购文件澄清/修改事项： 2025 年**月**日**:** （北京时间） （具体时间详见深圳政府采购智慧平台招标公告）前，供应商如果认为采购文件存在不明确、不清晰和前后不一致等问题，可登录深圳政府采购智慧(监管)平台（htt\n\n\n\n\n\np://zfcg.szggzy.com:8081/） → “深圳政府采购智慧(监管)平台用户网上办事子系统（http:/",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "supporting_material",
+          "rule": "supporting_material_pattern",
+          "reason": "命中证明材料、附件、表单或样品提交类表达。",
+          "signals": [
+            "六、其他补充事宜",
+            "reminder_clause",
+            "证明材料"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "weak",
+          "rule": "template_or_reminder_weak",
+          "reason": "模板、留白、提醒类证据默认视为弱证据。",
+          "signals": [
+            "六、其他补充事宜",
+            "reminder_clause",
+            "supporting_material"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "六、其他补充事宜",
+            "reminder_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "reminder_clause",
+          "business_domain": "technical",
+          "clause_role": "supporting_material",
+          "evidence_strength": "weak",
+          "hard_evidence": false
+        }
+      }
+    }
+  ]
+}

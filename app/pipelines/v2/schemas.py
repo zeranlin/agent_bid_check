@@ -80,6 +80,7 @@ class RiskSignature:
     severity: str = "需人工复核"
     source_rule: str = "topic"
     source_excerpt: str = ""
+    evidence_ids: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -98,6 +99,7 @@ class MergedRiskCluster:
     rectification: list[str] = field(default_factory=list)
     topics: list[str] = field(default_factory=list)
     source_rules: list[str] = field(default_factory=list)
+    evidence_ids: list[str] = field(default_factory=list)
     conflict_notes: list[str] = field(default_factory=list)
     need_manual_review: bool = False
 
@@ -161,7 +163,10 @@ class V2ReviewArtifacts:
     structure: V2StageArtifact
     topics: list[TopicReviewArtifact]
     final_markdown: str
+    final_snapshot: dict[str, Any] | None = None
     evidence: V2StageArtifact | None = None
+    evidence_layer: Any | None = None
     comparison: ComparisonArtifact | None = None
     governance: Any | None = None
+    problems: Any | None = None
     admission: Any | None = None

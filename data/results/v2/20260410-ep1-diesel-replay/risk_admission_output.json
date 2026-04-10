@@ -1,0 +1,1411 @@
+{
+  "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+      "comparison_summary": {
+        "cluster_count": 40,
+        "pending_count": 0,
+        "excluded_count": 0
+      },
+      "governance_summary": {
+        "candidate_count": 29
+      }
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "compare::import_consistency",
+      "risk_family": "import_consistency",
+      "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+      "review_type": "技术标准引用一致性 / 潜在限制竞争",
+      "severity": "高风险",
+      "evidence_kind": "qualification_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "国外标准/国外部件、废止燃油标准和标准编号格式问题属于同一技术标准一致性风险簇，治理层统一收口为主风险。",
+      "source_locations": [
+        "政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数；部件/验收条款：设备验收",
+        "证据 2，第 1125-1178 行，第（7）项",
+        "证据 1 及证据 3，第 1.14 项"
+      ],
+      "source_excerpts": [
+        "政策口径：不接受投标人选用进口产品\n\n外标引用：1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准\n\n国标/行标：1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准\n\n国外部件要求：4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。",
+        "（7）燃油标准，采用 0 号轻柴油，符合 GB252 或 BS2869 标准。",
+        "1.14 电磁影响：符合 BS EN 61000 GB/T 17626 及 EN55011 标准。"
+      ],
+      "source_rules": [
+        "compare_rule",
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "燃油标准引用已废止标准 GB252",
+            "absorbed_rule_id": "topic::import_consistency",
+            "absorbed_by_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "absorbed_by_rule_id": "compare::import_consistency",
+            "absorption_reason": "国外标准/国外部件、废止燃油标准和标准编号格式问题属于同一技术标准一致性风险簇，治理层统一收口为主风险。",
+            "absorption_kind": "supporting_evidence_item",
+            "blocked_from_formal": true
+          },
+          {
+            "absorbed_title": "电磁兼容标准引用格式混乱且编号不完整",
+            "absorbed_rule_id": "topic::import_consistency",
+            "absorbed_by_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "absorbed_by_rule_id": "compare::import_consistency",
+            "absorption_reason": "国外标准/国外部件、废止燃油标准和标准编号格式问题属于同一技术标准一致性风险簇，治理层统一收口为主风险。",
+            "absorption_kind": "supporting_evidence_item",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "技术标准引用与采购政策口径不一致，存在潜在倾向性和理解冲突",
+        "governance_canonical_title": "拒绝进口 vs 外标/国外部件引用矛盾风险"
+      }
+    },
+    {
+      "rule_id": "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+      "risk_family": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+      "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+      "review_type": "评审规则一致性 / 实质性条款标识完整性",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "评审规则：内置规则库：实质性条款星标规则；技术条款：（5） ▲排量： ≥50L"
+      ],
+      "source_excerpts": [
+        "规则要求：评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。\n\n正文条款：（5） ▲排量： ≥50L （6）起动方式： 24V 蓄电池自动启动。 （7）燃油标准， 采用 0 号轻柴油，符合 GB252 或 BS2869 标准。 （8）调速器系统，采用电子式调速器"
+      ],
+      "source_rules": [
+        "compare_rule"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+        "governance_canonical_title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清"
+      }
+    },
+    {
+      "rule_id": "compare::acceptance_scheme_scoring",
+      "risk_family": "acceptance_scheme_scoring",
+      "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+      "review_type": "评分因素合规性 / 评审规则设置合法性",
+      "severity": "中高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+      ],
+      "source_excerpts": [
+        "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分"
+      ],
+      "source_rules": [
+        "compare_rule"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "governance_canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+      }
+    },
+    {
+      "rule_id": "compare::certification_scoring_bundle",
+      "risk_family": "certification_scoring_bundle",
+      "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+      "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
+      "source_locations": [
+        "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容：",
+        "证据 6，第 395 - 399 行",
+        "评标信息 -> 综合实力部分 -> 2. 供应商认证情况 -> （二）证明文件 1",
+        "证据3，第 327 - 331 行",
+        "评标信息 -> 综合实力部分 -> 4. 制造商发电机组资质证书 -> （一）评分内容"
+      ],
+      "source_excerpts": [
+        "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。",
+        "1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得 40 分，具备两项得 80 分，本小项最高得 80 分。2.具备 CNAS 中国认可产品标志证书的，得 20 分，本小项最高得 20 分。",
+        "“要求提供有效的认证证书的扫描件，且认证机构必须为 CQC 中国质量认证中心。”",
+        "投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分，未提供得 0 分。",
+        "“具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的……具备 CNAS 中国认可产品标志证书的……\""
+      ],
+      "source_rules": [
+        "compare_rule",
+        "topic",
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+            "absorbed_rule_id": "topic::certification_scoring_bundle",
+            "absorbed_by_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "absorbed_by_rule_id": "compare::certification_scoring_bundle",
+            "absorption_reason": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
+            "absorption_kind": "supporting_item",
+            "blocked_from_formal": true
+          },
+          {
+            "absorbed_title": "评分标准中限定特定认证机构，限制竞争",
+            "absorbed_rule_id": "topic::certification_scoring_bundle",
+            "absorbed_by_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "absorbed_by_rule_id": "compare::certification_scoring_bundle",
+            "absorption_reason": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
+            "absorption_kind": "supporting_item",
+            "blocked_from_formal": true
+          },
+          {
+            "absorbed_title": "综合实力评分中三项体系认证要求过于刚性，可能排斥中小企业",
+            "absorbed_rule_id": "topic::certification_scoring_bundle",
+            "absorbed_by_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "absorbed_by_rule_id": "compare::certification_scoring_bundle",
+            "absorption_reason": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
+            "absorption_kind": "supporting_item",
+            "blocked_from_formal": true
+          },
+          {
+            "absorbed_title": "评分标准中要求特定非强制性认证证书，具有倾向性",
+            "absorbed_rule_id": "topic::certification_scoring_bundle",
+            "absorbed_by_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "absorbed_by_rule_id": "compare::certification_scoring_bundle",
+            "absorption_reason": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
+            "absorption_kind": "supporting_item",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+        "governance_canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+      }
+    },
+    {
+      "rule_id": "compare::acceptance_testing_cost",
+      "risk_family": "acceptance_testing_cost",
+      "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+      "review_type": "需求合规性 / 验收费用边界审查",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "同一风险家族同时出现费用转嫁与投标总价打包表达，治理层统一归并为一个主风险。",
+      "source_locations": [
+        "规则条款：内置规则库：需求合规性；需求条款：（二）其他商务要求",
+        "证据 1 - （二）其他商务要求 - 第 2 款"
+      ],
+      "source_excerpts": [
+        "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：2 基本要求 ★1.本项目为交钥匙项目：投标人的投标总价包括货物设计、生产（采购）、包装、运输至指定位置、装卸、安装 （排风、供油、尾气喷淋系统、接地、排烟管、电缆安装等）、检测、调试、试运行、培训、相关部门验收、验收合格之前及质保期内的首次维护保养 （含更换机油及耗材） 及整机质量保修三年或累计运行 1000 小时（时间先到之一终止） 、备品备件、专用工具等所有含税费用， 同时投标人应自行计入系统正常、合法、安全运行及使用所必需的所有设备、版权、专利等一切费用。",
+        "★1.本项目为交钥匙项目：投标人的投标总价包括……检测、调试、试运行、培训、相关部门验收……所有含税费用"
+      ],
+      "source_rules": [
+        "compare_rule",
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "将验收阶段检测费用笼统计入投标总价，存在合规风险",
+            "absorbed_rule_id": "topic::acceptance_testing_cost",
+            "absorbed_by_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "absorbed_by_rule_id": "compare::acceptance_testing_cost",
+            "absorption_reason": "同一风险家族同时出现费用转嫁与投标总价打包表达，治理层统一归并为一个主风险。",
+            "absorption_kind": "supporting_item",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "governance_canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+      }
+    },
+    {
+      "rule_id": "topic::regional_performance",
+      "risk_family": "regional_performance",
+      "title": "业绩评分限定特定行政区域，存在地域排斥风险",
+      "review_type": "业绩要求/限制竞争",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "同一风险家族同时覆盖行政区域与业主类型限制，治理层仅保留一个正式主风险。",
+      "source_locations": [
+        "评标信息 -> 综合实力部分 -> 3. 供应商同类项目业绩情况 -> （一）评分内容",
+        "证据 5，第 368 - 369 行"
+      ],
+      "source_excerpts": [
+        "“提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准）在深圳市政府机关的柴油发电机组供货或安装业绩……\"",
+        "1、提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准）在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。"
+      ],
+      "source_rules": [
+        "baseline",
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "业绩评分限定特定行政区域，存在地域歧视和排斥潜在投标人风险",
+            "absorbed_rule_id": "topic::regional_performance",
+            "absorbed_by_title": "业绩评分限定特定行政区域，存在地域排斥风险",
+            "absorbed_by_rule_id": "topic::regional_performance",
+            "absorption_reason": "同一风险家族同时覆盖行政区域与业主类型限制，治理层仅保留一个正式主风险。",
+            "absorption_kind": "legacy_title",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "业绩要求限定特定行政区域，排斥外地供应商",
+        "governance_canonical_title": "业绩评分限定特定行政区域，存在地域排斥风险"
+      }
+    },
+    {
+      "rule_id": "topic::personnel_scoring",
+      "risk_family": "personnel_scoring",
+      "title": "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
+      "review_type": "证书奖项审查",
+      "severity": "低风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1，第 261 - 276 行"
+      ],
+      "source_excerpts": [
+        "3.具有PMP项目经理证书的，得15分，具有柴油发电机组同类项目经验的，得 15 分，本小项最高得 30 分。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "将PMP证书作为评分项，可能与项目履约无直接关联",
+        "governance_canonical_title": "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险"
+      }
+    }
+  ],
+  "pending_review_items": [
+    {
+      "rule_id": "topic::中小企业扶持政策落实条款缺失-价格扣除比例未明确",
+      "risk_family": "中小企业扶持政策落实条款缺失-价格扣除比例未明确",
+      "title": "中小企业扶持政策落实条款缺失（价格扣除比例未明确）",
+      "review_type": "政策适用完整性审查",
+      "severity": "高风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2（第 1590-1652 行）及证据 3（第 3368-3421 行）"
+      ],
+      "source_excerpts": [
+        "证据 2 提到：'满足多项优惠政策的投标人，不重复享受多项价格扣除政策。'；证据 3 末尾显示：'6．政策导向 6.'后无具体内容。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "中小企业扶持政策落实条款缺失（价格扣除比例未明确）",
+        "governance_canonical_title": "中小企业扶持政策落实条款缺失（价格扣除比例未明确）"
+      }
+    },
+    {
+      "rule_id": "topic::guarantee_ratio",
+      "risk_family": "guarantee_ratio",
+      "title": "履约保证金比例严重超标",
+      "review_type": "合规性审查",
+      "severity": "高风险",
+      "evidence_kind": "contract_template",
+      "source_type": "completeness_hint",
+      "governance_reason": "履约保证金超过法定上限时，治理层优先保留“严重超标”主标题。",
+      "source_locations": [
+        "证据 2，第 781 - 810 行，第 21 条",
+        "第二章 对通用条款的补充内容及其他关键信息 -> 一、对通用条款的补充内容 -> 序号 21"
+      ],
+      "source_excerpts": [
+        "乙方应在签订本合同之日，向甲方或甲方指定的机构提交履约保证金为合同金额的 12%",
+        "“乙方应在签订本合同之日，向甲方或甲方指定的机构提交履约保证金为合同金额的 12%\""
+      ],
+      "source_rules": [
+        "topic",
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "履约保证金比例过高，加重供应商负担",
+            "absorbed_rule_id": "topic::guarantee_ratio",
+            "absorbed_by_title": "履约保证金比例严重超标",
+            "absorbed_by_rule_id": "topic::guarantee_ratio",
+            "absorption_reason": "履约保证金超过法定上限时，治理层优先保留“严重超标”主标题。",
+            "absorption_kind": "legacy_title",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "履约保证金比例严重超标",
+        "governance_canonical_title": "履约保证金比例严重超标"
+      }
+    },
+    {
+      "rule_id": "topic::技术参数中指定具体生产日期-具有明显排他性和倾向性",
+      "risk_family": "技术参数中指定具体生产日期-具有明显排他性和倾向性",
+      "title": "技术参数中指定具体生产日期，具有明显排他性和倾向性",
+      "review_type": "技术参数倾向性/限制竞争",
+      "severity": "高风险",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "第三章 用户需求书 -> 四、具体技术要求 -> 3.1 柴油机 (2) 及 3.2 发电机 (1)"
+      ],
+      "source_excerpts": [
+        "“（2）★产品应选用原装产品，生产日期必须是 2025 年。”、“（1）▲投标产品应选用原装产品，生产日期必须是 2025 年。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "技术参数中指定具体生产日期，具有明显排他性和倾向性",
+        "governance_canonical_title": "技术参数中指定具体生产日期，具有明显排他性和倾向性"
+      }
+    },
+    {
+      "rule_id": "topic::scoring_clarity",
+      "risk_family": "scoring_clarity",
+      "title": "评分描述量化口径不足，存在评审一致性风险",
+      "review_type": "评分标准明确性审查",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+      "source_locations": [
+        "证据 1，第 200 - 215 行",
+        "评标信息 -> 技术部分 -> 1. 施工组织方案及安全保障措施 / 2. 安装、检测、验收、培训计划",
+        "二、评审标准： 第200-215行"
+      ],
+      "source_excerpts": [
+        "1.安装、检测、验收、培训计划条理清晰，脉络分明，操作性强，人性化，能体现以人为本、服务至上的售后理念，评价为优得 60 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念，评价为良得 30 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念，评价为中得 10 分；4、安装、检测、验收、培训计划条理模糊，脉络不分明，操作性差，不能能体现以人为本、服务至上的售后理念，评价为差，不得分。",
+        "“方案每体现 1 点加 10 分……再此基础上 1.……评价为优得 70 分；2.……评价为良得 40 分……\"、“能体现以人为本、服务至上的售后理念，评价为优得 60 分……\"",
+        "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3"
+      ],
+      "source_rules": [
+        "topic",
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "评分标准主观性过强，缺乏量化依据",
+            "absorbed_rule_id": "topic::scoring_clarity",
+            "absorbed_by_title": "评分描述量化口径不足，存在评审一致性风险",
+            "absorbed_by_rule_id": "topic::scoring_clarity",
+            "absorption_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+            "absorption_kind": "legacy_title",
+            "blocked_from_formal": true
+          },
+          {
+            "absorbed_title": "评分档次缺少量化口径",
+            "absorbed_rule_id": "topic::scoring_clarity",
+            "absorbed_by_title": "评分描述量化口径不足，存在评审一致性风险",
+            "absorbed_by_rule_id": "topic::scoring_clarity",
+            "absorption_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+            "absorption_kind": "legacy_title",
+            "blocked_from_formal": true
+          }
+        ],
+        "governance_proposed_title": "评分档次缺少量化口径，主观分值裁量空间过大",
+        "governance_canonical_title": "评分描述量化口径不足，存在评审一致性风险"
+      }
+    },
+    {
+      "rule_id": "topic::付款节点设置滞后且尾款支付条件苛刻",
+      "risk_family": "付款节点设置滞后且尾款支付条件苛刻",
+      "title": "付款节点设置滞后且尾款支付条件苛刻",
+      "review_type": "公平性审查",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 3，第 2919 - 2954 行，第 3 条"
+      ],
+      "source_excerpts": [
+        "工程全部安装调试完成经采购人现场验收合格设备正常运行三个月后收到中标人合规发票 15 个工作日支付合同总价的 20% 给中标人。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "付款节点设置滞后且尾款支付条件苛刻",
+        "governance_canonical_title": "付款节点设置滞后且尾款支付条件苛刻"
+      }
+    },
+    {
+      "rule_id": "topic::制造商资质证书要求表述模糊-存在设置不合理门槛风险",
+      "risk_family": "制造商资质证书要求表述模糊-存在设置不合理门槛风险",
+      "title": "制造商资质证书要求表述模糊，存在设置不合理门槛风险",
+      "review_type": "资格条件审查",
+      "severity": "中风险",
+      "evidence_kind": "qualification_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "第 1752 - 1753 行"
+      ],
+      "source_excerpts": [
+        "九、制造商发电机组资质证书 （格式自拟）投标人自行按照本项目评标信息对应评审项内容进行提供资料。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "制造商资质证书要求表述模糊，存在设置不合理门槛风险",
+        "governance_canonical_title": "制造商资质证书要求表述模糊，存在设置不合理门槛风险"
+      }
+    },
+    {
+      "rule_id": "topic::missing_detection_or_cert_requirement",
+      "risk_family": "missing_detection_or_cert_requirement",
+      "title": "检测报告及认证资质要求缺失或表述不明",
+      "review_type": "检测认证要求审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 1、2、3（全文未明确提及检测报告要求）"
+      ],
+      "source_excerpts": [
+        "（证据片段中仅列出技术参数，未见对检测报告、CMA/CNAS 资质或 CCC 认证的具体要求）"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "检测报告及认证资质要求缺失或表述不明",
+        "governance_canonical_title": "检测报告及认证资质要求缺失或表述不明"
+      }
+    },
+    {
+      "rule_id": "topic::残疾人福利性单位及监狱企业政策表述不完整",
+      "risk_family": "残疾人福利性单位及监狱企业政策表述不完整",
+      "title": "残疾人福利性单位及监狱企业政策表述不完整",
+      "review_type": "政策适用准确性审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2（第 1590-1652 行）"
+      ],
+      "source_excerpts": [
+        "证据 2 提到：'满足多项优惠政策的投标人，不重复享受多项价格扣除政策。'但未明确残疾人福利性单位和监狱企业的具体优惠方式。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "残疾人福利性单位及监狱企业政策表述不完整",
+        "governance_canonical_title": "残疾人福利性单位及监狱企业政策表述不完整"
+      }
+    },
+    {
+      "rule_id": "topic::energy_policy_missing",
+      "risk_family": "energy_policy_missing",
+      "title": "节能环保产品政策条款缺失",
+      "review_type": "政策适用完整性审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 1、2、3"
+      ],
+      "source_excerpts": [
+        "所有证据片段中均未提及'节能产品'、'环境标志产品'、'强制采购'或'优先采购'等关键词。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "节能环保产品政策条款缺失",
+        "governance_canonical_title": "节能环保产品政策条款缺失"
+      }
+    },
+    {
+      "rule_id": "topic::要求现场技术人员必须为制造商原厂工程师-存在排斥代理商风险",
+      "risk_family": "要求现场技术人员必须为制造商原厂工程师-存在排斥代理商风险",
+      "title": "要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险",
+      "review_type": "技术参数倾向性、品牌型号与专有技术",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1/证据3 - 设备安装要求 - 第2条"
+      ],
+      "source_excerpts": [
+        "该技术人员必须为柴油发电机制造商厂的专业工程师，有指导安装、调试同类设备 5 年以上工作经验。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险",
+        "governance_canonical_title": "要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险"
+      }
+    },
+    {
+      "rule_id": "topic::踏勘现场作为资格性审查条件-违反规定",
+      "risk_family": "踏勘现场作为资格性审查条件-违反规定",
+      "title": "踏勘现场作为资格性审查条件，违反规定",
+      "review_type": "资格条件/限制竞争",
+      "severity": "中风险",
+      "evidence_kind": "qualification_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "第二章 对通用条款的补充内容及其他关键信息 -> 一、对通用条款的补充内容 -> 序号 9"
+      ],
+      "source_excerpts": [
+        "“投标人必须参与现场踏勘并提供现场踏勘确认函，未参与踏勘现场的将否定投标人资格”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "踏勘现场作为资格性审查条件，违反规定",
+        "governance_canonical_title": "踏勘现场作为资格性审查条件，违反规定"
+      }
+    },
+    {
+      "rule_id": "topic::项目负责人学历与职称要求过高-可能构成不合理门槛",
+      "risk_family": "项目负责人学历与职称要求过高-可能构成不合理门槛",
+      "title": "项目负责人学历与职称要求过高，可能构成不合理门槛",
+      "review_type": "人员资质审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1，第 261 - 276 行"
+      ],
+      "source_excerpts": [
+        "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分... 2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "项目负责人学历与职称要求过高，可能构成不合理门槛",
+        "governance_canonical_title": "项目负责人学历与职称要求过高，可能构成不合理门槛"
+      }
+    },
+    {
+      "rule_id": "topic::项目负责人评分项分值设置畸高且标准简单累加-缺乏与项目履约能力的直接关联",
+      "risk_family": "项目负责人评分项分值设置畸高且标准简单累加-缺乏与项目履约能力的直接关联",
+      "title": "项目负责人评分项分值设置畸高且标准简单累加，缺乏与项目履约能力的直接关联",
+      "review_type": "评分项合理性审查",
+      "severity": "中风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2，第 261 - 276 行"
+      ],
+      "source_excerpts": [
+        "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分，其他情况不得分，本小项最高得 30 分。2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。3.具有 PMP 项目经理证书的，得 15 分，具有柴油发电机组同类项目经验的，得 15 分，本小项最高得 30 分。以上得分可以累计，最高得分 100 分。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "项目负责人评分项分值设置畸高且标准简单累加，缺乏与项目履约能力的直接关联",
+        "governance_canonical_title": "项目负责人评分项分值设置畸高且标准简单累加，缺乏与项目履约能力的直接关联"
+      }
+    },
+    {
+      "rule_id": "topic::验收标准表述模糊-存在单方裁量空间过大风险",
+      "risk_family": "验收标准表述模糊-存在单方裁量空间过大风险",
+      "title": "验收标准表述模糊，存在单方裁量空间过大风险",
+      "review_type": "标准明确性审查",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2 - 设备验收 - 第 1、2 款"
+      ],
+      "source_excerpts": [
+        "1. 中标人应给出项目详细的验收方案，包括验收项目、验收标准，验收实施办法等。2.符合国家以及所投发电机组安装、调试规范要求。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "验收标准表述模糊，存在单方裁量空间过大风险",
+        "governance_canonical_title": "验收标准表述模糊，存在单方裁量空间过大风险"
+      }
+    },
+    {
+      "rule_id": "topic::项目负责人社保要求存在例外条款-可能导致评审不公",
+      "risk_family": "项目负责人社保要求存在例外条款-可能导致评审不公",
+      "title": "项目负责人社保要求存在例外条款，可能导致评审不公",
+      "review_type": "资格条件/评分因素",
+      "severity": "低风险",
+      "evidence_kind": "declaration_template",
+      "source_type": "completeness_hint",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "评标信息 -> 技术部分 -> 5. 拟安排的项目负责人情况 -> 二、评审依据 1"
+      ],
+      "source_excerpts": [
+        "“若供应商成立不足三个月的，需提供成立情况说明函（格式自拟），无需提供相关人员社保，亦可得分；若为退休返聘人员，需提供说明函（格式自拟），无需提供相关人员社保，亦可得分。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "项目负责人社保要求存在例外条款，可能导致评审不公",
+        "governance_canonical_title": "项目负责人社保要求存在例外条款，可能导致评审不公"
+      }
+    },
+    {
+      "rule_id": "topic::验收主体及流程描述不完整-缺乏不合格处理机制",
+      "risk_family": "验收主体及流程描述不完整-缺乏不合格处理机制",
+      "title": "验收主体及流程描述不完整，缺乏不合格处理机制",
+      "review_type": "流程完整性审查",
+      "severity": "低风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2 - 设备验收 - 第 5、6 款"
+      ],
+      "source_excerpts": [
+        "5.验收由采购人、中标人及相关人员依国家有关标准/合同及有关的附件要求进行。6.验收完毕由采购人及中标人在验收报告上签名确认。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "验收主体及流程描述不完整，缺乏不合格处理机制",
+        "governance_canonical_title": "验收主体及流程描述不完整，缺乏不合格处理机制"
+      }
+    },
+    {
+      "rule_id": "topic::关键履约与责任条款缺失",
+      "risk_family": "关键履约与责任条款缺失",
+      "title": "关键履约与责任条款缺失",
+      "review_type": "完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据片段整体"
+      ],
+      "source_excerpts": [
+        "当前证据片段未包含违约责任、质量保证金比例、履约期限等核心条款。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "关键履约与责任条款缺失",
+        "governance_canonical_title": "关键履约与责任条款缺失"
+      }
+    },
+    {
+      "rule_id": "topic::具体资格条款缺失-无法判断是否存在排斥性条件",
+      "risk_family": "具体资格条款缺失-无法判断是否存在排斥性条件",
+      "title": "具体资格条款缺失，无法判断是否存在排斥性条件",
+      "review_type": "完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "qualification_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "第 3368 - 3421 行"
+      ],
+      "source_excerpts": [
+        "5.2 投标人资格要求 参加本项目的投标人应具备的资格条件详见本项目招标公告中“投标人资格要求”（即申请人的资格要求）的内容。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "具体资格条款缺失，无法判断是否存在排斥性条件",
+        "governance_canonical_title": "具体资格条款缺失，无法判断是否存在排斥性条件"
+      }
+    },
+    {
+      "rule_id": "topic::质疑处理流程及答复时限证据缺失",
+      "risk_family": "质疑处理流程及答复时限证据缺失",
+      "title": "质疑处理流程及答复时限证据缺失",
+      "review_type": "程序完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据3，第 3756-3808 行，第 52.4 点及后续"
+      ],
+      "source_excerpts": [
+        "供应商可以委..."
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "质疑处理流程及答复时限证据缺失",
+        "governance_canonical_title": "质疑处理流程及答复时限证据缺失"
+      }
+    }
+  ],
+  "excluded_risks": [
+    {
+      "rule_id": "topic::acceptance_template_placeholder",
+      "risk_family": "acceptance_template_placeholder",
+      "title": "验收时点约定缺失，导致验收流程不可操作",
+      "review_type": "条款完整性审查",
+      "severity": "高风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 3 - 第五条 交货和验收 - 第 4 款"
+      ],
+      "source_excerpts": [
+        "甲方应当在到货后的              个工作日内对货物进行验收；需要乙方对货物或系统进行安装调试的，甲方应在货物安装调试完毕后的              个工作日内进行质量验收。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "验收时点约定缺失，导致验收流程不可操作",
+        "governance_canonical_title": "验收时点约定缺失，导致验收流程不可操作"
+      }
+    },
+    {
+      "rule_id": "topic::采购文件澄清截止时间未明确填写",
+      "risk_family": "采购文件澄清截止时间未明确填写",
+      "title": "采购文件澄清截止时间未明确填写",
+      "review_type": "程序合规性审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1，第 720-758 行，第 5 点"
+      ],
+      "source_excerpts": [
+        "5.采购文件澄清/修改事项： 2025 年**月**日**:** （北京时间） （具体时间详见深圳政府采购智慧平台招标公告）前..."
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "采购文件澄清截止时间未明确填写",
+        "governance_canonical_title": "采购文件澄清截止时间未明确填写"
+      }
+    },
+    {
+      "rule_id": "topic::电子投标文件容量限制可能增加投标负担",
+      "risk_family": "电子投标文件容量限制可能增加投标负担",
+      "title": "电子投标文件容量限制可能增加投标负担",
+      "review_type": "程序合理性审查",
+      "severity": "低风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1，第 720-758 行，第 4 点"
+      ],
+      "source_excerpts": [
+        "本项目电子投标文件最大容量为 100MB，超过此容量的文件将被拒绝。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "governance_proposed_title": "电子投标文件容量限制可能增加投标负担",
+        "governance_canonical_title": "电子投标文件容量限制可能增加投标负担"
+      }
+    }
+  ],
+  "decisions": {
+    "compare::import_consistency": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "qualification_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-001",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-002",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "compare::acceptance_scheme_scoring": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-003",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "compare::certification_scoring_bundle": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-006",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "compare::acceptance_testing_cost": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-007",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::regional_performance": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-regional_performance",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::中小企业扶持政策落实条款缺失-价格扣除比例未明确": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "当前属于政策执行参数是否完整的问题，仍需后续结合正文证据判断，先转为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前属于政策执行参数是否完整的问题，仍需后续结合正文证据判断，先转为待补证复核项。",
+      "formal_gate_rule": "sme_policy_completeness_pending",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::guarantee_ratio": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到模板/协议/声明函类证据，缺少正文硬证据交叉支撑，先降为待补证复核项。",
+      "evidence_kind": "contract_template",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到模板/协议/声明函类证据，缺少正文硬证据交叉支撑，先降为待补证复核项。",
+      "formal_gate_rule": "downgrade_template_or_boundary",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::技术参数中指定具体生产日期-具有明显排他性和倾向性": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "formal_gate_rule": "registry_mapping_missing_block",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::scoring_clarity": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_missing_type",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::acceptance_template_placeholder": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "检测到合同/协议模板中的时限占位符，属于模板留白，不直接作为正式风险输出。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到合同/协议模板中的时限占位符，属于模板留白，不直接作为正式风险输出。",
+      "formal_gate_rule": "template_placeholder_excluded",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::付款节点设置滞后且尾款支付条件苛刻": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_missing_type",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::制造商资质证书要求表述模糊-存在设置不合理门槛风险": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "evidence_kind": "qualification_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_missing_type",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::missing_detection_or_cert_requirement": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_evidence_insufficient",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::残疾人福利性单位及监狱企业政策表述不完整": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "当前更像政策配套表述是否完整的问题，证据不足以直接作为正式风险定性，先转为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前更像政策配套表述是否完整的问题，证据不足以直接作为正式风险定性，先转为待补证复核项。",
+      "formal_gate_rule": "policy_completeness_pending",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::energy_policy_missing": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "当前仅能确认节能环保政策章节召回不足，尚不足以直接认定为正式风险，先转为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前仅能确认节能环保政策章节召回不足，尚不足以直接认定为正式风险，先转为待补证复核项。",
+      "formal_gate_rule": "energy_policy_completeness_pending",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::要求现场技术人员必须为制造商原厂工程师-存在排斥代理商风险": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "formal_gate_rule": "registry_mapping_missing_block",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::踏勘现场作为资格性审查条件-违反规定": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "evidence_kind": "qualification_clause",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "formal_gate_rule": "registry_mapping_missing_block",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::采购文件澄清截止时间未明确填写": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "当前更像模板留白或程序承接字段缺失，不直接作为正式风险输出。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前更像模板留白或程序承接字段缺失，不直接作为正式风险输出。",
+      "formal_gate_rule": "clarification_placeholder_excluded",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::项目负责人学历与职称要求过高-可能构成不合理门槛": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "formal_gate_rule": "registry_mapping_missing_block",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::项目负责人评分项分值设置畸高且标准简单累加-缺乏与项目履约能力的直接关联": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_missing_type",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::验收标准表述模糊-存在单方裁量空间过大风险": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+      "formal_gate_rule": "registry_mapping_missing_block",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::personnel_scoring": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-personnel_scoring",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::电子投标文件容量限制可能增加投标负担": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "当前属于电子化平台参数边界提示，不直接作为正式风险输出。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前属于电子化平台参数边界提示，不直接作为正式风险输出。",
+      "formal_gate_rule": "electronic_capacity_excluded",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::项目负责人社保要求存在例外条款-可能导致评审不公": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到模板/协议/声明函类证据，缺少正文硬证据交叉支撑，先降为待补证复核项。",
+      "evidence_kind": "declaration_template",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到模板/协议/声明函类证据，缺少正文硬证据交叉支撑，先降为待补证复核项。",
+      "formal_gate_rule": "downgrade_template_or_boundary",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::验收主体及流程描述不完整-缺乏不合格处理机制": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "当前更适合作为验收条款明确性复核项，需结合完整验收机制继续核实，先转为待补证复核项。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "当前更适合作为验收条款明确性复核项，需结合完整验收机制继续核实，先转为待补证复核项。",
+      "formal_gate_rule": "acceptance_clarity_pending",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::关键履约与责任条款缺失": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_evidence_insufficient",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::具体资格条款缺失-无法判断是否存在排斥性条件": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "evidence_kind": "qualification_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_evidence_insufficient",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::质疑处理流程及答复时限证据缺失": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": false,
+      "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+      "formal_gate_rule": "downgrade_evidence_insufficient",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": false,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    }
+  }
+}

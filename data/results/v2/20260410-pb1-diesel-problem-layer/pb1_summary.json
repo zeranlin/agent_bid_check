@@ -1,0 +1,30 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "candidate_count": 2,
+  "problem_count": 2,
+  "formal_titles": [
+    "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+    "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+  ],
+  "problem_ids": [
+    "problem-349d1cf6ffb3",
+    "problem-ab67a307aacf"
+  ],
+  "problem_trace_keys": [
+    [
+      "problem_id_seed",
+      "source_candidate_titles",
+      "source_evidence_ids",
+      "source_governed_rule_ids",
+      "source_topics"
+    ],
+    [
+      "problem_id_seed",
+      "source_candidate_titles",
+      "source_evidence_ids",
+      "source_governed_rule_ids",
+      "source_topics"
+    ]
+  ],
+  "note": "PB1 骨架验证：真实文件已经过 compare -> governance -> problem_layer -> risk_admission，admission 直接消费 problem objects。"
+}

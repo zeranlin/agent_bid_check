@@ -1,0 +1,475 @@
+{
+  "document_name": "福州一中真实片段",
+  "input_summary": {
+    "governed_candidate_count": 5,
+    "problem_count": 5,
+    "absorbed_candidate_count": 0
+  },
+  "problems": [
+    {
+      "problem_id": "problem-da8d61343562",
+      "canonical_title": "样品要求过细且评审规则失衡，存在样品门槛风险",
+      "family_key": "sample_gate",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::sample_gate",
+          "risk_family": "sample_gate",
+          "source_topics": [
+            "samples_demo"
+          ],
+          "evidence_anchors": [
+            "99f677179a6d"
+          ],
+          "document_span": [
+            "样品要求第3、4点"
+          ]
+        },
+        "family": {
+          "family_key": "sample_gate",
+          "canonical_title": "样品要求过细且评审规则失衡，存在样品门槛风险",
+          "source_topics": [
+            "samples_demo"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "样品制作要求具有排他性及泄露信息风险",
+          "canonical_title": "样品要求过细且评审规则失衡，存在样品门槛风险"
+        },
+        "review_type": "技术参数倾向性/限制竞争",
+        "severity": "高风险",
+        "source_locations": [
+          "样品要求第3、4点"
+        ],
+        "source_excerpts": [
+          "不得出现样品图样，标识等可能泄露投标人样品的任何信息，否则按无效投标处理；样品需提前组装并一次性送达。"
+        ],
+        "risk_judgment": [
+          "样品要求过细。"
+        ],
+        "legal_basis": [
+          "样品要求不得形成不合理门槛。"
+        ],
+        "rectification": [
+          "压缩样品要求。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "99f677179a6d"
+      ],
+      "topic_sources": [
+        "samples_demo"
+      ],
+      "rule_ids": [
+        "topic::sample_gate"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::sample_gate"
+        ],
+        "source_candidate_titles": [
+          "样品制作要求具有排他性及泄露信息风险"
+        ],
+        "source_evidence_ids": [
+          "99f677179a6d"
+        ],
+        "source_topics": [
+          "samples_demo"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "sample_gate",
+        "problem_family_keys": [
+          "sample_gate"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "problem_id_seed": "sample_gate|样品要求过细且评审规则失衡，存在样品门槛风险|topic::sample_gate|99f677179a6d"
+      }
+    },
+    {
+      "problem_id": "problem-99631d951907",
+      "canonical_title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+      "family_key": "acceptance_vendor_standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::acceptance_vendor_standard",
+          "risk_family": "acceptance_vendor_standard",
+          "source_topics": [
+            "acceptance"
+          ],
+          "evidence_anchors": [
+            "34411e9371e7"
+          ],
+          "document_span": [
+            "验收条款9.1"
+          ]
+        },
+        "family": {
+          "family_key": "acceptance_vendor_standard",
+          "canonical_title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+          "source_topics": [
+            "acceptance"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "验收标准引用‘厂家验收标准’导致依据模糊",
+          "canonical_title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"
+        },
+        "review_type": "验收标准明确性审查",
+        "severity": "中风险",
+        "source_locations": [
+          "验收条款9.1"
+        ],
+        "source_excerpts": [
+          "所有货物按厂家验收标准、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"
+        ],
+        "risk_judgment": [
+          "样品被纳入验收依据，但与样品门槛属于不同问题。"
+        ],
+        "legal_basis": [
+          "验收标准应统一明确。"
+        ],
+        "rectification": [
+          "删除厂家标准并固化验收标准。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "34411e9371e7"
+      ],
+      "topic_sources": [
+        "acceptance"
+      ],
+      "rule_ids": [
+        "topic::acceptance_vendor_standard"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::acceptance_vendor_standard"
+        ],
+        "source_candidate_titles": [
+          "验收标准引用‘厂家验收标准’导致依据模糊"
+        ],
+        "source_evidence_ids": [
+          "34411e9371e7"
+        ],
+        "source_topics": [
+          "acceptance"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "acceptance_vendor_standard",
+        "problem_family_keys": [
+          "acceptance_vendor_standard"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "problem_id_seed": "acceptance_vendor_standard|验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险|topic::acceptance_vendor_standard|34411e9371e7"
+      }
+    },
+    {
+      "problem_id": "problem-4c8f147a0cae",
+      "canonical_title": "商务条款中采购人单方变更权过大且结算方式不明",
+      "family_key": "contract_change_imbalance",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::contract_change_imbalance",
+          "risk_family": "contract_change_imbalance",
+          "source_topics": [
+            "contract"
+          ],
+          "evidence_anchors": [
+            "654afc6774d8"
+          ],
+          "document_span": [
+            "商务要求8.3、13.3"
+          ]
+        },
+        "family": {
+          "family_key": "contract_change_imbalance",
+          "canonical_title": "商务条款中采购人单方变更权过大且结算方式不明",
+          "source_topics": [
+            "contract"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "商务条款中采购人单方调整权过大且结算方式不明",
+          "canonical_title": "商务条款中采购人单方变更权过大且结算方式不明"
+        },
+        "review_type": "商务条款失衡",
+        "severity": "中风险",
+        "source_locations": [
+          "商务要求8.3、13.3"
+        ],
+        "source_excerpts": [
+          "采购人有权细微调整且中标价不变，偏离超过5%按面积比例换算。"
+        ],
+        "risk_judgment": [
+          "采购人单方变更权过大。"
+        ],
+        "legal_basis": [
+          "不得背离合同实质性内容。"
+        ],
+        "rectification": [
+          "补充双方协商和价格调整机制。"
+        ],
+        "source_rules": [
+          "baseline"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "654afc6774d8"
+      ],
+      "topic_sources": [
+        "contract"
+      ],
+      "rule_ids": [
+        "topic::contract_change_imbalance"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::contract_change_imbalance"
+        ],
+        "source_candidate_titles": [
+          "商务条款中采购人单方调整权过大且结算方式不明"
+        ],
+        "source_evidence_ids": [
+          "654afc6774d8"
+        ],
+        "source_topics": [
+          "contract"
+        ],
+        "source_rule_tags": [
+          "baseline"
+        ],
+        "problem_group_key": "contract_change_imbalance",
+        "problem_family_keys": [
+          "contract_change_imbalance"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "problem_id_seed": "contract_change_imbalance|商务条款中采购人单方变更权过大且结算方式不明|topic::contract_change_imbalance|654afc6774d8"
+      }
+    },
+    {
+      "problem_id": "problem-a611208268e0",
+      "canonical_title": "履约监督与解除条件失衡",
+      "family_key": "supervision_termination_imbalance",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::supervision_termination_imbalance",
+          "risk_family": "supervision_termination_imbalance",
+          "source_topics": [
+            "acceptance"
+          ],
+          "evidence_anchors": [
+            "8110149dc90e"
+          ],
+          "document_span": [
+            "验收条款10.4"
+          ]
+        },
+        "family": {
+          "family_key": "supervision_termination_imbalance",
+          "canonical_title": "履约监督与解除条件失衡",
+          "source_topics": [
+            "acceptance"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "验收条款中“驻厂检查”及“终止合同”条件过于严苛",
+          "canonical_title": "履约监督与解除条件失衡"
+        },
+        "review_type": "商务条款失衡/验收条款",
+        "severity": "中风险",
+        "source_locations": [
+          "验收条款10.4"
+        ],
+        "source_excerpts": [
+          "采购人可对生产全过程驻厂检查，发现未按工艺生产可终止合同。"
+        ],
+        "risk_judgment": [
+          "监督与解除条件失衡。"
+        ],
+        "legal_basis": [
+          "违约处理应与过错程度相当。"
+        ],
+        "rectification": [
+          "压缩监督范围并增加整改程序。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "8110149dc90e"
+      ],
+      "topic_sources": [
+        "acceptance"
+      ],
+      "rule_ids": [
+        "topic::supervision_termination_imbalance"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::supervision_termination_imbalance"
+        ],
+        "source_candidate_titles": [
+          "验收条款中“驻厂检查”及“终止合同”条件过于严苛"
+        ],
+        "source_evidence_ids": [
+          "8110149dc90e"
+        ],
+        "source_topics": [
+          "acceptance"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "supervision_termination_imbalance",
+        "problem_family_keys": [
+          "supervision_termination_imbalance"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "problem_id_seed": "supervision_termination_imbalance|履约监督与解除条件失衡|topic::supervision_termination_imbalance|8110149dc90e"
+      }
+    },
+    {
+      "problem_id": "problem-9943e20b5dbf",
+      "canonical_title": "技术参数过细且特征化，存在指向性风险",
+      "family_key": "technical_over_specific",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::technical_over_specific",
+          "risk_family": "technical_over_specific",
+          "source_topics": [
+            "technical"
+          ],
+          "evidence_anchors": [
+            "7080bd9f3fbb"
+          ],
+          "document_span": [
+            "技术参数A"
+          ]
+        },
+        "family": {
+          "family_key": "technical_over_specific",
+          "canonical_title": "技术参数过细且特征化，存在指向性风险",
+          "source_topics": [
+            "technical"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "技术参数中尺寸公差及工艺要求过于具体，存在指向性嫌疑",
+          "canonical_title": "技术参数过细且特征化，存在指向性风险"
+        },
+        "review_type": "技术参数倾向性",
+        "severity": "中风险",
+        "source_locations": [
+          "技术参数A"
+        ],
+        "source_excerpts": [
+          "尺寸公差±5mm，拉手规格123*28*22mm。"
+        ],
+        "risk_judgment": [
+          "参数过细。"
+        ],
+        "legal_basis": [
+          "不得以过细参数指向特定产品。"
+        ],
+        "rectification": [
+          "放宽非关键参数。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "7080bd9f3fbb"
+      ],
+      "topic_sources": [
+        "technical"
+      ],
+      "rule_ids": [
+        "topic::technical_over_specific"
+      ],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::technical_over_specific"
+        ],
+        "source_candidate_titles": [
+          "技术参数中尺寸公差及工艺要求过于具体，存在指向性嫌疑"
+        ],
+        "source_evidence_ids": [
+          "7080bd9f3fbb"
+        ],
+        "source_topics": [
+          "technical"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "technical_over_specific",
+        "problem_family_keys": [
+          "technical_over_specific"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "problem_id_seed": "technical_over_specific|技术参数过细且特征化，存在指向性风险|topic::technical_over_specific|7080bd9f3fbb"
+      }
+    }
+  ]
+}

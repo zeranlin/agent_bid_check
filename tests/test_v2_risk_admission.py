@@ -6,6 +6,7 @@ from pathlib import Path
 from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import build_v2_final_output
 from app.pipelines.v2.output_governance import govern_comparison_artifact
+from app.pipelines.v2.problem_layer import build_problem_layer
 from app.pipelines.v2.risk_admission.evidence_classifier import infer_evidence_kind
 from app.pipelines.v2.risk_admission.formal_registry import (
     FormalRegistryEntry,
@@ -13,7 +14,7 @@ from app.pipelines.v2.risk_admission.formal_registry import (
     clear_formal_registry_cache,
     load_formal_registry_index,
 )
-from app.pipelines.v2.risk_admission import admit_governance_result, validate_admitted_result
+from app.pipelines.v2.risk_admission import admit_governance_result, admit_problem_result, validate_admitted_result
 from app.pipelines.v2.risk_admission.schemas import AdmissionCandidate, AdmissionDecision, AdmissionResult
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
@@ -49,6 +50,37 @@ def _build_sample_comparison() -> ComparisonArtifact:
             ]
         },
     )
+
+
+def test_admission_consumes_problem_objects_instead_of_raw_governed_candidates() -> None:
+    comparison = _build_sample_comparison()
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    problems = build_problem_layer("sample.docx", governance)
+
+    admission = admit_problem_result("sample.docx", comparison, problems, governance)
+
+    assert admission.input_summary["problem_summary"]["problem_count"] == len(problems.problems)
+    assert admission.input_summary["governance_summary"]["candidate_count"] == len(governance.governed_candidates)
+
+
+def test_admission_preserves_conflict_problem_trace_and_absorbs_source_problems() -> None:
+    comparison = _build_pb4_acceptance_conflict_for_admission()
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    problems = build_problem_layer("sample.docx", governance)
+
+    assert len(problems.problems) == 1
+    assert problems.problems[0].problem_kind == "conflict"
+
+    admission = admit_problem_result("sample.docx", comparison, problems, governance)
+
+    assert len(admission.formal_risks) == 1
+    assert admission.pending_review_items == []
+    formal = admission.formal_risks[0]
+    assert formal.extras["problem_kind"] == "conflict"
+    assert formal.extras["conflict_type"] == "acceptance_plan_scoring_conflict"
+    assert formal.extras["left_side"]["topic"] == "policy"
+    assert formal.extras["right_side"]["topic"] == "scoring"
+    assert formal.extras["final_problem_resolution"]["target_layer"] == "formal_risks"
 
 
 def _build_template_gate_comparison() -> ComparisonArtifact:
@@ -307,6 +339,39 @@ def _build_w014_admission_comparison() -> ComparisonArtifact:
                 rectification=["排除模板占位后再核查正文。"],
                 topics=["acceptance"],
                 source_rules=["topic"],
+            ),
+        ]
+    )
+
+
+def _build_pb4_acceptance_conflict_for_admission() -> ComparisonArtifact:
+    return ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="pb4-acceptance-policy",
+                title="评分规则明确不得将验收方案作为评审因素",
+                severity="中风险",
+                review_type="评分规则一致性审查",
+                source_locations=["评分规则总则"],
+                source_excerpts=["评审因素不得包含验收方案、付款方式等与评审无关内容。"],
+                risk_judgment=["评分规则已明确禁止。"],
+                legal_basis=["评审因素应与采购需求和履约相关。"],
+                rectification=["保持评分规则与评分细则一致。"],
+                topics=["policy"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="pb4-acceptance-scoring",
+                title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                severity="高风险",
+                review_type="评分因素合规性审查",
+                source_locations=["评分细则：验收方案评分"],
+                source_excerpts=["验收方案优的得满分。"],
+                risk_judgment=["评分细则实际按验收方案打分。"],
+                legal_basis=["评审因素应与采购需求和履约相关。"],
+                rectification=["删除与验收方案直接挂钩的评分条件。"],
+                topics=["scoring"],
+                source_rules=["compare_rule:R-003"],
             ),
         ]
     )

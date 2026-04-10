@@ -1,0 +1,193 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+      "comparison_summary": {
+        "cluster_count": 3,
+        "pending_count": 0,
+        "excluded_count": 0
+      },
+      "governance_summary": {
+        "candidate_count": 2
+      },
+      "problem_summary": {
+        "problem_count": 2
+      }
+    },
+    "comparison_summary": {
+      "cluster_count": 3,
+      "pending_count": 0,
+      "excluded_count": 0
+    },
+    "governance_summary": {
+      "candidate_count": 2
+    },
+    "problem_summary": {
+      "problem_count": 2
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "topic::acceptance_scheme_scoring",
+      "risk_family": "acceptance_scheme_scoring",
+      "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+      "review_type": "评分因素合规性审查",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+      "source_locations": [
+        "二、评审标准：（第 200-215 行）",
+        "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+      ],
+      "source_excerpts": [
+        "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+        "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分"
+      ],
+      "source_rules": [
+        "topic",
+        "compare_rule"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "absorbed_rule_id": "compare::acceptance_scheme_scoring",
+            "absorbed_by_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "absorbed_by_rule_id": "topic::acceptance_scheme_scoring",
+            "absorption_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+            "absorption_kind": "same_family_duplicate",
+            "blocked_from_formal": true
+          }
+        ],
+        "problem_id": "problem-349d1cf6ffb3",
+        "problem_rule_ids": [
+          "topic::acceptance_scheme_scoring",
+          "topic",
+          "compare_rule"
+        ],
+        "problem_evidence_ids": [
+          "2541bc86bfa3",
+          "044af10a3b64"
+        ],
+        "problem_topic_sources": [
+          "scoring",
+          "cross_topic"
+        ],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::acceptance_scheme_scoring"
+          ],
+          "source_candidate_titles": [
+            "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+          ],
+          "source_evidence_ids": [
+            "2541bc86bfa3",
+            "044af10a3b64"
+          ],
+          "source_topics": [
+            "scoring",
+            "cross_topic"
+          ],
+          "problem_id_seed": "acceptance_scheme_scoring|将项目验收方案纳入评审因素，违反评审规则合规性要求|topic::acceptance_scheme_scoring|044af10a3b64,2541bc86bfa3"
+        },
+        "governance_proposed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "governance_canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+      }
+    },
+    {
+      "rule_id": "compare::certification_scoring_bundle",
+      "risk_family": "certification_scoring_bundle",
+      "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+      "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容："
+      ],
+      "source_excerpts": [
+        "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+      ],
+      "source_rules": [
+        "compare_rule"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-ab67a307aacf",
+        "problem_rule_ids": [
+          "compare::certification_scoring_bundle",
+          "compare_rule"
+        ],
+        "problem_evidence_ids": [
+          "5225a7eeb500"
+        ],
+        "problem_topic_sources": [
+          "cross_topic"
+        ],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "compare::certification_scoring_bundle"
+          ],
+          "source_candidate_titles": [
+            "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险"
+          ],
+          "source_evidence_ids": [
+            "5225a7eeb500"
+          ],
+          "source_topics": [
+            "cross_topic"
+          ],
+          "problem_id_seed": "certification_scoring_bundle|以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险|compare::certification_scoring_bundle|5225a7eeb500"
+        },
+        "governance_proposed_title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+        "governance_canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+      }
+    }
+  ],
+  "pending_review_items": [],
+  "excluded_risks": [],
+  "decisions": {
+    "topic::acceptance_scheme_scoring": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-003",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "compare::certification_scoring_bundle": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "compare_rule",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-006",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    }
+  }
+}

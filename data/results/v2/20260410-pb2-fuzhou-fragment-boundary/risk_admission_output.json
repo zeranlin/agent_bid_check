@@ -1,0 +1,446 @@
+{
+  "document_name": "福州一中真实片段",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "福州一中真实片段",
+      "comparison_summary": {
+        "cluster_count": 5,
+        "pending_count": 0,
+        "excluded_count": 0
+      },
+      "governance_summary": {
+        "candidate_count": 5
+      },
+      "problem_summary": {
+        "problem_count": 5
+      }
+    },
+    "comparison_summary": {
+      "cluster_count": 5,
+      "pending_count": 0,
+      "excluded_count": 0
+    },
+    "governance_summary": {
+      "candidate_count": 5
+    },
+    "problem_summary": {
+      "problem_count": 5
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "topic::sample_gate",
+      "risk_family": "sample_gate",
+      "title": "样品要求过细且评审规则失衡，存在样品门槛风险",
+      "review_type": "技术参数倾向性/限制竞争",
+      "severity": "高风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "样品要求第3、4点"
+      ],
+      "source_excerpts": [
+        "不得出现样品图样，标识等可能泄露投标人样品的任何信息，否则按无效投标处理；样品需提前组装并一次性送达。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-da8d61343562",
+        "problem_rule_ids": [
+          "topic::sample_gate"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "99f677179a6d"
+        ],
+        "problem_topic_sources": [
+          "samples_demo"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::sample_gate"
+          ],
+          "source_candidate_titles": [
+            "样品制作要求具有排他性及泄露信息风险"
+          ],
+          "source_evidence_ids": [
+            "99f677179a6d"
+          ],
+          "source_topics": [
+            "samples_demo"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "sample_gate",
+          "problem_family_keys": [
+            "sample_gate"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "problem_id_seed": "sample_gate|样品要求过细且评审规则失衡，存在样品门槛风险|topic::sample_gate|99f677179a6d"
+        },
+        "governance_proposed_title": "样品制作要求具有排他性及泄露信息风险",
+        "governance_canonical_title": "样品要求过细且评审规则失衡，存在样品门槛风险"
+      }
+    },
+    {
+      "rule_id": "topic::acceptance_vendor_standard",
+      "risk_family": "acceptance_vendor_standard",
+      "title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+      "review_type": "验收标准明确性审查",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "验收条款9.1"
+      ],
+      "source_excerpts": [
+        "所有货物按厂家验收标准、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-99631d951907",
+        "problem_rule_ids": [
+          "topic::acceptance_vendor_standard"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "34411e9371e7"
+        ],
+        "problem_topic_sources": [
+          "acceptance"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::acceptance_vendor_standard"
+          ],
+          "source_candidate_titles": [
+            "验收标准引用‘厂家验收标准’导致依据模糊"
+          ],
+          "source_evidence_ids": [
+            "34411e9371e7"
+          ],
+          "source_topics": [
+            "acceptance"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "acceptance_vendor_standard",
+          "problem_family_keys": [
+            "acceptance_vendor_standard"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "problem_id_seed": "acceptance_vendor_standard|验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险|topic::acceptance_vendor_standard|34411e9371e7"
+        },
+        "governance_proposed_title": "验收标准引用‘厂家验收标准’导致依据模糊",
+        "governance_canonical_title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"
+      }
+    },
+    {
+      "rule_id": "topic::contract_change_imbalance",
+      "risk_family": "contract_change_imbalance",
+      "title": "商务条款中采购人单方变更权过大且结算方式不明",
+      "review_type": "商务条款失衡",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "商务要求8.3、13.3"
+      ],
+      "source_excerpts": [
+        "采购人有权细微调整且中标价不变，偏离超过5%按面积比例换算。"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-4c8f147a0cae",
+        "problem_rule_ids": [
+          "topic::contract_change_imbalance"
+        ],
+        "problem_source_rules": [
+          "baseline"
+        ],
+        "problem_evidence_ids": [
+          "654afc6774d8"
+        ],
+        "problem_topic_sources": [
+          "contract"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::contract_change_imbalance"
+          ],
+          "source_candidate_titles": [
+            "商务条款中采购人单方调整权过大且结算方式不明"
+          ],
+          "source_evidence_ids": [
+            "654afc6774d8"
+          ],
+          "source_topics": [
+            "contract"
+          ],
+          "source_rule_tags": [
+            "baseline"
+          ],
+          "problem_group_key": "contract_change_imbalance",
+          "problem_family_keys": [
+            "contract_change_imbalance"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "problem_id_seed": "contract_change_imbalance|商务条款中采购人单方变更权过大且结算方式不明|topic::contract_change_imbalance|654afc6774d8"
+        },
+        "governance_proposed_title": "商务条款中采购人单方调整权过大且结算方式不明",
+        "governance_canonical_title": "商务条款中采购人单方变更权过大且结算方式不明"
+      }
+    },
+    {
+      "rule_id": "topic::supervision_termination_imbalance",
+      "risk_family": "supervision_termination_imbalance",
+      "title": "履约监督与解除条件失衡",
+      "review_type": "商务条款失衡/验收条款",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "验收条款10.4"
+      ],
+      "source_excerpts": [
+        "采购人可对生产全过程驻厂检查，发现未按工艺生产可终止合同。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-a611208268e0",
+        "problem_rule_ids": [
+          "topic::supervision_termination_imbalance"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "8110149dc90e"
+        ],
+        "problem_topic_sources": [
+          "acceptance"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::supervision_termination_imbalance"
+          ],
+          "source_candidate_titles": [
+            "验收条款中“驻厂检查”及“终止合同”条件过于严苛"
+          ],
+          "source_evidence_ids": [
+            "8110149dc90e"
+          ],
+          "source_topics": [
+            "acceptance"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "supervision_termination_imbalance",
+          "problem_family_keys": [
+            "supervision_termination_imbalance"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "problem_id_seed": "supervision_termination_imbalance|履约监督与解除条件失衡|topic::supervision_termination_imbalance|8110149dc90e"
+        },
+        "governance_proposed_title": "验收条款中“驻厂检查”及“终止合同”条件过于严苛",
+        "governance_canonical_title": "履约监督与解除条件失衡"
+      }
+    },
+    {
+      "rule_id": "topic::technical_over_specific",
+      "risk_family": "technical_over_specific",
+      "title": "技术参数过细且特征化，存在指向性风险",
+      "review_type": "技术参数倾向性",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "技术参数A"
+      ],
+      "source_excerpts": [
+        "尺寸公差±5mm，拉手规格123*28*22mm。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-9943e20b5dbf",
+        "problem_rule_ids": [
+          "topic::technical_over_specific"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "7080bd9f3fbb"
+        ],
+        "problem_topic_sources": [
+          "technical"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::technical_over_specific"
+          ],
+          "source_candidate_titles": [
+            "技术参数中尺寸公差及工艺要求过于具体，存在指向性嫌疑"
+          ],
+          "source_evidence_ids": [
+            "7080bd9f3fbb"
+          ],
+          "source_topics": [
+            "technical"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "technical_over_specific",
+          "problem_family_keys": [
+            "technical_over_specific"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "problem_id_seed": "technical_over_specific|技术参数过细且特征化，存在指向性风险|topic::technical_over_specific|7080bd9f3fbb"
+        },
+        "governance_proposed_title": "技术参数中尺寸公差及工艺要求过于具体，存在指向性嫌疑",
+        "governance_canonical_title": "技术参数过细且特征化，存在指向性风险"
+      }
+    }
+  ],
+  "pending_review_items": [],
+  "excluded_risks": [],
+  "decisions": {
+    "topic::sample_gate": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-sample_gate",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::acceptance_vendor_standard": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal 例外白名单，允许保留为正式风险。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal 例外白名单，允许保留为正式风险。",
+      "formal_gate_rule": "formal_whitelist",
+      "formal_gate_exception_whitelist_hit": true,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-acceptance_vendor_standard",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::contract_change_imbalance": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal 例外白名单，允许保留为正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal 例外白名单，允许保留为正式风险。",
+      "formal_gate_rule": "formal_whitelist",
+      "formal_gate_exception_whitelist_hit": true,
+      "formal_gate_family_allowed": false,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "",
+      "formal_gate_registry_status": "",
+      "formal_gate_registry_source": "",
+      "formal_gate_registry_resolution": "missing"
+    },
+    "topic::supervision_termination_imbalance": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-supervision_termination_imbalance",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    },
+    "topic::technical_over_specific": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "GOV-technical_over_specific",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    }
+  }
+}

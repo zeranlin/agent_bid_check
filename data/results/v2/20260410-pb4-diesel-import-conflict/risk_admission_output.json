@@ -1,0 +1,407 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+      "comparison_summary": {
+        "cluster_count": 1,
+        "pending_count": 1,
+        "excluded_count": 0
+      },
+      "governance_summary": {
+        "candidate_count": 1
+      },
+      "problem_summary": {
+        "problem_count": 1
+      }
+    },
+    "comparison_summary": {
+      "cluster_count": 1,
+      "pending_count": 1,
+      "excluded_count": 0
+    },
+    "governance_summary": {
+      "candidate_count": 1
+    },
+    "problem_summary": {
+      "problem_count": 1
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "topic::import_consistency",
+      "risk_family": "import_consistency",
+      "title": "非进口项目要求与外标/国外部件引用存在一致性冲突",
+      "review_type": "技术标准一致性审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "国外标准/国外部件、废止燃油标准和标准编号格式问题属于同一技术标准一致性风险簇，治理层统一收口为主风险。",
+      "source_locations": [
+        "技术条款：1.规格及技术参数",
+        "采购包信息：是否允许进口产品"
+      ],
+      "source_excerpts": [
+        "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+        "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks",
+          "pending_review_items"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "非进口项目中出现国外标准和国外部件要求，存在政策适用矛盾",
+            "absorbed_rule_id": "topic::import_consistency",
+            "absorbed_by_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "absorbed_by_rule_id": "topic::import_consistency",
+            "absorption_reason": "国外标准/国外部件、废止燃油标准和标准编号格式问题属于同一技术标准一致性风险簇，治理层统一收口为主风险。",
+            "absorption_kind": "legacy_title",
+            "blocked_from_formal": true
+          }
+        ],
+        "problem_id": "problem-ffcfc2517c2e",
+        "problem_rule_ids": [
+          "topic::import_consistency"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "97583d348e96",
+          "fe2543c749d7"
+        ],
+        "problem_topic_sources": [
+          "technical_standard",
+          "policy"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "technical_standard",
+          "policy"
+        ],
+        "merged_family_keys": [
+          "import_consistency"
+        ],
+        "cross_topic_merge_reason": "跨专题一致性冲突已按白名单规则合并为单一 conflict problem。",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::import_consistency",
+            "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "family_key": "import_consistency",
+            "topic_sources": [
+              "technical_standard",
+              "policy"
+            ],
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "source_excerpts": [
+              "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+              "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          },
+          {
+            "source_bucket": "pending_review_items",
+            "candidate_rule_id": "topic::import_consistency",
+            "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "family_key": "import_consistency",
+            "topic_sources": [
+              "technical_standard",
+              "policy"
+            ],
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "source_excerpts": [
+              "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+              "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "formal_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::import_consistency",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+        },
+        "problem_kind": "conflict",
+        "conflict_type": "import_consistency_conflict",
+        "left_side": {
+          "problem_id": "problem-6727ee62d3e6",
+          "topic": "policy",
+          "family_key": "import_consistency",
+          "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+          "source_locations": [
+            "技术条款：1.规格及技术参数",
+            "采购包信息：是否允许进口产品"
+          ],
+          "source_excerpts": [
+            "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+            "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+          ],
+          "evidence_ids": [
+            "97583d348e96",
+            "fe2543c749d7"
+          ]
+        },
+        "right_side": {
+          "problem_id": "problem-6727ee62d3e6",
+          "topic": "technical_standard",
+          "family_key": "import_consistency",
+          "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+          "source_locations": [
+            "技术条款：1.规格及技术参数",
+            "采购包信息：是否允许进口产品"
+          ],
+          "source_excerpts": [
+            "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+            "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+          ],
+          "evidence_ids": [
+            "97583d348e96",
+            "fe2543c749d7"
+          ]
+        },
+        "conflict_reason": {
+          "left": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+          "right": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+          "why_conflict": "同一采购文件一侧要求非进口/限制进口，另一侧又引用外标或国外部件要求，两边不能同时作为一致的采购口径成立。"
+        },
+        "conflict_evidence_links": [
+          {
+            "side": "left",
+            "problem_id": "problem-6727ee62d3e6",
+            "topic": "policy",
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          },
+          {
+            "side": "right",
+            "problem_id": "problem-6727ee62d3e6",
+            "topic": "technical_standard",
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          }
+        ],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::import_consistency"
+          ],
+          "source_candidate_titles": [
+            "拒绝进口 vs 外标/国外部件引用矛盾风险"
+          ],
+          "source_evidence_ids": [
+            "97583d348e96",
+            "fe2543c749d7"
+          ],
+          "source_topics": [
+            "technical_standard",
+            "policy"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "import_consistency_conflict",
+          "problem_family_keys": [
+            "import_consistency"
+          ],
+          "problem_merge_reason": "问题层已将跨专题一致性冲突收口为单一 conflict problem。",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "merged_topic_sources": [
+            "technical_standard",
+            "policy"
+          ],
+          "merged_family_keys": [
+            "import_consistency"
+          ],
+          "cross_topic_merge_reason": "跨专题一致性冲突已按白名单规则合并为单一 conflict problem。",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::import_consistency",
+              "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+              "family_key": "import_consistency",
+              "topic_sources": [
+                "technical_standard",
+                "policy"
+              ],
+              "source_locations": [
+                "技术条款：1.规格及技术参数",
+                "采购包信息：是否允许进口产品"
+              ],
+              "source_excerpts": [
+                "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+                "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+              ],
+              "evidence_ids": [
+                "97583d348e96",
+                "fe2543c749d7"
+              ]
+            },
+            {
+              "source_bucket": "pending_review_items",
+              "candidate_rule_id": "topic::import_consistency",
+              "candidate_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+              "family_key": "import_consistency",
+              "topic_sources": [
+                "technical_standard",
+                "policy"
+              ],
+              "source_locations": [
+                "技术条款：1.规格及技术参数",
+                "采购包信息：是否允许进口产品"
+              ],
+              "source_excerpts": [
+                "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+                "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+              ],
+              "evidence_ids": [
+                "97583d348e96",
+                "fe2543c749d7"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "formal_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::import_consistency",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+          },
+          "problem_kind": "conflict",
+          "conflict_type": "import_consistency_conflict",
+          "left_side": {
+            "problem_id": "problem-6727ee62d3e6",
+            "topic": "policy",
+            "family_key": "import_consistency",
+            "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "source_excerpts": [
+              "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+              "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          },
+          "right_side": {
+            "problem_id": "problem-6727ee62d3e6",
+            "topic": "technical_standard",
+            "family_key": "import_consistency",
+            "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "source_locations": [
+              "技术条款：1.规格及技术参数",
+              "采购包信息：是否允许进口产品"
+            ],
+            "source_excerpts": [
+              "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。",
+              "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。"
+            ],
+            "evidence_ids": [
+              "97583d348e96",
+              "fe2543c749d7"
+            ]
+          },
+          "conflict_reason": {
+            "left": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "right": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+            "why_conflict": "同一采购文件一侧要求非进口/限制进口，另一侧又引用外标或国外部件要求，两边不能同时作为一致的采购口径成立。"
+          },
+          "conflict_evidence_links": [
+            {
+              "side": "left",
+              "problem_id": "problem-6727ee62d3e6",
+              "topic": "policy",
+              "source_locations": [
+                "技术条款：1.规格及技术参数",
+                "采购包信息：是否允许进口产品"
+              ],
+              "evidence_ids": [
+                "97583d348e96",
+                "fe2543c749d7"
+              ]
+            },
+            {
+              "side": "right",
+              "problem_id": "problem-6727ee62d3e6",
+              "topic": "technical_standard",
+              "source_locations": [
+                "技术条款：1.规格及技术参数",
+                "采购包信息：是否允许进口产品"
+              ],
+              "evidence_ids": [
+                "97583d348e96",
+                "fe2543c749d7"
+              ]
+            }
+          ],
+          "replaced_problem_ids": [
+            "problem-6727ee62d3e6",
+            "problem-6727ee62d3e6"
+          ],
+          "problem_id_seed": "import_consistency_conflict|problem-6727ee62d3e6|problem-6727ee62d3e6"
+        },
+        "governance_proposed_title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "governance_canonical_title": "拒绝进口 vs 外标/国外部件引用矛盾风险"
+      }
+    }
+  ],
+  "pending_review_items": [],
+  "excluded_risks": [],
+  "decisions": {
+    "topic::import_consistency": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-001",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    }
+  }
+}

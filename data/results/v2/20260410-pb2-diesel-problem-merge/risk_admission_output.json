@@ -1,0 +1,132 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+      "comparison_summary": {
+        "cluster_count": 2,
+        "pending_count": 0,
+        "excluded_count": 0
+      },
+      "governance_summary": {
+        "candidate_count": 2
+      },
+      "problem_summary": {
+        "problem_count": 1
+      }
+    },
+    "comparison_summary": {
+      "cluster_count": 2,
+      "pending_count": 0,
+      "excluded_count": 0
+    },
+    "governance_summary": {
+      "candidate_count": 2
+    },
+    "problem_summary": {
+      "problem_count": 1
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "topic::certification_scoring_bundle",
+      "risk_family": "certification_scoring_bundle",
+      "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+      "review_type": "评分因素合规性 / 限定特定认证或发证机构",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "（一） 评分内容（第 328-332 行）"
+      ],
+      "source_excerpts": [
+        "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-2d8725d052f6",
+        "problem_rule_ids": [
+          "topic::certification_scoring_bundle",
+          "topic::cert_weight"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "807c6caa5539"
+        ],
+        "problem_topic_sources": [
+          "scoring"
+        ],
+        "problem_supporting_candidate_rule_ids": [
+          "topic::cert_weight"
+        ],
+        "problem_supporting_candidate_titles": [
+          "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+        ],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::certification_scoring_bundle",
+            "topic::cert_weight"
+          ],
+          "source_candidate_titles": [
+            "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+            "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+          ],
+          "source_evidence_ids": [
+            "807c6caa5539"
+          ],
+          "source_topics": [
+            "scoring"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "certification_scoring_bundle",
+          "problem_family_keys": [
+            "certification_scoring_bundle",
+            "cert_weight"
+          ],
+          "problem_merge_reason": "特定认证证书、特定发证机构与认证权重属于同一评分问题簇，问题层统一保留一个主问题并吸收附属评分说明。",
+          "primary_selection_reason": "优先保留预设主 family，其次保留风险级别更高、证据锚点更完整的候选作为主问题。",
+          "absorbed_supporting_titles": [
+            "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
+          ],
+          "absorbed_supporting_rule_ids": [
+            "topic::cert_weight"
+          ],
+          "problem_id_seed": "certification_scoring_bundle|以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险|cert_weight,certification_scoring_bundle|topic::cert_weight,topic::certification_scoring_bundle|807c6caa5539"
+        },
+        "governance_proposed_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "governance_canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+      }
+    }
+  ],
+  "pending_review_items": [],
+  "excluded_risks": [],
+  "decisions": {
+    "topic::certification_scoring_bundle": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-006",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
+    }
+  }
+}

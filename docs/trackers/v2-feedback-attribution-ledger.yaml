@@ -1,0 +1,93 @@
+ledger_id: V2-FEEDBACK-ATTRIBUTION-001
+single_source: docs/trackers
+owner: M
+maintainer: T
+purpose: >
+  统一登记客户/真实回放反馈，并先做分层归因，再给出整改方向建议，
+  避免所有问题默认下发到 rule_layer。
+
+fields_definition:
+  feedback_type:
+    allowed_values: ["漏报", "误报", "层级错误", "标题错误", "追溯缺失", "展示错误"]
+  root_cause_layer:
+    allowed_values: ["evidence_layer", "problem_layer", "risk_admission", "publish_layer", "rule_layer", "unknown"]
+  disposition:
+    allowed_values: ["新建整改任务", "并入已有任务", "标记为样本补充", "标记为规则补充", "标记为展示修复", "标记为排除/误反馈"]
+  suggested_task_type:
+    allowed_values: ["证据层补强任务", "问题层归并整改任务", "准入层门禁整改任务", "发布层渲染修复任务", "规则纳管补充任务", "人工复核分诊任务"]
+
+feedback_cases:
+  - feedback_id: FB-GR2-001
+    source_document: （半真实）福建物业模板场景
+    source_run_id: ""
+    feedback_type: 误报
+    feedback_title: 模板/留白被误报 formal
+    expected_behavior: 模板条款不应被当成正文硬证据进入正式风险
+    actual_behavior: 模板留白条款进入 formal
+    suspected_layer: evidence_layer
+    signals: ["template_clause_as_body", "placeholder_clause_as_body"]
+
+  - feedback_id: FB-GR2-002
+    source_document: （半真实）福州一中相邻问题边界
+    source_run_id: ""
+    feedback_type: 标题错误
+    feedback_title: 样品/验收/商务问题误并
+    expected_behavior: 相邻但独立的问题应拆分保留
+    actual_behavior: 样品、验收、商务被误收成一个问题
+    suspected_layer: problem_layer
+    signals: ["wrong_merge", "cross_topic_overmerge"]
+
+  - feedback_id: FB-GR2-003
+    source_document: （半真实）formal gate 错层
+    source_run_id: ""
+    feedback_type: 层级错误
+    feedback_title: 待补证项被抬入 formal
+    expected_behavior: 证据不足项应进入 pending
+    actual_behavior: 结果进入 formal
+    suspected_layer: risk_admission
+    expected_layer: pending_review_items
+    actual_layer: formal_risks
+
+  - feedback_id: FB-GR2-004
+    source_document: 柴油文件 conflict 展示
+    source_run_id: 20260410-pu1-diesel-conflict-replay
+    source_run_dir: ../../data/results/v2/20260410-pu1-diesel-conflict-replay
+    feedback_type: 展示错误
+    feedback_title: Web 展示缺少 conflict 结构化信息
+    expected_behavior: 冲突问题应展示 left/right/conflict_reason
+    actual_behavior: 页面只看到标题，缺少冲突双方与冲突原因
+    suspected_layer: publish_layer
+    problem_id: problem-conflict-001
+    signals: ["web_render_mismatch"]
+
+  - feedback_id: FB-GR2-005
+    source_document: 柴油文件
+    source_run_id: ""
+    feedback_type: 漏报
+    feedback_title: 赠送风险漏报
+    expected_behavior: 赠送非项目物资评分应被识别并输出
+    actual_behavior: 当前结果未报出
+    suspected_layer: rule_layer
+    expected_rule_id: R-008
+    signals: ["rule_missing", "registry_gap"]
+
+  - feedback_id: FB-GR2-006
+    source_document: 福州一中 history 展示
+    source_run_id: 20260410-pu1-fuzhou-replay
+    source_run_dir: ../../data/results/v2/20260410-pu1-fuzhou-replay
+    feedback_type: 展示错误
+    feedback_title: 标题明明不该报却在 history 展示出来
+    expected_behavior: history 应与 final_snapshot 保持一致
+    actual_behavior: history 页面出现已排除标题
+    suspected_layer: publish_layer
+    signals: ["history_leak", "final_snapshot_projection_gap"]
+
+  - feedback_id: FB-GR2-007
+    source_document: 未知客户反馈
+    source_run_id: ""
+    feedback_type: 追溯缺失
+    feedback_title: 客户称结果不对但未提供定位
+    expected_behavior: 应能回看具体问题对象与证据
+    actual_behavior: 仅收到笼统投诉，无法定位具体问题
+    suspected_layer: unknown
+    signals: []

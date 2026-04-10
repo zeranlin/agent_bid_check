@@ -1,0 +1,19 @@
+{
+  "missing_should_report": [],
+  "unexpected_reported": [],
+  "missing_should_pending": [],
+  "unexpected_pending": [],
+  "mismatched_layers": [],
+  "formal_count": 0,
+  "pending_count": 20,
+  "excluded_count": 1,
+  "passed": true,
+  "document_id": "DOC-FUJIAN-PROPERTY-BASELINE",
+  "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
+  "notes": [
+    "福建物业基线当前采用 w013 稳定 seed，重点保护正文硬风险，同时阻断模板/后续合同确定类误报。",
+    "该文件的提醒项、证据不足项应继续停留在 pending，不得直接抬入 formal。",
+    "后续若福建链路继续收紧，可在不打坏正文硬风险前提下迭代 seed run。"
+  ],
+  "result_dir": "/Users/linzeran/code/2026-zn/test_getst/data/results/v2/gr1-fujian-baseline"
+}

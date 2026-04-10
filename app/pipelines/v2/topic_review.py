@@ -12,6 +12,11 @@ from app.config import ReviewSettings
 from .schemas import TopicReviewArtifact, V2StageArtifact
 from .topics import TopicDefinition, resolve_topic_definitions, resolve_topic_execution_plan
 
+try:
+    from .evidence_layer.models import EvidenceLayerArtifact
+except Exception:  # pragma: no cover - import guard for partial environments
+    EvidenceLayerArtifact = object  # type: ignore[assignment]
+
 
 JSON_BLOCK_RE = re.compile(r"```(?:json)?\s*(.+?)\s*```", re.DOTALL)
 SCORING_TIER_RE = re.compile(r"(优|良|中|差|一般)\s*(得|计)?\s*\d+\s*分")
@@ -1569,16 +1574,47 @@ def _snippet_from_section(section: dict) -> str:
     return "\n".join(lines)
 
 
-def _get_evidence_bundle(evidence: V2StageArtifact, topic_key: str) -> dict:
-    if not evidence.metadata:
+def _get_evidence_bundle(evidence: V2StageArtifact | EvidenceLayerArtifact, topic_key: str) -> dict:
+    topic_inputs = getattr(evidence, "topic_inputs", None)
+    if isinstance(topic_inputs, dict):
+        topic_input = topic_inputs.get(topic_key)
+        if topic_input is None:
+            return {}
+        if hasattr(topic_input, "to_dict"):
+            payload = topic_input.to_dict()
+        elif isinstance(topic_input, dict):
+            payload = topic_input
+        else:
+            return {}
+        return {
+            "sections": payload.get("sections", []),
+            "evidence_ids": payload.get("evidence_ids", []),
+            "missing_hints": payload.get("metadata", {}).get("missing_hints", []) if isinstance(payload.get("metadata", {}), dict) else [],
+            "recall_query": payload.get("metadata", {}).get("recall_query", "") if isinstance(payload.get("metadata", {}), dict) else "",
+            "metadata": payload.get("metadata", {}),
+        }
+    if not getattr(evidence, "metadata", None):
         return {}
     bundles = evidence.metadata.get("topic_evidence_bundles", {}) or {}
     bundle = bundles.get(topic_key, {})
     return bundle if isinstance(bundle, dict) else {}
 
 
-def _get_topic_coverage(evidence: V2StageArtifact, topic_key: str) -> dict:
-    if not evidence.metadata:
+def _get_topic_coverage(evidence: V2StageArtifact | EvidenceLayerArtifact, topic_key: str) -> dict:
+    topic_inputs = getattr(evidence, "topic_inputs", None)
+    if isinstance(topic_inputs, dict):
+        topic_input = topic_inputs.get(topic_key)
+        if topic_input is None:
+            return {}
+        if hasattr(topic_input, "to_dict"):
+            payload = topic_input.to_dict()
+        elif isinstance(topic_input, dict):
+            payload = topic_input
+        else:
+            return {}
+        coverage = payload.get("coverage", {})
+        return coverage if isinstance(coverage, dict) else {}
+    if not getattr(evidence, "metadata", None):
         return {}
     coverages = evidence.metadata.get("topic_coverages", {}) or {}
     coverage = coverages.get(topic_key, {})
@@ -1690,6 +1726,7 @@ def _build_empty_topic_artifact(
             "topic_mode": topic_mode,
             "topic_execution_plan": execution_plan,
             "selected_sections": selected_sections,
+            "selected_evidence_ids": [str(section.get("evidence_id", "")).strip() for section in selected_sections if str(section.get("evidence_id", "")).strip()],
             "missing_evidence": missing_items,
             "failure_reasons": failure_reasons,
             "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
@@ -1956,6 +1993,7 @@ def _run_single_topic(
             "topic_mode": topic_mode,
             "topic_execution_plan": execution_plan,
             "selected_sections": selected_sections,
+            "selected_evidence_ids": [str(section.get("evidence_id", "")).strip() for section in selected_sections if str(section.get("evidence_id", "")).strip()],
             "missing_evidence": missing_evidence,
             "failure_reasons": failure_reasons,
             "failure_reason_labels": [TOPIC_FAILURE_REASON_LABELS.get(reason, reason) for reason in failure_reasons],
@@ -1968,7 +2006,7 @@ def _run_single_topic(
 
 def run_topic_reviews(
     document_name: str,
-    evidence: V2StageArtifact,
+    evidence: V2StageArtifact | EvidenceLayerArtifact,
     settings: ReviewSettings,
     topic_mode: str = "default",
     topic_keys: tuple[str, ...] | list[str] | None = None,

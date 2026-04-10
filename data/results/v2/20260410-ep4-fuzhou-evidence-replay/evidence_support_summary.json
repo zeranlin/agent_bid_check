@@ -1,0 +1,338 @@
+{
+  "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
+  "evidence_count": 27,
+  "clause_role_counts": {
+    "supporting_material": 11,
+    "gate": 4,
+    "reminder": 2,
+    "scoring_factor": 1,
+    "technical_requirement": 3,
+    "acceptance_basis": 4,
+    "commercial_obligation": 2
+  },
+  "evidence_strength_counts": {
+    "medium": 12,
+    "strong": 8,
+    "weak": 7
+  },
+  "hard_evidence_counts": {
+    "true": 7,
+    "false": 20
+  },
+  "focused_examples": [
+    {
+      "evidence_id": "evidence-e0a34121da",
+      "title": "第七章 电子投标文件格式",
+      "source_kind": "template_clause",
+      "business_domain": "procedure",
+      "clause_role": "reminder",
+      "evidence_strength": "weak",
+      "hard_evidence": false,
+      "location": "第七章 电子投标文件格式（第 1295-1316 行）",
+      "excerpt": "第七章 电子投标文件格式\n编制说明\n1、除招标文件另有规定外，本章中：\n1.1涉及投标人的“全称”：\n（1）不接受联合体投标的，指投标人的全称。\n（2）接受联合体投标且投标人为联合体的，指牵头方的全称并加注（联合体牵头方），即应表述为：“牵头方的全称（联合体牵头方）”。\n1.2涉及投标人“加盖单位公章”：\n（1）不接受联合体投标的，指加盖投标人的单位公章。\n（2）接受联合体投标且投标人为联合体的，指加盖联合体牵头方的单位公章。\n1.3涉及“投标人代表签字”：\n（1）不接受联合体投标的，指由投标人的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n（2）接受联合体投标且投标人为联合体的，指由联合体牵头方的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n1.4“其他组织”指合伙企业、非企业专业服务机构、个体工商户、农村承包经营户等。\n1.5“自然人”指具有完全民事行为能力、能够承担民事责任和义务的中国公民。\n2、除招标文件另有规定外，本章中“投标人的资格及资信证明文件”：\n2.1投标人应按照招标文件第四章第1.3条第（2）款规定及本章规定进行编制，如有必要，可增加附页，附页作为资格及资信文件的组成部分。\n2.2接受联合体投标且投标人为联合体的，联合体中的各方均应按照本章第2.1条规定提交相应的全部资料。\n3、投标人对电子投标文件的索引应编制页码。\n4、本章提供格式仅供参考，投标人应根据自身实际情况制作电子投标文件。",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "reminder",
+          "rule": "reminder_role_pattern",
+          "reason": "命中提醒、模板、留白或待核实表达。",
+          "signals": [
+            "第七章 电子投标文件格式",
+            "template_clause"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "weak",
+          "rule": "template_or_reminder_weak",
+          "reason": "模板、留白、提醒类证据默认视为弱证据。",
+          "signals": [
+            "第七章 电子投标文件格式",
+            "template_clause",
+            "reminder"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "第七章 电子投标文件格式",
+            "template_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "template_clause",
+          "business_domain": "procedure",
+          "clause_role": "reminder",
+          "evidence_strength": "weak",
+          "hard_evidence": false
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-d32a915436",
+      "title": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+      "source_kind": "placeholder_clause",
+      "business_domain": "acceptance",
+      "clause_role": "acceptance_basis",
+      "evidence_strength": "weak",
+      "hard_evidence": false,
+      "location": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收（第 1049-1049 行）",
+      "excerpt": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "acceptance_basis",
+          "rule": "acceptance_basis_pattern",
+          "reason": "命中验收标准、检测或组织验收表达。",
+          "signals": [
+            "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组",
+            "验收依据"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "weak",
+          "rule": "template_or_reminder_weak",
+          "reason": "模板、留白、提醒类证据默认视为弱证据。",
+          "signals": [
+            "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组",
+            "placeholder_clause",
+            "acceptance_basis"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组",
+            "placeholder_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "placeholder_clause",
+          "business_domain": "acceptance",
+          "clause_role": "acceptance_basis",
+          "evidence_strength": "weak",
+          "hard_evidence": false
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-159309a40d",
+      "title": "（二）样品要求",
+      "source_kind": "sample_clause",
+      "business_domain": "sample",
+      "clause_role": "supporting_material",
+      "evidence_strength": "medium",
+      "hard_evidence": false,
+      "location": "（二）样品要求（第 792-832 行）",
+      "excerpt": "（二）样品要求\n1、样品为投标文件有效组成部分，投标人未提供样品或样品提供不全的或与样品制作要求不符合的，视为未对招标文件作出实质性响应，按无效投标处理。\n 2、不接受3D打印和雕刻加工的样品。\n 3、投标人应采用可去除的安全材料隐去投标人名称及其他可能泄露投标人信息的标志、符号等；同时，在投标文件中，也不得出现样品图样，标识等可能泄露投标人样品的任何信息，否则按无效投标处理。\n 4、投标人必须将以上样品成品提前组装好，并于开标当日投标截止时间前一次性送达投标现场，按要求摆放好样品。必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。\n 5、采购人有权对中标人的样品封存保留作为履约验收的参考，若所提供实物与样品不符，则采购人有权退货，并按合同规定进行处罚。\n 6、未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。\n 7、采购结果公告发布后的三个工作日之内，中标人的样品由采购人取走并封存。\n 8、样品投标须知：\n 本章所有图片均为参考图片,图中所示的尺寸以技术要求以样品制作要求中描述的尺寸为准。\n样品1:组合柜柜门 数量1片\n样品制作要求：\n 1、柜门采用基材≥0.8mm的冷轧钢板。柜门背面纵向具备≥2条，宽度≥30mm的加强条。柜门上下门角都需安装防撞角，防撞角采用橡胶材料注塑制作。防撞角部分需要内嵌在门板中，螺丝固定。防撞角外形以及规格尺寸见附图。\n 2、拉手：采用PP料注塑制作。拉手主体上下两头圆弧型，中间位置内凹。拉手盖板上下两头圆弧型，拉手盖板需要插入拉手主体中，不能突出。拉手跟门板采用螺丝固定。拉手主体和拉手盖板的外形以及规格尺寸见附图。\n样品1参考图\n\n \n样品2：桌面板 数量1片（需要切开一角，体现出内部基材）",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "supporting_material",
+          "rule": "supporting_material_pattern",
+          "reason": "命中证明材料、附件、表单或样品提交类表达。",
+          "signals": [
+            "（二）样品要求",
+            "sample_clause",
+            "证明材料"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "medium",
+          "rule": "supporting_material_medium",
+          "reason": "证明材料要求可支撑上下文，但通常不是直接硬约束本体。",
+          "signals": [
+            "（二）样品要求",
+            "supporting_material"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "（二）样品要求",
+            "sample_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "sample_clause",
+          "business_domain": "sample",
+          "clause_role": "supporting_material",
+          "evidence_strength": "medium",
+          "hard_evidence": false
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-e5703ab664",
+      "title": "资格承诺函",
+      "source_kind": "attachment_clause",
+      "business_domain": "qualification",
+      "clause_role": "supporting_material",
+      "evidence_strength": "medium",
+      "hard_evidence": false,
+      "location": "资格承诺函（第 34-92 行）",
+      "excerpt": "资格承诺函\n①本采购包允许供应商采用资格承诺制。采用资格承诺制的供应商，应当根据投标(响应)格式文件要求提供资格承诺函，无需提供《政府采购法实施条例》第十七条第一款规定的一般资格条件证明材料；资格承诺函不符合采购文件要求的，视为未按照采购文件规定提交供应商的资格及资信文件，按资格审查不合格处理。②采购项目有特殊资格要求的，供应商还应按要求提供相应的证明材料。\n本采购包属于专门面向中小企业采购。\n本采购包为专门面向中小企业采购，投标人须提供中小企业声明函。监狱企业、残疾人福利性单位视同小型、微型企业。\n6.3是否接受联合体投标：\n采购包1：不接受\n※根据上述资格要求，电子投标文件中应提交的“投标人的资格及资信证明文件”详见招标文件第四章。\n7、招标文件的获取\n7.1、招标文件获取期限：详见招标公告或更正公告，若不一致，以更正公告为准。\n7.2、在招标文件获取期限内，供应商应通过福建省政府采购网上公开信息系统的注册账号（免费注册）并获取招标文件(请根据项目所在地，登录对应的福建省政府采购网上公开信息系统(即省本级网址/地市分网))，否则投标将被拒绝。\n7.3、获取地点及方式：注册账号后，通过福建省政府采购网上公开信息系统以下载方式获取。\n7.4、招标文件售价：0元。\n8、投标截止\n8.1、投标截止时间：详见招标公告或更正公告，若不一致，以更正公告为准。\n8.2、投标人应在投标截止时间前按照福建省政府采购网上公开信息系统设定的操作流程将电子投标文件上传至福建省政府采购网上公开信息系统，否则投标将被拒绝。\n9、开标时间及地点\n详见招标公告或更正公告，若不一致，以更正公告为准。\n10、公告期限\n10.1、招标公告的公告期限：自财政部和福建省财政厅指定的政府采购信息发布媒体最先发布公告之日起5个工作日。\n10.2、招标文件公告期限：招标文件随同招标公告一并发布，其公告期限与招标公告的公",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "supporting_material",
+          "rule": "supporting_material_pattern",
+          "reason": "命中证明材料、附件、表单或样品提交类表达。",
+          "signals": [
+            "资格承诺函",
+            "attachment_clause",
+            "证明材料"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "medium",
+          "rule": "supporting_material_medium",
+          "reason": "证明材料要求可支撑上下文，但通常不是直接硬约束本体。",
+          "signals": [
+            "资格承诺函",
+            "supporting_material"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "资格承诺函",
+            "attachment_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "attachment_clause",
+          "business_domain": "qualification",
+          "clause_role": "supporting_material",
+          "evidence_strength": "medium",
+          "hard_evidence": false
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-c5b71173f2",
+      "title": "合同支付方式",
+      "source_kind": "body_clause",
+      "business_domain": "commercial",
+      "clause_role": "commercial_obligation",
+      "evidence_strength": "strong",
+      "hard_evidence": true,
+      "location": "合同支付方式（第 862-867 行）",
+      "excerpt": "合同支付方式\n1、第一批次货物到场后，完成安装，按照合同要求最终验收合格，中标人须在申请付款时出具全额发票，达到付款条件起14日内，支付合同总金额的50.00%\n2、第二批次货物到场后，完成安装，按照合同要求最终验收合格，中标人须在申请付款时出具全额发票，达到付款条件起14日内，支付合同总金额的50.00%\n7\n★\n履约保证金",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "commercial_obligation",
+          "rule": "commercial_obligation_pattern",
+          "reason": "命中付款、结算、交货或履约保证金义务表达。",
+          "signals": [
+            "合同支付方式",
+            "商务义务"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "合同支付方式",
+            "commercial_obligation",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": true,
+          "rule": "joint_signal_hard_evidence",
+          "reason": "正文来源、硬角色、强证据联合满足，允许作为正式硬证据。",
+          "signals": [
+            "合同支付方式",
+            "commercial",
+            "commercial_obligation",
+            "strong"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": true,
+        "admission_reason": "hard_evidence_available",
+        "admission_signals": {
+          "source_kind": "body_clause",
+          "business_domain": "commercial",
+          "clause_role": "commercial_obligation",
+          "evidence_strength": "strong",
+          "hard_evidence": true
+        }
+      }
+    },
+    {
+      "evidence_id": "evidence-fbed376dac",
+      "title": "9验收标准及要求：",
+      "source_kind": "sample_clause",
+      "business_domain": "acceptance",
+      "clause_role": "acceptance_basis",
+      "evidence_strength": "strong",
+      "hard_evidence": false,
+      "location": "9验收标准及要求：（第 881-932 行）",
+      "excerpt": "9验收标准及要求：\n 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。中标人提供货物的制造标准及技术规范等有关资料必须符合中国相应有关标准、规范要求。中标人如有调换产品，降低产品等级标准或提供存在质量缺陷产品，采购人有权责令中标人无条件于5日内更换质量达标产品，更换的费用应由中标人负责。中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。\n 9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。\n 9.3中标人根据招标要求进行产品分类装箱后，运至采购人要求地点，由采购人组织人员进行初步验收。\n 10.安装及调试\n 10.1中标人应设安装负责人，负责安装协调管理工作。\n 10.2中标人负责到采购人指定的地点进行安装、调试（包括布置、摆设）。\n 10.3安装过程中，中标人须接受采购人管理，应进行现场保护，对所有设施均有责任进行防护和爱惜，不得对周围环境和设备造成破坏和污染，保证采购单位的财产不受任何损失。造成二次污染及损坏的应及时进行修复，由中标人承担所有费用，直至修复完成。因运输和安装施工全过程造成的安全事故，由中标人全部负责。\n 10.4投标人须承诺：若中标，在生产本次采购家具的过程中，采购人可对产品从进料、开胚、酸洗磷化、喷涂、成型等一系列生产程序进行驻厂检查、监督；如果采购人在检查监督过程中发现中标人未按照相关工艺要求进行生产，采购人有权终止合同，并按照国家相关法律法规的规定提请",
+      "traces": {
+        "clause_role_trace": {
+          "clause_role": "acceptance_basis",
+          "rule": "acceptance_basis_pattern",
+          "reason": "命中验收标准、检测或组织验收表达。",
+          "signals": [
+            "9验收标准及要求：",
+            "验收依据"
+          ]
+        },
+        "evidence_strength_trace": {
+          "evidence_strength": "strong",
+          "rule": "explicit_constraint_strong",
+          "reason": "命中正文硬条款角色且存在明确约束动作表达。",
+          "signals": [
+            "9验收标准及要求：",
+            "acceptance_basis",
+            "明确约束"
+          ]
+        },
+        "hard_evidence_trace": {
+          "hard_evidence": false,
+          "rule": "non_body_not_hard",
+          "reason": "非正文来源默认不作为正式硬证据。",
+          "signals": [
+            "9验收标准及要求：",
+            "sample_clause"
+          ]
+        }
+      },
+      "admission_signal": {
+        "admission_evidence_passed": false,
+        "admission_reason": "hard_evidence_not_satisfied",
+        "admission_signals": {
+          "source_kind": "sample_clause",
+          "business_domain": "acceptance",
+          "clause_role": "acceptance_basis",
+          "evidence_strength": "strong",
+          "hard_evidence": false
+        }
+      }
+    }
+  ]
+}

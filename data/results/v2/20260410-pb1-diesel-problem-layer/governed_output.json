@@ -1,0 +1,389 @@
+{
+  "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+  "input_summary": {
+    "cluster_count": 3,
+    "pending_count": 0,
+    "excluded_count": 0,
+    "governance_input": {
+      "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+      "comparison": {
+        "signatures": [
+          {
+            "topic": "scoring",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "review_type": "评分因素合规性审查",
+            "source_locations": [
+              "二、评审标准：（第 200-215 行）"
+            ],
+            "source_excerpt_hash": "2541bc86bfa37531",
+            "severity": "高风险",
+            "source_rule": "topic",
+            "source_excerpt": "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ]
+          },
+          {
+            "topic": "cross_topic",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "review_type": "评分因素合规性 / 评审规则设置合法性",
+            "source_locations": [
+              "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+            ],
+            "source_excerpt_hash": "044af10a3b64260a",
+            "severity": "中高风险",
+            "source_rule": "compare_rule",
+            "source_excerpt": "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分",
+            "evidence_ids": []
+          },
+          {
+            "topic": "cross_topic",
+            "title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+            "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+            "source_locations": [
+              "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容："
+            ],
+            "source_excerpt_hash": "39bd122d6e3f190c",
+            "severity": "高风险",
+            "source_rule": "compare_rule",
+            "source_excerpt": "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。",
+            "evidence_ids": []
+          }
+        ],
+        "clusters": [
+          {
+            "cluster_id": "cluster-1",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "severity": "高风险",
+            "review_type": "评分因素合规性审查",
+            "source_locations": [
+              "二、评审标准：（第 200-215 行）"
+            ],
+            "source_excerpts": [
+              "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3"
+            ],
+            "risk_judgment": [
+              "验收方案被直接作为评分条件。"
+            ],
+            "legal_basis": [
+              "评审因素应与采购需求和合同履约相关。"
+            ],
+            "rectification": [
+              "删除与验收方案直接挂钩的评分条件。"
+            ],
+            "topics": [
+              "scoring"
+            ],
+            "source_rules": [
+              "topic"
+            ],
+            "evidence_ids": [
+              "evidence-7e3d279134",
+              "evidence-9209e7ce10",
+              "evidence-5c3c69c807",
+              "evidence-f79fdccb0b",
+              "evidence-eb46e7fcaf",
+              "evidence-275a8937cb",
+              "evidence-7205b57846"
+            ],
+            "conflict_notes": [],
+            "need_manual_review": false
+          },
+          {
+            "cluster_id": "cluster-2",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "severity": "中高风险",
+            "review_type": "评分因素合规性 / 评审规则设置合法性",
+            "source_locations": [
+              "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+            ],
+            "source_excerpts": [
+              "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分"
+            ],
+            "risk_judgment": [
+              "评审规则已明确不得将项目验收方案作为评审因素。",
+              "当前评分内容中纳入了“验收相关方案/计划”等验收相关内容，并与评分档次或得分直接挂钩。",
+              "相关内容与评分标准、得分或加分直接关联。",
+              "存在评分因素设置不合规、评审争议和中标结果不稳风险。"
+            ],
+            "legal_basis": [],
+            "rectification": [
+              "将验收方案、验收资料移交安排从评分因素中删除。",
+              "如确需提出要求，应调整至履约、实施或验收管理条款，不得作为评分项。",
+              "对评分标准重新拆分，仅保留允许纳入评分的实施能力内容。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "source_rules": [
+              "compare_rule"
+            ],
+            "evidence_ids": [],
+            "conflict_notes": [],
+            "need_manual_review": false
+          },
+          {
+            "cluster_id": "cluster-3",
+            "title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+            "severity": "高风险",
+            "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+            "source_locations": [
+              "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容："
+            ],
+            "source_excerpts": [
+              "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+            ],
+            "risk_judgment": [
+              "评审规则已明确，不得限定或者指定特定的专利、商标、品牌或者供应商。",
+              "当前评分内容将制造商的特定认证证书、特定标志证书作为高分条件。",
+              "上述证书要求明显偏向少数具备特定认证体系的供应商或制造商，容易形成倾向性评分。",
+              "如条款中出现“最高100分”等表述，也应理解为评分项内部满分，而非直接等同于评标总分层面的决定性分值。",
+              "该类设置可能限制公平竞争，并导致评审结果失真或争议增大。"
+            ],
+            "legal_basis": [],
+            "rectification": [
+              "删除以特定认证体系、特定标志证书作为高分条件的评分设置。",
+              "如确需评价产品质量或能力，应改为与采购需求直接相关、可由不同供应商公平满足的通用能力指标。",
+              "避免通过制造商身份、指定认证来源或指定标志证书形成事实上的供应商限定。"
+            ],
+            "topics": [
+              "cross_topic"
+            ],
+            "source_rules": [
+              "compare_rule"
+            ],
+            "evidence_ids": [],
+            "conflict_notes": [],
+            "need_manual_review": false
+          }
+        ],
+        "conflicts": [],
+        "coverage_summary": {
+          "baseline_risk_count": 0,
+          "topic_risk_count": 1,
+          "cluster_count": 3,
+          "topic_count": 1,
+          "baseline_only_count": 0,
+          "topic_only_count": 1,
+          "coverage_gap_count": 1,
+          "topic_summaries": [
+            {
+              "topic": "scoring",
+              "risk_count": 1,
+              "need_manual_review": false,
+              "selected_section_count": 7,
+              "missing_modules": []
+            }
+          ]
+        },
+        "comparison_summary": {
+          "conflict_count": 0,
+          "manual_review_count": 1,
+          "duplicate_reduction": 0,
+          "triggered_rule_codes": [
+            "acceptance_plan_in_scoring_forbidden",
+            "specific_brand_or_supplier_in_scoring_forbidden"
+          ],
+          "pending_review_count": 0,
+          "excluded_risk_count": 0
+        },
+        "baseline_only_risks": [],
+        "topic_only_risks": [
+          {
+            "topic": "scoring",
+            "source_rule": "topic",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "severity": "高风险",
+            "review_type": "评分因素合规性审查",
+            "source_location": "二、评审标准：（第 200-215 行）",
+            "source_excerpt": "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3"
+          }
+        ],
+        "missing_topic_coverage": [],
+        "manual_review_items": [
+          "基线层未发现风险，但专题层发现多个风险点，建议人工复核专题补充发现。"
+        ],
+        "coverage_gaps": [
+          {
+            "topic": "cross_check",
+            "type": "baseline_topic_gap",
+            "items": [],
+            "message": "基线层与专题层差异较大，建议人工复核专题新增问题。"
+          }
+        ],
+        "metadata": {
+          "document_name": "20260401-124322-9d7d80-SZDL2025000495-A.docx",
+          "failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden",
+            "specific_brand_or_supplier_in_scoring_forbidden"
+          ],
+          "comparison_failure_reason_codes": [
+            "acceptance_plan_in_scoring_forbidden",
+            "specific_brand_or_supplier_in_scoring_forbidden"
+          ],
+          "import_policy": "mixed_or_unclear",
+          "foreign_standard_refs": [],
+          "cn_standard_refs": [],
+          "has_equivalent_standard_clause": false,
+          "acceptance_plan_forbidden_in_scoring": true,
+          "acceptance_plan_linked_to_score": true,
+          "payment_terms_forbidden_in_scoring": true,
+          "payment_terms_linked_to_score": false,
+          "gifts_or_unrelated_goods_forbidden_in_scoring": true,
+          "gifts_or_goods_linked_to_score": false,
+          "specific_brand_or_supplier_forbidden_in_scoring": true,
+          "specific_cert_or_supplier_score_linked": true,
+          "acceptance_testing_cost_forbidden_to_bidder": false,
+          "acceptance_testing_cost_shifted_to_bidder": false,
+          "pending_review_items": [],
+          "excluded_risks": []
+        }
+      }
+    }
+  },
+  "governed_candidates": [
+    {
+      "identity": {
+        "rule_id": "topic::acceptance_scheme_scoring",
+        "risk_family": "acceptance_scheme_scoring",
+        "source_topics": [
+          "scoring",
+          "cross_topic"
+        ],
+        "evidence_anchors": [
+          "2541bc86bfa3",
+          "044af10a3b64"
+        ],
+        "document_span": [
+          "二、评审标准：（第 200-215 行）",
+          "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+        ]
+      },
+      "family": {
+        "family_key": "acceptance_scheme_scoring",
+        "canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "source_topics": [
+          "scoring",
+          "cross_topic"
+        ]
+      },
+      "decision": {
+        "governance_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+        "proposed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+      },
+      "review_type": "评分因素合规性审查",
+      "severity": "高风险",
+      "source_locations": [
+        "二、评审标准：（第 200-215 行）",
+        "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准："
+      ],
+      "source_excerpts": [
+        "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+        "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分"
+      ],
+      "risk_judgment": [
+        "验收方案被直接作为评分条件。",
+        "评审规则已明确不得将项目验收方案作为评审因素。",
+        "当前评分内容中纳入了“验收相关方案/计划”等验收相关内容，并与评分档次或得分直接挂钩。",
+        "相关内容与评分标准、得分或加分直接关联。",
+        "存在评分因素设置不合规、评审争议和中标结果不稳风险。"
+      ],
+      "legal_basis": [
+        "评审因素应与采购需求和合同履约相关。"
+      ],
+      "rectification": [
+        "删除与验收方案直接挂钩的评分条件。",
+        "将验收方案、验收资料移交安排从评分因素中删除。",
+        "如确需提出要求，应调整至履约、实施或验收管理条款，不得作为评分项。",
+        "对评分标准重新拆分，仅保留允许纳入评分的实施能力内容。"
+      ],
+      "source_rules": [
+        "topic",
+        "compare_rule"
+      ],
+      "need_manual_review": false,
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "absorbed_risks": [
+          {
+            "absorbed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "absorbed_rule_id": "compare::acceptance_scheme_scoring",
+            "absorbed_by_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "absorbed_by_rule_id": "topic::acceptance_scheme_scoring",
+            "absorption_reason": "同一风险家族存在近义候选，治理层已归并为单一主标题。",
+            "absorption_kind": "same_family_duplicate",
+            "blocked_from_formal": true
+          }
+        ]
+      }
+    },
+    {
+      "identity": {
+        "rule_id": "compare::certification_scoring_bundle",
+        "risk_family": "certification_scoring_bundle",
+        "source_topics": [
+          "cross_topic"
+        ],
+        "evidence_anchors": [
+          "5225a7eeb500"
+        ],
+        "document_span": [
+          "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容："
+        ]
+      },
+      "family": {
+        "family_key": "certification_scoring_bundle",
+        "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "source_topics": [
+          "cross_topic"
+        ]
+      },
+      "decision": {
+        "governance_reason": "由 compare 候选风险进入输出治理层。",
+        "proposed_title": "以制造商特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+        "canonical_title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+      },
+      "review_type": "评分因素合规性 / 限定特定供应商或认证体系",
+      "severity": "高风险",
+      "source_locations": [
+        "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容："
+      ],
+      "source_excerpts": [
+        "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+      ],
+      "risk_judgment": [
+        "评审规则已明确，不得限定或者指定特定的专利、商标、品牌或者供应商。",
+        "当前评分内容将制造商的特定认证证书、特定标志证书作为高分条件。",
+        "上述证书要求明显偏向少数具备特定认证体系的供应商或制造商，容易形成倾向性评分。",
+        "如条款中出现“最高100分”等表述，也应理解为评分项内部满分，而非直接等同于评标总分层面的决定性分值。",
+        "该类设置可能限制公平竞争，并导致评审结果失真或争议增大。"
+      ],
+      "legal_basis": [],
+      "rectification": [
+        "删除以特定认证体系、特定标志证书作为高分条件的评分设置。",
+        "如确需评价产品质量或能力，应改为与采购需求直接相关、可由不同供应商公平满足的通用能力指标。",
+        "避免通过制造商身份、指定认证来源或指定标志证书形成事实上的供应商限定。"
+      ],
+      "source_rules": [
+        "compare_rule"
+      ],
+      "need_manual_review": false,
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ]
+      }
+    }
+  ]
+}

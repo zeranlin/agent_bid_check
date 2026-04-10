@@ -44,3 +44,32 @@ def infer_evidence_kind(
     if "合同模板" in blob:
         return "contract_template"
     return "body_clause"
+
+
+def infer_evidence_support_signal(section: dict[str, object]) -> dict[str, object]:
+    source_kind = str(section.get("source_kind", "")).strip()
+    business_domain = str(section.get("business_domain", "")).strip()
+    clause_role = str(section.get("clause_role", "")).strip()
+    evidence_strength = str(section.get("evidence_strength", "")).strip()
+    hard_evidence = bool(section.get("hard_evidence", False))
+
+    evidence_passed = (
+        hard_evidence
+        and source_kind == "body_clause"
+        and clause_role in {"gate", "scoring_factor", "technical_requirement", "acceptance_basis", "commercial_obligation"}
+        and business_domain
+        in {"qualification", "scoring", "technical", "technical_standard", "acceptance", "commercial", "performance_staff"}
+        and evidence_strength == "strong"
+    )
+
+    return {
+        "admission_evidence_passed": evidence_passed,
+        "admission_reason": "hard_evidence_available" if evidence_passed else "hard_evidence_not_satisfied",
+        "admission_signals": {
+            "source_kind": source_kind,
+            "business_domain": business_domain,
+            "clause_role": clause_role,
+            "evidence_strength": evidence_strength,
+            "hard_evidence": hard_evidence,
+        },
+    }

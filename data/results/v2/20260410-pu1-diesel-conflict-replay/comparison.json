@@ -1,0 +1,56 @@
+{
+  "signatures": [],
+  "clusters": [
+    {
+      "cluster_id": "pu1-diesel-tech",
+      "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+      "severity": "中风险",
+      "review_type": "技术标准一致性审查",
+      "source_locations": [
+        "技术条款：1.规格及技术参数"
+      ],
+      "source_excerpts": [
+        "符合 BS EN 61000 GB/T 17626 及 EN55011 标准。"
+      ],
+      "risk_judgment": [
+        "技术标准专题命中了进口口径与外标引用冲突。"
+      ],
+      "legal_basis": [
+        "技术标准引用应与采购政策口径一致。"
+      ],
+      "rectification": [
+        "补充说明等效标准。"
+      ],
+      "topics": [
+        "technical_standard"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    }
+  ],
+  "conflicts": [],
+  "coverage_summary": {},
+  "comparison_summary": {},
+  "baseline_only_risks": [],
+  "topic_only_risks": [],
+  "missing_topic_coverage": [],
+  "manual_review_items": [],
+  "coverage_gaps": [],
+  "metadata": {
+    "pending_review_items": [
+      {
+        "title": "非进口项目中出现国外标准和国外部件要求，存在政策适用矛盾",
+        "severity": "需人工复核",
+        "review_type": "采购政策一致性复核",
+        "topic": "policy",
+        "source_location": "采购包信息：是否允许进口产品",
+        "source_excerpt": "采购包明确不允许进口产品，但技术条款又出现国外标准/国外部件表述。",
+        "reason": "政策专题从另一侧命中了同一问题，先作为待补证输入。"
+      }
+    ]
+  }
+}

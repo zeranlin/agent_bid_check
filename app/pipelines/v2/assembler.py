@@ -8,6 +8,7 @@ from app.common.parser import parse_review_markdown
 from app.common.schemas import ReviewReport, RiskPoint
 
 from .compare import compare_review_artifacts
+from .final_snapshot import build_v2_final_snapshot, project_final_output_from_snapshot, render_v2_markdown_from_snapshot
 from .output_governance import govern_comparison_artifact, validate_governed_result
 from .output_governance.schemas import GovernedResult
 from .risk_admission import admit_governance_result, validate_admitted_result
@@ -223,59 +224,16 @@ def build_v2_final_output(
     admission = admission or admit_governance_result(document_name, comparison, governance)
     validate_governed_result(governance)
     validate_admitted_result(admission)
-    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance, admission=admission)
-    return {
-        "subject": report.subject,
-        "description_lines": list(report.description_lines),
-        "formal_risks": [
-            {
-                "title": risk.title,
-                "severity": risk.severity,
-                "review_type": risk.review_type,
-                "source_location": risk.source_location,
-                "source_excerpt": risk.source_excerpt,
-                "risk_judgment": list(risk.risk_judgment),
-                "legal_basis": list(risk.legal_basis),
-                "rectification": list(risk.rectification),
-            }
-            for risk in report.risk_points
-        ],
-        "pending_review_items": deepcopy(
-            [
-                {
-                    "title": item.title,
-                    "severity": item.severity,
-                    "review_type": item.review_type,
-                    "topic": item.extras.get("topic", ""),
-                    "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
-                    "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
-                    "reason": admission.decisions[item.rule_id].admission_reason,
-                }
-                for item in admission.pending_review_items
-            ]
-        ),
-        "excluded_risks": deepcopy(
-            [
-                {
-                    "title": item.title,
-                    "severity": item.severity,
-                    "review_type": item.review_type,
-                    "source_location": "；".join(item.source_locations) if item.source_locations else "未发现",
-                    "source_excerpt": item.source_excerpts[0] if item.source_excerpts else "未发现",
-                    "reason": admission.decisions[item.rule_id].admission_reason,
-                }
-                for item in admission.excluded_risks
-            ]
-        ),
-        "summary": {
-            "high_risk_titles": list(report.summary_high_risk),
-            "medium_risk_titles": list(report.summary_medium_risk),
-            "manual_review_titles": list(report.summary_manual_review),
-        },
-        "basis_summary": list(report.basis_summary),
-        "governance": governance.to_dict(),
-        "risk_admission": admission.to_dict(),
-    }
+    snapshot = build_v2_final_snapshot(
+        document_name,
+        baseline,
+        structure,
+        topics,
+        comparison=comparison,
+        governance=governance,
+        admission=admission,
+    )
+    return project_final_output_from_snapshot(snapshot, governance=governance, admission=admission)
 
 
 def assemble_v2_report(
@@ -287,9 +245,16 @@ def assemble_v2_report(
     governance: GovernedResult | None = None,
     admission: AdmissionResult | None = None,
 ) -> str:
-    comparison = comparison or compare_review_artifacts(document_name, baseline, topics)
-    report = _build_report(document_name, baseline, structure, topics, comparison, governance=governance, admission=admission)
-    return _render_report(report)
+    snapshot = build_v2_final_snapshot(
+        document_name,
+        baseline,
+        structure,
+        topics,
+        comparison=comparison,
+        governance=governance,
+        admission=admission,
+    )
+    return render_v2_markdown_from_snapshot(snapshot)
 
 
 def build_v2_overview(structure: V2StageArtifact, topics: list[TopicReviewArtifact]) -> dict:

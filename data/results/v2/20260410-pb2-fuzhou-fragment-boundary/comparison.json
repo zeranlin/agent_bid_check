@@ -1,0 +1,164 @@
+{
+  "signatures": [],
+  "clusters": [
+    {
+      "cluster_id": "pb2-sample",
+      "title": "样品制作要求具有排他性及泄露信息风险",
+      "severity": "高风险",
+      "review_type": "技术参数倾向性/限制竞争",
+      "source_locations": [
+        "样品要求第3、4点"
+      ],
+      "source_excerpts": [
+        "不得出现样品图样，标识等可能泄露投标人样品的任何信息，否则按无效投标处理；样品需提前组装并一次性送达。"
+      ],
+      "risk_judgment": [
+        "样品要求过细。"
+      ],
+      "legal_basis": [
+        "样品要求不得形成不合理门槛。"
+      ],
+      "rectification": [
+        "压缩样品要求。"
+      ],
+      "topics": [
+        "samples_demo"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    },
+    {
+      "cluster_id": "pb2-acceptance",
+      "title": "验收标准引用‘厂家验收标准’导致依据模糊",
+      "severity": "中风险",
+      "review_type": "验收标准明确性审查",
+      "source_locations": [
+        "验收条款9.1"
+      ],
+      "source_excerpts": [
+        "所有货物按厂家验收标准、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"
+      ],
+      "risk_judgment": [
+        "样品被纳入验收依据，但与样品门槛属于不同问题。"
+      ],
+      "legal_basis": [
+        "验收标准应统一明确。"
+      ],
+      "rectification": [
+        "删除厂家标准并固化验收标准。"
+      ],
+      "topics": [
+        "acceptance"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    },
+    {
+      "cluster_id": "pb2-commercial",
+      "title": "商务条款中采购人单方调整权过大且结算方式不明",
+      "severity": "中风险",
+      "review_type": "商务条款失衡",
+      "source_locations": [
+        "商务要求8.3、13.3"
+      ],
+      "source_excerpts": [
+        "采购人有权细微调整且中标价不变，偏离超过5%按面积比例换算。"
+      ],
+      "risk_judgment": [
+        "采购人单方变更权过大。"
+      ],
+      "legal_basis": [
+        "不得背离合同实质性内容。"
+      ],
+      "rectification": [
+        "补充双方协商和价格调整机制。"
+      ],
+      "topics": [
+        "contract"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    },
+    {
+      "cluster_id": "pb2-supervision",
+      "title": "验收条款中“驻厂检查”及“终止合同”条件过于严苛",
+      "severity": "中风险",
+      "review_type": "商务条款失衡/验收条款",
+      "source_locations": [
+        "验收条款10.4"
+      ],
+      "source_excerpts": [
+        "采购人可对生产全过程驻厂检查，发现未按工艺生产可终止合同。"
+      ],
+      "risk_judgment": [
+        "监督与解除条件失衡。"
+      ],
+      "legal_basis": [
+        "违约处理应与过错程度相当。"
+      ],
+      "rectification": [
+        "压缩监督范围并增加整改程序。"
+      ],
+      "topics": [
+        "acceptance"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    },
+    {
+      "cluster_id": "pb2-technical",
+      "title": "技术参数中尺寸公差及工艺要求过于具体，存在指向性嫌疑",
+      "severity": "中风险",
+      "review_type": "技术参数倾向性",
+      "source_locations": [
+        "技术参数A"
+      ],
+      "source_excerpts": [
+        "尺寸公差±5mm，拉手规格123*28*22mm。"
+      ],
+      "risk_judgment": [
+        "参数过细。"
+      ],
+      "legal_basis": [
+        "不得以过细参数指向特定产品。"
+      ],
+      "rectification": [
+        "放宽非关键参数。"
+      ],
+      "topics": [
+        "technical"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "evidence_ids": [],
+      "conflict_notes": [],
+      "need_manual_review": false
+    }
+  ],
+  "conflicts": [],
+  "coverage_summary": {},
+  "comparison_summary": {},
+  "baseline_only_risks": [],
+  "topic_only_risks": [],
+  "missing_topic_coverage": [],
+  "manual_review_items": [],
+  "coverage_gaps": [],
+  "metadata": {}
+}

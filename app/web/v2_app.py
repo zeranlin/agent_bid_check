@@ -25,6 +25,7 @@ from app.config import (
     load_web_settings,
     save_web_settings,
 )
+from app.pipelines.v2.final_snapshot import project_final_output_from_snapshot, render_v2_markdown_from_snapshot
 from app.pipelines.v2.service import review_document_v2, save_review_artifacts_v2
 
 
@@ -540,6 +541,74 @@ def build_review_view_from_final_output(final_output: dict, comparison: dict | N
     }
 
 
+def build_review_view_from_final_snapshot(snapshot: dict) -> dict:
+    if not isinstance(snapshot, dict):
+        return build_review_view(parse_review_markdown(""), comparison=None)
+    final_risks = snapshot.get("final_risks", {})
+    formal_risks = final_risks.get("formal_risks", []) if isinstance(final_risks, dict) else []
+    summary_counts = {key: 0 for key in SEVERITY_ORDER}
+    type_counts: dict[str, int] = {}
+    grouped = {key: [] for key in SEVERITY_ORDER}
+    all_cards: list[dict] = []
+    for index, risk in enumerate(formal_risks, start=1):
+        if not isinstance(risk, dict):
+            continue
+        severity = str(risk.get("severity", "")).strip()
+        severity = severity if severity in grouped else "需人工复核"
+        summary_counts[severity] += 1
+        review_type = str(risk.get("review_type", "")).strip() or "未分类"
+        type_counts[review_type] = type_counts.get(review_type, 0) + 1
+        rule_ids = [str(item).strip() for item in risk.get("rule_ids", []) if str(item).strip()]
+        source_topics = [TOPIC_LABELS.get(item, item) for item in risk.get("topic_sources", []) or []]
+        legal_basis = [str(item).strip() for item in risk.get("legal_basis", []) if str(item).strip()]
+        card = {
+            "index": index,
+            "title": str(risk.get("title", "")).strip() or f"风险点{index}",
+            "severity": severity,
+            "severity_class": severity.replace("风险", "") if severity != "需人工复核" else "manual",
+            "review_type": review_type,
+            "source_location": str(risk.get("source_location", "")).strip() or "未发现",
+            "source_excerpt": str(risk.get("source_excerpt", "")).strip() or "未发现",
+            "risk_judgment": [str(item).strip() for item in risk.get("risk_judgment", []) if str(item).strip()],
+            "legal_basis": legal_basis,
+            "rectification": [str(item).strip() for item in risk.get("rectification", []) if str(item).strip()],
+            "source_tags": rule_ids,
+            "source_topics": source_topics,
+            "conflict_notes": [],
+            "manual_reasons": [],
+            "is_standard_compare": any("compare::" in item or "R-" in item for item in rule_ids),
+            "judgment_preview": (
+                [str(item).strip() for item in risk.get("risk_judgment", []) if str(item).strip()] or ["需人工复核"]
+            )[0],
+            "source_location_preview": (str(risk.get("source_location", "")).strip() or "未发现").splitlines()[0][:48],
+            "problem_id": str(risk.get("problem_id", "")).strip(),
+            "problem_kind": str(risk.get("problem_kind", "standard") or "standard"),
+            "conflict_type": str(risk.get("conflict_type", "") or ""),
+        }
+        grouped[severity].append(card)
+        all_cards.append(card)
+    sections = [
+        {"severity": severity, "count": len(grouped[severity]), "cards": grouped[severity]}
+        for severity in SEVERITY_ORDER
+        if grouped[severity]
+    ]
+    severity_rank = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
+    all_cards.sort(
+        key=lambda item: (
+            severity_rank.get(item["severity"], len(SEVERITY_ORDER)),
+            not bool(item["is_standard_compare"]),
+            item["index"],
+        )
+    )
+    return {
+        "summary_counts": summary_counts,
+        "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
+        "sections": sections,
+        "total": len(all_cards),
+        "all_cards": all_cards,
+    }
+
+
 def _is_governed_final_output(final_output: dict) -> bool:
     if not isinstance(final_output, dict):
         return False
@@ -700,11 +769,13 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         return None
     meta_path = run_dir / "meta.json"
     review_path = run_dir / "review.md"
+    final_review_path = run_dir / "final_review.md"
     overview_path = run_dir / "v2_overview.json"
     comparison_path = run_dir / "comparison.json"
     final_output_path = run_dir / "final_output.json"
+    final_snapshot_path = run_dir / "final_snapshot.json"
     topic_dir = run_dir / "topic_reviews"
-    if not review_path.exists():
+    if not review_path.exists() and not final_review_path.exists() and not final_snapshot_path.exists():
         return None
     meta = {}
     if meta_path.exists():
@@ -712,7 +783,21 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
         except Exception:
             meta = {}
-    final_markdown = review_path.read_text(encoding="utf-8")
+    final_snapshot = {}
+    if final_snapshot_path.exists():
+        try:
+            final_snapshot = json.loads(final_snapshot_path.read_text(encoding="utf-8"))
+        except Exception:
+            final_snapshot = {}
+    final_markdown = (
+        render_v2_markdown_from_snapshot(final_snapshot)
+        if isinstance(final_snapshot, dict) and final_snapshot.get("snapshot_version")
+        else (
+            final_review_path.read_text(encoding="utf-8")
+            if final_review_path.exists()
+            else review_path.read_text(encoding="utf-8")
+        )
+    )
     overview = {}
     if overview_path.exists():
         try:
@@ -726,7 +811,9 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         except Exception:
             comparison = {}
     final_output = {}
-    if final_output_path.exists():
+    if isinstance(final_snapshot, dict) and final_snapshot.get("snapshot_version"):
+        final_output = project_final_output_from_snapshot(final_snapshot)
+    elif final_output_path.exists():
         try:
             final_output = json.loads(final_output_path.read_text(encoding="utf-8"))
         except Exception:
@@ -749,15 +836,19 @@ def load_result_by_run_id(run_id: str) -> dict | None:
             except Exception:
                 continue
     topic_view = build_topic_view(topics, overview)
-    report = parse_review_markdown(final_markdown)
     output_admission = {
+        "final_snapshot_available": bool(final_snapshot),
         "governed_result_available": bool(governed_output),
-        "final_output_governed": _is_governed_final_output(final_output),
+        "final_output_governed": bool(final_snapshot) or _is_governed_final_output(final_output),
     }
     review_view = (
-        build_review_view_from_final_output(final_output, comparison)
-        if output_admission["final_output_governed"]
-        else build_review_view(report, comparison)
+        build_review_view_from_final_snapshot(final_snapshot)
+        if output_admission["final_snapshot_available"]
+        else (
+            build_review_view_from_final_output(final_output, comparison)
+            if output_admission["final_output_governed"]
+            else build_review_view(parse_review_markdown(final_markdown), comparison)
+        )
     )
     return {
         "run_id": run_id,
@@ -768,6 +859,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
         "review_view": review_view,
         "overview": overview,
         "comparison": comparison,
+        "final_snapshot": final_snapshot,
         "final_output": final_output,
         "governed_output": governed_output,
         "output_admission": output_admission,
@@ -792,14 +884,18 @@ def load_result_by_run_id(run_id: str) -> dict | None:
     }
 
 
-def list_recent_runs(limit: int = 12) -> list[dict]:
-    ensure_runtime_dirs()
-    runs: list[dict] = []
+def iter_result_roots() -> list[Path]:
     roots = [WEB_V2_RESULTS_DIR]
     if LEGACY_WEB_RESULTS_DIR != WEB_V2_RESULTS_DIR:
         roots.append(LEGACY_WEB_RESULTS_DIR)
+    return roots
+
+
+def list_recent_runs(limit: int = 12) -> list[dict]:
+    ensure_runtime_dirs()
+    runs: list[dict] = []
     seen_run_ids: set[str] = set()
-    for root in roots:
+    for root in iter_result_roots():
         if not root.exists():
             continue
         for run_dir in root.iterdir():
@@ -994,6 +1090,7 @@ def create_app() -> Flask:
         run_dir = find_run_dir(run_id)
         mapping = {
             "review": ("review.md", "text/markdown; charset=utf-8"),
+            "final_snapshot": ("final_snapshot.json", "application/json"),
             "extracted": ("extracted_text.md", "text/plain; charset=utf-8"),
             "baseline": ("baseline_review.md", "text/markdown; charset=utf-8"),
             "document_map": ("document_map.json", "application/json"),

@@ -1,0 +1,992 @@
+{
+  "document_name": "constructed-scoring.docx",
+  "input_summary": {
+    "governed_candidate_count": 6,
+    "base_problem_count": 6,
+    "problem_count": 6,
+    "absorbed_candidate_count": 0,
+    "cross_topic_problem_count": 0,
+    "layer_conflict_problem_count": 0,
+    "conflict_problem_count": 0
+  },
+  "problems": [
+    {
+      "problem_id": "problem-9219d002cd68",
+      "canonical_title": "评分规则明确不得将验收方案作为评审因素",
+      "family_key": "评分规则明确不得将验收方案作为评审因素",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::评分规则明确不得将验收方案作为评审因素",
+          "risk_family": "评分规则明确不得将验收方案作为评审因素",
+          "source_topics": [
+            "policy"
+          ],
+          "evidence_anchors": [
+            "69939c4789c6"
+          ],
+          "document_span": [
+            "评分规则总则"
+          ]
+        },
+        "family": {
+          "family_key": "评分规则明确不得将验收方案作为评审因素",
+          "canonical_title": "评分规则明确不得将验收方案作为评审因素",
+          "source_topics": [
+            "policy"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "评分规则明确不得将验收方案作为评审因素",
+          "canonical_title": "评分规则明确不得将验收方案作为评审因素"
+        },
+        "review_type": "评分规则一致性审查",
+        "severity": "中风险",
+        "source_locations": [
+          "评分规则总则"
+        ],
+        "source_excerpts": [
+          "评审因素不得包含验收方案、付款方式等与评审无关内容。"
+        ],
+        "risk_judgment": [
+          "评分规则已明确禁止。"
+        ],
+        "legal_basis": [
+          "评审因素应与采购需求和履约相关。"
+        ],
+        "rectification": [
+          "保持评分规则与评分细则一致。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "69939c4789c6"
+      ],
+      "topic_sources": [
+        "policy"
+      ],
+      "rule_ids": [
+        "topic::评分规则明确不得将验收方案作为评审因素"
+      ],
+      "merged_topic_sources": [
+        "policy"
+      ],
+      "merged_family_keys": [
+        "评分规则明确不得将验收方案作为评审因素"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::评分规则明确不得将验收方案作为评审因素",
+          "candidate_title": "评分规则明确不得将验收方案作为评审因素",
+          "family_key": "评分规则明确不得将验收方案作为评审因素",
+          "topic_sources": [
+            "policy"
+          ],
+          "source_locations": [
+            "评分规则总则"
+          ],
+          "source_excerpts": [
+            "评审因素不得包含验收方案、付款方式等与评审无关内容。"
+          ],
+          "evidence_ids": [
+            "69939c4789c6"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::评分规则明确不得将验收方案作为评审因素"
+        ],
+        "source_candidate_titles": [
+          "评分规则明确不得将验收方案作为评审因素"
+        ],
+        "source_evidence_ids": [
+          "69939c4789c6"
+        ],
+        "source_topics": [
+          "policy"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "评分规则明确不得将验收方案作为评审因素",
+        "problem_family_keys": [
+          "评分规则明确不得将验收方案作为评审因素"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "policy"
+        ],
+        "merged_family_keys": [
+          "评分规则明确不得将验收方案作为评审因素"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::评分规则明确不得将验收方案作为评审因素",
+            "candidate_title": "评分规则明确不得将验收方案作为评审因素",
+            "family_key": "评分规则明确不得将验收方案作为评审因素",
+            "topic_sources": [
+              "policy"
+            ],
+            "source_locations": [
+              "评分规则总则"
+            ],
+            "source_excerpts": [
+              "评审因素不得包含验收方案、付款方式等与评审无关内容。"
+            ],
+            "evidence_ids": [
+              "69939c4789c6"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "评分规则明确不得将验收方案作为评审因素|评分规则明确不得将验收方案作为评审因素|topic::评分规则明确不得将验收方案作为评审因素|69939c4789c6"
+      }
+    },
+    {
+      "problem_id": "problem-de4ddb96feb4",
+      "canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+      "family_key": "acceptance_scheme_scoring",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "R-003",
+          "risk_family": "acceptance_scheme_scoring",
+          "source_topics": [
+            "scoring"
+          ],
+          "evidence_anchors": [
+            "17fff143f23e"
+          ],
+          "document_span": [
+            "评分细则：验收方案评分"
+          ]
+        },
+        "family": {
+          "family_key": "acceptance_scheme_scoring",
+          "canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+          "source_topics": [
+            "scoring"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+          "canonical_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+        },
+        "review_type": "评分因素合规性审查",
+        "severity": "高风险",
+        "source_locations": [
+          "评分细则：验收方案评分"
+        ],
+        "source_excerpts": [
+          "验收方案优的得满分。"
+        ],
+        "risk_judgment": [
+          "评分细则实际按验收方案打分。"
+        ],
+        "legal_basis": [
+          "评审因素应与采购需求和履约相关。"
+        ],
+        "rectification": [
+          "删除与验收方案直接挂钩的评分条件。"
+        ],
+        "source_rules": [
+          "compare_rule:R-003"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "17fff143f23e"
+      ],
+      "topic_sources": [
+        "scoring"
+      ],
+      "rule_ids": [
+        "R-003"
+      ],
+      "merged_topic_sources": [
+        "scoring"
+      ],
+      "merged_family_keys": [
+        "acceptance_scheme_scoring"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "R-003",
+          "candidate_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+          "family_key": "acceptance_scheme_scoring",
+          "topic_sources": [
+            "scoring"
+          ],
+          "source_locations": [
+            "评分细则：验收方案评分"
+          ],
+          "source_excerpts": [
+            "验收方案优的得满分。"
+          ],
+          "evidence_ids": [
+            "17fff143f23e"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "R-003"
+        ],
+        "source_candidate_titles": [
+          "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+        ],
+        "source_evidence_ids": [
+          "17fff143f23e"
+        ],
+        "source_topics": [
+          "scoring"
+        ],
+        "source_rule_tags": [
+          "compare_rule:R-003"
+        ],
+        "problem_group_key": "acceptance_scheme_scoring",
+        "problem_family_keys": [
+          "acceptance_scheme_scoring"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "scoring"
+        ],
+        "merged_family_keys": [
+          "acceptance_scheme_scoring"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "R-003",
+            "candidate_title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+            "family_key": "acceptance_scheme_scoring",
+            "topic_sources": [
+              "scoring"
+            ],
+            "source_locations": [
+              "评分细则：验收方案评分"
+            ],
+            "source_excerpts": [
+              "验收方案优的得满分。"
+            ],
+            "evidence_ids": [
+              "17fff143f23e"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "acceptance_scheme_scoring|将项目验收方案纳入评审因素，违反评审规则合规性要求|R-003|17fff143f23e"
+      }
+    },
+    {
+      "problem_id": "problem-3f704b5a8e2a",
+      "canonical_title": "评分规则明确不得将付款方式作为评审因素",
+      "family_key": "评分规则明确不得将付款方式作为评审因素",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::评分规则明确不得将付款方式作为评审因素",
+          "risk_family": "评分规则明确不得将付款方式作为评审因素",
+          "source_topics": [
+            "policy"
+          ],
+          "evidence_anchors": [
+            "a8c0e60eb087"
+          ],
+          "document_span": [
+            "评分规则总则"
+          ]
+        },
+        "family": {
+          "family_key": "评分规则明确不得将付款方式作为评审因素",
+          "canonical_title": "评分规则明确不得将付款方式作为评审因素",
+          "source_topics": [
+            "policy"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "评分规则明确不得将付款方式作为评审因素",
+          "canonical_title": "评分规则明确不得将付款方式作为评审因素"
+        },
+        "review_type": "评分规则一致性审查",
+        "severity": "中风险",
+        "source_locations": [
+          "评分规则总则"
+        ],
+        "source_excerpts": [
+          "付款周期、预付款比例等交易条件不得作为评分因素。"
+        ],
+        "risk_judgment": [
+          "评分规则已明确禁止。"
+        ],
+        "legal_basis": [
+          "评分因素不得与履约无关。"
+        ],
+        "rectification": [
+          "保持评分规则与评分细则一致。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "a8c0e60eb087"
+      ],
+      "topic_sources": [
+        "policy"
+      ],
+      "rule_ids": [
+        "topic::评分规则明确不得将付款方式作为评审因素"
+      ],
+      "merged_topic_sources": [
+        "policy"
+      ],
+      "merged_family_keys": [
+        "评分规则明确不得将付款方式作为评审因素"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::评分规则明确不得将付款方式作为评审因素",
+          "candidate_title": "评分规则明确不得将付款方式作为评审因素",
+          "family_key": "评分规则明确不得将付款方式作为评审因素",
+          "topic_sources": [
+            "policy"
+          ],
+          "source_locations": [
+            "评分规则总则"
+          ],
+          "source_excerpts": [
+            "付款周期、预付款比例等交易条件不得作为评分因素。"
+          ],
+          "evidence_ids": [
+            "a8c0e60eb087"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::评分规则明确不得将付款方式作为评审因素"
+        ],
+        "source_candidate_titles": [
+          "评分规则明确不得将付款方式作为评审因素"
+        ],
+        "source_evidence_ids": [
+          "a8c0e60eb087"
+        ],
+        "source_topics": [
+          "policy"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "评分规则明确不得将付款方式作为评审因素",
+        "problem_family_keys": [
+          "评分规则明确不得将付款方式作为评审因素"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "policy"
+        ],
+        "merged_family_keys": [
+          "评分规则明确不得将付款方式作为评审因素"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::评分规则明确不得将付款方式作为评审因素",
+            "candidate_title": "评分规则明确不得将付款方式作为评审因素",
+            "family_key": "评分规则明确不得将付款方式作为评审因素",
+            "topic_sources": [
+              "policy"
+            ],
+            "source_locations": [
+              "评分规则总则"
+            ],
+            "source_excerpts": [
+              "付款周期、预付款比例等交易条件不得作为评分因素。"
+            ],
+            "evidence_ids": [
+              "a8c0e60eb087"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "评分规则明确不得将付款方式作为评审因素|评分规则明确不得将付款方式作为评审因素|topic::评分规则明确不得将付款方式作为评审因素|a8c0e60eb087"
+      }
+    },
+    {
+      "problem_id": "problem-0395b1739c3f",
+      "canonical_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险",
+      "family_key": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+          "risk_family": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+          "source_topics": [
+            "scoring"
+          ],
+          "evidence_anchors": [
+            "4c4d39485862"
+          ],
+          "document_span": [
+            "评分细则：商务响应"
+          ]
+        },
+        "family": {
+          "family_key": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+          "canonical_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险",
+          "source_topics": [
+            "scoring"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险",
+          "canonical_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险"
+        },
+        "review_type": "评分因素合规性审查",
+        "severity": "中风险",
+        "source_locations": [
+          "评分细则：商务响应"
+        ],
+        "source_excerpts": [
+          "付款周期越短得分越高，预付款比例越高加分越多。"
+        ],
+        "risk_judgment": [
+          "评分细则实际按付款方式加分。"
+        ],
+        "legal_basis": [
+          "评分因素不得与履约无关。"
+        ],
+        "rectification": [
+          "删除付款条件评分。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "4c4d39485862"
+      ],
+      "topic_sources": [
+        "scoring"
+      ],
+      "rule_ids": [
+        "topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险"
+      ],
+      "merged_topic_sources": [
+        "scoring"
+      ],
+      "merged_family_keys": [
+        "评分项按付款周期加分-存在以付款方式作为评审因素的风险"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+          "candidate_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险",
+          "family_key": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+          "topic_sources": [
+            "scoring"
+          ],
+          "source_locations": [
+            "评分细则：商务响应"
+          ],
+          "source_excerpts": [
+            "付款周期越短得分越高，预付款比例越高加分越多。"
+          ],
+          "evidence_ids": [
+            "4c4d39485862"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险"
+        ],
+        "source_candidate_titles": [
+          "评分项按付款周期加分，存在以付款方式作为评审因素的风险"
+        ],
+        "source_evidence_ids": [
+          "4c4d39485862"
+        ],
+        "source_topics": [
+          "scoring"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+        "problem_family_keys": [
+          "评分项按付款周期加分-存在以付款方式作为评审因素的风险"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "scoring"
+        ],
+        "merged_family_keys": [
+          "评分项按付款周期加分-存在以付款方式作为评审因素的风险"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+            "candidate_title": "评分项按付款周期加分，存在以付款方式作为评审因素的风险",
+            "family_key": "评分项按付款周期加分-存在以付款方式作为评审因素的风险",
+            "topic_sources": [
+              "scoring"
+            ],
+            "source_locations": [
+              "评分细则：商务响应"
+            ],
+            "source_excerpts": [
+              "付款周期越短得分越高，预付款比例越高加分越多。"
+            ],
+            "evidence_ids": [
+              "4c4d39485862"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "评分项按付款周期加分-存在以付款方式作为评审因素的风险|评分项按付款周期加分，存在以付款方式作为评审因素的风险|topic::评分项按付款周期加分-存在以付款方式作为评审因素的风险|4c4d39485862"
+      }
+    },
+    {
+      "problem_id": "problem-4214a89e2fca",
+      "canonical_title": "评分规则要求技术参数中的实质性要求以“★”标示",
+      "family_key": "评分规则要求技术参数中的实质性要求以-标示",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::评分规则要求技术参数中的实质性要求以-标示",
+          "risk_family": "评分规则要求技术参数中的实质性要求以-标示",
+          "source_topics": [
+            "policy"
+          ],
+          "evidence_anchors": [
+            "92a733d3fba5"
+          ],
+          "document_span": [
+            "评分规则总则"
+          ]
+        },
+        "family": {
+          "family_key": "评分规则要求技术参数中的实质性要求以-标示",
+          "canonical_title": "评分规则要求技术参数中的实质性要求以“★”标示",
+          "source_topics": [
+            "policy"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "评分规则要求技术参数中的实质性要求以“★”标示",
+          "canonical_title": "评分规则要求技术参数中的实质性要求以“★”标示"
+        },
+        "review_type": "评分规则一致性审查",
+        "severity": "中风险",
+        "source_locations": [
+          "评分规则总则"
+        ],
+        "source_excerpts": [
+          "技术参数中的实质性要求应以“★”标示。"
+        ],
+        "risk_judgment": [
+          "规则说明了标示方式。"
+        ],
+        "legal_basis": [
+          "应保证评审规则清晰。"
+        ],
+        "rectification": [
+          "保持规则说明与正文一致。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "92a733d3fba5"
+      ],
+      "topic_sources": [
+        "policy"
+      ],
+      "rule_ids": [
+        "topic::评分规则要求技术参数中的实质性要求以-标示"
+      ],
+      "merged_topic_sources": [
+        "policy"
+      ],
+      "merged_family_keys": [
+        "评分规则要求技术参数中的实质性要求以-标示"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::评分规则要求技术参数中的实质性要求以-标示",
+          "candidate_title": "评分规则要求技术参数中的实质性要求以“★”标示",
+          "family_key": "评分规则要求技术参数中的实质性要求以-标示",
+          "topic_sources": [
+            "policy"
+          ],
+          "source_locations": [
+            "评分规则总则"
+          ],
+          "source_excerpts": [
+            "技术参数中的实质性要求应以“★”标示。"
+          ],
+          "evidence_ids": [
+            "92a733d3fba5"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::评分规则要求技术参数中的实质性要求以-标示"
+        ],
+        "source_candidate_titles": [
+          "评分规则要求技术参数中的实质性要求以“★”标示"
+        ],
+        "source_evidence_ids": [
+          "92a733d3fba5"
+        ],
+        "source_topics": [
+          "policy"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "评分规则要求技术参数中的实质性要求以-标示",
+        "problem_family_keys": [
+          "评分规则要求技术参数中的实质性要求以-标示"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "policy"
+        ],
+        "merged_family_keys": [
+          "评分规则要求技术参数中的实质性要求以-标示"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::评分规则要求技术参数中的实质性要求以-标示",
+            "candidate_title": "评分规则要求技术参数中的实质性要求以“★”标示",
+            "family_key": "评分规则要求技术参数中的实质性要求以-标示",
+            "topic_sources": [
+              "policy"
+            ],
+            "source_locations": [
+              "评分规则总则"
+            ],
+            "source_excerpts": [
+              "技术参数中的实质性要求应以“★”标示。"
+            ],
+            "evidence_ids": [
+              "92a733d3fba5"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "评分规则要求技术参数中的实质性要求以-标示|评分规则要求技术参数中的实质性要求以“★”标示|topic::评分规则要求技术参数中的实质性要求以-标示|92a733d3fba5"
+      }
+    },
+    {
+      "problem_id": "problem-9943e20b5dbf",
+      "canonical_title": "技术参数过细且特征化，存在指向性风险",
+      "family_key": "technical_over_specific",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "topic::technical_over_specific",
+          "risk_family": "technical_over_specific",
+          "source_topics": [
+            "technical"
+          ],
+          "evidence_anchors": [
+            "7080bd9f3fbb"
+          ],
+          "document_span": [
+            "技术参数A"
+          ]
+        },
+        "family": {
+          "family_key": "technical_over_specific",
+          "canonical_title": "技术参数过细且特征化，存在指向性风险",
+          "source_topics": [
+            "technical"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "技术参数过细且特征化，存在指向性风险",
+          "canonical_title": "技术参数过细且特征化，存在指向性风险"
+        },
+        "review_type": "技术参数倾向性",
+        "severity": "中风险",
+        "source_locations": [
+          "技术参数A"
+        ],
+        "source_excerpts": [
+          "尺寸公差±5mm，拉手规格123*28*22mm。"
+        ],
+        "risk_judgment": [
+          "参数过细。"
+        ],
+        "legal_basis": [
+          "不得以过细参数指向特定产品。"
+        ],
+        "rectification": [
+          "放宽非关键参数。"
+        ],
+        "source_rules": [
+          "topic"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [],
+      "evidence_ids": [
+        "7080bd9f3fbb"
+      ],
+      "topic_sources": [
+        "technical"
+      ],
+      "rule_ids": [
+        "topic::technical_over_specific"
+      ],
+      "merged_topic_sources": [
+        "technical"
+      ],
+      "merged_family_keys": [
+        "technical_over_specific"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::technical_over_specific",
+          "candidate_title": "技术参数过细且特征化，存在指向性风险",
+          "family_key": "technical_over_specific",
+          "topic_sources": [
+            "technical"
+          ],
+          "source_locations": [
+            "技术参数A"
+          ],
+          "source_excerpts": [
+            "尺寸公差±5mm，拉手规格123*28*22mm。"
+          ],
+          "evidence_ids": [
+            "7080bd9f3fbb"
+          ]
+        }
+      ],
+      "final_problem_resolution": {},
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "topic::technical_over_specific"
+        ],
+        "source_candidate_titles": [
+          "技术参数过细且特征化，存在指向性风险"
+        ],
+        "source_evidence_ids": [
+          "7080bd9f3fbb"
+        ],
+        "source_topics": [
+          "technical"
+        ],
+        "source_rule_tags": [
+          "topic"
+        ],
+        "problem_group_key": "technical_over_specific",
+        "problem_family_keys": [
+          "technical_over_specific"
+        ],
+        "problem_merge_reason": "",
+        "absorbed_supporting_titles": [],
+        "absorbed_supporting_rule_ids": [],
+        "merged_topic_sources": [
+          "technical"
+        ],
+        "merged_family_keys": [
+          "technical_over_specific"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::technical_over_specific",
+            "candidate_title": "技术参数过细且特征化，存在指向性风险",
+            "family_key": "technical_over_specific",
+            "topic_sources": [
+              "technical"
+            ],
+            "source_locations": [
+              "技术参数A"
+            ],
+            "source_excerpts": [
+              "尺寸公差±5mm，拉手规格123*28*22mm。"
+            ],
+            "evidence_ids": [
+              "7080bd9f3fbb"
+            ]
+          }
+        ],
+        "final_problem_resolution": {},
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "technical_over_specific|技术参数过细且特征化，存在指向性风险|topic::technical_over_specific|7080bd9f3fbb"
+      }
+    }
+  ]
+}

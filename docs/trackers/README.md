@@ -20,3 +20,5 @@
 
 - `v2-remediation-tracker.md`：V2 任务总台账
 - `v2-real-replay-issue-ledger.yaml`：真实文件问题级闭环单源
+- `v2-real-replay-baselines.yaml`：关键真实文件 replay 基线主配置
+- `v2-feedback-attribution-ledger.yaml`：反馈分层归因与整改建议主账本

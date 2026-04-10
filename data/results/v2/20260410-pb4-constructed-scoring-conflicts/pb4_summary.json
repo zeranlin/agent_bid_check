@@ -1,0 +1,18 @@
+{
+  "document_name": "constructed-scoring.docx",
+  "candidate_count": 6,
+  "problem_count_before_conflict": 6,
+  "problem_count_after_conflict": 4,
+  "formal_titles_after_admission": [
+    "技术参数过细且特征化，存在指向性风险",
+    "评分规则禁止将验收方案作为评审因素，但评分项实际纳入验收方案"
+  ],
+  "conflict_titles": [
+    "评分规则禁止将验收方案作为评审因素，但评分项实际纳入验收方案",
+    "评分规则禁止将付款方式作为评审因素，但评分项实际按付款条件加分"
+  ],
+  "standard_titles": [
+    "评分规则要求技术参数中的实质性要求以“★”标示",
+    "技术参数过细且特征化，存在指向性风险"
+  ]
+}
