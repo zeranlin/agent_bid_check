@@ -6,7 +6,7 @@ from typing import Any, Literal
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster
 
 
-GovernanceLayer = Literal["formal_risks", "pending_review_items", "excluded_risks"]
+CompareSourceBucket = Literal["formal_risks", "pending_review_items", "excluded_risks"]
 
 
 @dataclass
@@ -33,7 +33,6 @@ class RiskFamily:
 
 @dataclass
 class GovernanceDecision:
-    target_layer: GovernanceLayer
     governance_reason: str
     proposed_title: str
     canonical_title: str
@@ -82,26 +81,22 @@ class GovernanceInput:
 class GovernedResult:
     document_name: str
     input_summary: dict[str, Any] = field(default_factory=dict)
-    formal_risks: list[GovernedRisk] = field(default_factory=list)
-    pending_review_items: list[GovernedRisk] = field(default_factory=list)
-    excluded_risks: list[GovernedRisk] = field(default_factory=list)
+    governed_candidates: list[GovernedRisk] = field(default_factory=list)
 
     def iter_all(self) -> list[GovernedRisk]:
-        return [*self.formal_risks, *self.pending_review_items, *self.excluded_risks]
+        return list(self.governed_candidates)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "document_name": self.document_name,
             "input_summary": dict(self.input_summary),
-            "formal_risks": [item.to_dict() for item in self.formal_risks],
-            "pending_review_items": [item.to_dict() for item in self.pending_review_items],
-            "excluded_risks": [item.to_dict() for item in self.excluded_risks],
+            "governed_candidates": [item.to_dict() for item in self.governed_candidates],
         }
 
 
 @dataclass
 class GovernanceClusterEnvelope:
-    layer: GovernanceLayer
+    compare_source_bucket: CompareSourceBucket
     title: str
     review_type: str
     severity: str
@@ -119,7 +114,7 @@ class GovernanceClusterEnvelope:
     @classmethod
     def from_cluster(cls, cluster: MergedRiskCluster) -> "GovernanceClusterEnvelope":
         return cls(
-            layer="formal_risks",
+            compare_source_bucket="formal_risks",
             title=cluster.title,
             review_type=cluster.review_type,
             severity=cluster.severity,
@@ -133,4 +128,3 @@ class GovernanceClusterEnvelope:
             need_manual_review=cluster.need_manual_review,
             governance_reason="由 compare 层候选正式风险进入输出治理层，等待统一治理裁决。",
         )
-

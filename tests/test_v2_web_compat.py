@@ -438,6 +438,11 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
                     "medium_risk_titles": [],
                     "manual_review_titles": [],
                 },
+                "risk_admission": {
+                    "formal_risks": [{"title": "正式风险标题", "rule_id": "compare::formal-risk"}],
+                    "pending_review_items": [],
+                    "excluded_risks": [{"title": "已剔除项", "rule_id": "compare::excluded-risk"}],
+                },
                 "basis_summary": ["正式依据"],
                     "governance": {
                         "formal_risks": [
@@ -473,7 +478,7 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
     assert result["governed_output"]["formal_risks"][0]["decision"]["canonical_title"] == "正式风险标题"
 
 
-def test_load_result_by_run_id_blocks_ungoverned_output_from_product_cards(tmp_path: Path, monkeypatch) -> None:
+def test_load_result_by_run_id_falls_back_to_markdown_for_ungoverned_output(tmp_path: Path, monkeypatch) -> None:
     run_dir = tmp_path / "ungoverned-run"
     run_dir.mkdir()
     (run_dir / "review.md").write_text(
@@ -527,5 +532,21 @@ def test_load_result_by_run_id_blocks_ungoverned_output_from_product_cards(tmp_p
 
     assert result is not None
     assert result["output_admission"]["final_output_governed"] is False
-    assert result["review_view"]["all_cards"] == []
-    assert result["review_view"]["total"] == 0
+    assert result["review_view"]["all_cards"][0]["title"] == "旧标题"
+    assert result["review_view"]["total"] == 1
+    assert result["review_view"]["summary_counts"]["高风险"] == 1
+
+
+def test_is_governed_final_output_requires_risk_admission_layer() -> None:
+    assert _is_governed_final_output(
+        {
+            "formal_risks": [{"title": "正式风险标题"}],
+            "pending_review_items": [],
+            "excluded_risks": [],
+            "governance": {
+                "formal_risks": [{"family": {"family_key": "formal-risk"}}],
+                "pending_review_items": [],
+                "excluded_risks": [],
+            },
+        }
+    ) is False

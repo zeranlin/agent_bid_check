@@ -371,35 +371,7 @@ def _filter_and_sort_clusters(
     clusters: list[MergedRiskCluster],
     triggered_rule_codes: list[str],
 ) -> list[MergedRiskCluster]:
-    standard_codes_present = {
-        code for code in triggered_rule_codes if code in STANDARD_RULE_TITLES
-    }
-    standard_titles_present = {STANDARD_RULE_TITLES[code] for code in standard_codes_present}
-    standard_compare_titles_present = {
-        str(cluster.title).strip()
-        for cluster in clusters
-        if "compare_rule" in cluster.source_rules and str(cluster.title).strip() in standard_titles_present
-    }
-    filtered: list[MergedRiskCluster] = []
-    for cluster in clusters:
-        cluster_rule_code = _detect_standard_rule_code(cluster)
-        if cluster_rule_code:
-            if str(cluster.title).strip() in standard_compare_titles_present and "compare_rule" not in cluster.source_rules:
-                continue
-            filtered.append(_sanitize_deterministic_compare_rule_cluster(cluster))
-            continue
-        title = str(cluster.title).strip()
-        suppressed = False
-        for code, patterns in STANDARD_CLUSTER_SUPPRESSION_RULES.items():
-            if code not in standard_codes_present:
-                continue
-            if title in standard_titles_present:
-                continue
-            if any(pattern.search(title) for pattern in patterns):
-                suppressed = True
-                break
-        if not suppressed:
-            filtered.append(_sanitize_deterministic_compare_rule_cluster(cluster))
+    filtered = [_sanitize_deterministic_compare_rule_cluster(cluster) for cluster in clusters]
     filtered.sort(
         key=lambda cluster: (
             _detect_standard_rule_code(cluster) == "",
@@ -689,223 +661,26 @@ def _detect_template_placeholder_status(cluster: MergedRiskCluster) -> str:
 def _refine_clusters_for_maturity(
     clusters: list[MergedRiskCluster],
     topics: list[TopicReviewArtifact],
-) -> tuple[list[MergedRiskCluster], list[dict[str, object]], list[dict[str, object]]]:
+) -> list[MergedRiskCluster]:
     topic_map = _build_topic_signal_map(topics)
-    policy_signals = topic_map.get("policy", {}).get("structured_signals", {})
-    qualification_signals = topic_map.get("qualification", {}).get("structured_signals", {})
-    procedure_signals = topic_map.get("procedure", {}).get("structured_signals", {})
-    acceptance_signals = topic_map.get("acceptance", {}).get("structured_signals", {})
-    technical_signals = topic_map.get("technical_standard", {}).get("structured_signals", {})
-    contract_payment_signals = topic_map.get("contract_payment", {}).get("structured_signals", {})
-
-    merged_groups: dict[str, list[MergedRiskCluster]] = {}
     refined: list[MergedRiskCluster] = []
-    pending_review_items: list[dict[str, object]] = []
-    excluded_risks: list[dict[str, object]] = []
 
     for cluster in clusters:
-        title = str(cluster.title).strip()
-        excerpt = "\n".join(cluster.source_excerpts)
-        location = "；".join(cluster.source_locations)
-        signal_text = f"{title}\n{excerpt}\n{location}"
-
         template_placeholder_status = _detect_template_placeholder_status(cluster)
-        if template_placeholder_status == "explicit":
-            excluded_risks.append(
-                _build_excluded_item(
-                    cluster,
-                    "检测到合同/协议模板中的时限占位符，属于模板留白，不直接作为正式风险输出。",
-                )
-            )
-            continue
-        if template_placeholder_status == "pending":
-            pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
-            pending_review_items[-1]["reason"] = "检测到条款存在模板留白迹象，需结合是否为生效正文继续复核。"
-            continue
+        if template_placeholder_status and "模板留白迹象待后续层判断。" not in cluster.conflict_notes:
+            cluster.conflict_notes.append("模板留白迹象待后续层判断。")
+            cluster.need_manual_review = True
 
-        group_key = _cluster_group_key(title)
-        if group_key:
-            merged_groups.setdefault(group_key, []).append(cluster)
-            continue
-
-        if TITLE_CONTRACT_TEMPLATE_RE.search(title) or TITLE_CONTRACT_TEMPLATE_STRICT_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "证据来自合同模板区/仅供参考区，按边界规则不进入正式风险。"))
-            continue
-
-        if TITLE_INTERNAL_SCORE_WEIGHT_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "该结论主要基于评分项内部满分口径，未结合总分权重折算，不再作为正式风险输出。"))
-            continue
-
-        if TITLE_CERT_WEIGHT_RE.search(title):
-            cluster.title = "认证项权重偏高且与履约关联不足，存在倾向性评分风险"
-            cluster.risk_judgment = dedupe(
-                [
-                    "体系认证被赋予较高分值，容易形成“高分集中于证书齐备供应商”的评分导向。",
-                    "当前问题核心不在于小项满分写法，而在于认证项权重偏高且与项目履约能力的直接关联不足。"
-                ]
-                + cluster.risk_judgment
-            )
-            refined.append(cluster)
-            continue
-
-        if TITLE_SHORT_WINDOW_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "近三年左右的业绩窗口不默认认定为时间过短，本条先从正式风险中移除。"))
-            continue
-
-        if TITLE_POLICY_MISSING_RE.search(title) and (
-            policy_signals.get("policy_discount_present") or policy_signals.get("eco_policy_present")
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "已召回到价格扣除比例或节能环保政策条款，不再输出“政策缺失”类正式风险。"))
-            continue
-
-        if title == "中小企业扶持政策价格扣除比例缺失":
-            pending_review_items.append(_build_pending_item(cluster, "政策条款"))
-            pending_review_items[-1]["reason"] = "当前仅召回到中小企业政策语境和声明函指引，未稳定召回价格扣除比例缺失的硬证据，先转为待补证复核项。"
-            continue
-
-        if TITLE_POLICY_INCOMPLETE_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "政策条款"))
-            pending_review_items[-1]["reason"] = "当前更像政策配套表述是否完整的问题，证据不足以直接作为正式风险定性，先转为待补证复核项。"
-            continue
-
-        if TITLE_ECO_POLICY_MISSING_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "政策条款"))
-            pending_review_items[-1]["reason"] = "当前仅能确认节能环保政策章节召回不足，尚不足以直接认定为正式风险，先转为待补证复核项。"
-            continue
-
-        if TITLE_POLICY_GUIDANCE_RE.search(title) and (
-            policy_signals.get("policy_discount_present")
-            or policy_signals.get("announcement_reference_present")
-            or policy_signals.get("electronic_procurement_present")
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "当前属于政策填写指引或声明函边界说明场景，不再作为正式风险输出。"))
-            continue
-
-        if TITLE_CERT_MISSING_RE.search(title) and (
-            technical_signals.get("compliance_proof_present")
-            or qualification_signals.get("compliance_proof_present")
-            or acceptance_signals.get("compliance_proof_present")
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "已召回到合格证、3C、原产地证明等认证/证明条款，不再输出“认证缺失”类正式风险。"))
-            continue
-
-        if TITLE_ANNOUNCEMENT_RE.search(title) and (
-            procedure_signals.get("announcement_reference_present") or qualification_signals.get("announcement_reference_present")
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "该字段已明确承接招标公告或平台公告，属于公告承接信息，不单列为正式风险。"))
-            continue
-
-        if TITLE_IMPORT_ITSELF_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "“不接受进口产品”属于项目基线采购口径，本身不单列为正式风险。"))
-            continue
-
-        if TITLE_SOCIAL_SECURITY_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "当前属于合理例外说明场景，未见明显失衡或异常豁免，不作为正式风险。"))
-            continue
-
-        if TITLE_BOUNDARY_LIGHT_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "当前属于边界提示或承接字段场景，缺少高确定性项目规则依据，不作为正式风险。"))
-            continue
-
-        if TITLE_CREDIT_SCORING_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "当前更多属于诚信评分细则优化事项，未达到正式风险输出阈值。"))
-            continue
-
-        if TITLE_ACCEPTANCE_PARTICIPANT_RE.search(title):
-            excluded_risks.append(_build_excluded_item(cluster, "当前更多属于验收参与主体表述优化事项，不作为正式风险输出。"))
-            continue
-
-        if TITLE_BRAND_DISCLOSURE_RE.search(title) and (
-            qualification_signals.get("brand_disclosure_only_present") or "提供品牌、规格和型号" in signal_text
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "仅要求披露品牌、规格和型号，不等同于指定品牌或型号。"))
-            continue
-
-        if TITLE_DIMENSION_RE.search(title) and (
-            technical_signals.get("parameter_tolerance_present") or "允许偏差" in signal_text
-        ):
-            pending_review_items.append(_build_pending_item(cluster, "技术条款"))
-            pending_review_items[-1]["reason"] = "参数条款已给出允许偏差，缺少进一步排斥性证据，先降为人工复核提示。"
-            continue
-
-        excerpt_and_location = f"{excerpt}\n{location}"
-        if TITLE_THIRD_PARTY_TESTING_RE.search(title) and not re.search(r"(第三方检测|专项检测|法定检测)", excerpt_and_location):
-            excluded_risks.append(_build_excluded_item(cluster, "文件未明确存在第三方/专项/法定检测前置条件，不默认输出该类正式风险。"))
-            continue
-
-        if title == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险":
-            excluded_risks.append(_build_excluded_item(cluster, "已由更稳妥的“费用边界不清/潜在转嫁”主风险替代，不再重复保留旧标题。"))
-            continue
-
-        if TITLE_PAYMENT_REVIEW_RE.search(title):
-            if contract_payment_signals.get("payment_chain_complete"):
-                reason = "已召回到签约预付款、到货中间款和验收尾款的完整付款链路，不再保留该弱信号风险。"
-                payment_chain_sentences = contract_payment_signals.get("payment_chain_sentences", [])
-                if isinstance(payment_chain_sentences, list) and payment_chain_sentences:
-                    reason += " 关键付款节点：" + "；".join(str(item).strip() for item in payment_chain_sentences[:3] if str(item).strip())
-                excluded_risks.append(_build_excluded_item(cluster, reason))
-            else:
-                pending_review_items.append(_build_pending_item(cluster, "付款与履约"))
-                pending_review_items[-1]["reason"] = "付款链路尚需结合预付款、中间款、尾款和最长账期整体复核，先降为待补证复核项。"
-            continue
-
-        if TITLE_GENERIC_SCORING_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "评分办法"))
-            pending_review_items[-1]["reason"] = "当前更多体现为分值关联性或权重合理性待核查，证据不足以直接作为正式风险定性。"
-            continue
-
-        if TITLE_ELECTRONIC_SIGNATURE_RE.search(title) and (
-            procedure_signals.get("electronic_procurement_present") or policy_signals.get("electronic_procurement_present")
-        ):
-            excluded_risks.append(_build_excluded_item(cluster, "当前为电子化平台场景，声明函不单独签字盖章不默认作为正式风险。"))
-            continue
-
-        if TITLE_SERVICE_SCORING_RE.search(title):
-            cluster.title = "售后服务评分基线高于需求基线且分档陡峭，可能导致过度承诺和竞争不均衡"
-            if not cluster.source_excerpts or _is_poor_excerpt(cluster.source_excerpts[0]):
-                cluster.source_excerpts = [
-                    "承诺在接到采购人通知后，能够在1小时内到达现场处理问题的得100分，1.5小时内得50分，其他情况不得分。"
-                ]
-            cluster.risk_judgment = dedupe(
-                [
-                    "商务要求与评分要求之间存在更严的响应时效分档，可能导致评分基线高于履约基线。",
-                    "评分分档陡峭，容易诱发过度承诺，并对服务半径不利的供应商形成不利影响。"
-                ]
-                + cluster.risk_judgment
-            )
-            refined.append(cluster)
-            continue
-
-        if TITLE_TRUNCATED_EVIDENCE_RE.search(title) or _is_poor_excerpt(cluster.source_excerpts[0] if cluster.source_excerpts else ""):
-            if TITLE_PENDING_QUALIFICATION_RE.search(title) or TITLE_PENDING_WASTE_RE.search(title):
-                pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
-                continue
-            excluded_risks.append(_build_excluded_item(cluster, "原文摘录为空或明显截断，证据质量不足，不进入正式风险。"))
-            continue
-
-        if TITLE_PENDING_QUALIFICATION_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "资格条件"))
-            pending_review_items[-1]["reason"] = "资格条件全文未完整召回，当前仅保留为待补证复核项。"
-            continue
-
-        if TITLE_PENDING_EVIDENCE_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"))
-            pending_review_items[-1]["reason"] = "当前属于证据召回不足或承接字段未完整展开场景，先转为待补证复核项。"
-            continue
-
-        if TITLE_PENDING_WASTE_RE.search(title):
-            pending_review_items.append(_build_pending_item(cluster, "程序条款"))
-            pending_review_items[-1]["reason"] = "当前未检到对应原文证据，先转为待补证复核项。"
-            continue
+        title = str(cluster.title).strip()
+        if (
+            TITLE_TRUNCATED_EVIDENCE_RE.search(title)
+            or _is_poor_excerpt(cluster.source_excerpts[0] if cluster.source_excerpts else "")
+        ) and "证据摘录质量一般，待后续层复核。" not in cluster.conflict_notes:
+            cluster.conflict_notes.append("证据摘录质量一般，待后续层复核。")
+            cluster.need_manual_review = True
 
         if cluster.severity == "需人工复核":
-            topic_hint = _clean_topic_label(cluster.topics[0]) if cluster.topics else "专题"
-            if TITLE_CONTRACT_TEMPLATE_RE.search(title) or TITLE_CONTRACT_TEMPLATE_STRICT_RE.search(title):
-                excluded_risks.append(_build_excluded_item(cluster, "当前仅形成模板区占位或缺失提示，不进入正式风险。"))
-            else:
-                pending_review_items.append(_build_pending_item(cluster, topic_hint))
-                pending_review_items[-1]["reason"] = "当前专题已标记需人工复核，暂不作为正式风险输出。"
-            continue
+            cluster.need_manual_review = True
 
         if TITLE_ORIGINAL_ENGINEER_RE.search(title):
             cluster.risk_judgment = dedupe(
@@ -929,20 +704,7 @@ def _refine_clusters_for_maturity(
                 + cluster.risk_judgment
             )
 
-        if TITLE_ACCEPTANCE_STANDARD_RE.search(title):
-            cluster.title = "验收标准来源表述不清，容易引发验收依据理解歧义"
-            cluster.risk_judgment = dedupe(
-                [
-                    "条款将验收方案、验收标准和实施办法一并要求由中标人提出，容易让供应商误解验收标准来源边界。"
-                ]
-                + cluster.risk_judgment
-            )
-
         refined.append(cluster)
-
-    for group_key, group_clusters in merged_groups.items():
-        merged_cluster = _merge_cluster_group(group_key, group_clusters)
-        refined.append(merged_cluster)
 
     refined.sort(
         key=lambda cluster: (
@@ -952,7 +714,7 @@ def _refine_clusters_for_maturity(
             str(cluster.title),
         )
     )
-    return refined, pending_review_items, excluded_risks
+    return refined
 
 
 def _build_cross_topic_policy_technical_cluster(
@@ -2211,7 +1973,7 @@ def compare_review_artifacts(
 
     clusters = [_build_cluster(f"cluster-{index}", items) for index, items in enumerate(grouped.values(), start=1)]
     clusters = _filter_and_sort_clusters(clusters, triggered_rule_codes)
-    clusters, pending_review_items, excluded_risks = _refine_clusters_for_maturity(clusters, topics)
+    clusters = _refine_clusters_for_maturity(clusters, topics)
     conflicts = [
         {
             "cluster_id": cluster.cluster_id,
@@ -2322,8 +2084,8 @@ def compare_review_artifacts(
         "manual_review_count": len(dedupe(manual_review_items)),
         "duplicate_reduction": max(len(signatures) - len(clusters), 0),
         "triggered_rule_codes": triggered_rule_codes,
-        "pending_review_count": len(pending_review_items),
-        "excluded_risk_count": len(excluded_risks),
+        "pending_review_count": 0,
+        "excluded_risk_count": 0,
     }
 
     return ComparisonArtifact(
@@ -2355,8 +2117,8 @@ def compare_review_artifacts(
             "specific_cert_or_supplier_score_linked": specific_cert_or_supplier_score_linked,
             "acceptance_testing_cost_forbidden_to_bidder": acceptance_testing_cost_forbidden_to_bidder,
             "acceptance_testing_cost_shifted_to_bidder": acceptance_testing_cost_shifted_to_bidder,
-            "pending_review_items": pending_review_items,
-            "excluded_risks": excluded_risks,
+            "pending_review_items": [],
+            "excluded_risks": [],
         },
     )
 

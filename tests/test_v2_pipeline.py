@@ -150,7 +150,7 @@ def test_build_v2_final_output_uses_comparison_as_single_source() -> None:
         clusters=[
             MergedRiskCluster(
                 cluster_id="cluster-1",
-                title="正式风险标题",
+                title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
                 severity="高风险",
                 review_type="类型A",
                 source_locations=["第一章"],
@@ -158,6 +158,7 @@ def test_build_v2_final_output_uses_comparison_as_single_source() -> None:
                 risk_judgment=["正式判断"],
                 legal_basis=["正式依据"],
                 rectification=["正式建议"],
+                source_rules=["compare_rule:R-003"],
             )
         ],
         metadata={
@@ -174,12 +175,12 @@ def test_build_v2_final_output_uses_comparison_as_single_source() -> None:
         comparison=artifact,
     )
 
-    assert [item["title"] for item in final_output["formal_risks"]] == ["正式风险标题"]
-    assert final_output["summary"]["high_risk_titles"] == ["正式风险标题"]
+    assert [item["title"] for item in final_output["formal_risks"]] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
+    assert final_output["summary"]["high_risk_titles"] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
     assert final_output["summary"]["manual_review_titles"] == ["待补证项"]
     assert [item["title"] for item in final_output["excluded_risks"]] == ["已剔除项"]
     assert "governance" in final_output
-    assert final_output["governance"]["formal_risks"][0]["decision"]["canonical_title"] == "正式风险标题"
+    assert final_output["governance"]["governed_candidates"][0]["decision"]["canonical_title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
 
 
 def test_topic_taxonomy_and_active_topics_contract() -> None:
@@ -851,18 +852,18 @@ def test_assemble_v2_report_merges_topic_risks() -> None:
 说明：
 - 本审查基于你提供的招标文件文本进行。
 
-## 风险点1：资格条件不合理
+## 风险点1：将项目验收方案纳入评审因素，违反评审规则合规性要求
 
 - 问题定性：高风险
-- 审查类型：资格条件
+- 审查类型：评分因素合规性审查
 - 原文位置：第一章
-- 原文摘录：要求成立满五年
+- 原文摘录：验收方案优的得满分
 - 风险判断：
-  - 可能限制竞争
+  - 验收方案被直接作为评分条件
 - 法律/政策依据：
-  - 《政府采购法》第二十二条
+  - 评审因素应与采购需求和合同履约相关
 - 整改建议：
-  - 删除成立年限要求
+  - 删除验收方案评分项
 """.strip(),
     )
     structure = V2StageArtifact(
@@ -875,14 +876,14 @@ def test_assemble_v2_report_merges_topic_risks() -> None:
         summary="发现标准引用细节风险。",
         risk_points=[
             RiskPoint(
-                title="标准名称与编号不一致",
+                title="技术参数存在错误或异常标准引用，可能导致技术要求失真",
                 severity="中风险",
                 review_type="技术参数/标准引用",
                 source_location="第三章 技术要求",
-                source_excerpt="满足人造草 GB36246-2018 标准",
-                risk_judgment=["标准名称与编号对应关系不清。"],
-                legal_basis=["需人工复核"],
-                rectification=["核对标准全称并统一表述。"],
+                source_excerpt="符合GB 48001-2026《汽车车门把手安全技术要求》标准中的要求。",
+                risk_judgment=["家具采购中引用汽车车门把手标准，属于明显错误或异常标准引用。"],
+                legal_basis=["技术标准应准确。"],
+                rectification=["修正错误标准引用。"],
             )
         ],
         need_manual_review=False,
@@ -890,8 +891,8 @@ def test_assemble_v2_report_merges_topic_risks() -> None:
     )
 
     result = assemble_v2_report("sample.docx", baseline, structure, [technical_topic])
-    assert "## 风险点1：资格条件不合理" in result
-    assert "## 风险点2：标准名称与编号不一致" in result
+    assert "## 风险点1：将项目验收方案纳入评审因素，违反评审规则合规性要求" in result
+    assert "## 风险点2：技术参数存在错误或异常标准引用，可能导致技术要求失真" in result
     assert "本报告结合全文直审、结构增强与专题深审生成。" in result
 
 

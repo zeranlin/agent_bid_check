@@ -544,10 +544,15 @@ def _is_governed_final_output(final_output: dict) -> bool:
     if not isinstance(final_output, dict):
         return False
     governance = final_output.get("governance")
+    risk_admission = final_output.get("risk_admission")
     if not isinstance(governance, dict):
+        return False
+    if not isinstance(risk_admission, dict):
         return False
     required = {"formal_risks", "pending_review_items", "excluded_risks"}
     if not required.issubset(governance.keys()):
+        return False
+    if not required.issubset(risk_admission.keys()):
         return False
     family_layers: dict[str, set[str]] = {}
     for layer in required:
@@ -563,6 +568,10 @@ def _is_governed_final_output(final_output: dict) -> bool:
             family_layers.setdefault(family, set()).add(layer)
     if any(len(layers) > 1 for layers in family_layers.values()):
         return False
+    for layer in required:
+        admitted_items = risk_admission.get(layer, [])
+        if not isinstance(admitted_items, list):
+            return False
     return isinstance(final_output.get("formal_risks", []), list)
 
 
@@ -748,7 +757,7 @@ def load_result_by_run_id(run_id: str) -> dict | None:
     review_view = (
         build_review_view_from_final_output(final_output, comparison)
         if output_admission["final_output_governed"]
-        else build_review_view(parse_review_markdown(""), comparison=None)
+        else build_review_view(report, comparison)
     )
     return {
         "run_id": run_id,
