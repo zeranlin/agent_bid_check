@@ -1,0 +1,97 @@
+batch_id: RC003-SAMPLES-2026-04-08-001
+candidate_id: RC-003
+source_name: RC-003 行业化证据边界建模样本集
+source_description: 面向柴油发电机组、机电安装、配套设备采购三类场景的正样本、负样本与边界样本
+positive_samples:
+  - sample_id: RC003-P-001
+    procurement_object: 柴油发电机组及附属安装
+    procurement_scene: 设备采购+安装调试
+    qualification_name: 农作物种子生产经营许可证
+    qualification_usage: 资格条件
+    demand_relevance: 相关性不足
+    industry_match_level: 明显错配
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 与柴油发电机组交付、安装、调试无直接关系，属于明显跨行业错配
+  - sample_id: RC003-P-002
+    procurement_object: 配电柜及柴油发电机组配套设备
+    procurement_scene: 配套设备采购
+    qualification_name: 旅行社业务经营许可证
+    qualification_usage: 合格供应商条件
+    demand_relevance: 相关性不足
+    industry_match_level: 明显错配
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 与设备采购履约毫无直接关联，属于明显错配
+  - sample_id: RC003-P-003
+    procurement_object: 机电设备安装项目
+    procurement_scene: 安装实施
+    qualification_name: 食品经营许可证
+    qualification_usage: 资格审查依据
+    demand_relevance: 相关性不足
+    industry_match_level: 明显错配
+    evidence_sufficiency: 证据充分
+    decision_layer: 正式风险
+    rationale: 与安装实施场景无关，且无行业特殊依据可解释
+negative_samples:
+  - sample_id: RC003-N-001
+    procurement_object: 柴油发电机组及相关配套机电设备
+    procurement_scene: 设备采购+安装调试
+    qualification_name: 建筑机电安装工程专业承包三级或以上资质
+    qualification_usage: 设备安装要求
+    demand_relevance: 与履约直接相关
+    industry_match_level: 行业匹配
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 直接对应安装实施场景，属于行业常见合理要求
+  - sample_id: RC003-N-002
+    procurement_object: 柴油发电机组安装实施
+    procurement_scene: 安装实施+项目管理
+    qualification_name: 机电工程专业二级或以上建造师资质证书
+    qualification_usage: 项目负责人任职要求
+    demand_relevance: 与履约直接相关
+    industry_match_level: 行业匹配
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 与机电安装项目负责人职责直接相关
+  - sample_id: RC003-N-003
+    procurement_object: 涉及高压接电的机电安装项目
+    procurement_scene: 设备安装+电气接入
+    qualification_name: 特种作业操作证（高压电工作业）
+    qualification_usage: 现场作业人员要求
+    demand_relevance: 与履约直接相关
+    industry_match_level: 行业匹配
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    rationale: 对应明确电气接入场景，存在直接履约关联
+boundary_samples:
+  - sample_id: RC003-B-001
+    procurement_object: 柴油发电机组及机房配套改造
+    procurement_scene: 设备采购+可能涉及施工改造
+    qualification_name: 安全生产许可证
+    qualification_usage: 资格条件
+    demand_relevance: 间接相关
+    industry_match_level: 跨行业疑似错配
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 若仅为货物采购则偏强，若包含施工改造则可能合理，需补场景证据
+  - sample_id: RC003-B-002
+    procurement_object: 柴油发电机组控制系统及附属配套
+    procurement_scene: 配套设备采购+可能涉及系统集成
+    qualification_name: 电子与智能化工程专业承包二级资质
+    qualification_usage: 合格供应商条件
+    demand_relevance: 间接相关
+    industry_match_level: 跨行业疑似错配
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 若涉及控制系统集成可能有一定关联，需结合技术边界再判断
+  - sample_id: RC003-B-003
+    procurement_object: 柴油发电机组及机房附属设施
+    procurement_scene: 设备采购+可能涉及消防联动
+    qualification_name: 消防设施工程专业承包二级资质
+    qualification_usage: 资格审查依据
+    demand_relevance: 间接相关
+    industry_match_level: 跨行业疑似错配
+    evidence_sufficiency: 证据一般
+    decision_layer: 待补证
+    rationale: 若仅设备采购则偏离需求，若含消防联动改造则可能存在合理性

@@ -1,0 +1,99 @@
+candidate_id: RC-003
+model_version: 1
+task_id: Task-G12
+source_rule_text: 不得设置与需求不相符的资质要求
+industry_scope:
+  - 柴油发电机组
+  - 机电安装
+  - 配套设备采购
+required_fields:
+  - procurement_object
+  - procurement_scene
+  - qualification_name
+  - qualification_usage
+  - demand_relevance
+  - industry_match_level
+  - evidence_sufficiency
+  - decision_layer
+field_definitions:
+  procurement_object: 采购标的，应落到设备、系统或服务对象本身
+  procurement_scene: 采购场景，应说明是纯设备采购、安装实施、调试验收还是配套改造
+  qualification_name: 被要求的企业资质、资格、许可或执业证照名称
+  qualification_usage: 文件中该资质的使用方式，如资格条件、合格供应商条件、审查依据
+  demand_relevance:
+    - 与履约直接相关
+    - 间接相关
+    - 相关性不足
+  industry_match_level:
+    - 行业匹配
+    - 跨行业疑似错配
+    - 明显错配
+  evidence_sufficiency:
+    - 证据充分
+    - 证据一般
+    - 证据不足
+  decision_layer:
+    - 正式风险
+    - 待补证
+    - 排除
+direct_relevance_reference:
+  柴油发电机组:
+    - 建筑机电安装工程专业承包资质
+    - 机电工程专业建造师资格
+    - 与安装、调试、并网、接电直接相关的法定许可或作业资格
+  机电安装:
+    - 建筑机电安装工程专业承包资质
+    - 安全生产许可证（限施工实施场景明确时）
+    - 特种作业操作证（限高压接电、高处作业等场景明确时）
+  配套设备采购:
+    - 与特定设备法定销售、安装、维修许可直接相关的资质
+    - 与交付、调试、验收职责直接对应的行业常见资质
+obvious_mismatch_reference:
+  - 农作物种子生产经营许可证
+  - 旅行社业务经营许可证
+  - 食品经营许可证
+  - 出版物经营许可证
+pending_review_reference:
+  - 安全生产标准化证书
+  - 安全生产许可证（当项目是否属于施工实施场景不清时）
+  - 消防设施工程专业承包资质（当是否包含消防联动改造不清时）
+  - 电子与智能化工程专业承包资质（当是否包含控制系统集成不清时）
+decision_layers:
+  - 正式风险
+  - 待补证
+  - 排除
+decision_rules:
+  formal_risk:
+    prerequisites:
+      - procurement_object_and_scene_clear
+      - qualification_usage_is_gate
+      - evidence_sufficiency_is_sufficient
+    triggers:
+      - demand_relevance_is_low
+      - industry_match_level_is_obvious_mismatch
+    output_rule: 采购标的和场景清晰，资质要求明显跨行业或与履约无直接关联，可直接落正式风险
+  pending_review:
+    prerequisites:
+      - qualification_usage_is_gate
+    triggers:
+      - demand_relevance_is_indirect
+      - industry_match_level_is_suspected_mismatch
+      - industry_special_basis_may_exist
+      - evidence_sufficiency_is_general
+    output_rule: 仅能看出相关性偏弱或场景不完整时，先落待补证
+  exclude:
+    triggers:
+      - demand_relevance_is_direct
+      - industry_match_level_is_match
+      - qualification_name_is_unfamiliar_but_scene_supports_it
+      - evidence_sufficiency_is_insufficient_for_mismatch
+    output_rule: 存在合理履约关联或仅凭字面陌生无法证明错配时，直接排除
+judgment_flow:
+  - 先确认 procurement_object 与 procurement_scene 是否足以描述采购边界
+  - 再确认 qualification_name 是否被用作资格门槛或审查依据
+  - 再判断 demand_relevance 与 industry_match_level
+  - 最后结合 evidence_sufficiency 决定落入 正式风险 / 待补证 / 排除
+non_goals:
+  - 不直接升级为全国通用正式规则
+  - 不以资质名称陌生作为正式风险依据
+  - 不在未识别采购场景前直接判定错配

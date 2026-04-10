@@ -1,0 +1,45 @@
+candidate_id: RC-003
+task_id: Task-G12
+real_replay:
+  target_file: /Users/linzeran/code/2026-zn/test_target/zf/埋点测试案例和结果/[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx
+  procurement_object: 柴油发电机组及相关配套机电设备采购及安装项目
+  observed_qualification:
+    procurement_object: 柴油发电机组及相关配套机电设备
+    procurement_scene: 设备采购+安装调试
+    qualification_name: 建筑机电安装工程专业承包三级或以上资质
+    qualification_usage: 设备安装要求
+    demand_relevance: 与履约直接相关
+    industry_match_level: 行业匹配
+    evidence_sufficiency: 证据充分
+    decision_layer: 排除
+    evidence_excerpt: 投标人需具备建筑机电安装工程专业承包三级或以上资质
+  summary: 当前柴油真实文件中识别到的安装类资质要求与采购场景直接相关，不支持“资质与需求错配”正式风险结论
+industry_replay:
+  source_batch: rules/candidates/imports/rc003_industry_samples_2026-04-08.yaml
+  decision_counts:
+    正式风险: 3
+    待补证: 3
+    排除: 3
+  false_positive_observation: 合理的机电安装、建造师、高压电工作业要求均被压在排除层，未被误升级为正式风险
+  false_negative_observation: 明显跨行业错配样本可稳定落入正式风险层
+  boundary_observation: 安全生产许可证、电子与智能化、消防设施等场景依赖项被保留在待补证层，避免直接判死
+upgrade_recommendation:
+  candidate_id: RC-003
+  recommend_r013: false
+  recommendation_reason: 当前证据模型已能在三类行业场景内稳定区分正式风险、待补证和排除，但行业覆盖仍局限于柴油发电机组、机电安装和配套设备采购，尚不足以直接升级为全国通用正式规则
+  current_blockers:
+    - 跨行业样本仍偏少，尚未覆盖医疗、信息化、后勤服务等高差异行业
+    - 边界样本对法定许可、行业惯例和施工/货物混合场景的外延还需继续补强
+    - 真实文件回放目前只证明误报可控，尚缺明确命中的真实正式风险样本
+  proposed_r013_draft:
+    rule_name: 资质要求与采购需求明显错配
+    trigger_conditions:
+      - 采购标的和采购场景能够明确识别
+      - 资质要求被用作资格条件、合格供应商条件或资格审查依据
+      - 资质要求与履约无直接关联，且存在明显跨行业错配
+      - 证据足以支撑“需求与资质错配”结论
+    exclude_conditions:
+      - 资质要求与安装实施、调试验收或法定许可存在直接履约关联
+      - 当前仅因资质名称陌生或字面不直观，尚不足以认定不相符
+      - 项目场景不清，仍可能存在行业特殊依据
+    formal_title: 资质要求与采购需求明显错配，存在设置不当准入门槛风险
