@@ -255,6 +255,25 @@ def call_chat_completion_stream(
     timeout: int,
     on_text: Callable[[str], None] | None = None,
 ) -> dict:
+    # Some Qwen-compatible gateways keep streaming `reasoning` deltas for a long time
+    # and may not yield usable `content` chunks promptly. Fall back to non-streaming
+    # requests on that path so document reviews can complete reliably.
+    if "qwen" in model.lower():
+        response = call_chat_completion(
+            base_url=base_url,
+            model=model,
+            api_key=api_key,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+        )
+        text = extract_response_text(response) or ""
+        if text and on_text:
+            on_text(text)
+        return response
+
     url = base_url.rstrip("/") + "/chat/completions"
     body = {
         "model": model,
@@ -337,4 +356,3 @@ def extract_response_text(response: dict) -> str | None:
         if text:
             return text
     return None
-
