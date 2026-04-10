@@ -1,0 +1,11 @@
+{
+  "run_id": "20260408-160449-f038dc8f",
+  "created_at": "2026-04-08T16:04:49",
+  "original_filename": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "saved_filename": "20260408-155839-6a350a-SZDL2025000495-A-0330.docx",
+  "base_url": "http://112.111.54.86:10011/v1",
+  "model": "qwen3.5-27b",
+  "config_path": "/Users/linzeran/code/2026-zn/test_getst/data/config/review_v2.json",
+  "pipeline": "v2",
+  "topic_mode": "mature"
+}

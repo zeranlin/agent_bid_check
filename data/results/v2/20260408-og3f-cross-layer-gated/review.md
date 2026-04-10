@@ -6,7 +6,7 @@
 - 本审查基于你提供的招标文件文本进行。
 - 本报告结合全文直审、结构增强与专题深审生成。
 - 结构增强层共识别 249 个候选章节，并按模块进行召回。
-- 以下专题仍建议人工复核：acceptance, contract_payment, performance_staff, policy, procedure, qualification, technical_bias。
+- 以下专题仍建议人工复核：qualification, performance_staff, technical_bias, contract_payment, acceptance, procedure, policy。
 - 下述“风险判断”系合规审查意见，不等同于行政机关最终认定。
 
 ---

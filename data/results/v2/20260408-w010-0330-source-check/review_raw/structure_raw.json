@@ -8,7 +8,7 @@
     "再为章节分配可能模块",
     "后续专题深审只召回最相关的章节和片段"
   ],
-  "structure_llm_used": false,
+  "structure_llm_used": true,
   "structure_fallback_used": false,
   "sections": [
     {
@@ -17,23 +17,36 @@
       "end_line": 16,
       "body": "柴油发电机组及相关配套机电设备采购及安装项目\n招标文件信息\n\n项目编号：\nSZDL2025000495\n项目名称：\n柴油发电机组及相关配套机电设备采购及安装项目\n包  号：\nA\n项目类型：\n货物类\n采购方式：\n公开招标\n货币类型：\n人民币\n评标方法：",
       "excerpt": "柴油发电机组及相关配套机电设备采购及安装项目\n招标文件信息\n\n项目编号：\nSZDL2025000495\n项目名称：\n柴油发电机组及相关配套机电设备采购及安装项目\n包  号：\nA\n项目类型：\n货物类\n采购方式：\n公开招标\n货币类型：\n人民币\n评标方法：",
-      "module": "scoring",
+      "module": "procedure",
       "module_scores": {
-        "qualification": 0,
+        "procedure": 10,
         "scoring": 1,
+        "qualification": 0,
         "contract": 0,
         "acceptance": 0,
         "technical": 0,
-        "procedure": 0,
         "policy": 0
       },
-      "confidence": 1,
+      "confidence": 10,
       "keywords": [
-        "评标"
+        "项目编号",
+        "采购方式",
+        "公开招标"
       ],
       "heading_level": 0,
-      "source": "rule_split",
+      "source": "llm_refined",
       "module_hits": [
+        {
+          "module": "procedure",
+          "score": 0.95,
+          "source": "llm_refine",
+          "reason": "包含项目编号、采购方式等招标基本信息，属于程序性概述。",
+          "evidence_keywords": [
+            "项目编号",
+            "采购方式",
+            "公开招标"
+          ]
+        },
         {
           "module": "scoring",
           "score": 1.0,
@@ -463,28 +476,34 @@
       "excerpt": "一、评审内容：\n投标人提供的安装、检测、验收、培训计划,包括但不限于：\n1.提供安装计划安排；\n2.提供检测计划安排；",
       "module": "scoring",
       "module_scores": {
-        "qualification": 0,
-        "scoring": 4,
-        "contract": 0,
+        "scoring": 9,
         "acceptance": 3,
-        "technical": 0,
         "procedure": 1,
+        "qualification": 0,
+        "contract": 0,
+        "technical": 0,
         "policy": 0
       },
-      "confidence": 4,
+      "confidence": 9,
       "keywords": [
-        "评审"
+        "评审内容",
+        "安装",
+        "检测",
+        "验收"
       ],
       "heading_level": 2,
-      "source": "rule_split",
+      "source": "llm_refined",
       "module_hits": [
         {
           "module": "scoring",
-          "score": 4.0,
-          "source": "keyword_rule",
-          "reason": "标题及正文命中 1 个关键词。",
+          "score": 0.92,
+          "source": "llm_refine",
+          "reason": "标题明确为评审内容，且涉及安装检测计划作为评分依据。",
           "evidence_keywords": [
-            "评审"
+            "评审内容",
+            "安装",
+            "检测",
+            "验收"
           ]
         },
         {
@@ -694,22 +713,36 @@
       "excerpt": "（二） 评审标准：\n1.完全满足招标文件要求的得 100 分，标注“▲”重要技术参数的每有一项负偏离的扣 10 分； 未标注“▲”其它一般参数的每有一项负偏离的扣 5 分， 最低得 0 分。\n2.参数中要求提供证明材料的，需提供佐证材料作为评分依据。未按要求提供或提供不清晰导致专家无法判断的不得分。\n\n\n\n\n\n4\n\n\n\n\n售后服务承诺\n\n\n\n\n4",
       "module": "scoring",
       "module_scores": {
-        "qualification": 0,
         "scoring": 11,
+        "technical": 10,
+        "qualification": 0,
         "contract": 0,
         "acceptance": 0,
-        "technical": 10,
         "procedure": 0,
         "policy": 0
       },
       "confidence": 11,
       "keywords": [
-        "评分",
-        "评审"
+        "评审标准",
+        "得分",
+        "扣分",
+        "参数"
       ],
       "heading_level": 3,
-      "source": "rule_split",
+      "source": "llm_refined",
       "module_hits": [
+        {
+          "module": "scoring",
+          "score": 0.98,
+          "source": "llm_refine",
+          "reason": "明确列出评分标准、扣分规则及分值计算方式。",
+          "evidence_keywords": [
+            "评审标准",
+            "得分",
+            "扣分",
+            "参数"
+          ]
+        },
         {
           "module": "technical",
           "score": 10.0,
@@ -720,16 +753,6 @@
             "参数",
             "标准",
             "技术参数"
-          ]
-        },
-        {
-          "module": "scoring",
-          "score": 5.0,
-          "source": "keyword_rule",
-          "reason": "标题及正文命中 2 个关键词。",
-          "evidence_keywords": [
-            "评分",
-            "评审"
           ]
         }
       ]
@@ -1065,28 +1088,32 @@
       "excerpt": "（一） 评分内容\n投标人应如实填写《商务条款偏离表》。",
       "module": "scoring",
       "module_scores": {
-        "qualification": 0,
-        "scoring": 4,
+        "scoring": 9,
         "contract": 3,
+        "procedure": 1,
+        "qualification": 0,
         "acceptance": 0,
         "technical": 0,
-        "procedure": 1,
         "policy": 0
       },
-      "confidence": 4,
+      "confidence": 9,
       "keywords": [
-        "评分"
+        "评分内容",
+        "商务条款",
+        "偏离表"
       ],
       "heading_level": 3,
-      "source": "rule_split",
+      "source": "llm_refined",
       "module_hits": [
         {
           "module": "scoring",
-          "score": 4.0,
-          "source": "keyword_rule",
-          "reason": "标题及正文命中 1 个关键词。",
+          "score": 0.88,
+          "source": "llm_refine",
+          "reason": "标题为评分内容，要求填写商务条款偏离表作为评分依据。",
           "evidence_keywords": [
-            "评分"
+            "评分内容",
+            "商务条款",
+            "偏离表"
           ]
         },
         {
@@ -1786,19 +1813,35 @@
       "excerpt": "第二章 对通用条款的补充内容及其他关键信息 \t20",
       "module": "procedure",
       "module_scores": {
+        "procedure": 8,
         "qualification": 0,
         "scoring": 0,
         "contract": 0,
         "acceptance": 0,
         "technical": 0,
-        "procedure": 0,
         "policy": 0
       },
-      "confidence": 0,
-      "keywords": [],
+      "confidence": 8,
+      "keywords": [
+        "通用条款",
+        "补充内容",
+        "关键信息"
+      ],
       "heading_level": 1,
-      "source": "rule_split",
-      "module_hits": []
+      "source": "llm_refined",
+      "module_hits": [
+        {
+          "module": "procedure",
+          "score": 0.85,
+          "source": "llm_refine",
+          "reason": "目录页显示章节标题，涉及通用条款补充，属于程序性结构。",
+          "evidence_keywords": [
+            "通用条款",
+            "补充内容",
+            "关键信息"
+          ]
+        }
+      ]
     },
     {
       "title": "一、对通用条款的补充内容\t20",
@@ -1808,19 +1851,33 @@
       "excerpt": "一、对通用条款的补充内容\t20",
       "module": "procedure",
       "module_scores": {
+        "procedure": 8,
         "qualification": 0,
         "scoring": 0,
         "contract": 0,
         "acceptance": 0,
         "technical": 0,
-        "procedure": 0,
         "policy": 0
       },
-      "confidence": 0,
-      "keywords": [],
+      "confidence": 8,
+      "keywords": [
+        "通用条款",
+        "补充内容"
+      ],
       "heading_level": 2,
-      "source": "rule_split",
-      "module_hits": []
+      "source": "llm_refined",
+      "module_hits": [
+        {
+          "module": "procedure",
+          "score": 0.85,
+          "source": "llm_refine",
+          "reason": "目录页显示对通用条款的补充，属于招标程序说明部分。",
+          "evidence_keywords": [
+            "通用条款",
+            "补充内容"
+          ]
+        }
+      ]
     },
     {
       "title": "二、其他关键信息\t21",
@@ -1830,19 +1887,31 @@
       "excerpt": "二、其他关键信息\t21",
       "module": "procedure",
       "module_scores": {
+        "procedure": 8,
         "qualification": 0,
         "scoring": 0,
         "contract": 0,
         "acceptance": 0,
         "technical": 0,
-        "procedure": 0,
         "policy": 0
       },
-      "confidence": 0,
-      "keywords": [],
+      "confidence": 8,
+      "keywords": [
+        "关键信息"
+      ],
       "heading_level": 2,
-      "source": "rule_split",
-      "module_hits": []
+      "source": "llm_refined",
+      "module_hits": [
+        {
+          "module": "procedure",
+          "score": 0.85,
+          "source": "llm_refine",
+          "reason": "目录页显示其他关键信息，属于招标程序性说明。",
+          "evidence_keywords": [
+            "关键信息"
+          ]
+        }
+      ]
     },
     {
       "title": "第三章 用户需求书 \t23",
@@ -1850,21 +1919,33 @@
       "end_line": 558,
       "body": "第三章 用户需求书 \t23",
       "excerpt": "第三章 用户需求书 \t23",
-      "module": "procedure",
+      "module": "technical",
       "module_scores": {
+        "technical": 10,
         "qualification": 0,
         "scoring": 0,
         "contract": 0,
         "acceptance": 0,
-        "technical": 0,
         "procedure": 0,
         "policy": 0
       },
-      "confidence": 0,
-      "keywords": [],
+      "confidence": 10,
+      "keywords": [
+        "用户需求书"
+      ],
       "heading_level": 1,
-      "source": "rule_split",
-      "module_hits": []
+      "source": "llm_refined",
+      "module_hits": [
+        {
+          "module": "technical",
+          "score": 0.95,
+          "source": "llm_refine",
+          "reason": "用户需求书通常包含详细的技术规格和功能要求。",
+          "evidence_keywords": [
+            "用户需求书"
+          ]
+        }
+      ]
     },
     {
       "title": "一、项目基本信息\t23",

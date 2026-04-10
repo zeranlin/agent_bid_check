@@ -1,0 +1,328 @@
+{
+  "topic": "acceptance",
+  "summary": "验收条款存在严重模糊性，验收标准完全依赖‘按次组织’及‘根据总包合同确定’，缺乏客观、可量化的验收指标；同时，分包合同中的验收条款被设定为待定状态，导致验收主体、流程及标准在中标后存在极大的不确定性和单方裁量空间，不符合政府采购验收条款明确、可操作的要求。",
+  "risk_points": [
+    {
+      "title": "验收标准模糊，存在过大单方裁量空间",
+      "severity": "高风险",
+      "review_type": "合规性审查",
+      "source_location": "证据 1 第 2621-2624 行；证据 2 第 2720-2721 行",
+      "source_excerpt": "1、期次 1，说明：按招标文件及合同约定的服务要求执行验收。... 甲方按照采购文件、乙方的投标或响应文件和本协议约定的服务内容及质量要求按次组织对乙方所提供服务进行验收...",
+      "risk_judgment": [
+        "验收方式仅表述为‘按次组织’和‘按招标文件及合同约定’，未明确具体的验收流程、时点及客观量化标准。",
+        "‘按次组织’表述过于笼统，未规定验收频率、参与人员及具体操作规范，易导致验收过程随意性大。",
+        "缺乏明确的验收通过/不通过的具体判定标准，赋予采购人过大的自由裁量权，可能引发履约争议。"
+      ],
+      "legal_basis": [
+        "《政府采购法》第四十一条：采购人或者其委托的采购代理机构应当组织对供应商履约的验收。大型或者复杂的政府采购项目，应当邀请国家认可的质量检测机构参加验收工作。",
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第七十一条：采购人应当及时组织对供应商履约情况进行验收。"
+      ],
+      "rectification": [
+        "明确验收的具体流程、时点（如每月、每季度、年度）及参与主体。",
+        "制定量化、可操作的验收标准，将‘服务内容及质量要求’具体化为可考核的指标（如 SLA 指标）。",
+        "明确验收不合格的处理机制及整改复验的具体要求。"
+      ]
+    },
+    {
+      "title": "分包合同验收条款待定，导致验收主体与标准不确定",
+      "severity": "高风险",
+      "review_type": "合同条款审查",
+      "source_location": "证据 3 第 3111-3133 行",
+      "source_excerpt": "分包合同标的交付时间、地点和条件，质量要求和标准，验收，款项的支付...等条款待甲方中标（成交）后，根据甲方与采购人签订的总包合同确定具体的内容。",
+      "risk_judgment": [
+        "分包合同中的验收条款被设定为‘待确定’，导致在投标阶段无法明确分包部分的验收主体、标准及流程。",
+        "将验收标准完全依赖于‘总包合同’，若总包合同未明确或存在变更，将导致分包验收缺乏依据，增加履约风险。",
+        "此种‘待定’条款违反了招标文件应当明确、具体、可执行的原则，可能导致后续验收工作无法开展或产生纠纷。"
+      ],
+      "legal_basis": [
+        "《政府采购法》第四十八条：经采购人同意，中标、成交供应商可以依法采取分包方式履行合同。",
+        "《政府采购法实施条例》第七十二条：政府采购合同应当明确验收标准、验收程序及验收主体。"
+      ],
+      "rectification": [
+        "在招标文件中明确分包部分的验收标准、流程及主体，不得以‘待确定’代替具体条款。",
+        "若必须依据总包合同，应在招标文件中明确总包合同中关于验收的核心指标，并承诺分包合同验收标准不低于总包合同要求。"
+      ]
+    }
+  ],
+  "need_manual_review": true,
+  "coverage_note": "当前仅召回 1 个核心证据片段（证据 1 和 2 涉及验收方式，证据 3 涉及分包验收待定），建议人工复核是否存在遗漏章节，特别是关于具体验收标准、不合格处理及检测费用承担的条款。",
+  "metadata": {
+    "topic_label": "验收条款",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "履约验收方式",
+        "start_line": 2621,
+        "end_line": 2624,
+        "module": "contract"
+      },
+      {
+        "title": "六、服务履约验收或考核",
+        "start_line": 2720,
+        "end_line": 2721,
+        "module": "acceptance"
+      },
+      {
+        "title": "三、其他条款",
+        "start_line": 3111,
+        "end_line": 3133,
+        "module": "contract"
+      }
+    ],
+    "missing_evidence": [
+      "具体的验收标准量化指标（如服务合格率、响应时间等）",
+      "验收不合格的具体处理流程及整改复验要求",
+      "验收阶段第三方检测费用的承担主体",
+      "试运行期间的具体考核指标及验收时点"
+    ],
+    "failure_reasons": [
+      "missing_evidence",
+      "degraded_to_manual_review",
+      "risk_degraded_to_manual_review"
+    ],
+    "failure_reason_labels": [
+      "证据不足",
+      "已降级为人工复核",
+      "存在风险但被降级为人工复核"
+    ],
+    "evidence_bundle": {
+      "topic": "acceptance",
+      "sections": [
+        {
+          "title": "履约验收方式",
+          "start_line": 2621,
+          "end_line": 2624,
+          "body": "履约验收方式\n1、期次1，说明：按招标文件及合同约定的服务要求执行验收。试用期每月考核，试用期后每季度考核。第12、24、36月进行年度评价考核。\n7",
+          "excerpt": "履约验收方式\n1、期次1，说明：按招标文件及合同约定的服务要求执行验收。试用期每月考核，试用期后每季度考核。第12、24、36月进行年度评价考核。\n7",
+          "module": "contract",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 5,
+            "acceptance": 5,
+            "technical": 0,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 5,
+          "keywords": [
+            "履约",
+            "合同"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "六、服务履约验收或考核",
+          "start_line": 2720,
+          "end_line": 2721,
+          "body": "六、服务履约验收或考核\n 甲方按照采购文件、乙方的投标或响应文件和本协议约定的服务内容及质量要求按次组织对乙方所提供服务进行验收，或定期进行服务考核，并根据验收或考核结果支付服务费用。具体如下：",
+          "excerpt": "六、服务履约验收或考核\n 甲方按照采购文件、乙方的投标或响应文件和本协议约定的服务内容及质量要求按次组织对乙方所提供服务进行验收，或定期进行服务考核，并根据验收或考核结果支付服务费用。具体如下：",
+          "module": "acceptance",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 5,
+            "acceptance": 6,
+            "technical": 0,
+            "procedure": 2,
+            "policy": 0
+          },
+          "confidence": 6,
+          "keywords": [
+            "验收"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "三、其他条款",
+          "start_line": 3111,
+          "end_line": 3133,
+          "body": "三、其他条款\n分包合同标的交付时间、地点和条件，质量要求和标准，验收，款项的支付，履约担保，违约责任，质量保证，知识产权，合同纠纷处理方式，不可抗力等条款待甲方中标（成交）后，根据甲方与采购人签订的总包合同确定具体的内容。\n甲方：\n乙方：\n住所：\n住所：\n单位负责人或委托代理人：\n单位负责人或委托代理人：\n联系方法：\n联系方法：\n开户银行：\n开户银行：\n账号：\n账号：\n签订地点：　　　　　　　　　　\n签约日期：　　年　　月　　日\n※注意：\n1.招标文件接受合同分包且投标人拟将合同分包的，应提供本协议；否则无须提供。\n2.本协议由委托代理人签字或盖章的，应按照本章载明的格式提供“单位授权书”。\n3.在以合同分包形式落实中小企业预留份额项目中，投标人除了要提供《中小企业声明函》，还需提供本协议。",
+          "excerpt": "三、其他条款\n分包合同标的交付时间、地点和条件，质量要求和标准，验收，款项的支付，履约担保，违约责任，质量保证，知识产权，合同纠纷处理方式，不可抗力等条款待甲方中标（成交）后，根据甲方与采购人签订的总包合同确定具体的内容。\n甲方：\n乙方：\n住所：\n住所：\n单位负责人或委托代理人：\n单位负责人或委托代理人：\n联系方法：\n联系方法：\n开户银行：\n开户银行：\n账号：\n账号：\n签订地点：　　　　　　　　　　\n签约日期：　　年　　月　　日\n※注意：\n1.招标文件接受合同分包且投标人拟将合同分包的，应提供本协议；否则无须提供。\n2.本协议由委托代理人签字或盖章的，应按照本章载明的格式提供“单位授权书”。\n3.在以合同分包形式落实中小企业预留份额项目中，投标人除了要提供《中小企业声明函》，还需提供本协议。",
+          "module": "contract",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 11,
+            "acceptance": 2,
+            "technical": 1,
+            "procedure": 2,
+            "policy": 2
+          },
+          "confidence": 11,
+          "keywords": [
+            "支付",
+            "履约",
+            "违约",
+            "合同"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "2720-2721"
+      ],
+      "secondary_section_ids": [
+        "2621-2624",
+        "3111-3133"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=acceptance,contract,technical；关键词=验收,交付,试运行,检测,抽检,验收主体,验收标准；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "验收条款",
+        "topic_aliases": [
+          "交付验收",
+          "验收机制"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "验收主体",
+            "验收方式",
+            "验收流程",
+            "验收标准",
+            "交付试运行"
+          ],
+          "out_of_scope": [
+            "付款节点",
+            "品牌型号倾向",
+            "一般程序条款"
+          ],
+          "primary_modules": [
+            "acceptance"
+          ],
+          "secondary_modules": [
+            "contract",
+            "technical"
+          ],
+          "ownership_rule": "只处理验收主体、方式、流程与标准，不处理单纯付款或技术品牌限制。",
+          "merge_hints": [
+            "验收标准引用错误归 technical_standard；验收程序与主体安排归 acceptance。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "acceptance",
+            "score": 6.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "验收"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "2720-2721",
+            "score": 78,
+            "reasons": [
+              "主模块命中 acceptance",
+              "标题命中 1 次关键词",
+              "正文命中 6 次关键词",
+              "标题层级 2"
+            ],
+            "keywords": [
+              "验收"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "acceptance",
+      "covered_modules": [
+        "contract",
+        "acceptance",
+        "technical"
+      ],
+      "covered_section_ids": [
+        "2720-2721",
+        "2621-2624",
+        "3111-3133"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": [],
+      "acceptance_testing_cost_forbidden_to_bidder": true,
+      "acceptance_testing_cost_rule_sections": [
+        {
+          "section_id": "builtin:acceptance_testing_cost",
+          "title": "内置规则库：需求合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "acceptance_testing_cost_rule_sentences": [
+        "需求合规性-不得要求中标人承担验收产生的检测费用。"
+      ],
+      "demand_contains_acceptance_testing_cost_signal": false,
+      "acceptance_testing_cost_sections": [],
+      "acceptance_testing_cost_evidence": [],
+      "acceptance_testing_cost_shifted_to_bidder": false,
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

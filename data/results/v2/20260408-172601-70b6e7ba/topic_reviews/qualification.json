@@ -1,0 +1,391 @@
+{
+  "topic": "qualification",
+  "summary": "当前召回证据仅包含投标人一般规定、联合体投标规则及资格审查程序性描述，未包含具体的法定资格、特定资格条件、信用条件或主体准入的具体指标。证据片段中明确指向‘详见招标文件第一章’，但第一章内容未在当前证据中体现，导致无法判断是否存在设置不合理门槛、排斥潜在供应商或要求无关资质的情况。",
+  "risk_points": [
+    {
+      "title": "关键资格条件证据缺失，无法完成实质性审查",
+      "severity": "需人工复核",
+      "review_type": "证据完整性审查",
+      "source_location": "证据1 第211-224行；证据2 第524-527行",
+      "source_excerpt": "（2）投标人的资格要求：详见招标文件第一章。",
+      "risk_judgment": [
+        "证据片段仅提供了资格要求的指引性说明，未提供具体的资格门槛内容。",
+        "无法判断是否存在将规模、奖项、荣誉、人员数量等作为不合理门槛。",
+        "无法判断是否存在要求与项目无关的资质、认证、授权或证明。",
+        "无法判断联合体投标的具体接受情况及相应的资质认定规则是否合规。",
+        "由于核心证据缺失，无法排除限制或排斥潜在供应商的风险。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法》第二十二条：供应商参加政府采购活动应当具备的条件。",
+        "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构有下列情形之一的，属于以不合理的条件对供应商实行差别待遇或者歧视待遇：（一）就同一采购项目向供应商提供有差别的项目信息；（二）设定的资格、技术、商务条件与采购项目的具体特点和实际需要不相适应或者与合同履行无关；（三）采购需求中的技术、服务等要求指向特定供应商、特定产品；（四）以特定行政区域或者特定行业的业绩、奖项作为加分条件或者中标、成交条件；（五）对供应商采取不同的资格审查或者评审标准；（六）限定或者指定特定的专利、商标、品牌或者供应商；（七）非法限定供应商的所有制形式、组织形式或者所在地；（八）以其他不合理条件限制或者排斥潜在供应商。"
+      ],
+      "rectification": [
+        "请补充提供招标文件第一章中关于‘投标人资格要求’的完整内容。",
+        "请明确本项目是否接受联合体投标，如接受，请提供具体的资质认定规则。",
+        "请补充具体的法定资格、特定资格及信用条件的详细条款，以便进行合规性审查。"
+      ]
+    }
+  ],
+  "need_manual_review": true,
+  "coverage_note": "本专题审查范围应涵盖法定资格、特定资格、联合体要求、供应商主体资格及信用条件。当前证据仅覆盖联合体投标的程序性规定（证据1、2、3）及资格审查的通用流程（证据2），缺失核心的‘具体资格条件’章节内容。",
+  "metadata": {
+    "topic_label": "资格条件",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "二、投标人",
+        "start_line": 211,
+        "end_line": 224,
+        "module": "procedure"
+      },
+      {
+        "title": "资格审查不合格项：无",
+        "start_line": 524,
+        "end_line": 527,
+        "module": "qualification"
+      },
+      {
+        "title": "第七章 电子投标文件格式",
+        "start_line": 2794,
+        "end_line": 2815,
+        "module": "procedure"
+      }
+    ],
+    "missing_evidence": [
+      "招标文件第一章中关于‘投标人资格要求’的具体条款（证据1提及‘详见招标文件第一章’但未提供内容）",
+      "具体的法定资格条件（如营业执照范围、行政许可等）",
+      "具体的特定资格条件（如行业资质、认证等）",
+      "具体的信用条件要求（如‘信用中国’查询标准、不良记录界定等）",
+      "是否接受联合体投标的明确结论（证据1、2、3均使用‘若本项目接受联合体投标’的条件句，未明确本项目实际是否接受）"
+    ],
+    "failure_reasons": [
+      "missing_evidence",
+      "degraded_to_manual_review",
+      "risk_degraded_to_manual_review"
+    ],
+    "failure_reason_labels": [
+      "证据不足",
+      "已降级为人工复核",
+      "存在风险但被降级为人工复核"
+    ],
+    "evidence_bundle": {
+      "topic": "qualification",
+      "sections": [
+        {
+          "title": "二、投标人",
+          "start_line": 211,
+          "end_line": 224,
+          "body": "二、投标人\n3、合格投标人\n3.1一般规定\n（1）投标人应遵守政府采购法及实施条例、政府采购招投标管理办法、政府采购质疑和投诉办法及财政部、福建省财政厅有关政府采购文件的规定，同时还应遵守有关法律、法规和规章的强制性规定。\n（2）投标人的资格要求：详见招标文件第一章。\n3.2若本项目接受联合体投标且投标人为联合体，则联合体各方应遵守本章第3.1条规定，同时还应遵守下列规定：\n（1）联合体各方应提交联合体协议，联合体协议应符合招标文件规定。\n（2）联合体各方不得再单独参加或与其他供应商另外组成联合体参加同一合同项下的投标。\n（3）联合体各方应共同与采购人签订政府采购合同，就政府采购合同约定的事项对采购人承担连带责任。\n（4）项目如涉及资质要求，该部分工作内容应由联合体中符合该资质要求的供应商承担，联合体协议及签订的采购合同应符合这一要求；联合体中有同类资质的供应商按照联合体分工承担相同工作的，应当按照资质等级较低的供应商确定资质等级。\n（5）联合体一方放弃中标的，视为联合体整体放弃中标，联合体各方承担连带责任。\n（6）如本项目不接受联合体投标而投标人为联合体的，或者本项目接受联合体投标但投标人组成的联合体不符合本章第3.2条规定的，投标无效。\n4、投标费用\n4.1除招标文件另有规定外，投标人应自行承担其参加本项目投标所涉及的一切费用。",
+          "excerpt": "二、投标人\n3、合格投标人\n3.1一般规定\n（1）投标人应遵守政府采购法及实施条例、政府采购招投标管理办法、政府采购质疑和投诉办法及财政部、福建省财政厅有关政府采购文件的规定，同时还应遵守有关法律、法规和规章的强制性规定。\n（2）投标人的资格要求：详见招标文件第一章。\n3.2若本项目接受联合体投标且投标人为联合体，则联合体各方应遵守本章第3.1条规定，同时还应遵守下列规定：\n（1）联合体各方应提交联合体协议，联合体协议应符合招标文件规定。\n（2）联合体各方不得再单独参加或与其他供应商另外组成联合体参加同一合同项下的投标。\n（3）联合体各方应共同与采购人签订政府采购合同，就政府采购合同约定的事项对采购人承担连带责任。\n（4）项目如涉及资质要求，该部分工作内容应由联合体中符合该资质要求的供应商承担，联合体协议及签订的采购合同应符合这一要求；联合体中有同类资质的供应商按照联合体分工承担相同工作的，应当按照资质等级较低的供应商确定资质等级。\n（5）联合体一方放弃中标的，视为联合体整体放弃中标，联合体各方承担连带责任。\n（6）如本项目不接受联合体投标而投标人为联合体的，或者本项目接受联合体投标但投标人组成的联合体不符合本章第3.2条规定的，投标无效。\n4、投标费用\n4.1除招标文件另有规定外，投标人应自行承担其参加本项目投标所涉及的一切费用。",
+          "module": "procedure",
+          "module_scores": {
+            "qualification": 6,
+            "scoring": 0,
+            "contract": 5,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 19,
+            "policy": 8
+          },
+          "confidence": 19,
+          "keywords": [
+            "投标"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "资格审查不合格项：无",
+          "start_line": 524,
+          "end_line": 527,
+          "body": "资格审查不合格项：无\n1.5若本项目接受联合体投标且投标人为联合体，联合体中有同类资质的供应商按照联合体分工承担相同工作的，应先按照资质等级较低的供应商确定资质等级，再按照本章第1.2、1.3、1.4条规定进行资格审查。\n2、资格审查情况不得私自外泄，有关信息由 福建省公共资源交易中心 统一对外发布。\n3、资格审查合格的投标人不足三家的，不进行评标。同时，本次采购活动结束， 福建省公共资源交易中心 将依法组织后续采购活动（包括但不限于：重新招标、采用其他方式采购等）。",
+          "excerpt": "资格审查不合格项：无\n1.5若本项目接受联合体投标且投标人为联合体，联合体中有同类资质的供应商按照联合体分工承担相同工作的，应先按照资质等级较低的供应商确定资质等级，再按照本章第1.2、1.3、1.4条规定进行资格审查。\n2、资格审查情况不得私自外泄，有关信息由 福建省公共资源交易中心 统一对外发布。\n3、资格审查合格的投标人不足三家的，不进行评标。同时，本次采购活动结束， 福建省公共资源交易中心 将依法组织后续采购活动（包括但不限于：重新招标、采用其他方式采购等）。",
+          "module": "qualification",
+          "module_scores": {
+            "qualification": 19,
+            "scoring": 1,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 3,
+            "policy": 0
+          },
+          "confidence": 19,
+          "keywords": [
+            "资格",
+            "资质"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "第七章 电子投标文件格式",
+          "start_line": 2794,
+          "end_line": 2815,
+          "body": "第七章 电子投标文件格式\n编制说明\n1、除招标文件另有规定外，本章中：\n1.1涉及投标人的“全称”：\n（1）不接受联合体投标的，指投标人的全称。\n（2）接受联合体投标且投标人为联合体的，指牵头方的全称并加注（联合体牵头方），即应表述为：“牵头方的全称（联合体牵头方）”。\n1.2涉及投标人“加盖单位公章”：\n（1）不接受联合体投标的，指加盖投标人的单位公章。\n（2）接受联合体投标且投标人为联合体的，指加盖联合体牵头方的单位公章。\n1.3涉及“投标人代表签字”：\n（1）不接受联合体投标的，指由投标人的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n（2）接受联合体投标且投标人为联合体的，指由联合体牵头方的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n1.4“其他组织”指合伙企业、非企业专业服务机构、个体工商户、农村承包经营户等。\n1.5“自然人”指具有完全民事行为能力、能够承担民事责任和义务的中国公民。\n2、除招标文件另有规定外，本章中“投标人的资格及资信证明文件”：\n2.1投标人应按照招标文件第四章第1.3条第（2）款规定及本章规定进行编制，如有必要，可增加附页，附页作为资格及资信文件的组成部分。\n2.2接受联合体投标且投标人为联合体的，联合体中的各方均应按照本章第2.1条规定提交相应的全部资料。\n3、投标人对电子投标文件的索引应编制页码。\n4、本章提供格式仅供参考，投标人应根据自身实际情况制作电子投标文件。",
+          "excerpt": "第七章 电子投标文件格式\n编制说明\n1、除招标文件另有规定外，本章中：\n1.1涉及投标人的“全称”：\n（1）不接受联合体投标的，指投标人的全称。\n（2）接受联合体投标且投标人为联合体的，指牵头方的全称并加注（联合体牵头方），即应表述为：“牵头方的全称（联合体牵头方）”。\n1.2涉及投标人“加盖单位公章”：\n（1）不接受联合体投标的，指加盖投标人的单位公章。\n（2）接受联合体投标且投标人为联合体的，指加盖联合体牵头方的单位公章。\n1.3涉及“投标人代表签字”：\n（1）不接受联合体投标的，指由投标人的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n（2）接受联合体投标且投标人为联合体的，指由联合体牵头方的单位负责人或其授权的委托代理人签字，由委托代理人签字的，应提供“单位授权书”。\n1.4“其他组织”指合伙企业、非企业专业服务机构、个体工商户、农村承包经营户等。\n1.5“自然人”指具有完全民事行为能力、能够承担民事责任和义务的中国公民。\n2、除招标文件另有规定外，本章中“投标人的资格及资信证明文件”：\n2.1投标人应按照招标文件第四章第1.3条第（2）款规定及本章规定进行编制，如有必要，可增加附页，附页作为资格及资信文件的组成部分。\n2.2接受联合体投标且投标人为联合体的，联合体中的各方均应按照本章第2.1条规定提交相应的全部资料。\n3、投标人对电子投标文件的索引应编制页码。\n4、本章提供格式仅供参考，投标人应根据自身实际情况制作电子投标文件。",
+          "module": "procedure",
+          "module_scores": {
+            "qualification": 2,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 27,
+            "policy": 0
+          },
+          "confidence": 27,
+          "keywords": [
+            "投标"
+          ],
+          "heading_level": 1,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "524-527"
+      ],
+      "secondary_section_ids": [
+        "211-224",
+        "2794-2815"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=qualification,procedure；关键词=资格,资质,信用,联合体,主体资格,准入,资格审查；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "资格条件",
+        "topic_aliases": [
+          "法定资格",
+          "特定资格"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "法定资格",
+            "特定资格",
+            "联合体要求",
+            "供应商主体资格",
+            "信用条件"
+          ],
+          "out_of_scope": [
+            "业绩要求",
+            "人员要求",
+            "证书奖项",
+            "评分加分"
+          ],
+          "primary_modules": [
+            "qualification"
+          ],
+          "secondary_modules": [
+            "procedure"
+          ],
+          "ownership_rule": "只处理供应商主体准入、法定资格与特定资格，不吸收业绩、人员、奖项类要求。",
+          "merge_hints": [
+            "与 performance_staff 同章时，凡属于准入门槛的条款归 qualification。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "qualification",
+            "score": 19.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "资格",
+              "资格审查",
+              "资质",
+              "联合体"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "524-527",
+            "score": 162,
+            "reasons": [
+              "主模块命中 qualification",
+              "标题命中 2 次关键词",
+              "正文命中 30 次关键词",
+              "标题层级 2"
+            ],
+            "keywords": [
+              "资格",
+              "资格审查",
+              "资质",
+              "联合体"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "qualification",
+      "covered_modules": [
+        "procedure",
+        "qualification"
+      ],
+      "covered_section_ids": [
+        "524-527",
+        "211-224",
+        "2794-2815"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "import_policy": "mixed_or_unclear",
+      "import_policy_reject_phrases": [],
+      "import_policy_accept_phrases": [],
+      "import_policy_sections": [],
+      "import_policy_sentences": [],
+      "policy_discount_present": false,
+      "policy_discount_sections": [],
+      "policy_discount_sentences": [],
+      "eco_policy_present": false,
+      "eco_policy_sections": [],
+      "eco_policy_sentences": [],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": true,
+      "electronic_procurement_sections": [
+        {
+          "section_id": "2794-2815",
+          "title": "第七章 电子投标文件格式",
+          "start_line": 2794,
+          "end_line": 2815,
+          "module": "procedure"
+        }
+      ],
+      "electronic_procurement_sentences": [
+        "第七章 电子投标文件格式 编制说明 1、除招标文件另有规定外，本章中： 1.1涉及投标人的“全称”： （1）不接受联合体投标的，指投标人的全称。",
+        "3、投标人对电子投标文件的索引应编制页码。",
+        "4、本章提供格式仅供参考，投标人应根据自身实际情况制作电子投标文件。"
+      ],
+      "contract_template_present": true,
+      "contract_template_sections": [
+        {
+          "section_id": "2794-2815",
+          "title": "第七章 电子投标文件格式",
+          "start_line": 2794,
+          "end_line": 2815,
+          "module": "procedure"
+        }
+      ],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": [],
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": [],
+      "qualification_requirement_present": true,
+      "qualification_requirement_sections": [
+        {
+          "section_id": "524-527",
+          "title": "资格审查不合格项：无",
+          "start_line": 524,
+          "end_line": 527,
+          "module": "qualification"
+        }
+      ],
+      "qualification_requirement_sentences": [
+        "资格审查不合格项：无 1.5若本项目接受联合体投标且投标人为联合体，联合体中有同类资质的供应商按照联合体分工承担相同工作的，应先按照资质等级较低的供应商确定资质等级，再按照本章第1.2、1.3、1.4条规定进行资格审查。",
+        "2、资格审查情况不得私自外泄，有关信息由 福建省公共资源交易中心 统一对外发布。",
+        "3、资格审查合格的投标人不足三家的，不进行评标。"
+      ],
+      "cancelled_or_non_mandatory_qualification_signal": false,
+      "cancelled_or_non_mandatory_qualification_sections": [],
+      "cancelled_or_non_mandatory_qualification_sentences": [],
+      "cancelled_or_non_mandatory_qualification_used_as_gate": false,
+      "cancelled_or_non_mandatory_qualification_gate_sections": [],
+      "cancelled_or_non_mandatory_qualification_gate_sentences": [],
+      "cancelled_or_non_mandatory_qualification_prohibition_context": false,
+      "qualification_material_submission_present": false,
+      "qualification_material_submission_sections": [],
+      "qualification_material_submission_sentences": [],
+      "original_or_paper_certificate_requirement_signal": false,
+      "original_or_paper_certificate_requirement_sections": [],
+      "original_or_paper_certificate_requirement_sentences": [],
+      "original_or_paper_certificate_used_as_submission_gate": false,
+      "original_or_paper_certificate_gate_sections": [],
+      "original_or_paper_certificate_gate_sentences": [],
+      "original_or_paper_certificate_post_award_only": false,
+      "original_or_paper_certificate_legal_verification_context": false,
+      "supplier_gate_requirement_present": true,
+      "supplier_gate_requirement_sections": [
+        {
+          "section_id": "211-224",
+          "title": "二、投标人",
+          "start_line": 211,
+          "end_line": 224,
+          "module": "procedure"
+        },
+        {
+          "section_id": "524-527",
+          "title": "资格审查不合格项：无",
+          "start_line": 524,
+          "end_line": 527,
+          "module": "qualification"
+        }
+      ],
+      "supplier_gate_requirement_sentences": [
+        "（2）投标人的资格要求：详见招标文件第一章。",
+        "资格审查不合格项：无 1.5若本项目接受联合体投标且投标人为联合体，联合体中有同类资质的供应商按照联合体分工承担相同工作的，应先按照资质等级较低的供应商确定资质等级，再按照本章第1.2、1.3、1.4条规定进行资格审查。",
+        "2、资格审查情况不得私自外泄，有关信息由 福建省公共资源交易中心 统一对外发布。",
+        "3、资格审查合格的投标人不足三家的，不进行评标。"
+      ],
+      "supplier_identity_or_region_limit_signal": false,
+      "supplier_identity_or_region_limit_sections": [],
+      "supplier_identity_or_region_limit_sentences": [],
+      "supplier_identity_or_region_limit_used_as_gate": false,
+      "supplier_identity_or_region_gate_sections": [],
+      "supplier_identity_or_region_gate_sentences": [],
+      "supplier_identity_or_region_post_award_service_only": false,
+      "supplier_identity_or_region_legal_context": false
+    }
+  }
+}
