@@ -1,0 +1,12 @@
+{
+  "run_id": "20260409-w014-post",
+  "created_at": "2026-03-30T19:48:22",
+  "original_filename": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
+  "saved_filename": "20260330-194518-6c178c-1213.docx",
+  "base_url": "http://112.111.54.86:10011/v1",
+  "model": "qwen3.5-27b",
+  "config_path": "/Users/linzeran/code/2026-zn/test_getst/data/config/review_v2.json",
+  "pipeline": "v2",
+  "rebuilt_from_run_id": "20260330-194822-b40823be",
+  "rebuilt_at": "2026-04-09T23:59:00"
+}

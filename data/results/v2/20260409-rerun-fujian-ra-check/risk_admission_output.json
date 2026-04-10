@@ -1,0 +1,540 @@
+{
+  "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
+  "input_summary": {
+    "admission_input": {
+      "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
+      "comparison_summary": {
+        "cluster_count": 15,
+        "pending_count": 4,
+        "excluded_count": 3
+      },
+      "governance_summary": {
+        "formal_count": 15,
+        "pending_count": 4,
+        "excluded_count": 3
+      }
+    }
+  },
+  "formal_risks": [
+    {
+      "rule_id": "topic::评分标准中设置特定品牌倾向性条款",
+      "title": "评分标准中设置特定品牌倾向性条款",
+      "review_type": "评分因素不相关/技术参数倾向性",
+      "severity": "高风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第四章 资格审查与评标 -> 7.2 评标标准 -> 加分项（F4×A4）"
+      ],
+      "source_excerpts": [
+        "“设备配置如果有华为小米等相关国产品牌优先。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::人员年龄限制可能构成不合理门槛",
+      "title": "人员年龄限制可能构成不合理门槛",
+      "review_type": "人员要求审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据2，第995-1054行"
+      ],
+      "source_excerpts": [
+        "工程技术人员（含水电工、维修/电梯工、弱电工、运行工）25-55周岁；环境领班25-45周岁；实验室洗涤人员20-55周岁；动物房饲养员20-55周岁；其他保洁人员20-55周岁。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::商务条款中设置过高的履约保证金及严苛的扣款机制",
+      "title": "商务条款中设置过高的履约保证金及严苛的扣款机制",
+      "review_type": "商务条款失衡",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第五章 招标内容及要求 -> 三、商务要求 -> 4.履约保证金；附件：物业管理服务负面清单和扣款一览表"
+      ],
+      "source_excerpts": [
+        "“本采购包履约保证金为合同金额的3.0%”；“非采购人原因，中标人存在欠薪行为……视情节扣除考核基金的10%—100%”；“中标人以任何名义和理由将项目进行转包、分包的。扣除考核基金的100%”；“因中标人原因，发生安全事故的……视情节扣除考核基金的10%—100%”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::技术参数中设置特定设备品牌及配置要求-存在倾向性",
+      "title": "技术参数中设置特定设备品牌及配置要求，存在倾向性",
+      "review_type": "技术参数倾向性",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第五章 招标内容及要求 -> 二、技术和服务要求 -> H.其他服务 -> 2.实验服清洗服务"
+      ],
+      "source_excerpts": [
+        "“由中标人提供8台全新滚筒洗衣机（容积大于等于10公斤、洗烘一体，如：美的、海尔、小天鹅同品质品牌）供检验科所使用”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::政策依据文件号表述不完整",
+      "title": "政策依据文件号表述不完整",
+      "review_type": "政策条款引用准确性审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据2，第452行附近"
+      ],
+      "source_excerpts": [
+        "符合财政部、民政部、中国残联文件（财库[2017]14"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::评分标准中业绩要求设置过窄-限制中小企业参与",
+      "title": "评分标准中业绩要求设置过窄，限制中小企业参与",
+      "review_type": "业绩与证书要求/限制竞争",
+      "severity": "中风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第四章 资格审查与评标 -> 7.2 评标标准 -> 商务项（F3×A3）-> 3.项目业绩"
+      ],
+      "source_excerpts": [
+        "“根据投标人提供的自2019年1月1日（含）至本项目投标截止时间止（以验收日期为准）已完成的同类（非住宅类）政府采购项目业绩情况进行评分……每提供一份业绩证明材料的得1分，满分3分。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::评分标准中设置与履约能力无关的特定人员证书要求",
+      "title": "评分标准中设置与履约能力无关的特定人员证书要求",
+      "review_type": "评分因素不相关/资格条件设置不当",
+      "severity": "中风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第四章 资格审查与评标 -> 7.2 评标标准 -> 技术项（F2×A2）-> 17.项目经理配置情况"
+      ],
+      "source_excerpts": [
+        "“持有政府部门颁发的物业管理师资格证书得1分……具有消防行业技能鉴定机构颁发的四级（含）以上消防设施操作员证的得1分”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::评分标准中设置特定人员学历及证书组合-存在排斥潜在供应商风险",
+      "title": "评分标准中设置特定人员学历及证书组合，存在排斥潜在供应商风险",
+      "review_type": "评分因素不相关/限制竞争",
+      "severity": "中风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第四章 资格审查与评标 -> 7.2 评标标准 -> 技术项（F2×A2）-> 17-24项（各岗位配置情况）"
+      ],
+      "source_excerpts": [
+        "“具有本科（含）以上学历的得1分……持有政府部门颁发的物业管理师资格证书得1分……具有消防行业技能鉴定机构颁发的四级（含）以上消防设施操作员证的得1分”（多处重复出现）"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::评分标准中设置-信息化软件服务能力-要求-存在倾向性",
+      "title": "评分标准中设置“信息化软件服务能力”要求，存在倾向性",
+      "review_type": "评分因素不相关/技术参数倾向性",
+      "severity": "低风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第四章 资格审查与评标 -> 7.2 评标标准 -> 商务项（F3×A3）-> 6.信息化软件服务能力"
+      ],
+      "source_excerpts": [
+        "“投标人拥有与物业服务相关信息化管理软件或系统，并承诺在服务期内该软件或系统会投入本项目使用的，每提供1项得1分，满分3分。投标人须提供承诺函和著作权人为投标人的《计算机软件著作权登记证书》……\""
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::评分标准中设置-无犯罪证明-作为中标后承诺-存在法律风险",
+      "title": "评分标准中设置“无犯罪证明”作为中标后承诺，存在法律风险",
+      "review_type": "资格条件/商务条款",
+      "severity": "低风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint",
+      "source_locations": [
+        "第五章 招标内容及要求 -> 二、技术和服务要求 -> （二）物业管理团队人员配备情况及要求 -> 2.两院区人员配备要求 -> 2)"
+      ],
+      "source_excerpts": [
+        "“投标人须单独提供承诺函（格式自拟），承诺在合同签订后的三个月内提供无犯罪证明，未提供的按无效投标处理。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {}
+    }
+  ],
+  "pending_review_items": [
+    {
+      "rule_id": "topic::商务评分项中-员工保险保障-评分标准存在履约风险及倾向性隐患",
+      "title": "商务评分项中'员工保险保障'评分标准存在履约风险及倾向性隐患",
+      "review_type": "评分标准合规性审查",
+      "severity": "中风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据6，第722-772行，商务项第2点"
+      ],
+      "source_excerpts": [
+        "①承诺在服务期为拟派人员购买上述保险...得3分...②若投标人已在日常管理中为员工购买了上述保险...得3分..."
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::验收流程与考核机制表述笼统-缺乏可操作性",
+      "title": "验收流程与考核机制表述笼统，缺乏可操作性",
+      "review_type": "流程可执行性审查",
+      "severity": "中风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据 1 第 2621-2624 行；证据 2 第 2720-2721 行"
+      ],
+      "source_excerpts": [
+        "试用期每月考核，试用期后每季度考核。第 12、24、36 月进行年度评价考核。甲方...按次组织对乙方所提供服务进行验收，或定期进行服务考核..."
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::企业荣誉-评分项判定标准不够明确-存在主观裁量空间",
+      "title": "'企业荣誉'评分项判定标准不够明确，存在主观裁量空间",
+      "review_type": "评分标准量化审查",
+      "severity": "低风险",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据6，第722-772行，商务项第1点"
+      ],
+      "source_excerpts": [
+        "获得过地市级（含）以上人民政府或行政机关颁发的与物业服务或企业诚信经营有关的荣誉或表彰的..."
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::唱标内容存在模糊表述-可能引发争议",
+      "title": "唱标内容存在模糊表述，可能引发争议",
+      "review_type": "程序条款审查",
+      "severity": "低风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据1，第 354-368 行，11.4(2)"
+      ],
+      "source_excerpts": [
+        "唱标时，唱标人将依次宣布……和招标文件规定的需要宣布的其他内容（包括但不限于：开标一览表中的内容、唱标人认为需要宣布的内容等）。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::专门面向中小企业采购的评审优惠条款缺失或不明",
+      "title": "专门面向中小企业采购的评审优惠条款缺失或不明",
+      "review_type": "政策适用与评分机制审查",
+      "severity": "需人工复核",
+      "evidence_kind": "scoring_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据1（资格审查要求概况）及证据2（政府采购政策）"
+      ],
+      "source_excerpts": [
+        "本采购包属于专门面向中小企业采购。... 符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
+      ],
+      "source_rules": [],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::关键合同条款缺失-无法评估付款与履约风险",
+      "title": "关键合同条款缺失，无法评估付款与履约风险",
+      "review_type": "完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据片段 1-3"
+      ],
+      "source_excerpts": [
+        "证据 3 仅提及'固定单价合同'或'固定总价合同'，未列明具体付款节点；证据 1-2 仅涉及投标保证金，未涉及履约保证金及违约责任。"
+      ],
+      "source_rules": [],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::节能环保产品政策落实细节缺失",
+      "title": "节能环保产品政策落实细节缺失",
+      "review_type": "政策适用范围审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据2，第420-452行"
+      ],
+      "source_excerpts": [
+        "17.2政府采购节能产品、环境标志产品实施品目清单管理... 依据品目清单和认证证书实施政府优先采购或强制采购。"
+      ],
+      "source_rules": [],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::质疑投诉流程证据不完整",
+      "title": "质疑投诉流程证据不完整",
+      "review_type": "程序条款审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据2，第 386-419 行，末尾截断"
+      ],
+      "source_excerpts": [
+        "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+      ],
+      "source_rules": [],
+      "extras": {}
+    }
+  ],
+  "excluded_risks": [
+    {
+      "rule_id": "topic::验收标准模糊且依赖后续合同确定-存在需求条款合规风险",
+      "title": "验收标准模糊且依赖后续合同确定，存在需求条款合规风险",
+      "review_type": "条款明确性审查",
+      "severity": "高风险",
+      "evidence_kind": "subcontract_template",
+      "source_type": "topic_inference",
+      "source_locations": [
+        "证据 1 第 2621-2624 行；证据 3 第 3111-3133 行"
+      ],
+      "source_excerpts": [
+        "1、期次 1，说明：按招标文件及合同约定的服务要求执行验收... 分包合同标的... 质量要求和标准，验收... 待甲方中标（成交）后，根据甲方与采购人签订的总包合同确定具体的内容。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::关键业绩与奖项要求证据缺失",
+      "title": "关键业绩与奖项要求证据缺失",
+      "review_type": "业绩与奖项审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据片段中未找到相关条款"
+      ],
+      "source_excerpts": [
+        "无"
+      ],
+      "source_rules": [],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::废标条件及否决性程序条款证据缺失",
+      "title": "废标条件及否决性程序条款证据缺失",
+      "review_type": "完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据1，第 354-368 行，末尾截断"
+      ],
+      "source_excerpts": [
+        "※若"
+      ],
+      "source_rules": [],
+      "extras": {}
+    },
+    {
+      "rule_id": "topic::社保与劳动关系证明要求证据缺失",
+      "title": "社保与劳动关系证明要求证据缺失",
+      "review_type": "社保与劳动关系审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only",
+      "source_locations": [
+        "证据片段中未找到相关条款"
+      ],
+      "source_excerpts": [
+        "无"
+      ],
+      "source_rules": [],
+      "extras": {}
+    }
+  ],
+  "decisions": {
+    "topic::评分标准中设置特定品牌倾向性条款": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::验收标准模糊且依赖后续合同确定-存在需求条款合规风险": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "检测到模板/协议/声明函类证据，且当前仅有专题推断支撑，不得直接作为正式风险主证据。",
+      "evidence_kind": "subcontract_template",
+      "source_type": "topic_inference"
+    },
+    "topic::人员年龄限制可能构成不合理门槛": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::商务条款中设置过高的履约保证金及严苛的扣款机制": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::商务评分项中-员工保险保障-评分标准存在履约风险及倾向性隐患": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::技术参数中设置特定设备品牌及配置要求-存在倾向性": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "body_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::政策依据文件号表述不完整": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::评分标准中业绩要求设置过窄-限制中小企业参与": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::评分标准中设置与履约能力无关的特定人员证书要求": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::评分标准中设置特定人员学历及证书组合-存在排斥潜在供应商风险": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::验收流程与考核机制表述笼统-缺乏可操作性": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::企业荣誉-评分项判定标准不够明确-存在主观裁量空间": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::唱标内容存在模糊表述-可能引发争议": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference"
+    },
+    "topic::评分标准中设置-信息化软件服务能力-要求-存在倾向性": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::评分标准中设置-无犯罪证明-作为中标后承诺-存在法律风险": {
+      "target_layer": "formal_risks",
+      "admission_reason": "由 compare formal 候选进入输出治理层。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "completeness_hint"
+    },
+    "topic::专门面向中小企业采购的评审优惠条款缺失或不明": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。当前专题已标记需人工复核，暂不作为正式风险输出。",
+      "evidence_kind": "scoring_clause",
+      "source_type": "warning_only"
+    },
+    "topic::关键合同条款缺失-无法评估付款与履约风险": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。当前专题已标记需人工复核，暂不作为正式风险输出。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    },
+    "topic::节能环保产品政策落实细节缺失": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。当前专题已标记需人工复核，暂不作为正式风险输出。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    },
+    "topic::质疑投诉流程证据不完整": {
+      "target_layer": "pending_review_items",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。当前专题已标记需人工复核，暂不作为正式风险输出。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    },
+    "topic::关键业绩与奖项要求证据缺失": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。原文摘录为空或明显截断，证据质量不足，不进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    },
+    "topic::废标条件及否决性程序条款证据缺失": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。原文摘录为空或明显截断，证据质量不足，不进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    },
+    "topic::社保与劳动关系证明要求证据缺失": {
+      "target_layer": "excluded_risks",
+      "admission_reason": "未触发治理层纠偏规则，暂保留 compare 初始层级。原文摘录为空或明显截断，证据质量不足，不进入正式风险。",
+      "evidence_kind": "body_clause",
+      "source_type": "warning_only"
+    }
+  }
+}

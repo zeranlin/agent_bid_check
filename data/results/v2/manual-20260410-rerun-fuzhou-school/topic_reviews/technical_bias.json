@@ -1,0 +1,250 @@
+{
+  "topic": "technical_bias",
+  "summary": "当前召回证据仅包含招标文件中的通用填报模板（要求填写品牌、型号）及验收组织方式，未包含具体的技术参数、功能配置、性能指标或指向特定品牌、专利、专有技术的实质性描述。无法依据现有片段判断是否存在技术倾向性、排他性或隐性限制。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "本专题仅基于提供的 3 个证据片段进行审查。证据 1 为采购标的填报模板，证据 2 和 3 为验收流程描述，均未涉及具体的家具技术参数或限制性条款。",
+  "metadata": {
+    "topic_label": "技术倾向性",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "(3)项目内容：",
+        "start_line": 968,
+        "end_line": 980,
+        "module": "technical"
+      },
+      {
+        "title": "（1）验收组织方式：自行验收委托第三方验收",
+        "start_line": 1040,
+        "end_line": 1040,
+        "module": "acceptance"
+      },
+      {
+        "title": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+        "start_line": 1049,
+        "end_line": 1049,
+        "module": "acceptance"
+      }
+    ],
+    "missing_evidence": [
+      "缺少具体的家具技术参数表（如尺寸、材质、工艺、环保标准等具体指标）",
+      "缺少对特定品牌、型号、专利或专有技术的描述性条款",
+      "缺少关于原厂证明、指定配件或兼容性要求的实质性规定",
+      "缺少验收标准中可能隐含的排他性技术指标"
+    ],
+    "failure_reasons": [
+      "missing_evidence",
+      "degraded_to_manual_review",
+      "risk_degraded_to_manual_review"
+    ],
+    "failure_reason_labels": [
+      "证据不足",
+      "已降级为人工复核",
+      "存在风险但被降级为人工复核"
+    ],
+    "evidence_bundle": {
+      "topic": "technical_bias",
+      "sections": [
+        {
+          "title": "(3)项目内容：",
+          "start_line": 968,
+          "end_line": 980,
+          "body": "(3)项目内容：\n采购标的及数量（台/套/个/架/组等）：___________________\n 品牌： ___________________ 规格型号：___________________\n采购标的的技术要求、商务要求具体见附件。\n①涉及信息类产品，请填写该产品关键部件的品牌、型号：\n标的名称： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n（注：关键部件是指财政部会同有关部门发布的政府采购需求标准规定的需要通过国家有关部门指定的测评机构开展的安全可靠测评的软硬件，如CPU芯片、操作系统、数据库等。）\n②涉及车辆采购，请填写是否属于新能源汽车：\n 是，《政府采购品目分类目录》底级品目名称：__________  数量：__________  金额：__________\n 否",
+          "excerpt": "(3)项目内容：\n采购标的及数量（台/套/个/架/组等）：___________________\n 品牌： ___________________ 规格型号：___________________\n采购标的的技术要求、商务要求具体见附件。\n①涉及信息类产品，请填写该产品关键部件的品牌、型号：\n标的名称： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n关键部件： ___________________ 品牌：___________________ 型号： ___________________\n（注：关键部件是指财政部会同有关部门发布的政府采购需求标准规定的需要通过国家有关部门指定的测评机构开展的安全可靠测评的软硬件，如CPU芯片、操作系统、数据库等。）\n②涉及车辆采购，请填写是否属于新能源汽车：\n 是，《政府采购品目分类目录》底级品目名称：__________  数量：__________  金额：__________\n 否",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 1,
+            "acceptance": 0,
+            "technical": 14,
+            "procedure": 0,
+            "policy": 3
+          },
+          "confidence": 14,
+          "keywords": [
+            "技术",
+            "标准",
+            "品牌",
+            "型号"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（1）验收组织方式：自行验收委托第三方验收",
+          "start_line": 1040,
+          "end_line": 1040,
+          "body": "（1）验收组织方式：自行验收委托第三方验收",
+          "excerpt": "（1）验收组织方式：自行验收委托第三方验收",
+          "module": "acceptance",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 12,
+            "technical": 0,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 12,
+          "keywords": [
+            "验收"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+          "start_line": 1049,
+          "end_line": 1049,
+          "body": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+          "excerpt": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收",
+          "module": "acceptance",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 4,
+            "acceptance": 20,
+            "technical": 0,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 20,
+          "keywords": [
+            "验收"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "968-980"
+      ],
+      "secondary_section_ids": [
+        "1040-1040",
+        "1049-1049"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=technical,acceptance；关键词=品牌,型号,专利,专有技术,唯一,指定,兼容,原厂；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "技术倾向性",
+        "topic_aliases": [
+          "技术参数倾向",
+          "品牌型号"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "品牌型号指向",
+            "专利专有技术",
+            "唯一性要求",
+            "原厂证明",
+            "兼容性指向"
+          ],
+          "out_of_scope": [
+            "标准有效性",
+            "检测认证有效性",
+            "付款履约"
+          ],
+          "primary_modules": [
+            "technical"
+          ],
+          "secondary_modules": [
+            "acceptance"
+          ],
+          "ownership_rule": "只处理技术参数对特定产品或供应商的指向性，不处理标准编号有效性问题。",
+          "merge_hints": [
+            "引用标准但重点在品牌型号限制时归 technical_bias；标准废止或错引归 technical_standard。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "technical",
+            "score": 14.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "品牌",
+              "型号",
+              "指定"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "968-980",
+            "score": 119,
+            "reasons": [
+              "主模块命中 technical",
+              "正文命中 22 次关键词",
+              "标题层级 3"
+            ],
+            "keywords": [
+              "品牌",
+              "型号",
+              "指定"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "technical_bias",
+      "covered_modules": [
+        "technical",
+        "acceptance"
+      ],
+      "covered_section_ids": [
+        "968-980",
+        "1040-1040",
+        "1049-1049"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {}
+  }
+}

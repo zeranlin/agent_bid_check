@@ -1,0 +1,719 @@
+{
+  "topic": "scoring",
+  "summary": "招标文件评分办法存在多处严重合规风险。主要问题包括：1. 评分标准主观性过强，大量使用‘优、良、中、差’等定性描述但缺乏对应的量化判定口径，导致评委自由裁量权过大；2. 将特定认证证书（省级采用国际标准产品确认证书、CNAS 标志证书）作为高分项，存在以特定认证限定供应商的倾向性风险；3. 业绩评分限定‘深圳市政府机关’，具有明显的地域歧视和排斥潜在投标人嫌疑；4. 项目负责人评分项分值设置畸高（最高 100 分），且将学历、职称、证书简单累加，未体现与项目履约能力的直接关联度。",
+  "risk_points": [
+    {
+      "title": "评分档次缺少量化口径，主观分值裁量空间过大",
+      "severity": "高风险",
+      "review_type": "评分标准明确性审查",
+      "source_location": "证据 1，第 200 - 215 行",
+      "source_excerpt": "1.安装、检测、验收、培训计划条理清晰，脉络分明，操作性强，人性化，能体现以人为本、服务至上的售后理念，评价为优得 60 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念，评价为良得 30 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念，评价为中得 10 分；4、安装、检测、验收、培训计划条理模糊，脉络不分明，操作性差，不能能体现以人为本、服务至上的售后理念，评价为差，不得分。",
+      "risk_judgment": [
+        "评分标准仅使用‘清晰’、‘较清晰’、‘模糊’、‘操作性强’、‘人性化’等定性词汇，未提供具体的量化指标或判定依据。",
+        "‘优’与‘良’之间分值差距巨大（60 分 vs 30 分），但缺乏明确的区分标准，极易导致评委主观随意打分，造成评审结果不公。",
+        "违反了评分标准应当明确、量化、可操作的要求，属于典型的主观分设置不规范。"
+      ],
+      "legal_basis": [
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第五十五条：评审因素应当细化和量化，且与相应的商务条件和采购需求对应。",
+        "《政府采购需求管理办法》（财库〔2021〕22 号）第二十一条：评审标准应当细化、量化，与采购需求对应。"
+      ],
+      "rectification": [
+        "删除‘优、良、中、差’等模糊档次描述，改为具体的量化指标（如：培训计划包含具体时间表、人员配置表、应急预案等得 X 分，缺少一项扣 Y 分）。",
+        "缩小各档次分值差距，或明确每一档次对应的具体得分点，确保评审结果客观公正。"
+      ]
+    },
+    {
+      "title": "以特定认证证书作为高分条件，存在限定特定供应商和倾向性评分风险",
+      "severity": "高风险",
+      "review_type": "评分项合规性审查",
+      "source_location": "证据 6，第 395 - 399 行",
+      "source_excerpt": "1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的，每具备一项得 40 分，具备两项得 80 分，本小项最高得 80 分。2.具备 CNAS 中国认可产品标志证书的，得 20 分，本小项最高得 20 分。",
+      "risk_judgment": [
+        "将‘省级采用国际标准产品确认证书’、‘采用国际标准产品标志证书’及'CNAS 中国认可产品标志证书’作为评分项，且分值极高（最高 100 分）。",
+        "此类证书并非国家强制性认证，且不同地区、不同协会颁发的证书认可度不一，将其作为高分项具有明显的排他性和倾向性，可能指向特定制造商或供应商。",
+        "违反了政府采购不得以特定行政区域、特定行业或特定认证体系作为加分条件的规定。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构不得以不合理的条件对供应商实行差别待遇或者歧视待遇，包括‘以特定行政区域或者特定行业的业绩、奖项作为加分条件或者中标、成交条件’。",
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。"
+      ],
+      "rectification": [
+        "删除所有关于特定认证证书（如省级采用国际标准产品确认证书、CNAS 标志证书等）的评分项。",
+        "若需考察产品质量，应改为考察产品是否符合国家标准、行业标准或提供第三方检测报告等通用性指标。"
+      ]
+    },
+    {
+      "title": "业绩评分限定特定行政区域，存在地域歧视风险",
+      "severity": "高风险",
+      "review_type": "评分项公平性审查",
+      "source_location": "证据 5，第 368 - 369 行",
+      "source_excerpt": "1、提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准）在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。",
+      "risk_judgment": [
+        "业绩评分明确要求‘在深圳市政府机关’的业绩，将非深圳市的业绩排除在外。",
+        "这种地域限制构成了对非本地供应商的歧视，限制了潜在投标人的竞争机会，违反了公平竞争原则。",
+        "‘以合同签订日期为准’的表述在投标截止时可能尚未签订合同，逻辑上存在矛盾，且增加了评审的不确定性。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构不得以不合理的条件对供应商实行差别待遇或者歧视待遇，包括‘以特定行政区域或者特定行业的业绩、奖项作为加分条件或者中标、成交条件’。",
+        "《关于促进政府采购公平竞争优化营商环境的通知》（财库〔2019〕38 号）：不得设置与采购项目的具体特点和实际需要不相适应的资格、技术、商务条件，不得限定或者指定特定的专利、商标、品牌、原产地或者供应商。"
+      ],
+      "rectification": [
+        "删除‘深圳市政府机关’的地域限制，改为‘全国范围内’或‘类似项目业绩’。",
+        "明确业绩证明材料以‘中标通知书’或‘合同’为准，并明确时间计算方式。"
+      ]
+    },
+    {
+      "title": "项目负责人评分项分值畸高且设置不合理",
+      "severity": "中风险",
+      "review_type": "分值设置合理性审查",
+      "source_location": "证据 2，第 261 - 276 行",
+      "source_excerpt": "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分，其他情况不得分，本小项最高得 30 分。2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。3.具有 PMP 项目经理证书的，得 15 分，具有柴油发电机组同类项目经验的，得 15 分，本小项最高得 30 分。以上得分可以累计，最高得分 100 分。",
+      "risk_judgment": [
+        "仅凭学历、职称、证书等静态条件累计最高可得 100 分，分值占比过高，且未体现与项目实际履约能力的直接关联。",
+        "将‘柴油发电机组同类项目经验’作为个人加分项，与业绩评分可能存在重复评价。",
+        "PMP 证书并非国家强制或行业通用的高级别证书，将其作为高分项具有倾向性。",
+        "这种设置容易导致‘唯证书论’，忽视了项目团队的实际配置和过往业绩。"
+      ],
+      "legal_basis": [
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第五十五条：评审因素应当细化和量化，且与相应的商务条件和采购需求对应。",
+        "《关于促进政府采购公平竞争优化营商环境的通知》（财库〔2019〕38 号）：不得将供应商的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素。"
+      ],
+      "rectification": [
+        "降低学历、职称、证书等静态条件的分值权重，增加对项目团队实际配置、类似项目业绩、项目实施方案等动态能力的考核。",
+        "删除 PMP 证书等特定证书的加分项，或将其改为行业通用的项目管理能力证明。",
+        "避免将个人业绩与单位业绩重复评分。"
+      ]
+    },
+    {
+      "title": "评分档次缺少量化口径",
+      "severity": "中风险",
+      "review_type": "评分标准不明确",
+      "source_location": "二、评审标准： 第200-215行",
+      "source_excerpt": "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+      "risk_judgment": [
+        "评分分档存在“优、良、中、差”或类似档次，但缺少与各档对应的量化判定标准。"
+      ],
+      "legal_basis": [
+        "需人工复核"
+      ],
+      "rectification": [
+        "补充各评分档次对应的量化标准，并压缩主观裁量空间。"
+      ]
+    }
+  ],
+  "need_manual_review": false,
+  "coverage_note": "本专题审查覆盖了评分办法中的评审标准、评分内容、分值设置及量化标准，重点识别了主观分设置、特定证书加分及地域限制业绩等高风险点。",
+  "metadata": {
+    "topic_label": "评分办法",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "二、评审标准：",
+        "start_line": 200,
+        "end_line": 215,
+        "module": "scoring"
+      },
+      {
+        "title": "一、评分内容：",
+        "start_line": 261,
+        "end_line": 276,
+        "module": "scoring"
+      },
+      {
+        "title": "（二） 评分标准",
+        "start_line": 309,
+        "end_line": 326,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容",
+        "start_line": 327,
+        "end_line": 331,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容：",
+        "start_line": 368,
+        "end_line": 369,
+        "module": "scoring"
+      },
+      {
+        "title": "（一） 评分内容：",
+        "start_line": 395,
+        "end_line": 399,
+        "module": "scoring"
+      },
+      {
+        "title": "评分准则",
+        "start_line": 409,
+        "end_line": 508,
+        "module": "policy"
+      }
+    ],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "failure_reasons": [
+      "risk_not_extracted",
+      "topic_triggered_but_partial_miss",
+      "cross_topic_shared_but_single_topic_hit"
+    ],
+    "failure_reason_labels": [
+      "专题未抽出风险",
+      "专题已触发但只抽出部分风险",
+      "共享证据场景下仅命中单专题"
+    ],
+    "evidence_bundle": {
+      "topic": "scoring",
+      "sections": [
+        {
+          "title": "二、评审标准：",
+          "start_line": 200,
+          "end_line": 215,
+          "body": "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+          "excerpt": "二、评审标准：\n方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上\n1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；\n2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；\n3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；\n4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。\n\n\n\n\n\n3",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 12,
+            "contract": 0,
+            "acceptance": 8,
+            "technical": 4,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 12,
+          "keywords": [
+            "评审"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "一、评分内容：",
+          "start_line": 261,
+          "end_line": 276,
+          "body": "一、评分内容：\n拟安排项目负责人为投标单位员工（以社保为准） ，否则本项不得分。\n1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分， 其他情况不得分，本小项最高得 30 分。\n2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。\n\n\n\n\n\n\n\n\n\n\n3.具有PMP项目经理证书的，得15分，具有柴油发电机组同类项目经验的， 得 15 分， 本小项最高得 30 分。\n以上得分可以累计， 最高得分 100 分。",
+          "excerpt": "一、评分内容：\n拟安排项目负责人为投标单位员工（以社保为准） ，否则本项不得分。\n1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分， 其他情况不得分，本小项最高得 30 分。\n2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。\n\n\n\n\n\n\n\n\n\n\n3.具有PMP项目经理证书的，得15分，具有柴油发电机组同类项目经验的， 得 15 分， 本小项最高得 30 分。\n以上得分可以累计， 最高得分 100 分。",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 7,
+            "scoring": 12,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 1,
+            "policy": 0
+          },
+          "confidence": 12,
+          "keywords": [
+            "评分"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "（二） 评分标准",
+          "start_line": 309,
+          "end_line": 326,
+          "body": "（二） 评分标准\n评审委员会根据响应情况进行打分， 全部满足要求的得100 分，每负偏离一项扣20 分， 最低得 0 分。\n\n\n\n\n\n2\n\n\n\n\n供应商认证情况\n\n\n\n\n3",
+          "excerpt": "（二） 评分标准\n评审委员会根据响应情况进行打分， 全部满足要求的得100 分，每负偏离一项扣20 分， 最低得 0 分。\n\n\n\n\n\n2\n\n\n\n\n供应商认证情况\n\n\n\n\n3",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 23,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 4,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 23,
+          "keywords": [
+            "评分",
+            "评审"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（一） 评分内容",
+          "start_line": 327,
+          "end_line": 331,
+          "body": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。",
+          "excerpt": "（一） 评分内容\n1.投标人具有质量管理体系认证证书；\n2.投标人具有环境管理体系认证证书；\n3.投标人具有职业健康管理认证证书。\n投标人每具备一项证书得 35 分，具备两项证书得 70 分，具备三项证书得 100 分,未提供得 0 分。",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 6,
+            "scoring": 10,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 4,
+            "policy": 0
+          },
+          "confidence": 10,
+          "keywords": [
+            "评分"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（一） 评分内容：",
+          "start_line": 368,
+          "end_line": 369,
+          "body": "（一） 评分内容：\n1、提供投标人 2022 年 4 月 1  日至投标截止日（以合同签订日期为准） 在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。",
+          "excerpt": "（一） 评分内容：\n1、提供投标人 2022 年 4 月 1  日至投标截止日（以合同签订日期为准） 在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 4,
+            "scoring": 12,
+            "contract": 1,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 2,
+            "policy": 0
+          },
+          "confidence": 12,
+          "keywords": [
+            "评分"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（一） 评分内容：",
+          "start_line": 395,
+          "end_line": 399,
+          "body": "（一） 评分内容：\n柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：\n1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。\n2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。\n以上累计最高得分为 100 分。",
+          "excerpt": "（一） 评分内容：\n柴油发电机组制造商的投标的柴油发电机组，具备以下认证的：\n1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。\n2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。\n以上累计最高得分为 100 分。",
+          "module": "scoring",
+          "module_scores": {
+            "qualification": 3,
+            "scoring": 12,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 6,
+            "procedure": 1,
+            "policy": 0
+          },
+          "confidence": 12,
+          "keywords": [
+            "评分"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "评分准则",
+          "start_line": 409,
+          "end_line": 508,
+          "body": "评分准则\n\n\n\n4\n\n\n\n\n1\n\n\n\n\n诚信情况\n\n\n\n\n5\n根据《深圳市财政局关于印发<深圳市财政局政府采购供应商信用信息管理办法>的通知》（深财规〔2023〕3 号）相关规定，如供应商在全国范围内存在因政府采购违法、违规行为受到财政部门罚款等一般行政处罚信息，或者存在该办法第十一条所称在本市集中采购活动中的一般违法失信行为记录信息， 且在公示期内的， 本项不得分，否则得 100 分。（采购代理机构通过“信用中国”、“中国政府采购网”、“深圳市政府采购监管网”以及市、区财政部门认定的其他渠道查询供应商信用信息， 投标人无需提供证明材料。）\n\n\n\n\n\n\n政府采购招标文件\n（货物类）\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n采购代理机构： 公诚管理咨询有限公司\n\n\n\n\n特别警示条款\n\n参与本项目政府采购活动的供应商应认真阅读以下特别警示条款，不得存在以下所列禁止情形， 一旦发现， 将被处以记入供应商诚信档案、罚款、取消参与政府采购资格、吊销营业执照等处罚；构成犯罪的，依法追究刑事责任。\n\n序号\n供应商参与投标禁止情形\n\n1\n与其他投标供应商的法定代表人、主要经营负责人、投标授权代表人、项目负责人、主要技术人员为同一人、属同一单位或者在同一单位缴纳社会保险。\n\n2\n参与本项目政府采购活动时，与其他投标供应商存在单位负责人为同一人或直接控股、管理关系。\n3\n与其他投标供应商的投标文件或部分投标文件相互混装或存在非正常一致。\n\n4\n与其他投标供应商的投标文件由同一单位或者同一人编制，或者使用同一设备编制  （“文件制作机器码”“文件创建标识码”一致）。\n\n5\n提供未经出具机构核实的虚假的检验检测报告、业绩材料、社保缴纳证明、学历学位证书、职称认证证书等材料。\n6\n擅自将投标密钥或电子营业执照出借他人使用或未妥善保管。\n\n警示条款\n一、《深圳经济特区政府采购条例》第五十七条 供应商在政府采购中， 有下列行为之一的， 一至三年内禁止其参与本市政府采购， 并由主管部门记入供应商诚信档案， 处以采购金额千分之十以上千分之二十以下的罚款；情节严重的， 取消其参与本市政府采购资格，处以采购金额千分之二十以上千分之三十以下的罚款，并由市场监管部门依法吊销其营业执照；给他人造成损失的， 依法承担赔偿责任； 构成犯罪的，依法追究刑事责任：\n（一） 在采购活动中应当回避而未回避的；\n（二） 未按本条例规定签订、履行采购合同， 造成严重后果的；\n（三） 隐瞒真实情况，提供虚假资料的；\n（四） 以非法手段排斥其他供应商参与竞争的；\n（五） 与其他采购参加人串通投标的；\n（六） 恶意投诉的；\n（七） 向采购项目相关人行贿或者提供其他不当利益的；\n（八） 阻碍、抗拒主管部门监督检查的；\n\n\n\n\n\n（九） 其他违反本条例规定的行为。",
+          "excerpt": "评分准则\n\n\n\n4\n\n\n\n\n1\n\n\n\n\n诚信情况\n\n\n\n\n5\n根据《深圳市财政局关于印发<深圳市财政局政府采购供应商信用信息管理办法>的通知》（深财规〔2023〕3 号）相关规定，如供应商在全国范围内存在因政府采购违法、违规行为受到财政部门罚款等一般行政处罚信息，或者存在该办法第十一条所称在本市集中采购活动中的一般违法失信行为记录信息， 且在公示期内的， 本项不得分，否则得 100 分。（采购代理机构通过“信用中国”、“中国政府采购网”、“深圳市政府采购监管网”以及市、区财政部门认定的其他渠道查询供应商信用信息， 投标人无需提供证明材料。）\n\n\n\n\n\n\n政府采购招标文件\n（货物类）\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n采购代理机构： 公诚管理咨询有限公司\n\n\n\n\n特别警示条款\n\n参与本项目政府采购活动的供应商应认真阅读以下特别警示条款，不得存在以下所列禁止情形， 一旦发现， 将被处以记入供应商诚信档案、罚款、取消参与政府采购资格、吊销营业执照等处罚；构成犯罪的，依法追究刑事责任。\n\n序号\n供应商参与投标禁止情形\n\n1\n与其他投标供应商的法定代表人、主要经营负责人、投标授权代表人、项目负责人、主要技术人员为同一人、属同一单位或者在同一单位缴纳社会保险。\n\n2\n参与本项目政府采购活动时，与其他投标供应商存在单位负责人为同一人或直接控股、管理关系。\n3\n与其他投标供应商的投标文件或部分投标文件相互混装或存在非正常一致。\n\n4\n与其他投标供应商的投标文件由同一单位或者同一人编制，或者使用同一设备编制  （“文件制作机器码”“文件创建标识码”一致）。\n\n5\n提供未经出具机构核实的虚假的检验检测报告、业绩材料、社保缴纳证明、学历学位证书、职称认证证书等材料。\n6\n擅自将投标密钥或电子营业执照出借他人使用或未妥善保管。\n\n警示条款\n一、《深圳经济特区政府采购条例》第五十",
+          "module": "policy",
+          "module_scores": {
+            "qualification": 12,
+            "scoring": 10,
+            "contract": 1,
+            "acceptance": 1,
+            "technical": 4,
+            "procedure": 12,
+            "policy": 14
+          },
+          "confidence": 14,
+          "keywords": [
+            "政府采购",
+            "财政部"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "395-399",
+        "327-331",
+        "200-215",
+        "309-326",
+        "261-276"
+      ],
+      "secondary_section_ids": [
+        "409-508",
+        "368-369"
+      ],
+      "missing_hints": [],
+      "recall_query": "模块=scoring,qualification,technical,procedure；关键词=评分,评标,评审,分值,综合评分,量化,最低评标价,加分；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "评分办法",
+        "topic_aliases": [
+          "评分项",
+          "评审标准"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "评分办法",
+            "评分项",
+            "分值设置",
+            "量化标准",
+            "主观分描述"
+          ],
+          "out_of_scope": [
+            "资格准入",
+            "合同履约",
+            "技术标准有效性"
+          ],
+          "primary_modules": [
+            "scoring"
+          ],
+          "secondary_modules": [
+            "qualification",
+            "technical",
+            "procedure"
+          ],
+          "ownership_rule": "只处理评分逻辑、分值和量化标准，不处理准入资格或合同执行条件。",
+          "merge_hints": [
+            "样品、演示、答辩若作为评分项，其评分逻辑归 scoring，要求本身归 samples_demo。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "scoring",
+            "score": 23.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "评分",
+              "评审"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "395-399",
+            "score": 143,
+            "reasons": [
+              "主模块命中 scoring",
+              "标题命中 1 次关键词",
+              "正文命中 2 次关键词",
+              "标题层级 3",
+              "专题特殊加权 63"
+            ],
+            "keywords": [
+              "评分"
+            ]
+          },
+          {
+            "section_id": "327-331",
+            "score": 141,
+            "reasons": [
+              "主模块命中 scoring",
+              "标题命中 1 次关键词",
+              "正文命中 2 次关键词",
+              "标题层级 3",
+              "专题特殊加权 63"
+            ],
+            "keywords": [
+              "评分"
+            ]
+          },
+          {
+            "section_id": "200-215",
+            "score": 140,
+            "reasons": [
+              "主模块命中 scoring",
+              "标题命中 1 次关键词",
+              "正文命中 2 次关键词",
+              "标题层级 2",
+              "专题特殊加权 65"
+            ],
+            "keywords": [
+              "评审"
+            ]
+          },
+          {
+            "section_id": "309-326",
+            "score": 126,
+            "reasons": [
+              "主模块命中 scoring",
+              "标题命中 1 次关键词",
+              "正文命中 4 次关键词",
+              "标题层级 3",
+              "专题特殊加权 45"
+            ],
+            "keywords": [
+              "评分",
+              "评审"
+            ]
+          },
+          {
+            "section_id": "261-276",
+            "score": 123,
+            "reasons": [
+              "主模块命中 scoring",
+              "标题命中 1 次关键词",
+              "正文命中 2 次关键词",
+              "标题层级 2",
+              "专题特殊加权 46"
+            ],
+            "keywords": [
+              "评分"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "scoring",
+      "covered_modules": [
+        "scoring",
+        "technical",
+        "qualification",
+        "procedure",
+        "policy"
+      ],
+      "covered_section_ids": [
+        "395-399",
+        "327-331",
+        "200-215",
+        "309-326",
+        "261-276",
+        "409-508",
+        "368-369"
+      ],
+      "missing_modules": [],
+      "missing_hints": [],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "star_required_for_gb_non_t": true,
+      "star_required_for_mandatory_standard": true,
+      "star_rule_sections": [
+        {
+          "section_id": "builtin:star_marker",
+          "title": "内置规则库：实质性条款星标规则",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "star_rule_sentences": [
+        "评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。"
+      ],
+      "acceptance_plan_forbidden_in_scoring": true,
+      "acceptance_plan_rule_sections": [
+        {
+          "section_id": "builtin:acceptance_plan_scoring",
+          "title": "内置规则库：评分因素合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "acceptance_plan_rule_sentences": [
+        "评审规则合规性-不得将项目验收方案作为评审因素。"
+      ],
+      "scoring_contains_acceptance_plan": true,
+      "acceptance_plan_scoring_sections": [
+        {
+          "section_id": "200-215",
+          "title": "二、评审标准：",
+          "start_line": 200,
+          "end_line": 215,
+          "module": "scoring"
+        }
+      ],
+      "acceptance_plan_scoring_sentences": [
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分",
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分",
+        "2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分",
+        "3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分",
+        "4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。 3"
+      ],
+      "acceptance_plan_linked_to_score": true,
+      "payment_terms_forbidden_in_scoring": true,
+      "payment_terms_rule_sections": [
+        {
+          "section_id": "builtin:payment_terms_scoring",
+          "title": "内置规则库：商务评分合规性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "payment_terms_rule_sentences": [
+        "评审规则合规性-不得将付款方式作为评审因素。"
+      ],
+      "scoring_contains_payment_terms": false,
+      "payment_terms_scoring_sections": [],
+      "payment_terms_scoring_sentences": [],
+      "payment_terms_linked_to_score": false,
+      "gifts_or_unrelated_goods_forbidden_in_scoring": true,
+      "gifts_or_goods_rule_sections": [
+        {
+          "section_id": "builtin:gifts_scoring",
+          "title": "内置规则库：评分因素相关性",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "gifts_or_goods_rule_sentences": [
+        "评审规则合规性-不得要求提供赠品、回扣或者与采购无关的其他商品、服务。"
+      ],
+      "scoring_contains_gifts_or_unrelated_goods": false,
+      "gifts_or_goods_scoring_sections": [],
+      "gifts_or_goods_scoring_sentences": [],
+      "gifts_or_goods_linked_to_score": false,
+      "specific_brand_or_supplier_forbidden_in_scoring": true,
+      "specific_brand_or_supplier_rule_sections": [
+        {
+          "section_id": "builtin:specific_brand_scoring",
+          "title": "内置规则库：评分因素公平竞争",
+          "start_line": 0,
+          "end_line": 0,
+          "module": "builtin_rule"
+        }
+      ],
+      "specific_brand_or_supplier_rule_sentences": [
+        "评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。"
+      ],
+      "scoring_contains_specific_cert_or_supplier_signal": true,
+      "specific_cert_or_supplier_scoring_sections": [
+        {
+          "section_id": "395-399",
+          "title": "（一） 评分内容：",
+          "start_line": 395,
+          "end_line": 399,
+          "module": "scoring"
+        }
+      ],
+      "specific_cert_or_supplier_evidence": [
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分",
+        "2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+      ],
+      "specific_cert_or_supplier_score_linked": true,
+      "scoring_requirement_present": true,
+      "scoring_requirement_sections": [
+        {
+          "section_id": "200-215",
+          "title": "二、评审标准：",
+          "start_line": 200,
+          "end_line": 215,
+          "module": "scoring"
+        },
+        {
+          "section_id": "261-276",
+          "title": "一、评分内容：",
+          "start_line": 261,
+          "end_line": 276,
+          "module": "scoring"
+        },
+        {
+          "section_id": "309-326",
+          "title": "（二） 评分标准",
+          "start_line": 309,
+          "end_line": 326,
+          "module": "scoring"
+        },
+        {
+          "section_id": "327-331",
+          "title": "（一） 评分内容",
+          "start_line": 327,
+          "end_line": 331,
+          "module": "scoring"
+        },
+        {
+          "section_id": "368-369",
+          "title": "（一） 评分内容：",
+          "start_line": 368,
+          "end_line": 369,
+          "module": "scoring"
+        },
+        {
+          "section_id": "395-399",
+          "title": "（一） 评分内容：",
+          "start_line": 395,
+          "end_line": 399,
+          "module": "scoring"
+        },
+        {
+          "section_id": "409-508",
+          "title": "评分准则",
+          "start_line": 409,
+          "end_line": 508,
+          "module": "policy"
+        }
+      ],
+      "scoring_requirement_sentences": [
+        "二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分；",
+        "4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分。",
+        "一、评分内容： 拟安排项目负责人为投标单位员工（以社保为准） ，否则本项不得分。",
+        "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分， 其他情况不得分，本小项最高得 30 分。",
+        "以上得分可以累计， 最高得分 100 分。",
+        "（二） 评分标准 评审委员会根据响应情况进行打分， 全部满足要求的得100 分，每负偏离一项扣20 分， 最低得 0 分。",
+        "（一） 评分内容 1.投标人具有质量管理体系认证证书；",
+        "（一） 评分内容： 1、提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准） 在深圳市政府机关的柴油发电机组供货或安装业绩，每提供 1 个类似项目业绩的得 20 分，其它情况不得分，本项最高得 100 分。",
+        "（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。",
+        "以上累计最高得分为 100 分。",
+        "评分准则 4 1 诚信情况 5 根据《深圳市财政局关于印发<深圳市财政局政府采购供应商信用信息管理办法>的通知》（深财规〔2023〕3 号）相关规定，如供应商在全国范围内存在因政府采购违法、违规行为受到财政部门罚款等一般行政处罚信息，或者存在该办法第十一条所称在本市集中采购活动中的一般违法失信行为记录信息， 且在公示期内的， 本项不得分，否则得 100 分。"
+      ],
+      "cancelled_or_non_mandatory_scoring_credential_signal": false,
+      "cancelled_or_non_mandatory_scoring_credential_sections": [],
+      "cancelled_or_non_mandatory_scoring_credential_sentences": [],
+      "cancelled_or_non_mandatory_scoring_credential_linked_to_score": false,
+      "cancelled_or_non_mandatory_scoring_credential_linked_sections": [],
+      "cancelled_or_non_mandatory_scoring_credential_linked_sentences": [],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

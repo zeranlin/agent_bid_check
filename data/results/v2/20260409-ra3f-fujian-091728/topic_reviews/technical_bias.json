@@ -1,0 +1,237 @@
+{
+  "topic": "technical_bias",
+  "summary": "当前召回的证据片段主要集中在验收流程说明及投标响应表格的填写规范，未包含具体的技术参数、功能配置、性能指标、品牌型号、专利专有技术或唯一性要求等实质性内容。无法依据现有片段判断是否存在技术倾向性或排他性条款。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "本专题召回范围涵盖技术参数、品牌型号、专利专有技术、唯一性要求、原厂证明及兼容性指向。当前证据仅覆盖验收模块及响应表格格式要求，缺失核心的技术规格章节内容。",
+  "metadata": {
+    "topic_label": "技术倾向性",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "是否邀请投标人验收",
+        "start_line": 2617,
+        "end_line": 2617,
+        "module": "acceptance"
+      },
+      {
+        "title": "六、服务履约验收或考核",
+        "start_line": 2720,
+        "end_line": 2721,
+        "module": "acceptance"
+      },
+      {
+        "title": "技术和服务要求",
+        "start_line": 3505,
+        "end_line": 3533,
+        "module": "technical"
+      }
+    ],
+    "missing_evidence": [
+      "招标文件第五章“技术和服务要求”的具体正文内容（当前仅召回了响应表格的填写说明）",
+      "涉及具体设备、材料、软件的技术参数、品牌、型号、产地描述",
+      "涉及专利、专有技术、原厂授权、指定配件或兼容性要求的条款"
+    ],
+    "failure_reasons": [
+      "missing_evidence",
+      "degraded_to_manual_review",
+      "risk_degraded_to_manual_review"
+    ],
+    "failure_reason_labels": [
+      "证据不足",
+      "已降级为人工复核",
+      "存在风险但被降级为人工复核"
+    ],
+    "evidence_bundle": {
+      "topic": "technical_bias",
+      "sections": [
+        {
+          "title": "是否邀请投标人验收",
+          "start_line": 2617,
+          "end_line": 2617,
+          "body": "是否邀请投标人验收",
+          "excerpt": "是否邀请投标人验收",
+          "module": "acceptance",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 4,
+            "technical": 0,
+            "procedure": 4,
+            "policy": 0
+          },
+          "confidence": 4,
+          "keywords": [
+            "验收"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "六、服务履约验收或考核",
+          "start_line": 2720,
+          "end_line": 2721,
+          "body": "六、服务履约验收或考核\n 甲方按照采购文件、乙方的投标或响应文件和本协议约定的服务内容及质量要求按次组织对乙方所提供服务进行验收，或定期进行服务考核，并根据验收或考核结果支付服务费用。具体如下：",
+          "excerpt": "六、服务履约验收或考核\n 甲方按照采购文件、乙方的投标或响应文件和本协议约定的服务内容及质量要求按次组织对乙方所提供服务进行验收，或定期进行服务考核，并根据验收或考核结果支付服务费用。具体如下：",
+          "module": "acceptance",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 5,
+            "acceptance": 6,
+            "technical": 0,
+            "procedure": 2,
+            "policy": 0
+          },
+          "confidence": 6,
+          "keywords": [
+            "验收"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "技术和服务要求",
+          "start_line": 3505,
+          "end_line": 3533,
+          "body": "技术和服务要求\n投标响应\n是否偏离及说明\n*\n*-1\n\n\n\n\n…\n\n\n\n…\n\n\n\n\n※注意：\n1、本表应按照下列规定填写：\n1.1“技术和服务要求”项下填写的内容应与招标文件第五章“技术和服务要求”的内容保持一致。\n1.2“投标响应”项下应填写具体的响应内容并与“技术和服务要求”项下填写的内容逐项对应；对招标文件“技术和服务要求”项下涉及“≥或＞”、“≤或＜”及某个区间值范围内的内容，投标响应应填写具体的数值，但技术指标只能以范围作响应的除外。\n1.3“是否偏离及说明”项下应按下列规定填写：优于的，填写“正偏离”；符合的，填写“无偏离”；低于的，填写“负偏离”。\n2、投标人需要说明的内容若需特殊表达，应先在本表中进行相应说明，再另页应答，但应做好标注说明，方便评委查阅评审。未标注说明可能导致的不利的评审后果由投标人自行承担。\n投标人：（全称并加盖单位公章）\n日期：　　年　　月　　日",
+          "excerpt": "技术和服务要求\n投标响应\n是否偏离及说明\n*\n*-1\n\n\n\n\n…\n\n\n\n…\n\n\n\n\n※注意：\n1、本表应按照下列规定填写：\n1.1“技术和服务要求”项下填写的内容应与招标文件第五章“技术和服务要求”的内容保持一致。\n1.2“投标响应”项下应填写具体的响应内容并与“技术和服务要求”项下填写的内容逐项对应；对招标文件“技术和服务要求”项下涉及“≥或＞”、“≤或＜”及某个区间值范围内的内容，投标响应应填写具体的数值，但技术指标只能以范围作响应的除外。\n1.3“是否偏离及说明”项下应按下列规定填写：优于的，填写“正偏离”；符合的，填写“无偏离”；低于的，填写“负偏离”。\n2、投标人需要说明的内容若需特殊表达，应先在本表中进行相应说明，再另页应答，但应做好标注说明，方便评委查阅评审。未标注说明可能导致的不利的评审后果由投标人自行承担。\n投标人：（全称并加盖单位公章）\n日期：　　年　　月　　日",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 2,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 9,
+            "procedure": 6,
+            "policy": 0
+          },
+          "confidence": 9,
+          "keywords": [
+            "技术"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "3505-3533"
+      ],
+      "secondary_section_ids": [
+        "2720-2721",
+        "2617-2617"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=technical,acceptance；关键词=品牌,型号,专利,专有技术,唯一,指定,兼容,原厂；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "技术倾向性",
+        "topic_aliases": [
+          "技术参数倾向",
+          "品牌型号"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "品牌型号指向",
+            "专利专有技术",
+            "唯一性要求",
+            "原厂证明",
+            "兼容性指向"
+          ],
+          "out_of_scope": [
+            "标准有效性",
+            "检测认证有效性",
+            "付款履约"
+          ],
+          "primary_modules": [
+            "technical"
+          ],
+          "secondary_modules": [
+            "acceptance"
+          ],
+          "ownership_rule": "只处理技术参数对特定产品或供应商的指向性，不处理标准编号有效性问题。",
+          "merge_hints": [
+            "引用标准但重点在品牌型号限制时归 technical_bias；标准废止或错引归 technical_standard。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "technical",
+            "score": 9.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": []
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "3505-3533",
+            "score": 50,
+            "reasons": [
+              "主模块命中 technical",
+              "标题层级 2"
+            ],
+            "keywords": []
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "technical_bias",
+      "covered_modules": [
+        "acceptance",
+        "technical"
+      ],
+      "covered_section_ids": [
+        "3505-3533",
+        "2720-2721",
+        "2617-2617"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 0.8333333333333334
+    },
+    "structured_signals": {}
+  }
+}
