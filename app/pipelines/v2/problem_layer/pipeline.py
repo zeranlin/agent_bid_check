@@ -22,6 +22,15 @@ PROBLEM_GROUP_RULES: dict[str, dict[str, object]] = {
         "primary_family": "import_consistency",
         "merge_reason": "国外标准/国外部件与采购政策口径冲突属于同一跨专题一致性问题，问题层统一收口为一个主问题。",
     },
+    "acceptance_testing_cost": {
+        "families": {"acceptance_testing_cost"},
+        "canonical_titles": {
+            "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+        },
+        "primary_family": "acceptance_testing_cost",
+        "merge_reason": "验收检测费用转嫁与费用边界不清属于同一费用风险家族，问题层统一保留 formal 主问题并吸收附属待补证标题。",
+    },
 }
 
 CROSS_TOPIC_FAMILY_REASONS: dict[str, str] = {
@@ -71,9 +80,11 @@ def _stable_conflict_problem_id(conflict_type: str, left_problem_id: str, right_
 
 def _problem_group_key(candidate: GovernedRisk) -> str:
     family_key = candidate.family.family_key
+    title = candidate.decision.canonical_title
     for group_key, rule in PROBLEM_GROUP_RULES.items():
         families = {str(item) for item in rule.get("families", set())}
-        if family_key in families:
+        canonical_titles = {str(item) for item in rule.get("canonical_titles", set())}
+        if family_key in families or title in canonical_titles:
             return group_key
     return family_key
 
@@ -195,6 +206,8 @@ def _problem_trace(
         "problem_merge_reason": problem_merge_reason,
         "absorbed_supporting_titles": list(absorbed_supporting_titles),
         "absorbed_supporting_rule_ids": list(absorbed_supporting_rule_ids),
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": list(topic_sources),
         "merged_family_keys": list(merged_family_keys),
         "cross_topic_merge_reason": cross_topic_reason,
@@ -284,6 +297,17 @@ def _build_problem_from_group(group_key: str, candidates: list[GovernedRisk]) ->
         layer_conflict_inputs=layer_conflict_inputs,
     )
     trace["primary_selection_reason"] = "优先保留预设主 family，其次保留风险级别更高、证据锚点更完整的候选作为主问题。"
+    if group_key == "acceptance_testing_cost" and support:
+        trace["user_visible_dedupe_reason"] = "family_visible_output_absorbed_by_primary"
+        trace["absorbed_user_visible_items"] = [
+            {
+                "title": item.decision.canonical_title,
+                "source_bucket": "pending_review_items",
+                "absorbed_by": primary.decision.canonical_title,
+                "hidden_reason": "same_family_absorbed_by_formal_primary",
+            }
+            for item in support
+        ]
     return Problem(
         problem_id=problem_id,
         canonical_title=primary.decision.canonical_title,

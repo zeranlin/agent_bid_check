@@ -1,0 +1,72 @@
+{
+  "document_id": "DOC-FUJIAN-PROPERTY-BASELINE",
+  "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
+  "baseline_assertions": {
+    "should_report": [
+      {
+        "assertion_id": "fujian-brand-bias",
+        "assertion": {
+          "id": "fujian-brand-bias",
+          "title": "评分标准中设置特定品牌倾向性条款"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fujian-tech-brand",
+        "assertion": {
+          "id": "fujian-tech-brand",
+          "title": "技术参数中关于“实验服清洗服务”的设备品牌指定风险"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      }
+    ],
+    "should_pending": [
+      {
+        "assertion_id": "fujian-acceptance-pending",
+        "assertion": {
+          "id": "fujian-acceptance-pending",
+          "title": "验收流程与考核机制表述笼统，缺乏可操作性"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "fujian-policy-reminder",
+        "assertion": {
+          "id": "fujian-policy-reminder",
+          "title": "专门面向中小企业采购的评审细节需确认"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      }
+    ],
+    "should_not_report": [
+      {
+        "assertion_id": "fujian-template-acceptance",
+        "assertion": {
+          "id": "fujian-template-acceptance",
+          "title": "验收标准模糊且依赖后续合同确定，存在需求条款合规风险"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [
+          "excluded_risks"
+        ],
+        "matched": true
+      }
+    ]
+  }
+}

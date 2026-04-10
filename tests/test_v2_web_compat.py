@@ -10,6 +10,7 @@ from app.web.v2_app import (
     build_comparison_view,
     build_review_view,
     build_review_view_from_final_output,
+    build_review_view_from_final_snapshot,
     build_topic_view,
     create_app,
     load_result_by_run_id,
@@ -476,6 +477,78 @@ def test_load_result_by_run_id_prefers_final_output_as_single_source(tmp_path: P
     assert result["final_output"]["excluded_risks"][0]["title"] == "已剔除项"
     assert result["output_admission"]["final_output_governed"] is True
     assert result["governed_output"]["formal_risks"][0]["decision"]["canonical_title"] == "正式风险标题"
+
+
+def test_build_review_view_from_final_snapshot_keeps_excluded_as_summary_not_main_cards() -> None:
+    snapshot = {
+        "final_risks": {
+            "formal_risks": [
+                {
+                    "title": "正式风险标题",
+                    "severity": "高风险",
+                    "review_type": "正式类型",
+                    "source_location": "正式位置",
+                    "source_excerpt": "正式摘录",
+                    "risk_judgment": ["正式判断"],
+                    "legal_basis": ["正式依据"],
+                    "rectification": ["正式建议"],
+                    "rule_ids": ["compare::formal-risk"],
+                    "topic_sources": ["policy"],
+                    "problem_id": "problem-1",
+                    "problem_kind": "standard",
+                    "conflict_type": "",
+                }
+            ],
+            "pending_review_items": [],
+            "excluded_risks": [
+                {
+                    "title": "已排除项",
+                    "admission_reason": "弱提示型问题已被 pending gate 拦截。",
+                }
+            ],
+        },
+        "summary": {
+            "formal_count": 1,
+            "pending_count": 0,
+            "excluded_count": 1,
+            "high_risk_titles": ["正式风险标题"],
+            "medium_risk_titles": [],
+            "manual_review_titles": [],
+            "excluded_titles": ["已排除项"],
+        },
+    }
+
+    view = build_review_view_from_final_snapshot(snapshot)
+
+    assert view["total"] == 1
+    assert [card["title"] for card in view["all_cards"]] == ["正式风险标题"]
+    assert view["excluded_summary"] == {
+        "count": 1,
+        "items": [{"title": "已排除项", "reason": "弱提示型问题已被 pending gate 拦截。"}],
+    }
+
+
+def test_build_review_view_from_final_snapshot_hides_missing_visible_evidence_excluded_items() -> None:
+    snapshot = {
+        "final_risks": {
+            "formal_risks": [],
+            "pending_review_items": [],
+            "excluded_risks": [],
+        },
+        "summary": {
+            "formal_count": 0,
+            "pending_count": 0,
+            "excluded_count": 0,
+            "high_risk_titles": [],
+            "medium_risk_titles": [],
+            "manual_review_titles": [],
+            "excluded_titles": [],
+        },
+    }
+
+    view = build_review_view_from_final_snapshot(snapshot)
+
+    assert view["excluded_summary"] == {"count": 0, "items": []}
 
 
 def test_load_result_by_run_id_falls_back_to_markdown_for_ungoverned_output(tmp_path: Path, monkeypatch) -> None:

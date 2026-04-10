@@ -39,6 +39,8 @@ class AdmissionDecision:
     admission_reason: str
     evidence_kind: EvidenceKind
     source_type: AdmissionSourceType
+    pending_gate_reason_code: str = ""
+    pending_gate_reason: str = ""
     formal_gate_passed: bool = False
     formal_gate_reason: str = ""
     formal_gate_rule: str = ""

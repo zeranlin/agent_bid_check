@@ -864,6 +864,182 @@ def test_formal_gate_blocks_inactive_registry_rule_even_with_body_evidence(monke
     assert decision.formal_gate_registry_resolution == "matched"
 
 
+def test_pending_gate_absorbs_same_family_pending_when_formal_primary_exists() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="acceptance-cost-formal",
+                title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                severity="高风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款：报价要求"],
+                source_excerpts=["投标总价应包含项目验收、检测及相关部门验收等全部费用。"],
+                risk_judgment=["正文已明确出现费用承担安排。"],
+                legal_basis=["不得将应由采购人承担的费用不当转嫁供应商。"],
+                rectification=["明确费用边界。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-COST"],
+            ),
+            MergedRiskCluster(
+                cluster_id="acceptance-cost-pending",
+                title="将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+                severity="中风险",
+                review_type="需求条款审查",
+                source_locations=["采购需求：验收要求"],
+                source_excerpts=["验收、检测等费用由中标人承担。"],
+                risk_judgment=["同一家族中的附属说明不应再并列对外展示。"],
+                legal_basis=["采购需求不得转嫁不合理费用负担。"],
+                rectification=["删除转嫁费用表述。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+                    "severity": "需人工复核",
+                    "review_type": "需求条款审查",
+                    "topic": "验收条款",
+                    "source_location": "采购需求：验收要求",
+                    "source_excerpt": "验收、检测等费用由中标人承担。",
+                    "reason": "当前为待补证复核输出。",
+                }
+            ]
+        },
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    problems = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    admission = admit_problem_result("fuzhou-school-dorm.docx", comparison, problems, governance)
+
+    assert [item.title for item in admission.formal_risks] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert admission.pending_review_items == []
+    formal = admission.formal_risks[0]
+    assert formal.extras["problem_trace"]["absorbed_user_visible_items"][0]["title"] == "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+    assert formal.extras["problem_trace"]["absorbed_user_visible_items"][0]["hidden_reason"] == "same_family_absorbed_by_formal_primary"
+
+
+def test_pending_gate_drops_weak_signal_without_rule_support_from_user_visible_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="weak-pending-no-rule",
+                title="政策依据引用不完整，存在表述截断风险",
+                severity="中风险",
+                review_type="政策条款审查",
+                source_locations=["政策章节"],
+                source_excerpts=["上述政策依据后续内容未完整展示，需进一步确认。"],
+                risk_judgment=["当前仅提示政策依据可能不完整。"],
+                legal_basis=["需结合完整政策条文进一步核实。"],
+                rectification=["补充完整政策依据。"],
+                topics=["policy"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    problems = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    admission = admit_problem_result("fuzhou-school-dorm.docx", comparison, problems, governance)
+
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["政策依据引用不完整，存在表述截断风险"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.pending_gate_reason_code == "weak_signal_no_rule_support"
+
+
+def test_pending_gate_drops_weak_signal_without_material_consequence_from_user_visible_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="weak-pending-no-consequence",
+                title="节能环保政策具体适用要求缺失",
+                severity="中风险",
+                review_type="政策条款审查",
+                source_locations=["政策章节"],
+                source_excerpts=["节能环保政策条款未写明具体适用要求，建议结合项目进一步确认。"],
+                risk_judgment=["当前仅提示存在适用要求缺口，未见明确合规后果。"],
+                legal_basis=["需结合采购标的与适用政策进一步核实。"],
+                rectification=["补充适用要求说明。"],
+                topics=["policy"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    problems = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    admission = admit_problem_result("fuzhou-school-dorm.docx", comparison, problems, governance)
+
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["节能环保政策具体适用要求缺失"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.pending_gate_reason_code == "weak_signal_no_material_consequence"
+
+
+def test_pending_gate_drops_fuzhou_energy_policy_hint_from_user_visible_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="fuzhou-energy-policy-hint",
+                title="节能环保政策具体适用要求缺失",
+                severity="中风险",
+                review_type="政策条款审查",
+                source_locations=["证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"],
+                source_excerpts=["政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"],
+                risk_judgment=["当前仅提示节能环保政策适用要求缺口，未形成明确合规后果。"],
+                legal_basis=["需结合采购标的与适用政策进一步核实。"],
+                rectification=["补充适用要求说明。"],
+                topics=["policy"],
+                source_rules=["baseline"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    problems = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    admission = admit_problem_result("fuzhou-school-dorm.docx", comparison, problems, governance)
+
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["节能环保政策具体适用要求缺失"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.pending_gate_reason_code == "weak_signal_no_material_consequence"
+
+
+def test_pending_gate_blocks_missing_user_visible_evidence() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="missing-visible-evidence",
+                title="违约责任及质保期条款缺失",
+                severity="中风险",
+                review_type="商务条款审查",
+                source_locations=["未在当前证据片段中找到"],
+                source_excerpts=["无"],
+                risk_judgment=["当前仅能推测章节可能缺失。"],
+                legal_basis=["需结合完整合同条款继续核实。"],
+                rectification=["补充违约责任及质保期条款。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    problems = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    admission = admit_problem_result("fuzhou-school-dorm.docx", comparison, problems, governance)
+
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["违约责任及质保期条款缺失"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.pending_gate_reason_code == "missing_user_visible_evidence"
+
+
 def test_formal_gate_whitelist_can_survive_weak_source_downgrade_rules() -> None:
     comparison = ComparisonArtifact(
         clusters=[

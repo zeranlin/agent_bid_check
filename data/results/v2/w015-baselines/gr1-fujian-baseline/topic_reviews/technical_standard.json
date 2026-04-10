@@ -1,0 +1,294 @@
+{
+  "topic": "technical_standard",
+  "summary": "当前召回的证据片段主要集中在商务评分项（荣誉、保险、业绩）及合同模板的空白占位符部分，未包含具体的技术标准引用、标准编号、检测方法或检测认证要求等实质性内容。无法判断标准引用的有效性、一致性或检测认证要求的合规性。",
+  "risk_points": [],
+  "need_manual_review": true,
+  "coverage_note": "本专题仅基于召回的 3 个证据片段进行审查。证据 1 为商务评分标准，证据 2 和 3 为合同及技术要求的空白模板，均未涉及具体的标准名称、编号、版本或检测认证条款。",
+  "metadata": {
+    "topic_label": "技术标准与检测",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "商务项（F3×A3）满分为22.00分",
+        "start_line": 722,
+        "end_line": 772,
+        "module": "procedure"
+      },
+      {
+        "title": "四、合同标的及服务范围、地点和时间",
+        "start_line": 2704,
+        "end_line": 2708,
+        "module": "contract"
+      },
+      {
+        "title": "五、服务内容、质量标准和要求",
+        "start_line": 2709,
+        "end_line": 2712,
+        "module": "technical"
+      }
+    ],
+    "missing_evidence": [
+      "未找到具体的国家标准（GB/GB/T）、行业标准或地方标准引用条款",
+      "未找到关于检测方法、检验条件或试验条件的具体描述",
+      "未找到关于检测报告（CMA/CNAS）或产品认证（CCC 等）的具体要求",
+      "证据 3 中'5.3 技术保障、服务人员组成、所涉及的货物的质量标准'后文缺失，需人工复核该章节后续内容是否包含具体标准"
+    ],
+    "failure_reasons": [
+      "missing_evidence",
+      "degraded_to_manual_review",
+      "risk_degraded_to_manual_review"
+    ],
+    "failure_reason_labels": [
+      "证据不足",
+      "已降级为人工复核",
+      "存在风险但被降级为人工复核"
+    ],
+    "evidence_bundle": {
+      "topic": "technical_standard",
+      "sections": [
+        {
+          "title": "商务项（F3×A3）满分为22.00分",
+          "start_line": 722,
+          "end_line": 772,
+          "body": "商务项（F3×A3）满分为22.00分\n 项目\n 分值\n 描述\n1.企业荣誉\n3.00\n投标人2020年1月1日以来（以获奖时间为准）获得过地市级（含）以上人民政府或行政机关颁发的与物业服务或企业诚信经营有关的荣誉或表彰的，每提供1份得1分，满分3分。注：投标人应提供相关荣誉或表彰证明材料，未提供的不得分。\n2.员工保险保障\n3.00\n为了保障本项目的用工安全，根据各投标人在服务期间为拟派人员购买的团体商业保险（个人意外险或雇主责任险）赔付限额情况评分。①承诺在服务期为拟派人员购买上述保险，每名员工赔付限额≥60万元人民币的得3分；50万元≤赔付限额＜60万元的得2分；40万元≤赔付限额＜50万元的得1分，投标人须提供专项书面承诺函（格式自拟），否则不得分。②若投标人已在日常管理中为员工购买了上述保险，且被保险的员工包含拟派本项目全部人员及保险期限涵盖本项目服务期，同时每名员工赔付限额≥60万元人民币的得3分；50万元≤赔付限额＜60万元的得2分；40万元≤赔付限额＜50万元的得1分，投保人须提供已购买保险的相关证明材料（包含拟派本项目的被保险人员名单、保险期限及赔付限额）复印件，否则不得分。\n3.项目业绩\n3.00\n根据投标人提供的自2019年1月1日（含）至本项目投标截止时间止（以验收日期为准）已完成的同类（非住宅类）政府采购项目业绩情况进行评分，每提供一份业绩证明材料的得1分，满分3分。投标人须提供以下证明材料：①该业绩项目的中标（成交）公告；②中标（成交）通知书复印件；③采购合同或采购合同关键页复印件（关键页应体现双方单位名称、合同签订日期、合同服务期限、服务内容、签章页等）；④能够证明该业绩项目经采购人验收合格的相关证明文件复印件。所有材料缺一不可，否则不得分。此评分项与“履约经验”及“服务满意度”评分项所涉及的项目不得重复，否则该项目均不得分，同一采购人的多个不同合同文本只计一个项目，不得累加计分。\n4.履约经验\n1.50\n根据投标人提供的自2019年1月1日以来至投标截止时间止（以合同签订时间为准）承接的同类（非住宅类）政府采购项目情况进行评价。每提供1个得0.5分，满分1.5分。每个项目有效证明材料须同时包括:采购合同或采购合同关键页复印件(关键页应体现双方单位名称、合同签订日期、合同服务期限、服务内容、签章页等)。注:已完成项目和正在履约项目在本评分项均可计分。本评分项与“业绩”及“服务满意度”评分项所涉及的项目不得重复，否则该项目均不得分。同一采购人的多个不同合同文本只计一个项目，不得累加计分。\n5.服务满意度\n3.00\n根据投标人提供的自2019年1月1日（含）至本项目投标截止时间止（日期以签订合同时间为准）所承接的正在履约或已完成的同类（非住宅类）政府采购项目服务满意度情况进行评分：每提供一份服务满意度评价为“优秀”或“满意”或“好”或“评分为90分(含)以上”的得0.5分，满分3分。投标人须提供以下证明材料：①该项目的中标（成交）公告；②中标（成交）通知书复印件；③采购合同或采购合同关键页复印件（关键页体现双方单位名称、合同签订日期、合同服务期限、服务内容、签章页等）；④非投标人自证的满意度证明材料复印件。所有材料缺一不可，否则不得分。本评分项与“业绩”及“履约经验”评分项所涉及的项目不得重复，否则该项目均不得分。同一采购人的多个不同合同文本只计一个项目，不得累加计分。\n6.信息化软件服务能力\n3.00\n投标人拥有与物业服务相关信息化管理软件或系统，并承诺在服务期内该软件或系统会投入本项目使用的，每提供1项得1分，满分3分。投标人须提供承诺函和著作权人为投标人的《计算机软件著作权登记证书》，若投标人购买软件或系统须提供购买合同及发票。未提供或提供不完整的或证书不在有效期的均不得分。\n7.安全管理\n3.00\n投标人承诺，自公司成立至本项目投标截止时间止，在服务过程中未发生重大安全事故（是指造成10人以上(含）30人以下（不含）死亡，或者50人以上（含）100人以下（不含）重伤，或者5000万元以上（含）1亿元以下（不含）直接经济损失的事故）的得3分。投标人须提供承诺函（格式自拟），未提供的不得分。（满分3分）\n8.项目荣誉\n1.50\n投标人已完成或正在履约的物业管理服务项目在投标人服务期间获得国家部委组织的“节约型公共机构示范单位”或“节约型机关”创建工作荣誉的得0.5分；其它的不得分。注：投标人须提供以下证明材料：①项目物业服务合同复印件；②相关荣誉证明材料复印件或相关材料；上述材料提供不全或未提供者不得分。 投标人已完成或正在履约的物业管理服务项目在投标人服务期间获得地市级（含）以上人民政府或行政机关授予“城区生活垃圾分类工作先进单位”荣誉的得0.5分。注：投标人须提供以下证明材料：①项目物业服务合同复印件；②相关荣誉证明材料复印件或相关材料；上述材料提供不全或未提供者不得分。 投标人已完成或正在履约的物业管理服务项目在投标人服务期间获得地市级（含）以上人民政府或行政机关授予“绿化或园林式单位”荣誉的得0.5分。注：投标人须提供以下证明材料：①项目物业服务合同复印件；②相关荣誉证明材料复印件或相关材料；上述材料提供不全或未提供者不得分。\n9.认证情况\n1.00\n投标人具有有效的诚信管理体系认证（GB/T 31950-2015或GB/T 31950-2023）证书，且认证范围包括“物业管理”或“物业服务”或“物业管理服务”的得1分。须提供有效体系认证证书复印件，评审委员会将通过中国国家认证认可监督管理委员会(http：//www.cnca.gov.cn)或中国合格评定国家认可委员会(https：//www.cnas.org.cn)网站查询所提供证书的有效性。若投标人提供的证书复印件中信息与所查询的信息不一致的，本项不得分。\n加分项（F4×A4）\n 项目\n 分值\n 描述\n节能、环境标志产品\n6.00\n本项目为服务项目，不存在执行节能、环境标志产品的政策附加，设备配置如果有华为小米等相关国产品牌优先。\n（4）中标候选人排列规则顺序如下：\na.按照评标总得分（FA）由高到低顺序排列。\nb.评标总得分（FA）相同的，按照评标价（即价格扣除后的投标报价）由低到高顺序排列。\nc.评标总得分（FA）且评标价（即价格扣除后的投标报价）相同的并列。\n8、其他规定\n8.1评标应全程保密且不得透露给任一投标人或与评标工作无关的人员。\n8.2评标将进行全程实时录音录像，录音录像资料随采购文件一并存档。\n8.3若投标人有任何试图干扰具体评标事务，影响评标委员会独立履行职责的行为，其投标无效且不予退还投标保证金或通过投标保函进行索赔。情节严重的，由财政部门列入不良行为记录。\n8.4其他：\n无",
+          "excerpt": "商务项（F3×A3）满分为22.00分\n 项目\n 分值\n 描述\n1.企业荣誉\n3.00\n投标人2020年1月1日以来（以获奖时间为准）获得过地市级（含）以上人民政府或行政机关颁发的与物业服务或企业诚信经营有关的荣誉或表彰的，每提供1份得1分，满分3分。注：投标人应提供相关荣誉或表彰证明材料，未提供的不得分。\n2.员工保险保障\n3.00\n为了保障本项目的用工安全，根据各投标人在服务期间为拟派人员购买的团体商业保险（个人意外险或雇主责任险）赔付限额情况评分。①承诺在服务期为拟派人员购买上述保险，每名员工赔付限额≥60万元人民币的得3分；50万元≤赔付限额＜60万元的得2分；40万元≤赔付限额＜50万元的得1分，投标人须提供专项书面承诺函（格式自拟），否则不得分。②若投标人已在日常管理中为员工购买了上述保险，且被保险的员工包含拟派本项目全部人员及保险期限涵盖本项目服务期，同时每名员工赔付限额≥60万元人民币的得3分；50万元≤赔付限额＜60万元的得2分；40万元≤赔付限额＜50万元的得1分，投保人须提供已购买保险的相关证明材料（包含拟派本项目的被保险人员名单、保险期限及赔付限额）复印件，否则不得分。\n3.项目业绩\n3.00\n根据投标人提供的自2019年1月1日（含）至本项目投标截止时间止（以验收日期为准）已完成的同类（非住宅类）政府采购项目业绩情况进行评分，每提供一份业绩证明材料的得1分，满分3分。投标人须提供以下证明材料：①该业绩项目的中标（成交）公告；②中标（成交）通知书复印件；③采购合同或采购合同关键页复印件（关键页应体现双方单位名称、合同签订日期、合同服务期限、服务内容、签章页等）；④能够证明该业绩项目经采购人验收合格的相关证明文件复印件。所有材料缺一不可，否则不得分。此评分项与“履约经验”及“服务满意度”评分项所涉及的项目不得重复，否则该项目均不得分，同一采购人的多个不",
+          "module": "procedure",
+          "module_scores": {
+            "qualification": 18,
+            "scoring": 32,
+            "contract": 34,
+            "acceptance": 2,
+            "technical": 1,
+            "procedure": 45,
+            "policy": 9
+          },
+          "confidence": 45,
+          "keywords": [
+            "投标",
+            "截止时间",
+            "公告"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "四、合同标的及服务范围、地点和时间",
+          "start_line": 2704,
+          "end_line": 2708,
+          "body": "四、合同标的及服务范围、地点和时间\n 4.1项目名称： _____________\n 4.2服务范围：_____________\n 4.3服务地点：_____________\n 4.4服务完成时间：_____________",
+          "excerpt": "四、合同标的及服务范围、地点和时间\n 4.1项目名称： _____________\n 4.2服务范围：_____________\n 4.3服务地点：_____________\n 4.4服务完成时间：_____________",
+          "module": "contract",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 0,
+            "contract": 4,
+            "acceptance": 0,
+            "technical": 0,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 4,
+          "keywords": [
+            "合同"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        },
+        {
+          "title": "五、服务内容、质量标准和要求",
+          "start_line": 2709,
+          "end_line": 2712,
+          "body": "五、服务内容、质量标准和要求\n 5.1服务工作量的计量方式：_____________\n 5.2服务内容：_____________\n 5.3技术保障、服务人员组成、所涉及的货物的质量标准：",
+          "excerpt": "五、服务内容、质量标准和要求\n 5.1服务工作量的计量方式：_____________\n 5.2服务内容：_____________\n 5.3技术保障、服务人员组成、所涉及的货物的质量标准：",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 1,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 0,
+            "technical": 6,
+            "procedure": 0,
+            "policy": 0
+          },
+          "confidence": 6,
+          "keywords": [
+            "技术",
+            "标准"
+          ],
+          "heading_level": 2,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "2709-2712"
+      ],
+      "secondary_section_ids": [
+        "722-772",
+        "2704-2708"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=technical,acceptance；关键词=标准,规范,GB,GB/T,检测,CMA,CNAS,认证,报告；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "技术标准与检测",
+        "topic_aliases": [
+          "标准引用",
+          "检测认证"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "标准引用",
+            "标准名称编号一致性",
+            "标准有效性",
+            "检测报告",
+            "认证要求"
+          ],
+          "out_of_scope": [
+            "品牌型号倾向",
+            "纯评分规则",
+            "付款节点"
+          ],
+          "primary_modules": [
+            "technical",
+            "acceptance"
+          ],
+          "secondary_modules": [],
+          "ownership_rule": "只处理标准、规范、检测认证及其有效性问题，不处理品牌型号倾向或评分分值。",
+          "merge_hints": [
+            "若标准要求直接形成验收门槛，仍由 technical_standard 主归属，acceptance 只看验收机制。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "technical",
+            "score": 6.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "标准"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "2709-2712",
+            "score": 71,
+            "reasons": [
+              "主模块命中 technical",
+              "标题命中 1 次关键词",
+              "正文命中 4 次关键词",
+              "标题层级 2",
+              "专题特殊加权 4"
+            ],
+            "keywords": [
+              "标准"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "technical_standard",
+      "covered_modules": [
+        "procedure",
+        "acceptance",
+        "technical",
+        "contract"
+      ],
+      "covered_section_ids": [
+        "2709-2712",
+        "722-772",
+        "2704-2708"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": [],
+      "foreign_standard_refs": [],
+      "cn_standard_refs": [
+        "GB/T 31950-2015"
+      ],
+      "has_equivalent_standard_clause": false,
+      "standard_system_mix": "cn_only",
+      "foreign_standard_has_version": false,
+      "foreign_standard_sections": [],
+      "foreign_standard_sentences": [],
+      "cn_standard_sections": [],
+      "cn_standard_sentences": [
+        "符合 GB/T 31950-2015 标准"
+      ],
+      "equivalent_standard_sections": [],
+      "equivalent_standard_sentences": [],
+      "contains_gb_non_t": false,
+      "contains_gbt": false,
+      "contains_mandatory_standard": false,
+      "gb_non_t_sections": [],
+      "gb_non_t_sentences": [],
+      "gbt_sections": [],
+      "gbt_sentences": [],
+      "mandatory_standard_sections": [],
+      "mandatory_standard_sentences": [],
+      "has_star_marker": false,
+      "standard_clause_flags": [],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

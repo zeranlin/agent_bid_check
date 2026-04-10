@@ -414,6 +414,71 @@ def test_problem_layer_records_layer_conflict_inputs_and_single_final_resolution
     ]
 
 
+def test_problem_layer_dedupes_acceptance_testing_cost_user_visible_outputs_with_trace() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="acceptance-cost-formal",
+                title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                severity="高风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款：报价要求"],
+                source_excerpts=["投标总价应包含项目验收、检测及相关部门验收等全部费用。"],
+                risk_judgment=["正文已出现验收检测费用计入投标人承担范围。"],
+                legal_basis=["不得将应由采购人承担的法定职责费用转嫁供应商。"],
+                rectification=["明确验收检测费用承担边界。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-COST"],
+            ),
+            MergedRiskCluster(
+                cluster_id="acceptance-cost-pending",
+                title="将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+                severity="中风险",
+                review_type="需求条款审查",
+                source_locations=["采购需求：验收要求"],
+                source_excerpts=["验收、检测等费用由中标人承担。"],
+                risk_judgment=["这是同一家族中的附属需求侧描述。"],
+                legal_basis=["采购需求不得转嫁不合理费用负担。"],
+                rectification=["删除由投标人承担验收检测费用的表述。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+                    "severity": "需人工复核",
+                    "review_type": "需求条款审查",
+                    "topic": "验收条款",
+                    "source_location": "采购需求：验收要求",
+                    "source_excerpt": "验收、检测等费用由中标人承担。",
+                    "reason": "当前为待补证复核输出。",
+                }
+            ]
+        },
+    )
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+
+    problem_result = build_problem_layer("fuzhou-school-dorm.docx", governance)
+
+    assert len(problem_result.problems) == 1
+    first = problem_result.problems[0]
+    assert first.canonical_title == "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+    assert [item.decision.canonical_title for item in first.supporting_candidates] == [
+        "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+    ]
+    assert first.trace["user_visible_dedupe_reason"] == "family_visible_output_absorbed_by_primary"
+    assert first.trace["absorbed_user_visible_items"] == [
+        {
+            "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "source_bucket": "pending_review_items",
+            "absorbed_by": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "hidden_reason": "same_family_absorbed_by_formal_primary",
+        }
+    ]
+
+
 def test_problem_layer_builds_import_consistency_conflict_problem() -> None:
     comparison = _build_pb3_cross_topic_family_merge_comparison()
     governance = govern_comparison_artifact("sample.docx", comparison)

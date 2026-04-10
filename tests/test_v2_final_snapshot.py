@@ -229,6 +229,101 @@ def test_render_v2_markdown_from_snapshot_uses_snapshot_as_single_source() -> No
     assert "## 主要依据汇总" in markdown
 
 
+def test_render_v2_markdown_from_snapshot_renders_excluded_summary_without_promoting_to_main_list() -> None:
+    baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts(
+        "standard.docx",
+        _build_standard_comparison(),
+    )
+    snapshot = build_v2_final_snapshot(
+        "standard.docx",
+        baseline,
+        structure,
+        topics,
+        comparison=_build_standard_comparison(),
+        governance=governance,
+        problems=problems,
+        admission=admission,
+        generated_at="2026-04-10T10:20:00",
+    )
+    snapshot["final_risks"]["excluded_risks"] = [
+        {
+            "title": "政策依据引用不完整，存在表述截断风险",
+            "admission_reason": "弱提示型问题已被 pending gate 拦截，不进入用户可见待补证列表。",
+        }
+    ]
+    snapshot["summary"]["excluded_count"] = 1
+    snapshot["summary"]["excluded_titles"] = ["政策依据引用不完整，存在表述截断风险"]
+
+    markdown = render_v2_markdown_from_snapshot(snapshot)
+
+    assert "## 已排除项摘要" in markdown
+    assert "- 已排除数量：1" in markdown
+    assert "### 复核项1：政策依据引用不完整，存在表述截断风险" not in markdown
+    assert "政策依据引用不完整，存在表述截断风险" in markdown
+
+
+def test_build_v2_final_snapshot_hides_missing_user_visible_evidence_items_from_all_user_visible_layers() -> None:
+    baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts(
+        "standard.docx",
+        _build_standard_comparison(),
+    )
+    admission.excluded_risks = [
+        admission.excluded_risks[0] if admission.excluded_risks else None,
+    ]
+    admission.excluded_risks = [item for item in admission.excluded_risks if item is not None]
+    if not admission.excluded_risks:
+        from app.pipelines.v2.risk_admission.schemas import AdmissionCandidate, AdmissionDecision
+
+        hidden = AdmissionCandidate(
+            rule_id="topic::missing-visible",
+            risk_family="missing-visible",
+            title="违约责任及质保期条款缺失",
+            review_type="商务条款审查",
+            severity="中风险",
+            evidence_kind="unknown",
+            source_type="topic_inference",
+            source_locations=["未在当前证据片段中找到"],
+            source_excerpts=["无"],
+            extras={},
+        )
+        admission.excluded_risks = [hidden]
+        admission.decisions[hidden.rule_id] = AdmissionDecision(
+            target_layer="excluded_risks",
+            admission_reason="当前问题缺少有效原文位置或摘录，仅保留内部 trace，不再作为对外待补证项展示。",
+            evidence_kind="unknown",
+            source_type="topic_inference",
+            pending_gate_reason_code="missing_user_visible_evidence",
+            pending_gate_reason="当前问题缺少有效原文位置或摘录，仅保留内部 trace，不再作为对外待补证项展示。",
+        )
+    else:
+        hidden = admission.excluded_risks[0]
+        hidden.title = "违约责任及质保期条款缺失"
+        hidden.source_locations = ["未在当前证据片段中找到"]
+        hidden.source_excerpts = ["无"]
+        admission.decisions[hidden.rule_id].pending_gate_reason_code = "missing_user_visible_evidence"
+        admission.decisions[hidden.rule_id].pending_gate_reason = "当前问题缺少有效原文位置或摘录，仅保留内部 trace，不再作为对外待补证项展示。"
+        admission.decisions[hidden.rule_id].admission_reason = "当前问题缺少有效原文位置或摘录，仅保留内部 trace，不再作为对外待补证项展示。"
+
+    snapshot = build_v2_final_snapshot(
+        "standard.docx",
+        baseline,
+        structure,
+        topics,
+        comparison=_build_standard_comparison(),
+        governance=governance,
+        problems=problems,
+        admission=admission,
+        generated_at="2026-04-10T10:21:00",
+    )
+    markdown = render_v2_markdown_from_snapshot(snapshot)
+    final_output = project_final_output_from_snapshot(snapshot)
+
+    assert "违约责任及质保期条款缺失" not in {item["title"] for item in snapshot["final_risks"]["excluded_risks"]}
+    assert "违约责任及质保期条款缺失" not in snapshot["summary"]["excluded_titles"]
+    assert "违约责任及质保期条款缺失" not in markdown
+    assert "违约责任及质保期条款缺失" not in {item["title"] for item in final_output["excluded_risks"]}
+
+
 def test_save_review_artifacts_v2_writes_final_snapshot_and_derived_output(tmp_path: Path) -> None:
     comparison = _build_standard_comparison()
     baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts("standard.docx", comparison)

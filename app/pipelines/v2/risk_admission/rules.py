@@ -4,6 +4,7 @@ from .downgrade_rules import apply_downgrade_rules
 from .formal_gate import evaluate_formal_gate
 from .formal_registry import resolve_formal_registry_resolution
 from .historical_block import match_historical_hard_block
+from .pending_gate import evaluate_pending_gate
 from .schemas import AdmissionDecision, AdmissionSourceType, EvidenceKind
 
 
@@ -41,6 +42,8 @@ def build_admission_decision(
             admission_reason=reason,
             evidence_kind=evidence_kind,
             source_type=source_type,
+            pending_gate_reason_code="",
+            pending_gate_reason="",
             formal_gate_passed=False,
             formal_gate_reason=reason,
             formal_gate_rule="historical_hard_block",
@@ -65,11 +68,13 @@ def build_admission_decision(
     )
     if downgrade is not None:
         layer, reason, rule_name = downgrade
-        return AdmissionDecision(
+        decision = AdmissionDecision(
             target_layer=layer,
             admission_reason=reason,
             evidence_kind=evidence_kind,
             source_type=source_type,
+            pending_gate_reason_code="",
+            pending_gate_reason="",
             formal_gate_passed=False,
             formal_gate_reason=reason,
             formal_gate_rule=rule_name,
@@ -81,6 +86,21 @@ def build_admission_decision(
             formal_gate_registry_source="",
             formal_gate_registry_resolution="missing",
         )
+        pending_gate = evaluate_pending_gate(
+            current_layer=decision.target_layer,
+            title=title,
+            governance_reason=governance_reason,
+            source_type=source_type,
+            source_locations=source_locations,
+            source_excerpts=source_excerpts,
+            risk_judgment=risk_judgment,
+        )
+        if pending_gate is not None:
+            decision.target_layer = pending_gate.target_layer
+            decision.admission_reason = pending_gate.reason
+            decision.pending_gate_reason_code = pending_gate.reason_code
+            decision.pending_gate_reason = pending_gate.reason
+        return decision
 
     gate_result = evaluate_formal_gate(
         rule_id=rule_id,
@@ -95,11 +115,13 @@ def build_admission_decision(
         source_excerpts=source_excerpts,
         risk_judgment=risk_judgment,
     )
-    return AdmissionDecision(
+    decision = AdmissionDecision(
         target_layer=gate_result.target_layer,
         admission_reason=gate_result.reason,
         evidence_kind=evidence_kind,
         source_type=source_type,
+        pending_gate_reason_code="",
+        pending_gate_reason="",
         formal_gate_passed=gate_result.passed,
         formal_gate_reason=gate_result.reason,
         formal_gate_rule=gate_result.rule,
@@ -111,3 +133,18 @@ def build_admission_decision(
         formal_gate_registry_source=gate_result.registry_source,
         formal_gate_registry_resolution=gate_result.registry_resolution,
     )
+    pending_gate = evaluate_pending_gate(
+        current_layer=decision.target_layer,
+        title=title,
+        governance_reason=governance_reason,
+        source_type=source_type,
+        source_locations=source_locations,
+        source_excerpts=source_excerpts,
+        risk_judgment=risk_judgment,
+    )
+    if pending_gate is not None:
+        decision.target_layer = pending_gate.target_layer
+        decision.admission_reason = pending_gate.reason
+        decision.pending_gate_reason_code = pending_gate.reason_code
+        decision.pending_gate_reason = pending_gate.reason
+    return decision

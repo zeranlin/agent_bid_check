@@ -121,6 +121,10 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
         "conflict_reason": dict(extras.get("conflict_reason", {})),
         "conflict_evidence_links": list(extras.get("conflict_evidence_links", [])),
         "admission_reason": decision.admission_reason,
+        "pending_gate": {
+            "pending_gate_reason_code": getattr(decision, "pending_gate_reason_code", ""),
+            "pending_gate_reason": getattr(decision, "pending_gate_reason", ""),
+        },
         "formal_gate": {
             "formal_gate_passed": decision.formal_gate_passed,
             "formal_gate_reason": decision.formal_gate_reason,
@@ -137,6 +141,12 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
         },
         "family_key": getattr(problem, "family_key", candidate.risk_family),
     }
+
+
+def _is_user_visible_snapshot_item(item: dict[str, Any]) -> bool:
+    pending_gate = item.get("pending_gate", {}) if isinstance(item, dict) else {}
+    reason_code = str(pending_gate.get("pending_gate_reason_code", "")).strip() if isinstance(pending_gate, dict) else ""
+    return reason_code != "missing_user_visible_evidence"
 
 
 def _build_problem_trace_summary(problems, admission) -> list[dict[str, Any]]:
@@ -206,7 +216,9 @@ def _collect_layer_items(admission, layer_name: str, problem_map: dict[str, Any]
         decision = admission.decisions.get(candidate.rule_id)
         if decision is None:
             continue
-        items.append(_build_snapshot_risk_item(candidate, decision, layer_name, problem_map))
+        built = _build_snapshot_risk_item(candidate, decision, layer_name, problem_map)
+        if _is_user_visible_snapshot_item(built):
+            items.append(built)
     return items
 
 
@@ -333,6 +345,15 @@ def render_v2_markdown_from_snapshot(snapshot: dict[str, Any]) -> str:
                     "",
                 ]
             )
+
+    excluded = [item for item in (final_risks.get("excluded_risks", []) or []) if isinstance(item, dict)]
+    if excluded:
+        lines.extend(["---", "", "## 已排除项摘要", ""])
+        lines.append(f"- 已排除数量：{len(excluded)}")
+        for item in excluded:
+            title = str(item.get("title", "")).strip() or "已排除项"
+            reason = str(item.get("admission_reason", "")).strip() or "已按准入规则排除。"
+            lines.append(f"- {title}：{reason}")
 
     lines.extend(["---", "", "## 综合判断", ""])
     lines.append("- 高风险问题：")

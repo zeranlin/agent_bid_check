@@ -1,0 +1,102 @@
+{
+  "document_id": "DOC-DIESEL-0330-BASELINE",
+  "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "baseline_assertions": {
+    "should_report": [
+      {
+        "assertion_id": "diesel-import-conflict",
+        "assertion": {
+          "id": "diesel-import-conflict",
+          "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+          "family_key": "import_consistency"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "diesel-cert-main",
+        "assertion": {
+          "id": "diesel-cert-main",
+          "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+          "family_key": "certification_scoring_bundle"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "diesel-acceptance-cost",
+        "assertion": {
+          "id": "diesel-acceptance-cost",
+          "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "family_key": "acceptance_testing_cost"
+        },
+        "expected_layer": "reported",
+        "actual_layers": [
+          "formal_risks"
+        ],
+        "matched": true
+      }
+    ],
+    "should_pending": [
+      {
+        "assertion_id": "diesel-missing-detection",
+        "assertion": {
+          "id": "diesel-missing-detection",
+          "title": "检测报告及认证资质要求缺失或表述不明",
+          "family_key": "missing_detection_or_cert_requirement"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "diesel-scoring-clarity",
+        "assertion": {
+          "id": "diesel-scoring-clarity",
+          "title": "评分描述量化口径不足，存在评审一致性风险",
+          "family_key": "scoring_clarity"
+        },
+        "expected_layer": "pending_review_items",
+        "actual_layers": [
+          "pending_review_items"
+        ],
+        "matched": true
+      }
+    ],
+    "should_not_report": [
+      {
+        "assertion_id": "diesel-template-acceptance-placeholder",
+        "assertion": {
+          "id": "diesel-template-acceptance-placeholder",
+          "title": "验收时点约定缺失，导致验收流程不可操作",
+          "family_key": "acceptance_template_placeholder"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [
+          "excluded_risks"
+        ],
+        "matched": true
+      },
+      {
+        "assertion_id": "diesel-e-bid-capacity-boundary",
+        "assertion": {
+          "id": "diesel-e-bid-capacity-boundary",
+          "title": "电子投标文件容量限制可能增加投标负担"
+        },
+        "expected_layer": "not_reported",
+        "actual_layers": [
+          "excluded_risks"
+        ],
+        "matched": true
+      }
+    ]
+  }
+}

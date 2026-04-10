@@ -532,12 +532,26 @@ def build_review_view_from_final_output(final_output: dict, comparison: dict | N
             item["index"],
         )
     )
+    excluded_items = []
+    for item in final_output.get("excluded_risks", []) or []:
+        if not isinstance(item, dict):
+            continue
+        excluded_items.append(
+            {
+                "title": str(item.get("title", "")).strip() or "已排除项",
+                "reason": str(item.get("reason", "")).strip() or "已按准入规则排除。",
+            }
+        )
     return {
         "summary_counts": summary_counts,
         "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
         "sections": sections,
         "total": len(all_cards),
         "all_cards": all_cards,
+        "excluded_summary": {
+            "count": len(excluded_items),
+            "items": excluded_items,
+        },
     }
 
 
@@ -600,12 +614,27 @@ def build_review_view_from_final_snapshot(snapshot: dict) -> dict:
             item["index"],
         )
     )
+    excluded_risks = final_risks.get("excluded_risks", []) if isinstance(final_risks, dict) else []
+    excluded_items = []
+    for item in excluded_risks or []:
+        if not isinstance(item, dict):
+            continue
+        excluded_items.append(
+            {
+                "title": str(item.get("title", "")).strip() or "已排除项",
+                "reason": str(item.get("admission_reason", "")).strip() or "已按准入规则排除。",
+            }
+        )
     return {
         "summary_counts": summary_counts,
         "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
         "sections": sections,
         "total": len(all_cards),
         "all_cards": all_cards,
+        "excluded_summary": {
+            "count": len(excluded_items),
+            "items": excluded_items,
+        },
     }
 
 
