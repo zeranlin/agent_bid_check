@@ -7,6 +7,12 @@ from app.common.schemas import RiskPoint
 from app.pipelines.v2.assembler import build_v2_final_output
 from app.pipelines.v2.output_governance import govern_comparison_artifact
 from app.pipelines.v2.risk_admission.evidence_classifier import infer_evidence_kind
+from app.pipelines.v2.risk_admission.formal_registry import (
+    FormalRegistryEntry,
+    FormalRegistryResolution,
+    clear_formal_registry_cache,
+    load_formal_registry_index,
+)
 from app.pipelines.v2.risk_admission import admit_governance_result, validate_admitted_result
 from app.pipelines.v2.risk_admission.schemas import AdmissionCandidate, AdmissionDecision, AdmissionResult
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
@@ -208,15 +214,120 @@ def _build_w011_fujian_stability_comparison() -> ComparisonArtifact:
     )
 
 
+def _build_w014_admission_comparison() -> ComparisonArtifact:
+    return ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="prepayment",
+                title="缺乏预付款安排，资金压力较大",
+                severity="中风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款 5.1"],
+                source_excerpts=["本项目货到验收合格后一次性付款，未设置预付款。"],
+                risk_judgment=["仅能看出未设预付款，不足以直接定性为正式合规风险。"],
+                legal_basis=["预付款安排通常属交易结构选择。"],
+                rectification=["可结合项目情况评估是否设置预付款。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="sign-default",
+                title="开标记录签字确认的默认认可条款",
+                severity="中风险",
+                review_type="开标程序审查",
+                source_locations=["开标须知"],
+                source_excerpts=["投标人未签字确认开标记录的，视为认可开标结果。"],
+                risk_judgment=["当前仅见默认认可表述，尚不足以构成正式风险。"],
+                legal_basis=["需结合异议救济机制综合判断。"],
+                rectification=["补充异议保留路径。"],
+                topics=["opening"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="remote-opening-default",
+                title="远程开标解密时限及后果条款的合理性审查",
+                severity="中风险",
+                review_type="开标程序审查",
+                source_locations=["远程开标须知"],
+                source_excerpts=["投标人应在30分钟内完成解密，未完成的视为撤销投标文件。"],
+                risk_judgment=["当前仅见一般性解密时限及后果表述，仍需结合异常时长或异常后果判断。"],
+                legal_basis=["需结合电子招投标通常安排进一步核实。"],
+                rectification=["核查时限是否异常偏短、后果是否过重。"],
+                topics=["opening"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="remote-opening-abnormal",
+                title="远程开标解密时限及后果条款显失公平",
+                severity="高风险",
+                review_type="开标程序审查",
+                source_locations=["远程开标须知"],
+                source_excerpts=["投标人须在5分钟内完成解密，超时即按无效投标处理且不得提出异议。"],
+                risk_judgment=["解密时限异常偏短，且直接按无效投标处理，后果明显过重。"],
+                legal_basis=["开标程序安排不得设置明显失衡门槛。"],
+                rectification=["合理延长解密时限并调整后果。"],
+                topics=["opening"],
+                source_rules=["compare_rule:R-OPEN"],
+            ),
+            MergedRiskCluster(
+                cluster_id="contract-up",
+                title="商务条款中采购人单方调整权过大且结算方式不明",
+                severity="中风险",
+                review_type="商务条款失衡",
+                source_locations=["商务要求8.3、13.3"],
+                source_excerpts=["采购人有权细微调整且中标价不变，偏离超过5%按面积比例换算。"],
+                risk_judgment=["采购人单方变更权过大，结算口径不清。"],
+                legal_basis=["不得背离合同实质性内容。"],
+                rectification=["补充双方协商和价格调整机制。"],
+                topics=["contract"],
+                source_rules=["baseline"],
+            ),
+            MergedRiskCluster(
+                cluster_id="acceptance-up",
+                title="验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+                severity="中风险",
+                review_type="验收标准明确性审查",
+                source_locations=["验收条款"],
+                source_excerpts=["按厂家验收标准、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"],
+                risk_judgment=["厂家验收标准+样品要求共同作为验收依据，裁量过宽。"],
+                legal_basis=["验收标准应统一明确。"],
+                rectification=["删除厂家标准并固化验收标准。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="template-blank",
+                title="验收时间条款留白，导致验收安排不明确",
+                severity="中风险",
+                review_type="合同模板边界审查",
+                source_locations=["专用条款 12.1"],
+                source_excerpts=["采购人应在货到后_______日内组织验收，具体时间按【专用条款】约定。"],
+                risk_judgment=["明显属于模板留白。"],
+                legal_basis=["模板占位不宜直接抬正式风险。"],
+                rectification=["排除模板占位后再核查正文。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+        ]
+    )
+
+
 def test_risk_admission_objects_can_be_constructed() -> None:
     decision = AdmissionDecision(
         target_layer="formal_risks",
         admission_reason="具备稳定规则来源和正文证据，可进入正式风险。",
         evidence_kind="scoring_clause",
         source_type="compare_rule",
+        formal_gate_passed=True,
+        formal_gate_reason="命中 formal 白名单，且存在正文硬证据。",
+        formal_gate_rule="formal_whitelist",
+        formal_gate_exception_whitelist_hit=True,
+        formal_gate_family_allowed=True,
+        formal_gate_evidence_passed=True,
     )
     candidate = AdmissionCandidate(
         rule_id="compare::R-003",
+        risk_family="acceptance_scheme_scoring",
         title="将项目验收方案纳入评审因素，违反评审规则合规性要求",
         review_type="评分因素合规性审查",
         severity="高风险",
@@ -231,6 +342,41 @@ def test_risk_admission_objects_can_be_constructed() -> None:
     assert result.document_name == "sample.docx"
     assert result.formal_risks[0].evidence_kind == "scoring_clause"
     assert result.decisions["compare::R-003"].source_type == "compare_rule"
+    assert result.decisions["compare::R-003"].formal_gate_passed is True
+    assert result.decisions["compare::R-003"].formal_gate_family_allowed is True
+    assert result.decisions["compare::R-003"].formal_gate_evidence_passed is True
+
+
+def test_formal_gate_trace_fields_exist_for_formal_output() -> None:
+    comparison = _build_sample_comparison()
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    admission = admit_governance_result("sample.docx", comparison, governance)
+
+    decision = admission.decisions["R-003"]
+
+    assert decision.target_layer == "formal_risks"
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_reason
+    assert decision.formal_gate_rule
+    assert decision.formal_gate_exception_whitelist_hit in {True, False}
+    assert decision.formal_gate_family_allowed in {True, False}
+    assert decision.formal_gate_evidence_passed in {True, False}
+    assert decision.formal_gate_registry_resolution in {"matched", "missing", "mismatch"}
+
+
+def test_formal_registry_index_combines_registry_and_governance_config() -> None:
+    clear_formal_registry_cache()
+    index = load_formal_registry_index()
+
+    import_entry = index.by_family_key["import_consistency"]
+    regional_entry = index.by_family_key["regional_performance"]
+
+    assert import_entry.rule_id == "R-001"
+    assert import_entry.source == "registry"
+    assert import_entry.allow_formal is True
+    assert regional_entry.rule_id == "GOV-regional_performance"
+    assert regional_entry.source == "governance_config"
+    assert regional_entry.allow_formal is True
 
 
 def test_infer_evidence_kind_recognizes_subcontract_template() -> None:
@@ -259,6 +405,10 @@ def test_risk_admission_is_unique_three_layer_exit() -> None:
         key in {"formal_risks", "pending_review_items", "excluded_risks"}
         for key in [decision.target_layer for decision in admission.decisions.values()]
     )
+    assert governance.governed_candidates
+    assert len(governance.governed_candidates) == (
+        len(admission.formal_risks) + len(admission.pending_review_items) + len(admission.excluded_risks)
+    )
 
 
 def test_subcontract_template_cannot_directly_support_formal_risk() -> None:
@@ -274,6 +424,10 @@ def test_subcontract_template_cannot_directly_support_formal_risk() -> None:
     assert (
         admission.decisions["topic::验收标准模糊且依赖后续合同确定-存在需求条款合规风险"].admission_reason
         == "检测到模板/协议/声明函类证据，且当前仅有专题推断支撑，不得直接作为正式风险主证据。"
+    )
+    assert (
+        admission.decisions["topic::验收标准模糊且依赖后续合同确定-存在需求条款合规风险"].formal_gate_rule
+        == "downgrade_template_or_boundary"
     )
 
 
@@ -343,6 +497,304 @@ def test_supporting_standard_format_risk_is_absorbed_by_main_import_conflict() -
     assert "电磁兼容标准引用格式混乱且编号不完整" not in formal_titles
 
 
+def test_formal_gate_order_blocks_history_before_whitelist() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="blocked-1",
+                title="缺失检测报告及认证资质要求",
+                severity="高风险",
+                review_type="检测认证要求审查",
+                source_locations=["技术条款：设备验收"],
+                source_excerpts=["技术参数引用了多项标准，但未说明检测报告。"],
+                risk_judgment=["仅由专题推断抬起。"],
+                topics=["technical_standard"],
+                source_rules=["compare_rule:R-FAKE"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.excluded_risks] == ["缺失检测报告及认证资质要求"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "historical_hard_block"
+
+
+def test_formal_gate_order_applies_downgrade_before_whitelist() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="template-whitelist",
+                title="评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争",
+                severity="中风险",
+                review_type="条款明确性审查",
+                source_locations=["证据 3（第 3111-3133 行）"],
+                source_excerpts=["分包合同标的的质量要求和标准待甲方中标（成交）后，根据总包合同确定具体内容。"],
+                risk_judgment=["当前仅见模板中的信息化能力要求。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fujian.docx", comparison)
+    admission = admit_governance_result("fujian.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.excluded_risks] == ["评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "downgrade_template_or_boundary"
+    assert decision.formal_gate_exception_whitelist_hit is False
+
+
+def test_formal_gate_whitelist_can_keep_stable_formal_risk() -> None:
+    comparison = _build_w011_fujian_stability_comparison()
+    governance = govern_comparison_artifact("fujian.docx", comparison)
+    admission = admit_governance_result("fujian.docx", comparison, governance)
+
+    decision = admission.decisions["topic::software_copyright_competition"]
+
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in {
+        item.title for item in admission.formal_risks
+    }
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_rule == "formal_whitelist"
+    assert decision.formal_gate_exception_whitelist_hit is True
+
+
+def test_formal_gate_blocks_absorbed_supporting_item_before_formal_admission() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="support-only",
+                title="电磁兼容标准引用格式混乱且编号不完整",
+                severity="中风险",
+                review_type="标准规范性审查",
+                source_locations=["技术条款：1.规格及技术参数"],
+                source_excerpts=["1.14 电磁影响：符合 BS EN 61000 GB/T 17626 及 EN55011 标准。"],
+                risk_judgment=["该条更多是主风险的标准编号和格式佐证。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.excluded_risks] == ["拒绝进口 vs 外标/国外部件引用矛盾风险"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "absorbed_supporting_item_block"
+
+
+def test_formal_gate_demotes_unstable_family_even_with_body_evidence() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="unstable-family-hard-evidence",
+                title="要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险",
+                severity="中风险",
+                review_type="资格条件审查",
+                source_locations=["资格条款：技术服务团队"],
+                source_excerpts=["投标人须承诺派驻至少2名制造商原厂工程师常驻现场。"],
+                risk_judgment=["条款正文明确，但当前规则家族尚未纳入稳定 formal 范围。"],
+                legal_basis=["需结合规则纳管状态继续复核。"],
+                rectification=["补充履约必要性说明。"],
+                topics=["qualification"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.pending_review_items] == ["要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_family_allowed is False
+    assert decision.formal_gate_evidence_passed is True
+    assert decision.formal_gate_rule == "registry_mapping_missing_block"
+    assert decision.formal_gate_registry_resolution == "missing"
+
+
+def test_formal_gate_allows_stable_family_with_body_evidence() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="stable-family-hard-evidence",
+                title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                severity="高风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款：报价要求"],
+                source_excerpts=["投标总价应包含项目验收、检测及相关部门验收等全部费用。"],
+                risk_judgment=["费用边界与转嫁风险已在正文明确出现。"],
+                legal_basis=["不得将本应由采购人承担的法定职责费用转嫁供应商。"],
+                rectification=["明确费用承担边界。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-COST"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert [item.title for item in admission.formal_risks] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_family_allowed is True
+    assert decision.formal_gate_evidence_passed is True
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+    assert decision.formal_gate_registry_rule_id == "R-007"
+    assert decision.formal_gate_registry_status == "active"
+    assert decision.formal_gate_registry_source == "registry"
+    assert decision.formal_gate_registry_resolution == "matched"
+
+
+def test_formal_gate_blocks_when_registry_mapping_missing_even_with_body_evidence(monkeypatch) -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="registry-missing-hard-evidence",
+                title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                severity="高风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款：报价要求"],
+                source_excerpts=["投标总价应包含项目验收、检测及相关部门验收等全部费用。"],
+                risk_judgment=["费用边界与转嫁风险已在正文明确出现。"],
+                legal_basis=["不得将本应由采购人承担的法定职责费用转嫁供应商。"],
+                rectification=["明确费用承担边界。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-COST"],
+            )
+        ],
+        metadata={},
+    )
+
+    def _fake_missing_resolution(**_: object) -> FormalRegistryResolution:
+        return FormalRegistryResolution(
+            outcome="missing",
+            reason="未找到 family_key / rule_id 对应的 formal registry 配置。",
+            entry=None,
+        )
+
+    monkeypatch.setattr(
+        "app.pipelines.v2.risk_admission.formal_gate.resolve_formal_registry_resolution",
+        _fake_missing_resolution,
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.pending_review_items] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "registry_mapping_missing_block"
+    assert decision.formal_gate_registry_resolution == "missing"
+    assert decision.formal_gate_registry_rule_id == ""
+    assert decision.formal_gate_family_allowed is False
+    assert decision.formal_gate_evidence_passed is True
+
+
+def test_formal_gate_blocks_inactive_registry_rule_even_with_body_evidence(monkeypatch) -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="registry-inactive-hard-evidence",
+                title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                severity="高风险",
+                review_type="商务条款审查",
+                source_locations=["商务条款：报价要求"],
+                source_excerpts=["投标总价应包含项目验收、检测及相关部门验收等全部费用。"],
+                risk_judgment=["费用边界与转嫁风险已在正文明确出现。"],
+                legal_basis=["不得将本应由采购人承担的法定职责费用转嫁供应商。"],
+                rectification=["明确费用承担边界。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-COST"],
+            )
+        ],
+        metadata={},
+    )
+
+    def _fake_inactive_resolution(**_: object) -> FormalRegistryResolution:
+        return FormalRegistryResolution(
+            outcome="matched",
+            reason="命中 formal registry，但对应规则当前未正式纳管。",
+            entry=FormalRegistryEntry(
+                rule_id="R-007",
+                family_key="acceptance_testing_cost",
+                canonical_title="验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+                status="review",
+                source="registry",
+                allow_formal=False,
+                requires_hard_evidence=True,
+            ),
+        )
+
+    monkeypatch.setattr(
+        "app.pipelines.v2.risk_admission.formal_gate.resolve_formal_registry_resolution",
+        _fake_inactive_resolution,
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert admission.formal_risks == []
+    assert [item.title for item in admission.pending_review_items] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert decision.formal_gate_passed is False
+    assert decision.formal_gate_rule == "registry_inactive_block"
+    assert decision.formal_gate_registry_rule_id == "R-007"
+    assert decision.formal_gate_registry_status == "review"
+    assert decision.formal_gate_registry_source == "registry"
+    assert decision.formal_gate_registry_resolution == "matched"
+
+
+def test_formal_gate_whitelist_can_survive_weak_source_downgrade_rules() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="whitelist-acceptance-hard-risk",
+                title="验收标准引用‘厂家验收标准’导致依据模糊",
+                severity="中风险",
+                review_type="验收标准明确性审查",
+                source_locations=["验收条款"],
+                source_excerpts=["按厂家验收标准、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"],
+                risk_judgment=["厂家验收标准与样品共同作为验收依据，裁量空间过大。"],
+                legal_basis=["验收标准应统一明确。"],
+                rectification=["删除厂家标准并固化验收标准。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    admission = admit_governance_result("fuzhou-school-dorm.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert [item.title for item in admission.formal_risks] == ["验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"]
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_exception_whitelist_hit is True
+    assert decision.formal_gate_rule == "formal_whitelist"
+
+
 def test_fujian_titles_and_severity_are_stabilized() -> None:
     comparison = _build_w011_fujian_stability_comparison()
     governance = govern_comparison_artifact("fujian.docx", comparison)
@@ -404,3 +856,111 @@ def test_assembler_consumes_risk_admission_output_only() -> None:
     assert final_output["formal_risks"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
     assert final_output["pending_review_items"][0]["title"] == "节能环保产品政策条款缺失"
     assert final_output["risk_admission"]["formal_risks"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+    assert "governed_candidates" in final_output["governance"]
+    assert "formal_risks" not in final_output["governance"]
+
+
+def test_w014_risk_admission_demotes_wrong_layer_items_and_promotes_real_hard_risks() -> None:
+    comparison = _build_w014_admission_comparison()
+    governance = govern_comparison_artifact("fuzhou-school-dorm.docx", comparison)
+    admission = admit_governance_result("fuzhou-school-dorm.docx", comparison, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert "商务条款中采购人单方调整权过大且结算方式不明" in formal_titles
+    assert "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险" in formal_titles
+    assert "缺乏预付款安排，资金压力较大" not in formal_titles
+    assert "开标记录签字确认的默认认可条款" not in formal_titles
+    assert "远程开标解密时限及后果条款的合理性审查" not in formal_titles
+    assert "缺乏预付款安排，资金压力较大" in pending_titles or "缺乏预付款安排，资金压力较大" in excluded_titles
+    assert "开标记录签字确认的默认认可条款" in excluded_titles
+    assert "远程开标解密时限及后果条款的合理性审查" in pending_titles
+    assert "远程开标解密时限及后果条款显失公平" in formal_titles
+    assert "验收时间条款留白，导致验收安排不明确" in excluded_titles
+
+
+def test_risk_admission_can_promote_candidate_without_governance_layer_hint() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[],
+        metadata={
+            "pending_review_items": [
+                {
+                    "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                    "severity": "中高风险",
+                    "review_type": "评分因素合规性 / 评审规则设置合法性",
+                    "topic": "评分办法",
+                    "source_location": "评分条款",
+                    "source_excerpt": "验收方案优的得满分。",
+                    "reason": "compare 初步判成待补证。",
+                }
+            ]
+        },
+    )
+
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    admission = admit_governance_result("sample.docx", comparison, governance)
+
+    assert [item.title for item in admission.formal_risks] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
+    assert admission.pending_review_items == []
+
+
+def test_risk_admission_can_demote_candidate_without_governance_layer_hint() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="formal-1",
+                title="社保缴纳证明要求存在例外情形，需关注执行一致性",
+                severity="中风险",
+                review_type="资格条件审查",
+                source_locations=["资格条款"],
+                source_excerpts=["退休返聘人员可免提供社保，若供应商成立不足三个月也可说明替代。"],
+                topics=["qualification"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    admission = admit_governance_result("sample.docx", comparison, governance)
+
+    assert [item.title for item in admission.excluded_risks] == ["社保缴纳证明要求存在例外情形，需关注执行一致性"]
+    assert admission.formal_risks == []
+
+
+def test_risk_admission_handles_cross_candidate_conflict_without_governance_layer_bucket() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="same-family-formal",
+                title="履约保证金比例过高，加重供应商负担",
+                severity="高风险",
+                review_type="合规性审查",
+                source_locations=["商务条款A"],
+                source_excerpts=["履约保证金为合同金额的12%。"],
+                topics=["contract_payment"],
+                source_rules=["compare_rule:R-005"],
+            ),
+            MergedRiskCluster(
+                cluster_id="same-family-reminder",
+                title="履约保证金比例严重超标，需结合项目情况进一步核实",
+                severity="中风险",
+                review_type="合规性审查",
+                source_locations=["商务条款B"],
+                source_excerpts=["履约保证金12%，但仍建议结合项目情况核实。"],
+                risk_judgment=["当前表述带有需进一步核实提示。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("sample.docx", comparison)
+    admission = admit_governance_result("sample.docx", comparison, governance)
+
+    assert [item.title for item in admission.formal_risks] == ["履约保证金比例严重超标"]
+    assert admission.pending_review_items == []
+    assert admission.excluded_risks == []
+    assert admission.decisions[next(iter(admission.decisions))].target_layer == "formal_risks"
