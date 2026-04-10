@@ -2,8 +2,12 @@ __pycache__/
 *.pyc
 .DS_Store
 .codex_logs/
+.tmp_*/
+*.log
 
 data/runs/cli/tmp_*
+data/jobs/
+data/uploads/
 
 data/web_runs/uploads/
 data/web_runs/results/
