@@ -3,6 +3,8 @@
   "input_summary": {
     "governed_candidate_count": 21,
     "base_problem_count": 21,
+    "family_governed_problem_count": 21,
+    "family_absorbed_problem_count": 0,
     "problem_count": 21,
     "absorbed_candidate_count": 0,
     "cross_topic_problem_count": 0,
@@ -147,6 +149,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -331,6 +335,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "acceptance"
         ],
@@ -478,7 +484,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::人员年龄限制可能构成就业歧视",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -513,6 +519,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "performance_staff"
         ],
@@ -541,7 +549,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::人员年龄限制可能构成就业歧视",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -659,7 +667,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::唱标内容表述模糊-存在程序随意性风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -694,6 +702,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "procedure"
         ],
@@ -722,7 +732,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::唱标内容表述模糊-存在程序随意性风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -841,7 +851,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::商务条款中关于-人员工资-的报价要求可能引发低价恶性竞争或履约风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -876,6 +886,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -904,7 +916,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::商务条款中关于-人员工资-的报价要求可能引发低价恶性竞争或履约风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1059,6 +1071,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1206,7 +1220,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::将企业荣誉作为评分项-与履约能力关联度不足-存在倾向性风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1241,6 +1255,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "scoring"
         ],
@@ -1269,7 +1285,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::将企业荣誉作为评分项-与履约能力关联度不足-存在倾向性风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1387,7 +1403,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::政策依据文件号表述不完整",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1422,6 +1438,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -1450,7 +1468,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::政策依据文件号表述不完整",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1604,6 +1622,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1752,7 +1772,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::评分标准中人员配置要求存在重复计分及过度限制风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1787,6 +1807,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1815,7 +1837,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::评分标准中人员配置要求存在重复计分及过度限制风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1934,7 +1956,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1969,6 +1991,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1997,7 +2021,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -2151,6 +2175,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "acceptance"
         ],
@@ -2333,6 +2359,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -2479,7 +2507,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::人员证书评分项设置需警惕变相指定特定资质或人员",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -2514,6 +2542,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "scoring"
         ],
@@ -2542,7 +2572,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::人员证书评分项设置需警惕变相指定特定资质或人员",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -2695,6 +2725,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "performance_staff"
         ],
@@ -2875,6 +2907,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -3020,7 +3054,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::评分标准中-项目业绩-要求-非住宅类-且时间跨度较长-可能限制中小企业",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3055,6 +3089,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -3083,7 +3119,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::评分标准中-项目业绩-要求-非住宅类-且时间跨度较长-可能限制中小企业",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3201,7 +3237,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::关键业绩与奖项要求证据缺失-需人工复核",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3236,6 +3272,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "performance_staff"
         ],
@@ -3264,7 +3302,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::关键业绩与奖项要求证据缺失-需人工复核",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3385,7 +3423,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::关键合同条款缺失-无法评估付款与履约风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3420,6 +3458,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "contract_payment"
         ],
@@ -3448,7 +3488,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::关键合同条款缺失-无法评估付款与履约风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3565,7 +3605,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::节能环保产品政策适用性需进一步核实",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3600,6 +3640,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -3628,7 +3670,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::节能环保产品政策适用性需进一步核实",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3746,7 +3788,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::质疑证明材料要求证据缺失-需人工复核是否存在不合理门槛",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3781,6 +3823,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "procedure"
         ],
@@ -3809,7 +3853,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::质疑证明材料要求证据缺失-需人工复核是否存在不合理门槛",
           "winner_basis": "problem_conflict_resolution_priority",

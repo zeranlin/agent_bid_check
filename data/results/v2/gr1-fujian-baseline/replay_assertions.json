@@ -62,9 +62,7 @@
           "title": "验收标准模糊且依赖后续合同确定，存在需求条款合规风险"
         },
         "expected_layer": "not_reported",
-        "actual_layers": [
-          "excluded_risks"
-        ],
+        "actual_layers": [],
         "matched": true
       }
     ]

@@ -19,6 +19,23 @@ from app.pipelines.v2.risk_admission.schemas import AdmissionCandidate, Admissio
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster, TopicReviewArtifact, V2StageArtifact
 
 
+def _load_comparison_artifact(path: str | Path) -> ComparisonArtifact:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return ComparisonArtifact(
+        signatures=[],
+        clusters=[MergedRiskCluster(**item) for item in payload.get("clusters", [])],
+        conflicts=list(payload.get("conflicts", [])),
+        coverage_summary=dict(payload.get("coverage_summary", {})),
+        comparison_summary=dict(payload.get("comparison_summary", {})),
+        baseline_only_risks=list(payload.get("baseline_only_risks", [])),
+        topic_only_risks=list(payload.get("topic_only_risks", [])),
+        missing_topic_coverage=list(payload.get("missing_topic_coverage", [])),
+        manual_review_items=list(payload.get("manual_review_items", [])),
+        coverage_gaps=list(payload.get("coverage_gaps", [])),
+        metadata=dict(payload.get("metadata", {})),
+    )
+
+
 def _build_sample_comparison() -> ComparisonArtifact:
     return ComparisonArtifact(
         clusters=[
@@ -427,6 +444,12 @@ def test_formal_gate_trace_fields_exist_for_formal_output() -> None:
     assert decision.formal_gate_family_allowed in {True, False}
     assert decision.formal_gate_evidence_passed in {True, False}
     assert decision.formal_gate_registry_resolution in {"matched", "missing", "mismatch"}
+    assert decision.technical_layer_decision in {"formal_risks", "pending_review_items", "excluded_risks"}
+    assert decision.user_visible_gate_passed in {True, False}
+    assert decision.user_visible_gate_reason
+    assert decision.user_visible_gate_rule
+    assert decision.evidence_sufficiency in {"sufficient", "insufficient", "missing_user_visible_evidence"}
+    assert decision.user_visible_decision_basis
 
 
 def test_formal_registry_index_after_q7_uses_registry_as_runtime_single_source() -> None:
@@ -569,8 +592,16 @@ def test_fujian_template_misreport_is_blocked_by_current_admission_rules() -> No
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" in excluded_titles
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" not in formal_titles
     assert "评分标准中设置特定品牌倾向性条款" in pending_titles
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in formal_titles
+    assert (
+        "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
+        or "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in excluded_titles
+    )
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in formal_titles
+    assert (
+        "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
+        or "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in excluded_titles
+    )
 
 
 def test_missing_type_risk_is_downgraded_from_formal() -> None:
@@ -801,13 +832,18 @@ def test_formal_gate_blocks_when_registry_mapping_missing_even_with_body_evidenc
     decision = next(iter(admission.decisions.values()))
 
     assert admission.formal_risks == []
-    assert [item.title for item in admission.pending_review_items] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"]
     assert decision.formal_gate_passed is False
     assert decision.formal_gate_rule == "registry_mapping_missing_block"
     assert decision.formal_gate_registry_resolution == "missing"
     assert decision.formal_gate_registry_rule_id == ""
     assert decision.formal_gate_family_allowed is False
     assert decision.formal_gate_evidence_passed is True
+    assert decision.technical_layer_decision == "pending_review_items"
+    assert decision.user_visible_gate_passed is False
+    assert decision.user_visible_gate_rule == "internal_governance_signal"
+    assert decision.user_visible_gate_reason == "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。"
 
 
 def test_formal_gate_blocks_inactive_registry_rule_even_with_body_evidence(monkeypatch) -> None:
@@ -948,6 +984,10 @@ def test_pending_gate_drops_weak_signal_without_rule_support_from_user_visible_p
     assert [item.title for item in admission.excluded_risks] == ["政策依据引用不完整，存在表述截断风险"]
     decision = next(iter(admission.decisions.values()))
     assert decision.pending_gate_reason_code == "weak_signal_no_rule_support"
+    assert decision.technical_layer_decision == "pending_review_items"
+    assert decision.user_visible_gate_passed is False
+    assert decision.user_visible_gate_rule == "weak_signal_no_rule_support"
+    assert decision.evidence_sufficiency == "insufficient"
 
 
 def test_pending_gate_drops_weak_signal_without_material_consequence_from_user_visible_pending() -> None:
@@ -978,6 +1018,9 @@ def test_pending_gate_drops_weak_signal_without_material_consequence_from_user_v
     assert [item.title for item in admission.excluded_risks] == ["节能环保政策具体适用要求缺失"]
     decision = next(iter(admission.decisions.values()))
     assert decision.pending_gate_reason_code == "weak_signal_no_material_consequence"
+    assert decision.technical_layer_decision == "pending_review_items"
+    assert decision.user_visible_gate_passed is False
+    assert decision.user_visible_gate_rule == "weak_signal_no_material_consequence"
 
 
 def test_pending_gate_drops_fuzhou_energy_policy_hint_from_user_visible_pending() -> None:
@@ -1038,6 +1081,43 @@ def test_pending_gate_blocks_missing_user_visible_evidence() -> None:
     assert [item.title for item in admission.excluded_risks] == ["违约责任及质保期条款缺失"]
     decision = next(iter(admission.decisions.values()))
     assert decision.pending_gate_reason_code == "missing_user_visible_evidence"
+    assert decision.technical_layer_decision == "pending_review_items"
+    assert decision.user_visible_gate_passed is False
+    assert decision.user_visible_gate_rule == "missing_user_visible_evidence"
+    assert decision.evidence_sufficiency == "missing_user_visible_evidence"
+
+
+def test_user_visible_gate_keeps_material_pending_with_trace() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="material-pending",
+                title="检测报告及认证资质要求缺失或表述不明",
+                severity="中风险",
+                review_type="检测认证要求审查",
+                source_locations=["技术条款：设备验收"],
+                source_excerpts=["未见关于第三方检测报告、CMA/CNAS 资质或 CCC 认证的具体条款。"],
+                risk_judgment=["文件仅要求符合相关标准，但未明确检测报告要求。", "需人工确认验收章节是否补充了相关检测要求。"],
+                legal_basis=["需进一步核实。"],
+                rectification=["补充明确检测要求。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    problems = build_problem_layer("diesel.docx", governance)
+
+    admission = admit_problem_result("diesel.docx", comparison, problems, governance)
+
+    assert [item.title for item in admission.pending_review_items] == ["检测报告及认证资质要求缺失或表述不明"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.technical_layer_decision == "pending_review_items"
+    assert decision.user_visible_gate_passed is True
+    assert decision.user_visible_gate_rule == "pending_material_issue_allowed"
+    assert decision.evidence_sufficiency == "sufficient"
+    assert decision.user_visible_decision_basis
 
 
 def test_formal_gate_whitelist_can_survive_weak_source_downgrade_rules() -> None:
@@ -1271,3 +1351,91 @@ def test_risk_admission_handles_cross_candidate_conflict_without_governance_laye
     assert admission.pending_review_items == []
     assert admission.excluded_risks == []
     assert admission.decisions[next(iter(admission.decisions))].target_layer == "formal_risks"
+
+
+def test_domain_classifier_assigns_expected_domains_for_real_replay_documents() -> None:
+    cases = [
+        (
+            "quanzhou.docx",
+            Path("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json"),
+            "engineering_maintenance_construction",
+        ),
+        (
+            "fuzhou.docx",
+            Path("data/results/v2/gr1-fuzhou-baseline/comparison.json"),
+            "goods_procurement",
+        ),
+        (
+            "fujian.docx",
+            Path("data/results/v2/gr1-fujian-baseline/comparison.json"),
+            "service_procurement",
+        ),
+        (
+            "diesel.docx",
+            Path("data/results/v2/gr1-diesel-baseline/comparison.json"),
+            "goods_procurement",
+        ),
+    ]
+
+    for document_name, comparison_path, expected_domain in cases:
+        comparison = _load_comparison_artifact(comparison_path)
+        governance = govern_comparison_artifact(document_name, comparison)
+        problems = build_problem_layer(document_name, governance)
+        admission = admit_problem_result(document_name, comparison, problems, governance)
+
+        domains = {decision.document_domain for decision in admission.decisions.values()}
+        assert domains == {expected_domain}
+        assert all(decision.domain_confidence > 0 for decision in admission.decisions.values())
+        assert all(decision.domain_policy_id for decision in admission.decisions.values())
+        assert all(decision.domain_evidence for decision in admission.decisions.values())
+        assert admission.input_summary["domain_context"]["document_domain"] == expected_domain
+
+
+def test_domain_budget_compresses_quanzhou_pending_and_preserves_trace() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    pending_titles = {item.title for item in admission.pending_review_items}
+    hidden_titles = {
+        candidate.title
+        for candidate in admission.iter_all()
+        if admission.decisions[candidate.rule_id].budget_hit
+    }
+
+    assert admission.input_summary["domain_context"]["document_domain"] == "engineering_maintenance_construction"
+    assert len(admission.pending_review_items) <= 4
+    assert "疑似限定或倾向特定品牌/供应商" in pending_titles
+    assert "将样品要求/验收方案不当作为评审或履约门槛" in pending_titles
+    assert "专门面向中小企业采购的证明材料要求表述需核实" not in pending_titles
+    assert any(
+        title in hidden_titles
+        for title in {
+            "专门面向中小企业采购的证明材料要求表述需核实",
+            "验收流程、组织方式及不合格复验程序约定不明，存在执行风险",
+        }
+    )
+    assert admission.input_summary["budget_summary"]["hidden_count"] >= 1
+    assert any(
+        decision.budget_hit
+        and decision.budget_rule
+        and decision.budget_reason
+        and decision.absorbed_or_hidden_items
+        for decision in admission.decisions.values()
+    )
+
+
+def test_domain_budget_marks_hidden_pending_items_as_internal_trace_only() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    hidden_decisions = [decision for decision in admission.decisions.values() if decision.budget_hit]
+
+    assert hidden_decisions
+    assert all(decision.gate_passed is False for decision in hidden_decisions)
+    assert all(decision.user_visible_gate_passed is False for decision in hidden_decisions)
+    assert all(decision.budget_rule for decision in hidden_decisions)
+    assert all(decision.budget_reason for decision in hidden_decisions)

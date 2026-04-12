@@ -12,7 +12,7 @@
         "candidate_count": 27
       },
       "problem_summary": {
-        "problem_count": 27
+        "problem_count": 26
       }
     },
     "comparison_summary": {
@@ -24,160 +24,65 @@
       "candidate_count": 27
     },
     "problem_summary": {
-      "problem_count": 27
+      "problem_count": 26
+    },
+    "domain_context": {
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1"
+    },
+    "domain_policy": {
+      "policy_id": "domain-policy-goods-v1",
+      "formal_output_strategy": "protect_formal_hard_risks",
+      "pending_output_strategy": "keep_goods_specific_quality_and_competition_issues",
+      "family_repeat_tolerance": 1,
+      "weak_signal_threshold": "moderate",
+      "internal_signal_visibility": "hidden_from_user",
+      "formal_count_budget": 8,
+      "pending_count_budget": 6,
+      "family_repeat_budget": 1,
+      "low_value_signal_budget": 0,
+      "priority_title_patterns": [
+        "品牌",
+        "样品",
+        "验收",
+        "检测",
+        "认证",
+        "付款",
+        "技术人员",
+        "原厂工程师"
+      ],
+      "low_value_title_patterns": [
+        "节能环保政策",
+        "政策条款缺失",
+        "提醒"
+      ]
+    },
+    "budget_summary": {
+      "policy_id": "domain-policy-goods-v1",
+      "before_counts": {
+        "formal_risks": 8,
+        "pending_review_items": 2,
+        "excluded_risks": 16
+      },
+      "after_counts": {
+        "formal_risks": 8,
+        "pending_review_items": 2,
+        "excluded_risks": 16
+      },
+      "hidden_count": 0,
+      "hidden_titles": [],
+      "visible_pending_titles": [
+        "缺乏预付款安排，资金压力较大",
+        "远程开标解密时限及后果条款的合理性审查"
+      ]
     }
   },
   "formal_risks": [
-    {
-      "rule_id": "compare::acceptance_testing_cost",
-      "risk_family": "acceptance_testing_cost",
-      "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-      "review_type": "需求合规性 / 验收费用边界审查",
-      "severity": "中风险",
-      "evidence_kind": "acceptance_clause",
-      "source_type": "compare_rule",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-      ],
-      "source_excerpts": [
-        "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-      ],
-      "source_rules": [
-        "compare_rule"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-cf91c9b919e3",
-        "problem_rule_ids": [
-          "compare::acceptance_testing_cost"
-        ],
-        "problem_source_rules": [
-          "compare_rule"
-        ],
-        "problem_evidence_ids": [
-          "017e45310d0e"
-        ],
-        "problem_topic_sources": [
-          "acceptance"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "acceptance"
-        ],
-        "merged_family_keys": [
-          "acceptance_testing_cost"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "compare::acceptance_testing_cost",
-            "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-            "family_key": "acceptance_testing_cost",
-            "topic_sources": [
-              "acceptance"
-            ],
-            "source_locations": [
-              "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-            ],
-            "source_excerpts": [
-              "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-            ],
-            "evidence_ids": [
-              "017e45310d0e"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "formal_risks",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "compare::acceptance_testing_cost",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "compare::acceptance_testing_cost"
-          ],
-          "source_candidate_titles": [
-            "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
-          ],
-          "source_evidence_ids": [
-            "017e45310d0e"
-          ],
-          "source_topics": [
-            "acceptance"
-          ],
-          "source_rule_tags": [
-            "compare_rule"
-          ],
-          "problem_group_key": "acceptance_testing_cost",
-          "problem_family_keys": [
-            "acceptance_testing_cost"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "acceptance"
-          ],
-          "merged_family_keys": [
-            "acceptance_testing_cost"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "compare::acceptance_testing_cost",
-              "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-              "family_key": "acceptance_testing_cost",
-              "topic_sources": [
-                "acceptance"
-              ],
-              "source_locations": [
-                "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-              ],
-              "source_excerpts": [
-                "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-              ],
-              "evidence_ids": [
-                "017e45310d0e"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "formal_risks",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "compare::acceptance_testing_cost",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "acceptance_testing_cost|验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|compare::acceptance_testing_cost|017e45310d0e"
-        },
-        "governance_proposed_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-        "governance_canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
-      }
-    },
     {
       "rule_id": "topic::abnormal_standard_reference",
       "risk_family": "abnormal_standard_reference",
@@ -291,6 +196,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline"
           ],
@@ -452,6 +359,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline"
           ],
@@ -627,6 +536,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline",
             "samples_demo"
@@ -782,6 +693,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline"
           ],
@@ -932,6 +845,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline"
           ],
@@ -1082,6 +997,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "baseline"
           ],
@@ -1232,6 +1149,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "acceptance"
           ],
@@ -1279,25 +1198,26 @@
         "governance_proposed_title": "验收标准引用‘厂家验收标准’及‘样品’，存在模糊表述和单方裁量风险",
         "governance_canonical_title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"
       }
-    }
-  ],
-  "pending_review_items": [
+    },
     {
-      "rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-      "risk_family": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-      "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-      "review_type": "费用承担合规性审查",
-      "severity": "高风险",
+      "rule_id": "compare::acceptance_testing_cost",
+      "risk_family": "acceptance_testing_cost",
+      "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+      "review_type": "需求合规性 / 验收费用边界审查",
+      "severity": "中风险",
       "evidence_kind": "acceptance_clause",
-      "source_type": "topic_inference",
+      "source_type": "compare_rule",
       "governance_reason": "由 compare 候选风险进入输出治理层。",
       "source_locations": [
+        "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行",
         "证据1，第 9.2 条"
       ],
       "source_excerpts": [
+        "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。",
         "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
       ],
       "source_rules": [
+        "compare_rule",
         "topic"
       ],
       "extras": {
@@ -1305,25 +1225,33 @@
         "compare_source_buckets": [
           "formal_risks"
         ],
-        "problem_id": "problem-8b622f7d4de9",
+        "problem_id": "problem-b63f1df5ccd0",
         "problem_rule_ids": [
+          "compare::acceptance_testing_cost",
           "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
         ],
         "problem_source_rules": [
+          "compare_rule",
           "topic"
         ],
         "problem_evidence_ids": [
+          "017e45310d0e",
           "f7231648849f"
         ],
         "problem_topic_sources": [
           "acceptance"
         ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
+        "problem_supporting_candidate_rule_ids": [
+          "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+        ],
+        "problem_supporting_candidate_titles": [
+          "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+        ],
         "merged_topic_sources": [
           "acceptance"
         ],
         "merged_family_keys": [
+          "acceptance_testing_cost",
           "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
         ],
         "cross_topic_merge_reason": "",
@@ -1345,15 +1273,33 @@
             "evidence_ids": [
               "f7231648849f"
             ]
+          },
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "compare::acceptance_testing_cost",
+            "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "family_key": "acceptance_testing_cost",
+            "topic_sources": [
+              "acceptance"
+            ],
+            "source_locations": [
+              "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
+            ],
+            "source_excerpts": [
+              "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
+            ],
+            "evidence_ids": [
+              "017e45310d0e"
+            ]
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "formal_risks",
           "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+          "winner_rule_id": "compare::acceptance_testing_cost",
           "winner_basis": "problem_conflict_resolution_priority",
           "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
         },
         "problem_kind": "standard",
         "conflict_type": "",
@@ -1363,31 +1309,50 @@
         "conflict_evidence_links": [],
         "problem_trace": {
           "source_governed_rule_ids": [
+            "compare::acceptance_testing_cost",
             "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
           ],
           "source_candidate_titles": [
+            "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
             "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
           ],
           "source_evidence_ids": [
+            "017e45310d0e",
             "f7231648849f"
           ],
           "source_topics": [
             "acceptance"
           ],
           "source_rule_tags": [
+            "compare_rule",
             "topic"
           ],
-          "problem_group_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+          "problem_group_key": "acceptance_testing_cost",
           "problem_family_keys": [
+            "acceptance_testing_cost",
             "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
           ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
+          "problem_merge_reason": "验收检测费用转嫁与费用边界不清属于同一费用风险家族，问题层统一保留 formal 主问题并吸收附属待补证标题。",
+          "absorbed_supporting_titles": [
+            "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+          ],
+          "absorbed_supporting_rule_ids": [
+            "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+          ],
+          "absorbed_user_visible_items": [
+            {
+              "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+              "source_bucket": "pending_review_items",
+              "absorbed_by": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+              "hidden_reason": "same_family_absorbed_by_formal_primary"
+            }
+          ],
+          "user_visible_dedupe_reason": "family_visible_output_absorbed_by_primary",
           "merged_topic_sources": [
             "acceptance"
           ],
           "merged_family_keys": [
+            "acceptance_testing_cost",
             "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
           ],
           "cross_topic_merge_reason": "",
@@ -1409,165 +1374,33 @@
               "evidence_ids": [
                 "f7231648849f"
               ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险|topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|f7231648849f"
-        },
-        "governance_proposed_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-        "governance_canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
-      }
-    },
-    {
-      "rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-      "risk_family": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-      "title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
-      "review_type": "标准名称与编号一致性审查",
-      "severity": "中风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
-      ],
-      "source_excerpts": [
-        "均采用基材≥0.8mm 国家标准冷轧钢板。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-822e30c75ff2",
-        "problem_rule_ids": [
-          "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "344d6fed5881"
-        ],
-        "problem_topic_sources": [
-          "technical_standard"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "technical_standard"
-        ],
-        "merged_family_keys": [
-          "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-            "candidate_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
-            "family_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-            "topic_sources": [
-              "technical_standard"
-            ],
-            "source_locations": [
-              "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
-            ],
-            "source_excerpts": [
-              "均采用基材≥0.8mm 国家标准冷轧钢板。"
-            ],
-            "evidence_ids": [
-              "344d6fed5881"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称"
-          ],
-          "source_candidate_titles": [
-            "家具产品执行标准引用不明确，仅使用'国家标准'泛称"
-          ],
-          "source_evidence_ids": [
-            "344d6fed5881"
-          ],
-          "source_topics": [
-            "technical_standard"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-          "problem_family_keys": [
-            "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "technical_standard"
-          ],
-          "merged_family_keys": [
-            "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
+            },
             {
               "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
-              "candidate_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
-              "family_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+              "candidate_rule_id": "compare::acceptance_testing_cost",
+              "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+              "family_key": "acceptance_testing_cost",
               "topic_sources": [
-                "technical_standard"
+                "acceptance"
               ],
               "source_locations": [
-                "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
+                "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
               ],
               "source_excerpts": [
-                "均采用基材≥0.8mm 国家标准冷轧钢板。"
+                "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
               ],
               "evidence_ids": [
-                "344d6fed5881"
+                "017e45310d0e"
               ]
             }
           ],
           "final_problem_resolution": {
-            "target_layer": "pending_review_items",
+            "target_layer": "formal_risks",
             "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+            "winner_rule_id": "compare::acceptance_testing_cost",
             "winner_basis": "problem_conflict_resolution_priority",
             "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+            "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
           },
           "problem_kind": "standard",
           "conflict_type": "",
@@ -1576,462 +1409,25 @@
           "conflict_reason": {},
           "conflict_evidence_links": [],
           "replaced_problem_ids": [],
-          "problem_id_seed": "家具产品执行标准引用不明确-仅使用-国家标准-泛称|家具产品执行标准引用不明确，仅使用'国家标准'泛称|topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称|344d6fed5881"
+          "problem_id_seed": "acceptance_testing_cost|验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|acceptance_testing_cost,将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|compare::acceptance_testing_cost,topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|017e45310d0e,f7231648849f",
+          "primary_selection_reason": "优先保留规则归属最清晰、合规后果最明确的检测费用主问题，附属需求表述下沉为 supporting trace。",
+          "family_key": "acceptance_testing_cost",
+          "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "primary_visible_problem_id": "problem-b63f1df5ccd0",
+          "supporting_problem_ids": [],
+          "internal_trace_only_problem_ids": [],
+          "absorbed_problem_ids": [],
+          "family_visible_output_absorbed_by_primary": true,
+          "supporting_visible_problem_limit": 0,
+          "family_product_rule_key": "acceptance_testing_cost",
+          "family_merge_reason": "验收检测费用转嫁与费用边界不清属于同一费用承担家族，问题层统一保留一个用户可见主问题。"
         },
-        "governance_proposed_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
-        "governance_canonical_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称"
+        "governance_proposed_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "governance_canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
       }
-    },
-    {
-      "rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-      "risk_family": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-      "title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
-      "review_type": "标准引用与认证要求审查",
-      "severity": "中风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据 2，第 760-791 行，组合柜技术参数第 1 点"
-      ],
-      "source_excerpts": [
-        "插座需要达到国家 3C 认证标准。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-1215e240f950",
-        "problem_rule_ids": [
-          "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "1c07fc26d288"
-        ],
-        "problem_topic_sources": [
-          "technical_standard"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "technical_standard"
-        ],
-        "merged_family_keys": [
-          "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-            "candidate_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
-            "family_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-            "topic_sources": [
-              "technical_standard"
-            ],
-            "source_locations": [
-              "证据 2，第 760-791 行，组合柜技术参数第 1 点"
-            ],
-            "source_excerpts": [
-              "插座需要达到国家 3C 认证标准。"
-            ],
-            "evidence_ids": [
-              "1c07fc26d288"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
-          ],
-          "source_candidate_titles": [
-            "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求"
-          ],
-          "source_evidence_ids": [
-            "1c07fc26d288"
-          ],
-          "source_topics": [
-            "technical_standard"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-          "problem_family_keys": [
-            "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "technical_standard"
-          ],
-          "merged_family_keys": [
-            "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-              "candidate_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
-              "family_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-              "topic_sources": [
-                "technical_standard"
-              ],
-              "source_locations": [
-                "证据 2，第 760-791 行，组合柜技术参数第 1 点"
-              ],
-              "source_excerpts": [
-                "插座需要达到国家 3C 认证标准。"
-              ],
-              "evidence_ids": [
-                "1c07fc26d288"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求|强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求|topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求|1c07fc26d288"
-        },
-        "governance_proposed_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
-        "governance_canonical_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求"
-      }
-    },
-    {
-      "rule_id": "topic::政策依据引用不完整-存在表述截断风险",
-      "risk_family": "政策依据引用不完整-存在表述截断风险",
-      "title": "政策依据引用不完整，存在表述截断风险",
-      "review_type": "政策条款准确性审查",
-      "severity": "中风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
-      ],
-      "source_excerpts": [
-        "符合财政部、民政部、中国残联文件（财库[2017]14"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-f7b1b7e7bff2",
-        "problem_rule_ids": [
-          "topic::政策依据引用不完整-存在表述截断风险"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "5b731b740372"
-        ],
-        "problem_topic_sources": [
-          "policy"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "policy"
-        ],
-        "merged_family_keys": [
-          "政策依据引用不完整-存在表述截断风险"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
-            "candidate_title": "政策依据引用不完整，存在表述截断风险",
-            "family_key": "政策依据引用不完整-存在表述截断风险",
-            "topic_sources": [
-              "policy"
-            ],
-            "source_locations": [
-              "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
-            ],
-            "source_excerpts": [
-              "符合财政部、民政部、中国残联文件（财库[2017]14"
-            ],
-            "evidence_ids": [
-              "5b731b740372"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::政策依据引用不完整-存在表述截断风险"
-          ],
-          "source_candidate_titles": [
-            "政策依据引用不完整，存在表述截断风险"
-          ],
-          "source_evidence_ids": [
-            "5b731b740372"
-          ],
-          "source_topics": [
-            "policy"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "政策依据引用不完整-存在表述截断风险",
-          "problem_family_keys": [
-            "政策依据引用不完整-存在表述截断风险"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "policy"
-          ],
-          "merged_family_keys": [
-            "政策依据引用不完整-存在表述截断风险"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
-              "candidate_title": "政策依据引用不完整，存在表述截断风险",
-              "family_key": "政策依据引用不完整-存在表述截断风险",
-              "topic_sources": [
-                "policy"
-              ],
-              "source_locations": [
-                "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
-              ],
-              "source_excerpts": [
-                "符合财政部、民政部、中国残联文件（财库[2017]14"
-              ],
-              "evidence_ids": [
-                "5b731b740372"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "政策依据引用不完整-存在表述截断风险|政策依据引用不完整，存在表述截断风险|topic::政策依据引用不完整-存在表述截断风险|5b731b740372"
-        },
-        "governance_proposed_title": "政策依据引用不完整，存在表述截断风险",
-        "governance_canonical_title": "政策依据引用不完整，存在表述截断风险"
-      }
-    },
-    {
-      "rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
-      "risk_family": "样品评审标准不明确-存在主观裁量风险",
-      "title": "样品评审标准不明确，存在主观裁量风险",
-      "review_type": "评审标准审查",
-      "severity": "中风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据2，第792-832行，样品要求第4条"
-      ],
-      "source_excerpts": [
-        "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-84440d99717b",
-        "problem_rule_ids": [
-          "topic::样品评审标准不明确-存在主观裁量风险"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "7ae43fcc080c"
-        ],
-        "problem_topic_sources": [
-          "samples_demo"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "samples_demo"
-        ],
-        "merged_family_keys": [
-          "样品评审标准不明确-存在主观裁量风险"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
-            "candidate_title": "样品评审标准不明确，存在主观裁量风险",
-            "family_key": "样品评审标准不明确-存在主观裁量风险",
-            "topic_sources": [
-              "samples_demo"
-            ],
-            "source_locations": [
-              "证据2，第792-832行，样品要求第4条"
-            ],
-            "source_excerpts": [
-              "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
-            ],
-            "evidence_ids": [
-              "7ae43fcc080c"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::样品评审标准不明确-存在主观裁量风险"
-          ],
-          "source_candidate_titles": [
-            "样品评审标准不明确，存在主观裁量风险"
-          ],
-          "source_evidence_ids": [
-            "7ae43fcc080c"
-          ],
-          "source_topics": [
-            "samples_demo"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "样品评审标准不明确-存在主观裁量风险",
-          "problem_family_keys": [
-            "样品评审标准不明确-存在主观裁量风险"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "samples_demo"
-          ],
-          "merged_family_keys": [
-            "样品评审标准不明确-存在主观裁量风险"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
-              "candidate_title": "样品评审标准不明确，存在主观裁量风险",
-              "family_key": "样品评审标准不明确-存在主观裁量风险",
-              "topic_sources": [
-                "samples_demo"
-              ],
-              "source_locations": [
-                "证据2，第792-832行，样品要求第4条"
-              ],
-              "source_excerpts": [
-                "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
-              ],
-              "evidence_ids": [
-                "7ae43fcc080c"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "样品评审标准不明确-存在主观裁量风险|样品评审标准不明确，存在主观裁量风险|topic::样品评审标准不明确-存在主观裁量风险|7ae43fcc080c"
-        },
-        "governance_proposed_title": "样品评审标准不明确，存在主观裁量风险",
-        "governance_canonical_title": "样品评审标准不明确，存在主观裁量风险"
-      }
-    },
+    }
+  ],
+  "pending_review_items": [
     {
       "rule_id": "topic::缺乏预付款安排-资金压力较大",
       "risk_family": "缺乏预付款安排-资金压力较大",
@@ -2134,6 +1530,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "contract_payment"
           ],
@@ -2180,456 +1578,6 @@
         },
         "governance_proposed_title": "缺乏预付款安排，资金压力较大",
         "governance_canonical_title": "缺乏预付款安排，资金压力较大"
-      }
-    },
-    {
-      "rule_id": "topic::履约保证金退还时限与法律规定不一致",
-      "risk_family": "履约保证金退还时限与法律规定不一致",
-      "title": "履约保证金退还时限与法律规定不一致",
-      "review_type": "商务条款合规性",
-      "severity": "低风险",
-      "evidence_kind": "acceptance_clause",
-      "source_type": "completeness_hint",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
-      ],
-      "source_excerpts": [
-        "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
-      ],
-      "source_rules": [
-        "baseline"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-8d544496ffd9",
-        "problem_rule_ids": [
-          "topic::履约保证金退还时限与法律规定不一致"
-        ],
-        "problem_source_rules": [
-          "baseline"
-        ],
-        "problem_evidence_ids": [
-          "d34d9c47551a"
-        ],
-        "problem_topic_sources": [
-          "baseline"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "baseline"
-        ],
-        "merged_family_keys": [
-          "履约保证金退还时限与法律规定不一致"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::履约保证金退还时限与法律规定不一致",
-            "candidate_title": "履约保证金退还时限与法律规定不一致",
-            "family_key": "履约保证金退还时限与法律规定不一致",
-            "topic_sources": [
-              "baseline"
-            ],
-            "source_locations": [
-              "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
-            ],
-            "source_excerpts": [
-              "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
-            ],
-            "evidence_ids": [
-              "d34d9c47551a"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::履约保证金退还时限与法律规定不一致"
-          ],
-          "source_candidate_titles": [
-            "履约保证金退还时限与法律规定不一致"
-          ],
-          "source_evidence_ids": [
-            "d34d9c47551a"
-          ],
-          "source_topics": [
-            "baseline"
-          ],
-          "source_rule_tags": [
-            "baseline"
-          ],
-          "problem_group_key": "履约保证金退还时限与法律规定不一致",
-          "problem_family_keys": [
-            "履约保证金退还时限与法律规定不一致"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "baseline"
-          ],
-          "merged_family_keys": [
-            "履约保证金退还时限与法律规定不一致"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::履约保证金退还时限与法律规定不一致",
-              "candidate_title": "履约保证金退还时限与法律规定不一致",
-              "family_key": "履约保证金退还时限与法律规定不一致",
-              "topic_sources": [
-                "baseline"
-              ],
-              "source_locations": [
-                "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
-              ],
-              "source_excerpts": [
-                "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
-              ],
-              "evidence_ids": [
-                "d34d9c47551a"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "履约保证金退还时限与法律规定不一致|履约保证金退还时限与法律规定不一致|topic::履约保证金退还时限与法律规定不一致|d34d9c47551a"
-        },
-        "governance_proposed_title": "履约保证金退还时限与法律规定不一致",
-        "governance_canonical_title": "履约保证金退还时限与法律规定不一致"
-      }
-    },
-    {
-      "rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
-      "risk_family": "样品退样流程存在风险-可能增加投标人负担",
-      "title": "样品退样流程存在风险，可能增加投标人负担",
-      "review_type": "流程合规性审查",
-      "severity": "低风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据2，第792-832行，样品要求第6条"
-      ],
-      "source_excerpts": [
-        "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-bc676d46a07a",
-        "problem_rule_ids": [
-          "topic::样品退样流程存在风险-可能增加投标人负担"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "a06094368fe9"
-        ],
-        "problem_topic_sources": [
-          "samples_demo"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "samples_demo"
-        ],
-        "merged_family_keys": [
-          "样品退样流程存在风险-可能增加投标人负担"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
-            "candidate_title": "样品退样流程存在风险，可能增加投标人负担",
-            "family_key": "样品退样流程存在风险-可能增加投标人负担",
-            "topic_sources": [
-              "samples_demo"
-            ],
-            "source_locations": [
-              "证据2，第792-832行，样品要求第6条"
-            ],
-            "source_excerpts": [
-              "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
-            ],
-            "evidence_ids": [
-              "a06094368fe9"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::样品退样流程存在风险-可能增加投标人负担"
-          ],
-          "source_candidate_titles": [
-            "样品退样流程存在风险，可能增加投标人负担"
-          ],
-          "source_evidence_ids": [
-            "a06094368fe9"
-          ],
-          "source_topics": [
-            "samples_demo"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "样品退样流程存在风险-可能增加投标人负担",
-          "problem_family_keys": [
-            "样品退样流程存在风险-可能增加投标人负担"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "samples_demo"
-          ],
-          "merged_family_keys": [
-            "样品退样流程存在风险-可能增加投标人负担"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
-              "candidate_title": "样品退样流程存在风险，可能增加投标人负担",
-              "family_key": "样品退样流程存在风险-可能增加投标人负担",
-              "topic_sources": [
-                "samples_demo"
-              ],
-              "source_locations": [
-                "证据2，第792-832行，样品要求第6条"
-              ],
-              "source_excerpts": [
-                "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
-              ],
-              "evidence_ids": [
-                "a06094368fe9"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "样品退样流程存在风险-可能增加投标人负担|样品退样流程存在风险，可能增加投标人负担|topic::样品退样流程存在风险-可能增加投标人负担|a06094368fe9"
-        },
-        "governance_proposed_title": "样品退样流程存在风险，可能增加投标人负担",
-        "governance_canonical_title": "样品退样流程存在风险，可能增加投标人负担"
-      }
-    },
-    {
-      "rule_id": "topic::节能环保政策具体适用要求缺失",
-      "risk_family": "节能环保政策具体适用要求缺失",
-      "title": "节能环保政策具体适用要求缺失",
-      "review_type": "政策完整性审查",
-      "severity": "低风险",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
-      ],
-      "source_excerpts": [
-        "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-c8d84eee64f5",
-        "problem_rule_ids": [
-          "topic::节能环保政策具体适用要求缺失"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "489a076dac73"
-        ],
-        "problem_topic_sources": [
-          "policy"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "policy"
-        ],
-        "merged_family_keys": [
-          "节能环保政策具体适用要求缺失"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::节能环保政策具体适用要求缺失",
-            "candidate_title": "节能环保政策具体适用要求缺失",
-            "family_key": "节能环保政策具体适用要求缺失",
-            "topic_sources": [
-              "policy"
-            ],
-            "source_locations": [
-              "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
-            ],
-            "source_excerpts": [
-              "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
-            ],
-            "evidence_ids": [
-              "489a076dac73"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::节能环保政策具体适用要求缺失"
-          ],
-          "source_candidate_titles": [
-            "节能环保政策具体适用要求缺失"
-          ],
-          "source_evidence_ids": [
-            "489a076dac73"
-          ],
-          "source_topics": [
-            "policy"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "节能环保政策具体适用要求缺失",
-          "problem_family_keys": [
-            "节能环保政策具体适用要求缺失"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "policy"
-          ],
-          "merged_family_keys": [
-            "节能环保政策具体适用要求缺失"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::节能环保政策具体适用要求缺失",
-              "candidate_title": "节能环保政策具体适用要求缺失",
-              "family_key": "节能环保政策具体适用要求缺失",
-              "topic_sources": [
-                "policy"
-              ],
-              "source_locations": [
-                "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
-              ],
-              "source_excerpts": [
-                "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
-              ],
-              "evidence_ids": [
-                "489a076dac73"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "节能环保政策具体适用要求缺失|节能环保政策具体适用要求缺失|topic::节能环保政策具体适用要求缺失|489a076dac73"
-        },
-        "governance_proposed_title": "节能环保政策具体适用要求缺失",
-        "governance_canonical_title": "节能环保政策具体适用要求缺失"
       }
     },
     {
@@ -2734,6 +1682,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "procedure"
           ],
@@ -2781,321 +1731,23 @@
         "governance_proposed_title": "远程开标解密时限及后果条款的合理性审查",
         "governance_canonical_title": "远程开标解密时限及后果条款的合理性审查"
       }
-    },
+    }
+  ],
+  "excluded_risks": [
     {
-      "rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
-      "risk_family": "专门面向中小企业采购的评分优惠落实情况不明",
-      "title": "专门面向中小企业采购的评分优惠落实情况不明",
-      "review_type": "政策适用与评分一致性审查",
-      "severity": "需人工复核",
-      "evidence_kind": "scoring_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据1（资格承诺函）及证据2（政策概述）"
-      ],
-      "source_excerpts": [
-        "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-65413a8e1f91",
-        "problem_rule_ids": [
-          "topic::专门面向中小企业采购的评分优惠落实情况不明"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "5745aa67d69a"
-        ],
-        "problem_topic_sources": [
-          "policy"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "policy"
-        ],
-        "merged_family_keys": [
-          "专门面向中小企业采购的评分优惠落实情况不明"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
-            "candidate_title": "专门面向中小企业采购的评分优惠落实情况不明",
-            "family_key": "专门面向中小企业采购的评分优惠落实情况不明",
-            "topic_sources": [
-              "policy"
-            ],
-            "source_locations": [
-              "证据1（资格承诺函）及证据2（政策概述）"
-            ],
-            "source_excerpts": [
-              "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
-            ],
-            "evidence_ids": [
-              "5745aa67d69a"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::专门面向中小企业采购的评分优惠落实情况不明"
-          ],
-          "source_candidate_titles": [
-            "专门面向中小企业采购的评分优惠落实情况不明"
-          ],
-          "source_evidence_ids": [
-            "5745aa67d69a"
-          ],
-          "source_topics": [
-            "policy"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "专门面向中小企业采购的评分优惠落实情况不明",
-          "problem_family_keys": [
-            "专门面向中小企业采购的评分优惠落实情况不明"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "policy"
-          ],
-          "merged_family_keys": [
-            "专门面向中小企业采购的评分优惠落实情况不明"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
-              "candidate_title": "专门面向中小企业采购的评分优惠落实情况不明",
-              "family_key": "专门面向中小企业采购的评分优惠落实情况不明",
-              "topic_sources": [
-                "policy"
-              ],
-              "source_locations": [
-                "证据1（资格承诺函）及证据2（政策概述）"
-              ],
-              "source_excerpts": [
-                "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
-              ],
-              "evidence_ids": [
-                "5745aa67d69a"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "专门面向中小企业采购的评分优惠落实情况不明|专门面向中小企业采购的评分优惠落实情况不明|topic::专门面向中小企业采购的评分优惠落实情况不明|5745aa67d69a"
-        },
-        "governance_proposed_title": "专门面向中小企业采购的评分优惠落实情况不明",
-        "governance_canonical_title": "专门面向中小企业采购的评分优惠落实情况不明"
-      }
-    },
-    {
-      "rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
-      "risk_family": "关键资格条件证据缺失-无法完成实质性审查",
-      "title": "关键资格条件证据缺失，无法完成实质性审查",
-      "review_type": "证据完整性审查",
-      "severity": "需人工复核",
-      "evidence_kind": "qualification_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "证据1 第 263-277 行"
-      ],
-      "source_excerpts": [
-        "（2）投标人的资格要求：详见招标文件第一章。"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-ca36cfd6f4f8",
-        "problem_rule_ids": [
-          "topic::关键资格条件证据缺失-无法完成实质性审查"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "eb4fe886c298"
-        ],
-        "problem_topic_sources": [
-          "qualification"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "qualification"
-        ],
-        "merged_family_keys": [
-          "关键资格条件证据缺失-无法完成实质性审查"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
-            "candidate_title": "关键资格条件证据缺失，无法完成实质性审查",
-            "family_key": "关键资格条件证据缺失-无法完成实质性审查",
-            "topic_sources": [
-              "qualification"
-            ],
-            "source_locations": [
-              "证据1 第 263-277 行"
-            ],
-            "source_excerpts": [
-              "（2）投标人的资格要求：详见招标文件第一章。"
-            ],
-            "evidence_ids": [
-              "eb4fe886c298"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::关键资格条件证据缺失-无法完成实质性审查"
-          ],
-          "source_candidate_titles": [
-            "关键资格条件证据缺失，无法完成实质性审查"
-          ],
-          "source_evidence_ids": [
-            "eb4fe886c298"
-          ],
-          "source_topics": [
-            "qualification"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "关键资格条件证据缺失-无法完成实质性审查",
-          "problem_family_keys": [
-            "关键资格条件证据缺失-无法完成实质性审查"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "qualification"
-          ],
-          "merged_family_keys": [
-            "关键资格条件证据缺失-无法完成实质性审查"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
-              "candidate_title": "关键资格条件证据缺失，无法完成实质性审查",
-              "family_key": "关键资格条件证据缺失-无法完成实质性审查",
-              "topic_sources": [
-                "qualification"
-              ],
-              "source_locations": [
-                "证据1 第 263-277 行"
-              ],
-              "source_excerpts": [
-                "（2）投标人的资格要求：详见招标文件第一章。"
-              ],
-              "evidence_ids": [
-                "eb4fe886c298"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "关键资格条件证据缺失-无法完成实质性审查|关键资格条件证据缺失，无法完成实质性审查|topic::关键资格条件证据缺失-无法完成实质性审查|eb4fe886c298"
-        },
-        "governance_proposed_title": "关键资格条件证据缺失，无法完成实质性审查",
-        "governance_canonical_title": "关键资格条件证据缺失，无法完成实质性审查"
-      }
-    },
-    {
-      "rule_id": "topic::履约保证金条款缺失关键信息",
-      "risk_family": "履约保证金条款缺失关键信息",
-      "title": "履约保证金条款缺失关键信息",
-      "review_type": "保证金合规性审查",
-      "severity": "需人工复核",
+      "rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+      "risk_family": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+      "title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
+      "review_type": "标准名称与编号一致性审查",
+      "severity": "中风险",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
       "governance_reason": "由 compare 候选风险进入输出治理层。",
       "source_locations": [
-        "证据3，第 867 行"
+        "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
       ],
       "source_excerpts": [
-        "★ 履约保证金"
+        "均采用基材≥0.8mm 国家标准冷轧钢板。"
       ],
       "source_rules": [
         "topic"
@@ -3105,55 +1757,55 @@
         "compare_source_buckets": [
           "formal_risks"
         ],
-        "problem_id": "problem-5ed796972834",
+        "problem_id": "problem-822e30c75ff2",
         "problem_rule_ids": [
-          "topic::履约保证金条款缺失关键信息"
+          "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称"
         ],
         "problem_source_rules": [
           "topic"
         ],
         "problem_evidence_ids": [
-          "75cf3fb6db97"
+          "344d6fed5881"
         ],
         "problem_topic_sources": [
-          "contract_payment"
+          "technical_standard"
         ],
         "problem_supporting_candidate_rule_ids": [],
         "problem_supporting_candidate_titles": [],
         "merged_topic_sources": [
-          "contract_payment"
+          "technical_standard"
         ],
         "merged_family_keys": [
-          "履约保证金条款缺失关键信息"
+          "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
         ],
         "cross_topic_merge_reason": "",
         "layer_conflict_inputs": [
           {
             "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::履约保证金条款缺失关键信息",
-            "candidate_title": "履约保证金条款缺失关键信息",
-            "family_key": "履约保证金条款缺失关键信息",
+            "candidate_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+            "candidate_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
+            "family_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
             "topic_sources": [
-              "contract_payment"
+              "technical_standard"
             ],
             "source_locations": [
-              "证据3，第 867 行"
+              "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
             ],
             "source_excerpts": [
-              "★ 履约保证金"
+              "均采用基材≥0.8mm 国家标准冷轧钢板。"
             ],
             "evidence_ids": [
-              "75cf3fb6db97"
+              "344d6fed5881"
             ]
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::履约保证金条款缺失关键信息",
+          "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
           "winner_basis": "problem_conflict_resolution_priority",
           "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
         },
         "problem_kind": "standard",
         "conflict_type": "",
@@ -3163,61 +1815,63 @@
         "conflict_evidence_links": [],
         "problem_trace": {
           "source_governed_rule_ids": [
-            "topic::履约保证金条款缺失关键信息"
+            "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称"
           ],
           "source_candidate_titles": [
-            "履约保证金条款缺失关键信息"
+            "家具产品执行标准引用不明确，仅使用'国家标准'泛称"
           ],
           "source_evidence_ids": [
-            "75cf3fb6db97"
+            "344d6fed5881"
           ],
           "source_topics": [
-            "contract_payment"
+            "technical_standard"
           ],
           "source_rule_tags": [
             "topic"
           ],
-          "problem_group_key": "履约保证金条款缺失关键信息",
+          "problem_group_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
           "problem_family_keys": [
-            "履约保证金条款缺失关键信息"
+            "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
           ],
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
-            "contract_payment"
+            "technical_standard"
           ],
           "merged_family_keys": [
-            "履约保证金条款缺失关键信息"
+            "家具产品执行标准引用不明确-仅使用-国家标准-泛称"
           ],
           "cross_topic_merge_reason": "",
           "layer_conflict_inputs": [
             {
               "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::履约保证金条款缺失关键信息",
-              "candidate_title": "履约保证金条款缺失关键信息",
-              "family_key": "履约保证金条款缺失关键信息",
+              "candidate_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+              "candidate_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
+              "family_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
               "topic_sources": [
-                "contract_payment"
+                "technical_standard"
               ],
               "source_locations": [
-                "证据3，第 867 行"
+                "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'"
               ],
               "source_excerpts": [
-                "★ 履约保证金"
+                "均采用基材≥0.8mm 国家标准冷轧钢板。"
               ],
               "evidence_ids": [
-                "75cf3fb6db97"
+                "344d6fed5881"
               ]
             }
           ],
           "final_problem_resolution": {
-            "target_layer": "pending_review_items",
+            "target_layer": "excluded_risks",
             "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::履约保证金条款缺失关键信息",
+            "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
             "winner_basis": "problem_conflict_resolution_priority",
             "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
           },
           "problem_kind": "standard",
           "conflict_type": "",
@@ -3226,18 +1880,18 @@
           "conflict_reason": {},
           "conflict_evidence_links": [],
           "replaced_problem_ids": [],
-          "problem_id_seed": "履约保证金条款缺失关键信息|履约保证金条款缺失关键信息|topic::履约保证金条款缺失关键信息|75cf3fb6db97"
+          "problem_id_seed": "家具产品执行标准引用不明确-仅使用-国家标准-泛称|家具产品执行标准引用不明确，仅使用'国家标准'泛称|topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称|344d6fed5881"
         },
-        "governance_proposed_title": "履约保证金条款缺失关键信息",
-        "governance_canonical_title": "履约保证金条款缺失关键信息"
+        "governance_proposed_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
+        "governance_canonical_title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称"
       }
     },
     {
-      "rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
-      "risk_family": "环保及检测方法标准缺失-e1-级未明确对应标准",
-      "title": "环保及检测方法标准缺失，E1 级未明确对应标准",
-      "review_type": "标准有效性与检测方法审查",
-      "severity": "需人工复核",
+      "rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
+      "risk_family": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
+      "title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
+      "review_type": "标准引用与认证要求审查",
+      "severity": "中风险",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
       "governance_reason": "由 compare 候选风险进入输出治理层。",
@@ -3245,7 +1899,7 @@
         "证据 2，第 760-791 行，组合柜技术参数第 1 点"
       ],
       "source_excerpts": [
-        "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+        "插座需要达到国家 3C 认证标准。"
       ],
       "source_rules": [
         "topic"
@@ -3255,15 +1909,15 @@
         "compare_source_buckets": [
           "formal_risks"
         ],
-        "problem_id": "problem-91eae7190551",
+        "problem_id": "problem-1215e240f950",
         "problem_rule_ids": [
-          "topic::环保及检测方法标准缺失-e1-级未明确对应标准"
+          "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
         ],
         "problem_source_rules": [
           "topic"
         ],
         "problem_evidence_ids": [
-          "09370a573649"
+          "1c07fc26d288"
         ],
         "problem_topic_sources": [
           "technical_standard"
@@ -3274,15 +1928,15 @@
           "technical_standard"
         ],
         "merged_family_keys": [
-          "环保及检测方法标准缺失-e1-级未明确对应标准"
+          "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
         ],
         "cross_topic_merge_reason": "",
         "layer_conflict_inputs": [
           {
             "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
-            "candidate_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
-            "family_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+            "candidate_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
+            "candidate_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
+            "family_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
             "topic_sources": [
               "technical_standard"
             ],
@@ -3290,20 +1944,20 @@
               "证据 2，第 760-791 行，组合柜技术参数第 1 点"
             ],
             "source_excerpts": [
-              "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+              "插座需要达到国家 3C 认证标准。"
             ],
             "evidence_ids": [
-              "09370a573649"
+              "1c07fc26d288"
             ]
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+          "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
           "winner_basis": "problem_conflict_resolution_priority",
           "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
         },
         "problem_kind": "standard",
         "conflict_type": "",
@@ -3313,13 +1967,13 @@
         "conflict_evidence_links": [],
         "problem_trace": {
           "source_governed_rule_ids": [
-            "topic::环保及检测方法标准缺失-e1-级未明确对应标准"
+            "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
           ],
           "source_candidate_titles": [
-            "环保及检测方法标准缺失，E1 级未明确对应标准"
+            "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求"
           ],
           "source_evidence_ids": [
-            "09370a573649"
+            "1c07fc26d288"
           ],
           "source_topics": [
             "technical_standard"
@@ -3327,26 +1981,28 @@
           "source_rule_tags": [
             "topic"
           ],
-          "problem_group_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+          "problem_group_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
           "problem_family_keys": [
-            "环保及检测方法标准缺失-e1-级未明确对应标准"
+            "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
           ],
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "technical_standard"
           ],
           "merged_family_keys": [
-            "环保及检测方法标准缺失-e1-级未明确对应标准"
+            "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求"
           ],
           "cross_topic_merge_reason": "",
           "layer_conflict_inputs": [
             {
               "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
-              "candidate_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
-              "family_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+              "candidate_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
+              "candidate_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
+              "family_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
               "topic_sources": [
                 "technical_standard"
               ],
@@ -3354,20 +2010,20 @@
                 "证据 2，第 760-791 行，组合柜技术参数第 1 点"
               ],
               "source_excerpts": [
-                "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+                "插座需要达到国家 3C 认证标准。"
               ],
               "evidence_ids": [
-                "09370a573649"
+                "1c07fc26d288"
               ]
             }
           ],
           "final_problem_resolution": {
-            "target_layer": "pending_review_items",
+            "target_layer": "excluded_risks",
             "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+            "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
             "winner_basis": "problem_conflict_resolution_priority",
             "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
           },
           "problem_kind": "standard",
           "conflict_type": "",
@@ -3376,26 +2032,26 @@
           "conflict_reason": {},
           "conflict_evidence_links": [],
           "replaced_problem_ids": [],
-          "problem_id_seed": "环保及检测方法标准缺失-e1-级未明确对应标准|环保及检测方法标准缺失，E1 级未明确对应标准|topic::环保及检测方法标准缺失-e1-级未明确对应标准|09370a573649"
+          "problem_id_seed": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求|强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求|topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求|1c07fc26d288"
         },
-        "governance_proposed_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
-        "governance_canonical_title": "环保及检测方法标准缺失，E1 级未明确对应标准"
+        "governance_proposed_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
+        "governance_canonical_title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求"
       }
     },
     {
-      "rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
-      "risk_family": "质疑投诉章节内容不完整-存在潜在限制风险",
-      "title": "质疑投诉章节内容不完整，存在潜在限制风险",
-      "review_type": "完整性审查",
-      "severity": "需人工复核",
+      "rule_id": "topic::政策依据引用不完整-存在表述截断风险",
+      "risk_family": "政策依据引用不完整-存在表述截断风险",
+      "title": "政策依据引用不完整，存在表述截断风险",
+      "review_type": "政策条款准确性审查",
+      "severity": "中风险",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
       "governance_reason": "由 compare 候选风险进入输出治理层。",
       "source_locations": [
-        "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+        "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
       ],
       "source_excerpts": [
-        "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+        "符合财政部、民政部、中国残联文件（财库[2017]14"
       ],
       "source_rules": [
         "topic"
@@ -3405,52 +2061,204 @@
         "compare_source_buckets": [
           "formal_risks"
         ],
-        "problem_id": "problem-9b5bfe9d261c",
+        "problem_id": "problem-f7b1b7e7bff2",
         "problem_rule_ids": [
-          "topic::质疑投诉章节内容不完整-存在潜在限制风险"
+          "topic::政策依据引用不完整-存在表述截断风险"
         ],
         "problem_source_rules": [
           "topic"
         ],
         "problem_evidence_ids": [
-          "0a0a72016d2e"
+          "5b731b740372"
         ],
         "problem_topic_sources": [
-          "procedure"
+          "policy"
         ],
         "problem_supporting_candidate_rule_ids": [],
         "problem_supporting_candidate_titles": [],
         "merged_topic_sources": [
-          "procedure"
+          "policy"
         ],
         "merged_family_keys": [
-          "质疑投诉章节内容不完整-存在潜在限制风险"
+          "政策依据引用不完整-存在表述截断风险"
         ],
         "cross_topic_merge_reason": "",
         "layer_conflict_inputs": [
           {
             "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
-            "candidate_title": "质疑投诉章节内容不完整，存在潜在限制风险",
-            "family_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+            "candidate_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
+            "candidate_title": "政策依据引用不完整，存在表述截断风险",
+            "family_key": "政策依据引用不完整-存在表述截断风险",
             "topic_sources": [
-              "procedure"
+              "policy"
             ],
             "source_locations": [
-              "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+              "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
             ],
             "source_excerpts": [
-              "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+              "符合财政部、民政部、中国残联文件（财库[2017]14"
             ],
             "evidence_ids": [
-              "0a0a72016d2e"
+              "5b731b740372"
             ]
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+          "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::政策依据引用不完整-存在表述截断风险"
+          ],
+          "source_candidate_titles": [
+            "政策依据引用不完整，存在表述截断风险"
+          ],
+          "source_evidence_ids": [
+            "5b731b740372"
+          ],
+          "source_topics": [
+            "policy"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "政策依据引用不完整-存在表述截断风险",
+          "problem_family_keys": [
+            "政策依据引用不完整-存在表述截断风险"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "policy"
+          ],
+          "merged_family_keys": [
+            "政策依据引用不完整-存在表述截断风险"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
+              "candidate_title": "政策依据引用不完整，存在表述截断风险",
+              "family_key": "政策依据引用不完整-存在表述截断风险",
+              "topic_sources": [
+                "policy"
+              ],
+              "source_locations": [
+                "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾"
+              ],
+              "source_excerpts": [
+                "符合财政部、民政部、中国残联文件（财库[2017]14"
+              ],
+              "evidence_ids": [
+                "5b731b740372"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "政策依据引用不完整-存在表述截断风险|政策依据引用不完整，存在表述截断风险|topic::政策依据引用不完整-存在表述截断风险|5b731b740372"
+        },
+        "governance_proposed_title": "政策依据引用不完整，存在表述截断风险",
+        "governance_canonical_title": "政策依据引用不完整，存在表述截断风险"
+      }
+    },
+    {
+      "rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
+      "risk_family": "样品评审标准不明确-存在主观裁量风险",
+      "title": "样品评审标准不明确，存在主观裁量风险",
+      "review_type": "评审标准审查",
+      "severity": "中风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据2，第792-832行，样品要求第4条"
+      ],
+      "source_excerpts": [
+        "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-84440d99717b",
+        "problem_rule_ids": [
+          "topic::样品评审标准不明确-存在主观裁量风险"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "7ae43fcc080c"
+        ],
+        "problem_topic_sources": [
+          "samples_demo"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "samples_demo"
+        ],
+        "merged_family_keys": [
+          "样品评审标准不明确-存在主观裁量风险"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
+            "candidate_title": "样品评审标准不明确，存在主观裁量风险",
+            "family_key": "样品评审标准不明确-存在主观裁量风险",
+            "topic_sources": [
+              "samples_demo"
+            ],
+            "source_locations": [
+              "证据2，第792-832行，样品要求第4条"
+            ],
+            "source_excerpts": [
+              "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
+            ],
+            "evidence_ids": [
+              "7ae43fcc080c"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
           "winner_basis": "problem_conflict_resolution_priority",
           "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
           "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
@@ -3463,58 +2271,60 @@
         "conflict_evidence_links": [],
         "problem_trace": {
           "source_governed_rule_ids": [
-            "topic::质疑投诉章节内容不完整-存在潜在限制风险"
+            "topic::样品评审标准不明确-存在主观裁量风险"
           ],
           "source_candidate_titles": [
-            "质疑投诉章节内容不完整，存在潜在限制风险"
+            "样品评审标准不明确，存在主观裁量风险"
           ],
           "source_evidence_ids": [
-            "0a0a72016d2e"
+            "7ae43fcc080c"
           ],
           "source_topics": [
-            "procedure"
+            "samples_demo"
           ],
           "source_rule_tags": [
             "topic"
           ],
-          "problem_group_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+          "problem_group_key": "样品评审标准不明确-存在主观裁量风险",
           "problem_family_keys": [
-            "质疑投诉章节内容不完整-存在潜在限制风险"
+            "样品评审标准不明确-存在主观裁量风险"
           ],
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
-            "procedure"
+            "samples_demo"
           ],
           "merged_family_keys": [
-            "质疑投诉章节内容不完整-存在潜在限制风险"
+            "样品评审标准不明确-存在主观裁量风险"
           ],
           "cross_topic_merge_reason": "",
           "layer_conflict_inputs": [
             {
               "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
-              "candidate_title": "质疑投诉章节内容不完整，存在潜在限制风险",
-              "family_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+              "candidate_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
+              "candidate_title": "样品评审标准不明确，存在主观裁量风险",
+              "family_key": "样品评审标准不明确-存在主观裁量风险",
               "topic_sources": [
-                "procedure"
+                "samples_demo"
               ],
               "source_locations": [
-                "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+                "证据2，第792-832行，样品要求第4条"
               ],
               "source_excerpts": [
-                "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+                "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
               ],
               "evidence_ids": [
-                "0a0a72016d2e"
+                "7ae43fcc080c"
               ]
             }
           ],
           "final_problem_resolution": {
-            "target_layer": "pending_review_items",
+            "target_layer": "excluded_risks",
             "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+            "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
             "winner_basis": "problem_conflict_resolution_priority",
             "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
             "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
@@ -3526,164 +2336,12 @@
           "conflict_reason": {},
           "conflict_evidence_links": [],
           "replaced_problem_ids": [],
-          "problem_id_seed": "质疑投诉章节内容不完整-存在潜在限制风险|质疑投诉章节内容不完整，存在潜在限制风险|topic::质疑投诉章节内容不完整-存在潜在限制风险|0a0a72016d2e"
+          "problem_id_seed": "样品评审标准不明确-存在主观裁量风险|样品评审标准不明确，存在主观裁量风险|topic::样品评审标准不明确-存在主观裁量风险|7ae43fcc080c"
         },
-        "governance_proposed_title": "质疑投诉章节内容不完整，存在潜在限制风险",
-        "governance_canonical_title": "质疑投诉章节内容不完整，存在潜在限制风险"
+        "governance_proposed_title": "样品评审标准不明确，存在主观裁量风险",
+        "governance_canonical_title": "样品评审标准不明确，存在主观裁量风险"
       }
     },
-    {
-      "rule_id": "topic::违约责任及质保期条款缺失",
-      "risk_family": "违约责任及质保期条款缺失",
-      "title": "违约责任及质保期条款缺失",
-      "review_type": "责任平衡性审查",
-      "severity": "需人工复核",
-      "evidence_kind": "body_clause",
-      "source_type": "topic_inference",
-      "governance_reason": "由 compare 候选风险进入输出治理层。",
-      "source_locations": [
-        "未在当前证据片段中找到"
-      ],
-      "source_excerpts": [
-        "无"
-      ],
-      "source_rules": [
-        "topic"
-      ],
-      "extras": {
-        "compare_source_bucket": "formal_risks",
-        "compare_source_buckets": [
-          "formal_risks"
-        ],
-        "problem_id": "problem-193f867fa0f1",
-        "problem_rule_ids": [
-          "topic::违约责任及质保期条款缺失"
-        ],
-        "problem_source_rules": [
-          "topic"
-        ],
-        "problem_evidence_ids": [
-          "d81bb206a889"
-        ],
-        "problem_topic_sources": [
-          "contract_payment"
-        ],
-        "problem_supporting_candidate_rule_ids": [],
-        "problem_supporting_candidate_titles": [],
-        "merged_topic_sources": [
-          "contract_payment"
-        ],
-        "merged_family_keys": [
-          "违约责任及质保期条款缺失"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::违约责任及质保期条款缺失",
-            "candidate_title": "违约责任及质保期条款缺失",
-            "family_key": "违约责任及质保期条款缺失",
-            "topic_sources": [
-              "contract_payment"
-            ],
-            "source_locations": [
-              "未在当前证据片段中找到"
-            ],
-            "source_excerpts": [
-              "无"
-            ],
-            "evidence_ids": [
-              "d81bb206a889"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::违约责任及质保期条款缺失",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "problem_trace": {
-          "source_governed_rule_ids": [
-            "topic::违约责任及质保期条款缺失"
-          ],
-          "source_candidate_titles": [
-            "违约责任及质保期条款缺失"
-          ],
-          "source_evidence_ids": [
-            "d81bb206a889"
-          ],
-          "source_topics": [
-            "contract_payment"
-          ],
-          "source_rule_tags": [
-            "topic"
-          ],
-          "problem_group_key": "违约责任及质保期条款缺失",
-          "problem_family_keys": [
-            "违约责任及质保期条款缺失"
-          ],
-          "problem_merge_reason": "",
-          "absorbed_supporting_titles": [],
-          "absorbed_supporting_rule_ids": [],
-          "merged_topic_sources": [
-            "contract_payment"
-          ],
-          "merged_family_keys": [
-            "违约责任及质保期条款缺失"
-          ],
-          "cross_topic_merge_reason": "",
-          "layer_conflict_inputs": [
-            {
-              "source_bucket": "formal_risks",
-              "candidate_rule_id": "topic::违约责任及质保期条款缺失",
-              "candidate_title": "违约责任及质保期条款缺失",
-              "family_key": "违约责任及质保期条款缺失",
-              "topic_sources": [
-                "contract_payment"
-              ],
-              "source_locations": [
-                "未在当前证据片段中找到"
-              ],
-              "source_excerpts": [
-                "无"
-              ],
-              "evidence_ids": [
-                "d81bb206a889"
-              ]
-            }
-          ],
-          "final_problem_resolution": {
-            "target_layer": "pending_review_items",
-            "winner_input_bucket": "formal_risks",
-            "winner_rule_id": "topic::违约责任及质保期条款缺失",
-            "winner_basis": "problem_conflict_resolution_priority",
-            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
-          },
-          "problem_kind": "standard",
-          "conflict_type": "",
-          "left_side": {},
-          "right_side": {},
-          "conflict_reason": {},
-          "conflict_evidence_links": [],
-          "replaced_problem_ids": [],
-          "problem_id_seed": "违约责任及质保期条款缺失|违约责任及质保期条款缺失|topic::违约责任及质保期条款缺失|d81bb206a889"
-        },
-        "governance_proposed_title": "违约责任及质保期条款缺失",
-        "governance_canonical_title": "违约责任及质保期条款缺失"
-      }
-    }
-  ],
-  "excluded_risks": [
     {
       "rule_id": "topic::验收时间条款留白-导致履约验收时点不明确-缺乏可操作性",
       "risk_family": "验收时间条款留白-导致履约验收时点不明确-缺乏可操作性",
@@ -3786,6 +2444,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "acceptance"
           ],
@@ -3832,6 +2492,158 @@
         },
         "governance_proposed_title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性",
         "governance_canonical_title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性"
+      }
+    },
+    {
+      "rule_id": "topic::履约保证金退还时限与法律规定不一致",
+      "risk_family": "履约保证金退还时限与法律规定不一致",
+      "title": "履约保证金退还时限与法律规定不一致",
+      "review_type": "商务条款合规性",
+      "severity": "低风险",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "completeness_hint",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
+      ],
+      "source_excerpts": [
+        "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
+      ],
+      "source_rules": [
+        "baseline"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-8d544496ffd9",
+        "problem_rule_ids": [
+          "topic::履约保证金退还时限与法律规定不一致"
+        ],
+        "problem_source_rules": [
+          "baseline"
+        ],
+        "problem_evidence_ids": [
+          "d34d9c47551a"
+        ],
+        "problem_topic_sources": [
+          "baseline"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "baseline"
+        ],
+        "merged_family_keys": [
+          "履约保证金退还时限与法律规定不一致"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::履约保证金退还时限与法律规定不一致",
+            "candidate_title": "履约保证金退还时限与法律规定不一致",
+            "family_key": "履约保证金退还时限与法律规定不一致",
+            "topic_sources": [
+              "baseline"
+            ],
+            "source_locations": [
+              "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
+            ],
+            "source_excerpts": [
+              "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
+            ],
+            "evidence_ids": [
+              "d34d9c47551a"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::履约保证金退还时限与法律规定不一致"
+          ],
+          "source_candidate_titles": [
+            "履约保证金退还时限与法律规定不一致"
+          ],
+          "source_evidence_ids": [
+            "d34d9c47551a"
+          ],
+          "source_topics": [
+            "baseline"
+          ],
+          "source_rule_tags": [
+            "baseline"
+          ],
+          "problem_group_key": "履约保证金退还时限与法律规定不一致",
+          "problem_family_keys": [
+            "履约保证金退还时限与法律规定不一致"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "baseline"
+          ],
+          "merged_family_keys": [
+            "履约保证金退还时限与法律规定不一致"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::履约保证金退还时限与法律规定不一致",
+              "candidate_title": "履约保证金退还时限与法律规定不一致",
+              "family_key": "履约保证金退还时限与法律规定不一致",
+              "topic_sources": [
+                "baseline"
+              ],
+              "source_locations": [
+                "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金"
+              ],
+              "source_excerpts": [
+                "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
+              ],
+              "evidence_ids": [
+                "d34d9c47551a"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "履约保证金退还时限与法律规定不一致|履约保证金退还时限与法律规定不一致|topic::履约保证金退还时限与法律规定不一致|d34d9c47551a"
+        },
+        "governance_proposed_title": "履约保证金退还时限与法律规定不一致",
+        "governance_canonical_title": "履约保证金退还时限与法律规定不一致"
       }
     },
     {
@@ -3936,6 +2748,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "procedure"
           ],
@@ -3982,6 +2796,918 @@
         },
         "governance_proposed_title": "开标记录签字确认的默认认可条款",
         "governance_canonical_title": "开标记录签字确认的默认认可条款"
+      }
+    },
+    {
+      "rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
+      "risk_family": "样品退样流程存在风险-可能增加投标人负担",
+      "title": "样品退样流程存在风险，可能增加投标人负担",
+      "review_type": "流程合规性审查",
+      "severity": "低风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据2，第792-832行，样品要求第6条"
+      ],
+      "source_excerpts": [
+        "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-bc676d46a07a",
+        "problem_rule_ids": [
+          "topic::样品退样流程存在风险-可能增加投标人负担"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "a06094368fe9"
+        ],
+        "problem_topic_sources": [
+          "samples_demo"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "samples_demo"
+        ],
+        "merged_family_keys": [
+          "样品退样流程存在风险-可能增加投标人负担"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
+            "candidate_title": "样品退样流程存在风险，可能增加投标人负担",
+            "family_key": "样品退样流程存在风险-可能增加投标人负担",
+            "topic_sources": [
+              "samples_demo"
+            ],
+            "source_locations": [
+              "证据2，第792-832行，样品要求第6条"
+            ],
+            "source_excerpts": [
+              "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
+            ],
+            "evidence_ids": [
+              "a06094368fe9"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::样品退样流程存在风险-可能增加投标人负担"
+          ],
+          "source_candidate_titles": [
+            "样品退样流程存在风险，可能增加投标人负担"
+          ],
+          "source_evidence_ids": [
+            "a06094368fe9"
+          ],
+          "source_topics": [
+            "samples_demo"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "样品退样流程存在风险-可能增加投标人负担",
+          "problem_family_keys": [
+            "样品退样流程存在风险-可能增加投标人负担"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "samples_demo"
+          ],
+          "merged_family_keys": [
+            "样品退样流程存在风险-可能增加投标人负担"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
+              "candidate_title": "样品退样流程存在风险，可能增加投标人负担",
+              "family_key": "样品退样流程存在风险-可能增加投标人负担",
+              "topic_sources": [
+                "samples_demo"
+              ],
+              "source_locations": [
+                "证据2，第792-832行，样品要求第6条"
+              ],
+              "source_excerpts": [
+                "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
+              ],
+              "evidence_ids": [
+                "a06094368fe9"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "样品退样流程存在风险-可能增加投标人负担|样品退样流程存在风险，可能增加投标人负担|topic::样品退样流程存在风险-可能增加投标人负担|a06094368fe9"
+        },
+        "governance_proposed_title": "样品退样流程存在风险，可能增加投标人负担",
+        "governance_canonical_title": "样品退样流程存在风险，可能增加投标人负担"
+      }
+    },
+    {
+      "rule_id": "topic::节能环保政策具体适用要求缺失",
+      "risk_family": "节能环保政策具体适用要求缺失",
+      "title": "节能环保政策具体适用要求缺失",
+      "review_type": "政策完整性审查",
+      "severity": "低风险",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
+      ],
+      "source_excerpts": [
+        "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-c8d84eee64f5",
+        "problem_rule_ids": [
+          "topic::节能环保政策具体适用要求缺失"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "489a076dac73"
+        ],
+        "problem_topic_sources": [
+          "policy"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "policy"
+        ],
+        "merged_family_keys": [
+          "节能环保政策具体适用要求缺失"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::节能环保政策具体适用要求缺失",
+            "candidate_title": "节能环保政策具体适用要求缺失",
+            "family_key": "节能环保政策具体适用要求缺失",
+            "topic_sources": [
+              "policy"
+            ],
+            "source_locations": [
+              "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
+            ],
+            "source_excerpts": [
+              "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
+            ],
+            "evidence_ids": [
+              "489a076dac73"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::节能环保政策具体适用要求缺失"
+          ],
+          "source_candidate_titles": [
+            "节能环保政策具体适用要求缺失"
+          ],
+          "source_evidence_ids": [
+            "489a076dac73"
+          ],
+          "source_topics": [
+            "policy"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "节能环保政策具体适用要求缺失",
+          "problem_family_keys": [
+            "节能环保政策具体适用要求缺失"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "policy"
+          ],
+          "merged_family_keys": [
+            "节能环保政策具体适用要求缺失"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::节能环保政策具体适用要求缺失",
+              "candidate_title": "节能环保政策具体适用要求缺失",
+              "family_key": "节能环保政策具体适用要求缺失",
+              "topic_sources": [
+                "policy"
+              ],
+              "source_locations": [
+                "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款"
+              ],
+              "source_excerpts": [
+                "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
+              ],
+              "evidence_ids": [
+                "489a076dac73"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "节能环保政策具体适用要求缺失|节能环保政策具体适用要求缺失|topic::节能环保政策具体适用要求缺失|489a076dac73"
+        },
+        "governance_proposed_title": "节能环保政策具体适用要求缺失",
+        "governance_canonical_title": "节能环保政策具体适用要求缺失"
+      }
+    },
+    {
+      "rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
+      "risk_family": "专门面向中小企业采购的评分优惠落实情况不明",
+      "title": "专门面向中小企业采购的评分优惠落实情况不明",
+      "review_type": "政策适用与评分一致性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "scoring_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1（资格承诺函）及证据2（政策概述）"
+      ],
+      "source_excerpts": [
+        "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-65413a8e1f91",
+        "problem_rule_ids": [
+          "topic::专门面向中小企业采购的评分优惠落实情况不明"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "5745aa67d69a"
+        ],
+        "problem_topic_sources": [
+          "policy"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "policy"
+        ],
+        "merged_family_keys": [
+          "专门面向中小企业采购的评分优惠落实情况不明"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
+            "candidate_title": "专门面向中小企业采购的评分优惠落实情况不明",
+            "family_key": "专门面向中小企业采购的评分优惠落实情况不明",
+            "topic_sources": [
+              "policy"
+            ],
+            "source_locations": [
+              "证据1（资格承诺函）及证据2（政策概述）"
+            ],
+            "source_excerpts": [
+              "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
+            ],
+            "evidence_ids": [
+              "5745aa67d69a"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::专门面向中小企业采购的评分优惠落实情况不明"
+          ],
+          "source_candidate_titles": [
+            "专门面向中小企业采购的评分优惠落实情况不明"
+          ],
+          "source_evidence_ids": [
+            "5745aa67d69a"
+          ],
+          "source_topics": [
+            "policy"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "专门面向中小企业采购的评分优惠落实情况不明",
+          "problem_family_keys": [
+            "专门面向中小企业采购的评分优惠落实情况不明"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "policy"
+          ],
+          "merged_family_keys": [
+            "专门面向中小企业采购的评分优惠落实情况不明"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
+              "candidate_title": "专门面向中小企业采购的评分优惠落实情况不明",
+              "family_key": "专门面向中小企业采购的评分优惠落实情况不明",
+              "topic_sources": [
+                "policy"
+              ],
+              "source_locations": [
+                "证据1（资格承诺函）及证据2（政策概述）"
+              ],
+              "source_excerpts": [
+                "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
+              ],
+              "evidence_ids": [
+                "5745aa67d69a"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "专门面向中小企业采购的评分优惠落实情况不明|专门面向中小企业采购的评分优惠落实情况不明|topic::专门面向中小企业采购的评分优惠落实情况不明|5745aa67d69a"
+        },
+        "governance_proposed_title": "专门面向中小企业采购的评分优惠落实情况不明",
+        "governance_canonical_title": "专门面向中小企业采购的评分优惠落实情况不明"
+      }
+    },
+    {
+      "rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
+      "risk_family": "关键资格条件证据缺失-无法完成实质性审查",
+      "title": "关键资格条件证据缺失，无法完成实质性审查",
+      "review_type": "证据完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "qualification_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据1 第 263-277 行"
+      ],
+      "source_excerpts": [
+        "（2）投标人的资格要求：详见招标文件第一章。"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-ca36cfd6f4f8",
+        "problem_rule_ids": [
+          "topic::关键资格条件证据缺失-无法完成实质性审查"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "eb4fe886c298"
+        ],
+        "problem_topic_sources": [
+          "qualification"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "qualification"
+        ],
+        "merged_family_keys": [
+          "关键资格条件证据缺失-无法完成实质性审查"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
+            "candidate_title": "关键资格条件证据缺失，无法完成实质性审查",
+            "family_key": "关键资格条件证据缺失-无法完成实质性审查",
+            "topic_sources": [
+              "qualification"
+            ],
+            "source_locations": [
+              "证据1 第 263-277 行"
+            ],
+            "source_excerpts": [
+              "（2）投标人的资格要求：详见招标文件第一章。"
+            ],
+            "evidence_ids": [
+              "eb4fe886c298"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::关键资格条件证据缺失-无法完成实质性审查"
+          ],
+          "source_candidate_titles": [
+            "关键资格条件证据缺失，无法完成实质性审查"
+          ],
+          "source_evidence_ids": [
+            "eb4fe886c298"
+          ],
+          "source_topics": [
+            "qualification"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "关键资格条件证据缺失-无法完成实质性审查",
+          "problem_family_keys": [
+            "关键资格条件证据缺失-无法完成实质性审查"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "qualification"
+          ],
+          "merged_family_keys": [
+            "关键资格条件证据缺失-无法完成实质性审查"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
+              "candidate_title": "关键资格条件证据缺失，无法完成实质性审查",
+              "family_key": "关键资格条件证据缺失-无法完成实质性审查",
+              "topic_sources": [
+                "qualification"
+              ],
+              "source_locations": [
+                "证据1 第 263-277 行"
+              ],
+              "source_excerpts": [
+                "（2）投标人的资格要求：详见招标文件第一章。"
+              ],
+              "evidence_ids": [
+                "eb4fe886c298"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "关键资格条件证据缺失-无法完成实质性审查|关键资格条件证据缺失，无法完成实质性审查|topic::关键资格条件证据缺失-无法完成实质性审查|eb4fe886c298"
+        },
+        "governance_proposed_title": "关键资格条件证据缺失，无法完成实质性审查",
+        "governance_canonical_title": "关键资格条件证据缺失，无法完成实质性审查"
+      }
+    },
+    {
+      "rule_id": "topic::履约保证金条款缺失关键信息",
+      "risk_family": "履约保证金条款缺失关键信息",
+      "title": "履约保证金条款缺失关键信息",
+      "review_type": "保证金合规性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据3，第 867 行"
+      ],
+      "source_excerpts": [
+        "★ 履约保证金"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-5ed796972834",
+        "problem_rule_ids": [
+          "topic::履约保证金条款缺失关键信息"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "75cf3fb6db97"
+        ],
+        "problem_topic_sources": [
+          "contract_payment"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "contract_payment"
+        ],
+        "merged_family_keys": [
+          "履约保证金条款缺失关键信息"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::履约保证金条款缺失关键信息",
+            "candidate_title": "履约保证金条款缺失关键信息",
+            "family_key": "履约保证金条款缺失关键信息",
+            "topic_sources": [
+              "contract_payment"
+            ],
+            "source_locations": [
+              "证据3，第 867 行"
+            ],
+            "source_excerpts": [
+              "★ 履约保证金"
+            ],
+            "evidence_ids": [
+              "75cf3fb6db97"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::履约保证金条款缺失关键信息",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::履约保证金条款缺失关键信息"
+          ],
+          "source_candidate_titles": [
+            "履约保证金条款缺失关键信息"
+          ],
+          "source_evidence_ids": [
+            "75cf3fb6db97"
+          ],
+          "source_topics": [
+            "contract_payment"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "履约保证金条款缺失关键信息",
+          "problem_family_keys": [
+            "履约保证金条款缺失关键信息"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "contract_payment"
+          ],
+          "merged_family_keys": [
+            "履约保证金条款缺失关键信息"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::履约保证金条款缺失关键信息",
+              "candidate_title": "履约保证金条款缺失关键信息",
+              "family_key": "履约保证金条款缺失关键信息",
+              "topic_sources": [
+                "contract_payment"
+              ],
+              "source_locations": [
+                "证据3，第 867 行"
+              ],
+              "source_excerpts": [
+                "★ 履约保证金"
+              ],
+              "evidence_ids": [
+                "75cf3fb6db97"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::履约保证金条款缺失关键信息",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "履约保证金条款缺失关键信息|履约保证金条款缺失关键信息|topic::履约保证金条款缺失关键信息|75cf3fb6db97"
+        },
+        "governance_proposed_title": "履约保证金条款缺失关键信息",
+        "governance_canonical_title": "履约保证金条款缺失关键信息"
+      }
+    },
+    {
+      "rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+      "risk_family": "环保及检测方法标准缺失-e1-级未明确对应标准",
+      "title": "环保及检测方法标准缺失，E1 级未明确对应标准",
+      "review_type": "标准有效性与检测方法审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据 2，第 760-791 行，组合柜技术参数第 1 点"
+      ],
+      "source_excerpts": [
+        "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-91eae7190551",
+        "problem_rule_ids": [
+          "topic::环保及检测方法标准缺失-e1-级未明确对应标准"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "09370a573649"
+        ],
+        "problem_topic_sources": [
+          "technical_standard"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "technical_standard"
+        ],
+        "merged_family_keys": [
+          "环保及检测方法标准缺失-e1-级未明确对应标准"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+            "candidate_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
+            "family_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+            "topic_sources": [
+              "technical_standard"
+            ],
+            "source_locations": [
+              "证据 2，第 760-791 行，组合柜技术参数第 1 点"
+            ],
+            "source_excerpts": [
+              "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+            ],
+            "evidence_ids": [
+              "09370a573649"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::环保及检测方法标准缺失-e1-级未明确对应标准"
+          ],
+          "source_candidate_titles": [
+            "环保及检测方法标准缺失，E1 级未明确对应标准"
+          ],
+          "source_evidence_ids": [
+            "09370a573649"
+          ],
+          "source_topics": [
+            "technical_standard"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+          "problem_family_keys": [
+            "环保及检测方法标准缺失-e1-级未明确对应标准"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "technical_standard"
+          ],
+          "merged_family_keys": [
+            "环保及检测方法标准缺失-e1-级未明确对应标准"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+              "candidate_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
+              "family_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+              "topic_sources": [
+                "technical_standard"
+              ],
+              "source_locations": [
+                "证据 2，第 760-791 行，组合柜技术参数第 1 点"
+              ],
+              "source_excerpts": [
+                "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+              ],
+              "evidence_ids": [
+                "09370a573649"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "环保及检测方法标准缺失-e1-级未明确对应标准|环保及检测方法标准缺失，E1 级未明确对应标准|topic::环保及检测方法标准缺失-e1-级未明确对应标准|09370a573649"
+        },
+        "governance_proposed_title": "环保及检测方法标准缺失，E1 级未明确对应标准",
+        "governance_canonical_title": "环保及检测方法标准缺失，E1 级未明确对应标准"
       }
     },
     {
@@ -4086,6 +3812,8 @@
           "problem_merge_reason": "",
           "absorbed_supporting_titles": [],
           "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
           "merged_topic_sources": [
             "scoring"
           ],
@@ -4133,46 +3861,340 @@
         "governance_proposed_title": "联合体商务部分评标主体约定不明确",
         "governance_canonical_title": "联合体商务部分评标主体约定不明确"
       }
+    },
+    {
+      "rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+      "risk_family": "质疑投诉章节内容不完整-存在潜在限制风险",
+      "title": "质疑投诉章节内容不完整，存在潜在限制风险",
+      "review_type": "完整性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+      ],
+      "source_excerpts": [
+        "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-9b5bfe9d261c",
+        "problem_rule_ids": [
+          "topic::质疑投诉章节内容不完整-存在潜在限制风险"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "0a0a72016d2e"
+        ],
+        "problem_topic_sources": [
+          "procedure"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "procedure"
+        ],
+        "merged_family_keys": [
+          "质疑投诉章节内容不完整-存在潜在限制风险"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+            "candidate_title": "质疑投诉章节内容不完整，存在潜在限制风险",
+            "family_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+            "topic_sources": [
+              "procedure"
+            ],
+            "source_locations": [
+              "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+            ],
+            "source_excerpts": [
+              "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+            ],
+            "evidence_ids": [
+              "0a0a72016d2e"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::质疑投诉章节内容不完整-存在潜在限制风险"
+          ],
+          "source_candidate_titles": [
+            "质疑投诉章节内容不完整，存在潜在限制风险"
+          ],
+          "source_evidence_ids": [
+            "0a0a72016d2e"
+          ],
+          "source_topics": [
+            "procedure"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+          "problem_family_keys": [
+            "质疑投诉章节内容不完整-存在潜在限制风险"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "procedure"
+          ],
+          "merged_family_keys": [
+            "质疑投诉章节内容不完整-存在潜在限制风险"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+              "candidate_title": "质疑投诉章节内容不完整，存在潜在限制风险",
+              "family_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+              "topic_sources": [
+                "procedure"
+              ],
+              "source_locations": [
+                "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b"
+              ],
+              "source_excerpts": [
+                "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+              ],
+              "evidence_ids": [
+                "0a0a72016d2e"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "质疑投诉章节内容不完整-存在潜在限制风险|质疑投诉章节内容不完整，存在潜在限制风险|topic::质疑投诉章节内容不完整-存在潜在限制风险|0a0a72016d2e"
+        },
+        "governance_proposed_title": "质疑投诉章节内容不完整，存在潜在限制风险",
+        "governance_canonical_title": "质疑投诉章节内容不完整，存在潜在限制风险"
+      }
+    },
+    {
+      "rule_id": "topic::违约责任及质保期条款缺失",
+      "risk_family": "违约责任及质保期条款缺失",
+      "title": "违约责任及质保期条款缺失",
+      "review_type": "责任平衡性审查",
+      "severity": "需人工复核",
+      "evidence_kind": "body_clause",
+      "source_type": "topic_inference",
+      "governance_reason": "由 compare 候选风险进入输出治理层。",
+      "source_locations": [
+        "未在当前证据片段中找到"
+      ],
+      "source_excerpts": [
+        "无"
+      ],
+      "source_rules": [
+        "topic"
+      ],
+      "extras": {
+        "compare_source_bucket": "formal_risks",
+        "compare_source_buckets": [
+          "formal_risks"
+        ],
+        "problem_id": "problem-193f867fa0f1",
+        "problem_rule_ids": [
+          "topic::违约责任及质保期条款缺失"
+        ],
+        "problem_source_rules": [
+          "topic"
+        ],
+        "problem_evidence_ids": [
+          "d81bb206a889"
+        ],
+        "problem_topic_sources": [
+          "contract_payment"
+        ],
+        "problem_supporting_candidate_rule_ids": [],
+        "problem_supporting_candidate_titles": [],
+        "merged_topic_sources": [
+          "contract_payment"
+        ],
+        "merged_family_keys": [
+          "违约责任及质保期条款缺失"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::违约责任及质保期条款缺失",
+            "candidate_title": "违约责任及质保期条款缺失",
+            "family_key": "违约责任及质保期条款缺失",
+            "topic_sources": [
+              "contract_payment"
+            ],
+            "source_locations": [
+              "未在当前证据片段中找到"
+            ],
+            "source_excerpts": [
+              "无"
+            ],
+            "evidence_ids": [
+              "d81bb206a889"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "excluded_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::违约责任及质保期条款缺失",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "problem_trace": {
+          "source_governed_rule_ids": [
+            "topic::违约责任及质保期条款缺失"
+          ],
+          "source_candidate_titles": [
+            "违约责任及质保期条款缺失"
+          ],
+          "source_evidence_ids": [
+            "d81bb206a889"
+          ],
+          "source_topics": [
+            "contract_payment"
+          ],
+          "source_rule_tags": [
+            "topic"
+          ],
+          "problem_group_key": "违约责任及质保期条款缺失",
+          "problem_family_keys": [
+            "违约责任及质保期条款缺失"
+          ],
+          "problem_merge_reason": "",
+          "absorbed_supporting_titles": [],
+          "absorbed_supporting_rule_ids": [],
+          "absorbed_user_visible_items": [],
+          "user_visible_dedupe_reason": "",
+          "merged_topic_sources": [
+            "contract_payment"
+          ],
+          "merged_family_keys": [
+            "违约责任及质保期条款缺失"
+          ],
+          "cross_topic_merge_reason": "",
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::违约责任及质保期条款缺失",
+              "candidate_title": "违约责任及质保期条款缺失",
+              "family_key": "违约责任及质保期条款缺失",
+              "topic_sources": [
+                "contract_payment"
+              ],
+              "source_locations": [
+                "未在当前证据片段中找到"
+              ],
+              "source_excerpts": [
+                "无"
+              ],
+              "evidence_ids": [
+                "d81bb206a889"
+              ]
+            }
+          ],
+          "final_problem_resolution": {
+            "target_layer": "excluded_risks",
+            "winner_input_bucket": "formal_risks",
+            "winner_rule_id": "topic::违约责任及质保期条款缺失",
+            "winner_basis": "problem_conflict_resolution_priority",
+            "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+            "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+          },
+          "problem_kind": "standard",
+          "conflict_type": "",
+          "left_side": {},
+          "right_side": {},
+          "conflict_reason": {},
+          "conflict_evidence_links": [],
+          "replaced_problem_ids": [],
+          "problem_id_seed": "违约责任及质保期条款缺失|违约责任及质保期条款缺失|topic::违约责任及质保期条款缺失|d81bb206a889"
+        },
+        "governance_proposed_title": "违约责任及质保期条款缺失",
+        "governance_canonical_title": "违约责任及质保期条款缺失"
+      }
     }
   ],
   "decisions": {
-    "compare::acceptance_testing_cost": {
-      "target_layer": "formal_risks",
-      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
-      "evidence_kind": "acceptance_clause",
-      "source_type": "compare_rule",
-      "formal_gate_passed": true,
-      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
-      "formal_gate_rule": "registry_family_hard_evidence_gate",
-      "formal_gate_exception_whitelist_hit": false,
-      "formal_gate_family_allowed": true,
-      "formal_gate_evidence_passed": true,
-      "formal_gate_registry_rule_id": "R-007",
-      "formal_gate_registry_status": "active",
-      "formal_gate_registry_source": "registry",
-      "formal_gate_registry_resolution": "matched"
-    },
-    "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险": {
-      "target_layer": "pending_review_items",
-      "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
-      "evidence_kind": "acceptance_clause",
-      "source_type": "topic_inference",
-      "formal_gate_passed": false,
-      "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
-      "formal_gate_rule": "downgrade_missing_type",
-      "formal_gate_exception_whitelist_hit": false,
-      "formal_gate_family_allowed": false,
-      "formal_gate_evidence_passed": false,
-      "formal_gate_registry_rule_id": "",
-      "formal_gate_registry_status": "",
-      "formal_gate_registry_source": "",
-      "formal_gate_registry_resolution": "missing"
-    },
     "topic::abnormal_standard_reference": {
       "target_layer": "formal_risks",
       "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "evidence_kind": "body_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "formal_gate_rule": "registry_family_hard_evidence_gate",
@@ -4189,6 +4211,28 @@
       "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "evidence_kind": "body_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "formal_gate_rule": "registry_family_hard_evidence_gate",
@@ -4205,6 +4249,28 @@
       "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "evidence_kind": "body_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "formal_gate_rule": "registry_family_hard_evidence_gate",
@@ -4221,6 +4287,28 @@
       "admission_reason": "命中 formal 例外白名单，允许保留为正式风险。",
       "evidence_kind": "body_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal 例外白名单，允许保留为正式风险。",
       "formal_gate_rule": "formal_whitelist",
@@ -4233,10 +4321,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "gate_rule": "weak_signal_no_rule_support",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "user_visible_gate_rule": "weak_signal_no_rule_support",
+      "evidence_sufficiency": "insufficient",
+      "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "weak_signal_no_rule_support",
+      "pending_gate_reason": "当前仅体现标题或表述层面的弱提示，缺少稳定规则支撑，已阻断用户可见 pending 输出。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_missing_type",
@@ -4249,10 +4359,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "gate_rule": "weak_signal_no_rule_support",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "user_visible_gate_rule": "weak_signal_no_rule_support",
+      "evidence_sufficiency": "insufficient",
+      "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "weak_signal_no_rule_support",
+      "pending_gate_reason": "当前仅体现标题或表述层面的弱提示，缺少稳定规则支撑，已阻断用户可见 pending 输出。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_missing_type",
@@ -4269,6 +4401,28 @@
       "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "evidence_kind": "scoring_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "formal_gate_rule": "registry_family_hard_evidence_gate",
@@ -4281,10 +4435,32 @@
       "formal_gate_registry_resolution": "matched"
     },
     "topic::政策依据引用不完整-存在表述截断风险": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "gate_rule": "weak_signal_no_rule_support",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "user_visible_gate_rule": "weak_signal_no_rule_support",
+      "evidence_sufficiency": "insufficient",
+      "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "weak_signal_no_rule_support",
+      "pending_gate_reason": "当前仅体现标题或表述层面的弱提示，缺少稳定规则支撑，已阻断用户可见 pending 输出。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_missing_type",
@@ -4297,10 +4473,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::样品评审标准不明确-存在主观裁量风险": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_reminder",
@@ -4317,6 +4515,28 @@
       "admission_reason": "当前仅体现未设预付款安排，尚不足以直接认定为正式合规风险，先转待补证复核。",
       "evidence_kind": "acceptance_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": true,
+      "gate_reason": "当前问题虽未达 formal 条件，但具备明确商务影响和原文证据，保留为用户可见待补证项。",
+      "gate_rule": "pending_material_issue_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题虽未达 formal 条件，但具备明确商务影响和原文证据，保留为用户可见待补证项。",
+      "user_visible_gate_rule": "pending_material_issue_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "当前仅体现未设预付款安排，尚不足以直接认定为正式合规风险，先转待补证复核。",
       "formal_gate_rule": "downgrade_prepayment_only",
@@ -4333,6 +4553,28 @@
       "admission_reason": "检测到模板留白或专用条款占位表达，当前属于模板边界内容，不作为正式风险输出。",
       "evidence_kind": "acceptance_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "excluded_risks",
+      "gate_passed": false,
+      "gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "gate_rule": "technical_layer_excluded",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "user_visible_gate_rule": "technical_layer_excluded",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_layer_excluded",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到模板留白或专用条款占位表达，当前属于模板边界内容，不作为正式风险输出。",
       "formal_gate_rule": "downgrade_template_blank",
@@ -4349,6 +4591,28 @@
       "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "evidence_kind": "acceptance_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
       "formal_gate_rule": "registry_family_hard_evidence_gate",
@@ -4365,6 +4629,28 @@
       "admission_reason": "命中 formal 例外白名单，允许保留为正式风险。",
       "evidence_kind": "acceptance_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": true,
       "formal_gate_reason": "命中 formal 例外白名单，允许保留为正式风险。",
       "formal_gate_rule": "formal_whitelist",
@@ -4377,10 +4663,32 @@
       "formal_gate_registry_resolution": "matched"
     },
     "topic::履约保证金退还时限与法律规定不一致": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "evidence_kind": "acceptance_clause",
       "source_type": "completeness_hint",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_reminder",
@@ -4397,6 +4705,28 @@
       "admission_reason": "当前仅见开标记录签字默认认可表述，未见足以支撑正式风险的异常程序失衡证据，先排除输出。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "excluded_risks",
+      "gate_passed": false,
+      "gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "gate_rule": "technical_layer_excluded",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "user_visible_gate_rule": "technical_layer_excluded",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_layer_excluded",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "当前仅见开标记录签字默认认可表述，未见足以支撑正式风险的异常程序失衡证据，先排除输出。",
       "formal_gate_rule": "downgrade_sign_default",
@@ -4409,10 +4739,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::样品退样流程存在风险-可能增加投标人负担": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_reminder",
@@ -4425,10 +4777,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::节能环保政策具体适用要求缺失": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "gate_rule": "weak_signal_no_material_consequence",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "user_visible_gate_rule": "weak_signal_no_material_consequence",
+      "evidence_sufficiency": "insufficient",
+      "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "weak_signal_no_material_consequence",
+      "pending_gate_reason": "当前仅体现提醒性或适用性缺口，尚未形成明确合规后果，已阻断用户可见 pending 输出。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_missing_type",
@@ -4445,6 +4819,28 @@
       "admission_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": true,
+      "gate_reason": "当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。",
+      "gate_rule": "pending_material_issue_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。",
+      "user_visible_gate_rule": "pending_material_issue_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。",
       "formal_gate_rule": "downgrade_remote_decrypt_routine",
@@ -4457,10 +4853,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::专门面向中小企业采购的评分优惠落实情况不明": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "evidence_kind": "scoring_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_evidence_insufficient",
@@ -4473,10 +4891,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::关键资格条件证据缺失-无法完成实质性审查": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "evidence_kind": "qualification_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_evidence_insufficient",
@@ -4489,10 +4929,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::履约保证金条款缺失关键信息": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_evidence_insufficient",
@@ -4505,10 +4967,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::环保及检测方法标准缺失-e1-级未明确对应标准": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "gate_rule": "unstable_pending_identity_block",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+      "user_visible_gate_rule": "unstable_pending_identity_block",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_evidence_insufficient",
@@ -4525,6 +5009,28 @@
       "admission_reason": "检测到模板/协议/声明函类证据，且当前仅有专题推断支撑，不得直接作为正式风险主证据。",
       "evidence_kind": "joint_venture_template",
       "source_type": "topic_inference",
+      "technical_layer_decision": "excluded_risks",
+      "gate_passed": false,
+      "gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "gate_rule": "technical_layer_excluded",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+      "user_visible_gate_rule": "technical_layer_excluded",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_layer_excluded",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到模板/协议/声明函类证据，且当前仅有专题推断支撑，不得直接作为正式风险主证据。",
       "formal_gate_rule": "downgrade_template_or_boundary",
@@ -4537,10 +5043,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::质疑投诉章节内容不完整-存在潜在限制风险": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "gate_rule": "weak_signal_no_rule_support",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+      "user_visible_gate_rule": "weak_signal_no_rule_support",
+      "evidence_sufficiency": "insufficient",
+      "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "weak_signal_no_rule_support",
+      "pending_gate_reason": "当前仅体现标题或表述层面的弱提示，缺少稳定规则支撑，已阻断用户可见 pending 输出。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_reminder",
@@ -4553,10 +5081,32 @@
       "formal_gate_registry_resolution": "missing"
     },
     "topic::违约责任及质保期条款缺失": {
-      "target_layer": "pending_review_items",
+      "target_layer": "excluded_risks",
       "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "evidence_kind": "body_clause",
       "source_type": "topic_inference",
+      "technical_layer_decision": "pending_review_items",
+      "gate_passed": false,
+      "gate_reason": "当前问题缺少用户可见的原文位置或摘录，仅保留内部 trace，不进入用户可见结果层。",
+      "gate_rule": "missing_user_visible_evidence",
+      "user_visible_gate_passed": false,
+      "user_visible_gate_reason": "当前问题缺少用户可见的原文位置或摘录，仅保留内部 trace，不进入用户可见结果层。",
+      "user_visible_gate_rule": "missing_user_visible_evidence",
+      "evidence_sufficiency": "missing_user_visible_evidence",
+      "user_visible_decision_basis": "location_excerpt_required_for_user_visible_output",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "missing_user_visible_evidence",
+      "pending_gate_reason": "当前问题缺少有效原文位置或摘录，仅保留内部 trace，不再作为对外待补证项展示。",
       "formal_gate_passed": false,
       "formal_gate_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
       "formal_gate_rule": "downgrade_evidence_insufficient",
@@ -4567,6 +5117,44 @@
       "formal_gate_registry_status": "",
       "formal_gate_registry_source": "",
       "formal_gate_registry_resolution": "missing"
+    },
+    "compare::acceptance_testing_cost": {
+      "target_layer": "formal_risks",
+      "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "evidence_kind": "acceptance_clause",
+      "source_type": "compare_rule",
+      "technical_layer_decision": "formal_risks",
+      "gate_passed": true,
+      "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "gate_rule": "formal_output_allowed",
+      "user_visible_gate_passed": true,
+      "user_visible_gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+      "user_visible_gate_rule": "formal_output_allowed",
+      "evidence_sufficiency": "sufficient",
+      "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+      "document_domain": "goods_procurement",
+      "domain_confidence": 0.88,
+      "domain_evidence": [
+        "家具采购",
+        "学生宿舍家具"
+      ],
+      "domain_policy_id": "domain-policy-goods-v1",
+      "budget_hit": false,
+      "budget_rule": "",
+      "budget_reason": "",
+      "absorbed_or_hidden_items": [],
+      "pending_gate_reason_code": "",
+      "pending_gate_reason": "",
+      "formal_gate_passed": true,
+      "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+      "formal_gate_rule": "registry_family_hard_evidence_gate",
+      "formal_gate_exception_whitelist_hit": false,
+      "formal_gate_family_allowed": true,
+      "formal_gate_evidence_passed": true,
+      "formal_gate_registry_rule_id": "R-007",
+      "formal_gate_registry_status": "active",
+      "formal_gate_registry_source": "registry",
+      "formal_gate_registry_resolution": "matched"
     }
   }
 }

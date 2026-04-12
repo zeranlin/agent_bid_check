@@ -6,6 +6,7 @@ from .formal_registry import resolve_formal_registry_resolution
 from .historical_block import match_historical_hard_block
 from .pending_gate import evaluate_pending_gate
 from .schemas import AdmissionDecision, AdmissionSourceType, EvidenceKind
+from .user_visible_gate import evaluate_user_visible_gate
 
 
 def _build_source_blob(title: str, governance_reason: str, *parts: str) -> str:
@@ -37,11 +38,33 @@ def build_admission_decision(
     historical_block = match_historical_hard_block(title, proposed_title, source_blob)
     if historical_block is not None:
         _, reason = historical_block
+        technical_layer = "excluded_risks"
+        user_gate = evaluate_user_visible_gate(
+            technical_layer=technical_layer,
+            rule_id=rule_id,
+            family_key=family_key,
+            title=title,
+            source_type=source_type,
+            source_locations=source_locations,
+            source_excerpts=source_excerpts,
+            formal_gate_rule="historical_hard_block",
+            formal_gate_registry_resolution="missing",
+            pending_gate_reason_code="",
+        )
         return AdmissionDecision(
-            target_layer="excluded_risks",
+            target_layer=user_gate.target_layer,
             admission_reason=reason,
             evidence_kind=evidence_kind,
             source_type=source_type,
+            technical_layer_decision=technical_layer,
+            gate_passed=user_gate.passed,
+            gate_reason=user_gate.reason,
+            gate_rule=user_gate.rule,
+            user_visible_gate_passed=user_gate.passed,
+            user_visible_gate_reason=user_gate.reason,
+            user_visible_gate_rule=user_gate.rule,
+            evidence_sufficiency=user_gate.evidence_sufficiency,
+            user_visible_decision_basis=user_gate.decision_basis,
             pending_gate_reason_code="",
             pending_gate_reason="",
             formal_gate_passed=False,
@@ -73,6 +96,7 @@ def build_admission_decision(
             admission_reason=reason,
             evidence_kind=evidence_kind,
             source_type=source_type,
+            technical_layer_decision=layer,
             pending_gate_reason_code="",
             pending_gate_reason="",
             formal_gate_passed=False,
@@ -86,8 +110,9 @@ def build_admission_decision(
             formal_gate_registry_source="",
             formal_gate_registry_resolution="missing",
         )
+        technical_layer = decision.target_layer
         pending_gate = evaluate_pending_gate(
-            current_layer=decision.target_layer,
+            current_layer=technical_layer,
             title=title,
             governance_reason=governance_reason,
             source_type=source_type,
@@ -96,10 +121,30 @@ def build_admission_decision(
             risk_judgment=risk_judgment,
         )
         if pending_gate is not None:
-            decision.target_layer = pending_gate.target_layer
-            decision.admission_reason = pending_gate.reason
             decision.pending_gate_reason_code = pending_gate.reason_code
             decision.pending_gate_reason = pending_gate.reason
+        user_gate = evaluate_user_visible_gate(
+            technical_layer=technical_layer,
+            rule_id=rule_id,
+            family_key=family_key,
+            title=title,
+            source_type=source_type,
+            source_locations=source_locations,
+            source_excerpts=source_excerpts,
+            formal_gate_rule=decision.formal_gate_rule,
+            formal_gate_registry_resolution=decision.formal_gate_registry_resolution,
+            pending_gate_reason_code=decision.pending_gate_reason_code,
+        )
+        decision.technical_layer_decision = technical_layer
+        decision.target_layer = user_gate.target_layer
+        decision.gate_passed = user_gate.passed
+        decision.gate_reason = user_gate.reason
+        decision.gate_rule = user_gate.rule
+        decision.user_visible_gate_passed = user_gate.passed
+        decision.user_visible_gate_reason = user_gate.reason
+        decision.user_visible_gate_rule = user_gate.rule
+        decision.evidence_sufficiency = user_gate.evidence_sufficiency
+        decision.user_visible_decision_basis = user_gate.decision_basis
         return decision
 
     gate_result = evaluate_formal_gate(
@@ -120,6 +165,7 @@ def build_admission_decision(
         admission_reason=gate_result.reason,
         evidence_kind=evidence_kind,
         source_type=source_type,
+        technical_layer_decision=gate_result.target_layer,
         pending_gate_reason_code="",
         pending_gate_reason="",
         formal_gate_passed=gate_result.passed,
@@ -133,8 +179,9 @@ def build_admission_decision(
         formal_gate_registry_source=gate_result.registry_source,
         formal_gate_registry_resolution=gate_result.registry_resolution,
     )
+    technical_layer = decision.target_layer
     pending_gate = evaluate_pending_gate(
-        current_layer=decision.target_layer,
+        current_layer=technical_layer,
         title=title,
         governance_reason=governance_reason,
         source_type=source_type,
@@ -143,8 +190,28 @@ def build_admission_decision(
         risk_judgment=risk_judgment,
     )
     if pending_gate is not None:
-        decision.target_layer = pending_gate.target_layer
-        decision.admission_reason = pending_gate.reason
         decision.pending_gate_reason_code = pending_gate.reason_code
         decision.pending_gate_reason = pending_gate.reason
+    user_gate = evaluate_user_visible_gate(
+        technical_layer=technical_layer,
+        rule_id=rule_id,
+        family_key=family_key,
+        title=title,
+        source_type=source_type,
+        source_locations=source_locations,
+        source_excerpts=source_excerpts,
+        formal_gate_rule=decision.formal_gate_rule,
+        formal_gate_registry_resolution=decision.formal_gate_registry_resolution,
+        pending_gate_reason_code=decision.pending_gate_reason_code,
+    )
+    decision.technical_layer_decision = technical_layer
+    decision.target_layer = user_gate.target_layer
+    decision.gate_passed = user_gate.passed
+    decision.gate_reason = user_gate.reason
+    decision.gate_rule = user_gate.rule
+    decision.user_visible_gate_passed = user_gate.passed
+    decision.user_visible_gate_reason = user_gate.reason
+    decision.user_visible_gate_rule = user_gate.rule
+    decision.evidence_sufficiency = user_gate.evidence_sufficiency
+    decision.user_visible_decision_basis = user_gate.decision_basis
     return decision

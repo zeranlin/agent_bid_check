@@ -32,6 +32,23 @@ AdmissionSourceType = Literal[
 
 AdmissionLayer = Literal["formal_risks", "pending_review_items", "excluded_risks"]
 
+DocumentDomain = Literal[
+    "engineering_maintenance_construction",
+    "goods_procurement",
+    "service_procurement",
+]
+
+
+@dataclass
+class DomainClassification:
+    document_domain: DocumentDomain
+    domain_confidence: float
+    domain_evidence: list[str] = field(default_factory=list)
+    domain_policy_id: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
 
 @dataclass
 class AdmissionDecision:
@@ -39,6 +56,23 @@ class AdmissionDecision:
     admission_reason: str
     evidence_kind: EvidenceKind
     source_type: AdmissionSourceType
+    technical_layer_decision: AdmissionLayer = "excluded_risks"
+    gate_passed: bool = False
+    gate_reason: str = ""
+    gate_rule: str = ""
+    user_visible_gate_passed: bool = False
+    user_visible_gate_reason: str = ""
+    user_visible_gate_rule: str = ""
+    evidence_sufficiency: str = ""
+    user_visible_decision_basis: str = ""
+    document_domain: str = ""
+    domain_confidence: float = 0.0
+    domain_evidence: list[str] = field(default_factory=list)
+    domain_policy_id: str = ""
+    budget_hit: bool = False
+    budget_rule: str = ""
+    budget_reason: str = ""
+    absorbed_or_hidden_items: list[dict[str, Any]] = field(default_factory=list)
     pending_gate_reason_code: str = ""
     pending_gate_reason: str = ""
     formal_gate_passed: bool = False

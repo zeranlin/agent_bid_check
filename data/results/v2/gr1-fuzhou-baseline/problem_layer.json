@@ -2,377 +2,16 @@
   "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
   "input_summary": {
     "governed_candidate_count": 27,
-    "base_problem_count": 27,
-    "problem_count": 27,
+    "base_problem_count": 26,
+    "family_governed_problem_count": 26,
+    "family_absorbed_problem_count": 0,
+    "problem_count": 26,
     "absorbed_candidate_count": 0,
     "cross_topic_problem_count": 1,
-    "layer_conflict_problem_count": 0,
+    "layer_conflict_problem_count": 1,
     "conflict_problem_count": 0
   },
   "problems": [
-    {
-      "problem_id": "problem-cf91c9b919e3",
-      "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-      "family_key": "acceptance_testing_cost",
-      "problem_kind": "standard",
-      "primary_candidate": {
-        "identity": {
-          "rule_id": "compare::acceptance_testing_cost",
-          "risk_family": "acceptance_testing_cost",
-          "source_topics": [
-            "acceptance"
-          ],
-          "evidence_anchors": [
-            "017e45310d0e"
-          ],
-          "document_span": [
-            "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-          ]
-        },
-        "family": {
-          "family_key": "acceptance_testing_cost",
-          "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-          "source_topics": [
-            "acceptance"
-          ]
-        },
-        "decision": {
-          "governance_reason": "由 compare 候选风险进入输出治理层。",
-          "proposed_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-          "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
-        },
-        "review_type": "需求合规性 / 验收费用边界审查",
-        "severity": "中风险",
-        "source_locations": [
-          "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-        ],
-        "source_excerpts": [
-          "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-        ],
-        "risk_judgment": [
-          "规则已明确，不得要求中标人承担验收产生的检测费用。",
-          "当前条款将检测、相关部门验收等费用笼统纳入投标总价，但未区分履约自检、试运行成本与验收阶段第三方/法定检测费用。",
-          "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
-          "该类写法首先表现为费用承担边界不清，其次才可能演化为实际费用转嫁争议。"
-        ],
-        "legal_basis": [],
-        "rectification": [
-          "将安装调试、自检、试运行等正常履约成本，与采购验收阶段可能发生的专项检测或法定检测费用区分开。",
-          "如项目确需检测，应明确检测类型、承担主体和合规依据，避免仅以“投标总价包括检测、相关部门验收等费用”笼统表述。",
-          "对“相关部门验收”涉及的具体部门、流程及费用承担方式作进一步说明。"
-        ],
-        "source_rules": [
-          "compare_rule"
-        ],
-        "need_manual_review": false,
-        "extras": {
-          "compare_source_bucket": "formal_risks",
-          "compare_source_buckets": [
-            "formal_risks"
-          ]
-        }
-      },
-      "supporting_candidates": [],
-      "evidence_ids": [
-        "017e45310d0e"
-      ],
-      "topic_sources": [
-        "acceptance"
-      ],
-      "rule_ids": [
-        "compare::acceptance_testing_cost"
-      ],
-      "merged_topic_sources": [
-        "acceptance"
-      ],
-      "merged_family_keys": [
-        "acceptance_testing_cost"
-      ],
-      "cross_topic_merge_reason": "",
-      "layer_conflict_inputs": [
-        {
-          "source_bucket": "formal_risks",
-          "candidate_rule_id": "compare::acceptance_testing_cost",
-          "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-          "family_key": "acceptance_testing_cost",
-          "topic_sources": [
-            "acceptance"
-          ],
-          "source_locations": [
-            "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-          ],
-          "source_excerpts": [
-            "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-          ],
-          "evidence_ids": [
-            "017e45310d0e"
-          ]
-        }
-      ],
-      "final_problem_resolution": {
-        "target_layer": "formal_risks",
-        "winner_input_bucket": "formal_risks",
-        "winner_rule_id": "compare::acceptance_testing_cost",
-        "winner_basis": "problem_conflict_resolution_priority",
-        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
-      },
-      "conflict_type": "",
-      "left_side": {},
-      "right_side": {},
-      "conflict_reason": {},
-      "conflict_evidence_links": [],
-      "trace": {
-        "source_governed_rule_ids": [
-          "compare::acceptance_testing_cost"
-        ],
-        "source_candidate_titles": [
-          "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
-        ],
-        "source_evidence_ids": [
-          "017e45310d0e"
-        ],
-        "source_topics": [
-          "acceptance"
-        ],
-        "source_rule_tags": [
-          "compare_rule"
-        ],
-        "problem_group_key": "acceptance_testing_cost",
-        "problem_family_keys": [
-          "acceptance_testing_cost"
-        ],
-        "problem_merge_reason": "",
-        "absorbed_supporting_titles": [],
-        "absorbed_supporting_rule_ids": [],
-        "merged_topic_sources": [
-          "acceptance"
-        ],
-        "merged_family_keys": [
-          "acceptance_testing_cost"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "compare::acceptance_testing_cost",
-            "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
-            "family_key": "acceptance_testing_cost",
-            "topic_sources": [
-              "acceptance"
-            ],
-            "source_locations": [
-              "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
-            ],
-            "source_excerpts": [
-              "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
-            ],
-            "evidence_ids": [
-              "017e45310d0e"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "formal_risks",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "compare::acceptance_testing_cost",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "replaced_problem_ids": [],
-        "problem_id_seed": "acceptance_testing_cost|验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|compare::acceptance_testing_cost|017e45310d0e"
-      }
-    },
-    {
-      "problem_id": "problem-8b622f7d4de9",
-      "canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-      "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-      "problem_kind": "standard",
-      "primary_candidate": {
-        "identity": {
-          "rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "risk_family": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "source_topics": [
-            "acceptance"
-          ],
-          "evidence_anchors": [
-            "f7231648849f"
-          ],
-          "document_span": [
-            "证据1，第 9.2 条"
-          ]
-        },
-        "family": {
-          "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-          "source_topics": [
-            "acceptance"
-          ]
-        },
-        "decision": {
-          "governance_reason": "由 compare 候选风险进入输出治理层。",
-          "proposed_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-          "canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
-        },
-        "review_type": "费用承担合规性审查",
-        "severity": "高风险",
-        "source_locations": [
-          "证据1，第 9.2 条"
-        ],
-        "source_excerpts": [
-          "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
-        ],
-        "risk_judgment": [
-          "条款规定‘检测结果如出现不合格的产品，检测费用由中标人支付’，未明确区分‘法定/常规抽检’与‘因质量问题导致的复检’。",
-          "若将正常的履约验收抽检费用（无论结果是否合格）均笼统要求由中标人承担，违反了政府采购中关于验收费用应由采购人承担或按过错原则分担的合规要求。",
-          "该条款可能导致中标人承担不合理的履约成本，构成对供应商的不公平待遇。",
-          "未明确‘如有必要’的具体触发条件，赋予采购人过大的单方裁量权，易引发争议。"
-        ],
-        "legal_basis": [
-          "《政府采购法实施条例》第四十五条：采购人或者采购代理机构应当按照政府采购合同规定的技术、服务、安全标准组织对供应商履约情况进行验收，并出具验收书。",
-          "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第七十四条：采购人应当及时对采购项目进行验收。验收标准应当明确、客观、可操作。",
-          "相关财政法规精神：验收费用原则上由采购人承担，因供应商原因导致的不合格复检费用由供应商承担。"
-        ],
-        "rectification": [
-          "修改条款，明确区分验收检测费用的承担主体：常规验收抽检费用由采购人承担；仅当检测结果不合格且确认为供应商产品质量问题时，复检费用及由此产生的损失由供应商承担。",
-          "明确‘如有必要’的具体情形，如‘当采购人发现货物存在质量疑点时’，避免随意启动检测。"
-        ],
-        "source_rules": [
-          "topic"
-        ],
-        "need_manual_review": false,
-        "extras": {
-          "compare_source_bucket": "formal_risks",
-          "compare_source_buckets": [
-            "formal_risks"
-          ]
-        }
-      },
-      "supporting_candidates": [],
-      "evidence_ids": [
-        "f7231648849f"
-      ],
-      "topic_sources": [
-        "acceptance"
-      ],
-      "rule_ids": [
-        "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
-      ],
-      "merged_topic_sources": [
-        "acceptance"
-      ],
-      "merged_family_keys": [
-        "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
-      ],
-      "cross_topic_merge_reason": "",
-      "layer_conflict_inputs": [
-        {
-          "source_bucket": "formal_risks",
-          "candidate_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "candidate_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-          "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "topic_sources": [
-            "acceptance"
-          ],
-          "source_locations": [
-            "证据1，第 9.2 条"
-          ],
-          "source_excerpts": [
-            "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
-          ],
-          "evidence_ids": [
-            "f7231648849f"
-          ]
-        }
-      ],
-      "final_problem_resolution": {
-        "target_layer": "pending_review_items",
-        "winner_input_bucket": "formal_risks",
-        "winner_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-        "winner_basis": "problem_conflict_resolution_priority",
-        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-      },
-      "conflict_type": "",
-      "left_side": {},
-      "right_side": {},
-      "conflict_reason": {},
-      "conflict_evidence_links": [],
-      "trace": {
-        "source_governed_rule_ids": [
-          "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
-        ],
-        "source_candidate_titles": [
-          "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
-        ],
-        "source_evidence_ids": [
-          "f7231648849f"
-        ],
-        "source_topics": [
-          "acceptance"
-        ],
-        "source_rule_tags": [
-          "topic"
-        ],
-        "problem_group_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-        "problem_family_keys": [
-          "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
-        ],
-        "problem_merge_reason": "",
-        "absorbed_supporting_titles": [],
-        "absorbed_supporting_rule_ids": [],
-        "merged_topic_sources": [
-          "acceptance"
-        ],
-        "merged_family_keys": [
-          "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
-        ],
-        "cross_topic_merge_reason": "",
-        "layer_conflict_inputs": [
-          {
-            "source_bucket": "formal_risks",
-            "candidate_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-            "candidate_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
-            "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-            "topic_sources": [
-              "acceptance"
-            ],
-            "source_locations": [
-              "证据1，第 9.2 条"
-            ],
-            "source_excerpts": [
-              "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
-            ],
-            "evidence_ids": [
-              "f7231648849f"
-            ]
-          }
-        ],
-        "final_problem_resolution": {
-          "target_layer": "pending_review_items",
-          "winner_input_bucket": "formal_risks",
-          "winner_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
-          "winner_basis": "problem_conflict_resolution_priority",
-          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
-          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
-        },
-        "problem_kind": "standard",
-        "conflict_type": "",
-        "left_side": {},
-        "right_side": {},
-        "conflict_reason": {},
-        "conflict_evidence_links": [],
-        "replaced_problem_ids": [],
-        "problem_id_seed": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险|topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|f7231648849f"
-      }
-    },
     {
       "problem_id": "problem-8afc21d1d718",
       "canonical_title": "技术参数存在错误或异常标准引用，可能导致技术要求失真",
@@ -520,6 +159,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -711,6 +352,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -930,6 +573,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline",
           "samples_demo"
@@ -1117,6 +762,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1264,7 +911,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1299,6 +946,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "technical_standard"
         ],
@@ -1327,7 +976,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::家具产品执行标准引用不明确-仅使用-国家标准-泛称",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1447,7 +1096,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1482,6 +1131,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "technical_standard"
         ],
@@ -1510,7 +1161,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1661,6 +1312,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -1807,7 +1460,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -1842,6 +1495,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -1870,7 +1525,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::政策依据引用不完整-存在表述截断风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -1989,7 +1644,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -2024,6 +1679,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "samples_demo"
         ],
@@ -2052,7 +1709,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::样品评审标准不明确-存在主观裁量风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -2205,6 +1862,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "contract_payment"
         ],
@@ -2386,6 +2045,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "acceptance"
         ],
@@ -2567,6 +2228,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -2750,6 +2413,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "acceptance"
         ],
@@ -2894,7 +2559,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -2929,6 +2594,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "baseline"
         ],
@@ -2957,7 +2624,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::履约保证金退还时限与法律规定不一致",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3108,6 +2775,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "procedure"
         ],
@@ -3255,7 +2924,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3290,6 +2959,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "samples_demo"
         ],
@@ -3318,7 +2989,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::样品退样流程存在风险-可能增加投标人负担",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3434,7 +3105,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3469,6 +3140,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -3497,7 +3170,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::节能环保政策具体适用要求缺失",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3650,6 +3323,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "procedure"
         ],
@@ -3796,7 +3471,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -3831,6 +3506,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "policy"
         ],
@@ -3859,7 +3536,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::专门面向中小企业采购的评分优惠落实情况不明",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -3979,7 +3656,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -4014,6 +3691,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "qualification"
         ],
@@ -4042,7 +3721,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::关键资格条件证据缺失-无法完成实质性审查",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -4160,7 +3839,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::履约保证金条款缺失关键信息",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -4195,6 +3874,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "contract_payment"
         ],
@@ -4223,7 +3904,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::履约保证金条款缺失关键信息",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -4342,7 +4023,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -4377,6 +4058,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "technical_standard"
         ],
@@ -4405,7 +4088,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::环保及检测方法标准缺失-e1-级未明确对应标准",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -4558,6 +4241,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "scoring"
         ],
@@ -4704,7 +4389,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -4739,6 +4424,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "procedure"
         ],
@@ -4767,7 +4454,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::质疑投诉章节内容不完整-存在潜在限制风险",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -4884,7 +4571,7 @@
         }
       ],
       "final_problem_resolution": {
-        "target_layer": "pending_review_items",
+        "target_layer": "excluded_risks",
         "winner_input_bucket": "formal_risks",
         "winner_rule_id": "topic::违约责任及质保期条款缺失",
         "winner_basis": "problem_conflict_resolution_priority",
@@ -4919,6 +4606,8 @@
         "problem_merge_reason": "",
         "absorbed_supporting_titles": [],
         "absorbed_supporting_rule_ids": [],
+        "absorbed_user_visible_items": [],
+        "user_visible_dedupe_reason": "",
         "merged_topic_sources": [
           "contract_payment"
         ],
@@ -4947,7 +4636,7 @@
           }
         ],
         "final_problem_resolution": {
-          "target_layer": "pending_review_items",
+          "target_layer": "excluded_risks",
           "winner_input_bucket": "formal_risks",
           "winner_rule_id": "topic::违约责任及质保期条款缺失",
           "winner_basis": "problem_conflict_resolution_priority",
@@ -4962,6 +4651,316 @@
         "conflict_evidence_links": [],
         "replaced_problem_ids": [],
         "problem_id_seed": "违约责任及质保期条款缺失|违约责任及质保期条款缺失|topic::违约责任及质保期条款缺失|d81bb206a889"
+      }
+    },
+    {
+      "problem_id": "problem-b63f1df5ccd0",
+      "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+      "family_key": "acceptance_testing_cost",
+      "problem_kind": "standard",
+      "primary_candidate": {
+        "identity": {
+          "rule_id": "compare::acceptance_testing_cost",
+          "risk_family": "acceptance_testing_cost",
+          "source_topics": [
+            "acceptance"
+          ],
+          "evidence_anchors": [
+            "017e45310d0e"
+          ],
+          "document_span": [
+            "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
+          ]
+        },
+        "family": {
+          "family_key": "acceptance_testing_cost",
+          "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "source_topics": [
+            "acceptance"
+          ]
+        },
+        "decision": {
+          "governance_reason": "由 compare 候选风险进入输出治理层。",
+          "proposed_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+        },
+        "review_type": "需求合规性 / 验收费用边界审查",
+        "severity": "中风险",
+        "source_locations": [
+          "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
+        ],
+        "source_excerpts": [
+          "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
+        ],
+        "risk_judgment": [
+          "规则已明确，不得要求中标人承担验收产生的检测费用。",
+          "当前条款将检测、相关部门验收等费用笼统纳入投标总价，但未区分履约自检、试运行成本与验收阶段第三方/法定检测费用。",
+          "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
+          "该类写法首先表现为费用承担边界不清，其次才可能演化为实际费用转嫁争议。"
+        ],
+        "legal_basis": [],
+        "rectification": [
+          "将安装调试、自检、试运行等正常履约成本，与采购验收阶段可能发生的专项检测或法定检测费用区分开。",
+          "如项目确需检测，应明确检测类型、承担主体和合规依据，避免仅以“投标总价包括检测、相关部门验收等费用”笼统表述。",
+          "对“相关部门验收”涉及的具体部门、流程及费用承担方式作进一步说明。"
+        ],
+        "source_rules": [
+          "compare_rule"
+        ],
+        "need_manual_review": false,
+        "extras": {
+          "compare_source_bucket": "formal_risks",
+          "compare_source_buckets": [
+            "formal_risks"
+          ]
+        }
+      },
+      "supporting_candidates": [
+        {
+          "identity": {
+            "rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+            "risk_family": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+            "source_topics": [
+              "acceptance"
+            ],
+            "evidence_anchors": [
+              "f7231648849f"
+            ],
+            "document_span": [
+              "证据1，第 9.2 条"
+            ]
+          },
+          "family": {
+            "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+            "canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "source_topics": [
+              "acceptance"
+            ]
+          },
+          "decision": {
+            "governance_reason": "由 compare 候选风险进入输出治理层。",
+            "proposed_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "canonical_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+          },
+          "review_type": "费用承担合规性审查",
+          "severity": "高风险",
+          "source_locations": [
+            "证据1，第 9.2 条"
+          ],
+          "source_excerpts": [
+            "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
+          ],
+          "risk_judgment": [
+            "条款规定‘检测结果如出现不合格的产品，检测费用由中标人支付’，未明确区分‘法定/常规抽检’与‘因质量问题导致的复检’。",
+            "若将正常的履约验收抽检费用（无论结果是否合格）均笼统要求由中标人承担，违反了政府采购中关于验收费用应由采购人承担或按过错原则分担的合规要求。",
+            "该条款可能导致中标人承担不合理的履约成本，构成对供应商的不公平待遇。",
+            "未明确‘如有必要’的具体触发条件，赋予采购人过大的单方裁量权，易引发争议。"
+          ],
+          "legal_basis": [
+            "《政府采购法实施条例》第四十五条：采购人或者采购代理机构应当按照政府采购合同规定的技术、服务、安全标准组织对供应商履约情况进行验收，并出具验收书。",
+            "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第七十四条：采购人应当及时对采购项目进行验收。验收标准应当明确、客观、可操作。",
+            "相关财政法规精神：验收费用原则上由采购人承担，因供应商原因导致的不合格复检费用由供应商承担。"
+          ],
+          "rectification": [
+            "修改条款，明确区分验收检测费用的承担主体：常规验收抽检费用由采购人承担；仅当检测结果不合格且确认为供应商产品质量问题时，复检费用及由此产生的损失由供应商承担。",
+            "明确‘如有必要’的具体情形，如‘当采购人发现货物存在质量疑点时’，避免随意启动检测。"
+          ],
+          "source_rules": [
+            "topic"
+          ],
+          "need_manual_review": false,
+          "extras": {
+            "compare_source_bucket": "formal_risks",
+            "compare_source_buckets": [
+              "formal_risks"
+            ]
+          }
+        }
+      ],
+      "evidence_ids": [
+        "017e45310d0e",
+        "f7231648849f"
+      ],
+      "topic_sources": [
+        "acceptance"
+      ],
+      "rule_ids": [
+        "compare::acceptance_testing_cost",
+        "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+      ],
+      "merged_topic_sources": [
+        "acceptance"
+      ],
+      "merged_family_keys": [
+        "acceptance_testing_cost",
+        "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+      ],
+      "cross_topic_merge_reason": "",
+      "layer_conflict_inputs": [
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+          "candidate_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+          "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+          "topic_sources": [
+            "acceptance"
+          ],
+          "source_locations": [
+            "证据1，第 9.2 条"
+          ],
+          "source_excerpts": [
+            "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
+          ],
+          "evidence_ids": [
+            "f7231648849f"
+          ]
+        },
+        {
+          "source_bucket": "formal_risks",
+          "candidate_rule_id": "compare::acceptance_testing_cost",
+          "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "family_key": "acceptance_testing_cost",
+          "topic_sources": [
+            "acceptance"
+          ],
+          "source_locations": [
+            "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
+          ],
+          "source_excerpts": [
+            "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
+          ],
+          "evidence_ids": [
+            "017e45310d0e"
+          ]
+        }
+      ],
+      "final_problem_resolution": {
+        "target_layer": "formal_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "compare::acceptance_testing_cost",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+      },
+      "conflict_type": "",
+      "left_side": {},
+      "right_side": {},
+      "conflict_reason": {},
+      "conflict_evidence_links": [],
+      "trace": {
+        "source_governed_rule_ids": [
+          "compare::acceptance_testing_cost",
+          "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+        ],
+        "source_candidate_titles": [
+          "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+        ],
+        "source_evidence_ids": [
+          "017e45310d0e",
+          "f7231648849f"
+        ],
+        "source_topics": [
+          "acceptance"
+        ],
+        "source_rule_tags": [
+          "compare_rule",
+          "topic"
+        ],
+        "problem_group_key": "acceptance_testing_cost",
+        "problem_family_keys": [
+          "acceptance_testing_cost",
+          "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+        ],
+        "problem_merge_reason": "验收检测费用转嫁与费用边界不清属于同一费用风险家族，问题层统一保留 formal 主问题并吸收附属待补证标题。",
+        "absorbed_supporting_titles": [
+          "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"
+        ],
+        "absorbed_supporting_rule_ids": [
+          "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+        ],
+        "absorbed_user_visible_items": [
+          {
+            "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "source_bucket": "pending_review_items",
+            "absorbed_by": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "hidden_reason": "same_family_absorbed_by_formal_primary"
+          }
+        ],
+        "user_visible_dedupe_reason": "family_visible_output_absorbed_by_primary",
+        "merged_topic_sources": [
+          "acceptance"
+        ],
+        "merged_family_keys": [
+          "acceptance_testing_cost",
+          "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险"
+        ],
+        "cross_topic_merge_reason": "",
+        "layer_conflict_inputs": [
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+            "candidate_title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+            "family_key": "将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险",
+            "topic_sources": [
+              "acceptance"
+            ],
+            "source_locations": [
+              "证据1，第 9.2 条"
+            ],
+            "source_excerpts": [
+              "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
+            ],
+            "evidence_ids": [
+              "f7231648849f"
+            ]
+          },
+          {
+            "source_bucket": "formal_risks",
+            "candidate_rule_id": "compare::acceptance_testing_cost",
+            "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+            "family_key": "acceptance_testing_cost",
+            "topic_sources": [
+              "acceptance"
+            ],
+            "source_locations": [
+              "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行"
+            ],
+            "source_excerpts": [
+              "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
+            ],
+            "evidence_ids": [
+              "017e45310d0e"
+            ]
+          }
+        ],
+        "final_problem_resolution": {
+          "target_layer": "formal_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "compare::acceptance_testing_cost",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+        },
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "replaced_problem_ids": [],
+        "problem_id_seed": "acceptance_testing_cost|验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|acceptance_testing_cost,将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|compare::acceptance_testing_cost,topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|017e45310d0e,f7231648849f",
+        "primary_selection_reason": "优先保留规则归属最清晰、合规后果最明确的检测费用主问题，附属需求表述下沉为 supporting trace。",
+        "family_key": "acceptance_testing_cost",
+        "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "primary_visible_problem_id": "problem-b63f1df5ccd0",
+        "supporting_problem_ids": [],
+        "internal_trace_only_problem_ids": [],
+        "absorbed_problem_ids": [],
+        "family_visible_output_absorbed_by_primary": true,
+        "supporting_visible_problem_limit": 0,
+        "family_product_rule_key": "acceptance_testing_cost",
+        "family_merge_reason": "验收检测费用转嫁与费用边界不清属于同一费用承担家族，问题层统一保留一个用户可见主问题。"
       }
     }
   ]

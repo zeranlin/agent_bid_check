@@ -50,8 +50,10 @@ def _build_final_problem_resolution(candidate, decision) -> dict[str, Any]:
         return dict(resolution)
     return {
         "target_layer": decision.target_layer,
+        "technical_layer_decision": getattr(decision, "technical_layer_decision", decision.target_layer),
         "admission_reason": decision.admission_reason,
         "formal_gate_rule": decision.formal_gate_rule,
+        "gate_rule": getattr(decision, "gate_rule", ""),
     }
 
 
@@ -121,6 +123,14 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
         "conflict_reason": dict(extras.get("conflict_reason", {})),
         "conflict_evidence_links": list(extras.get("conflict_evidence_links", [])),
         "admission_reason": decision.admission_reason,
+        "technical_layer_decision": getattr(decision, "technical_layer_decision", layer),
+        "evidence_sufficiency": getattr(decision, "evidence_sufficiency", ""),
+        "user_visible_decision_basis": getattr(decision, "user_visible_decision_basis", ""),
+        "user_visible_gate": {
+            "gate_passed": getattr(decision, "gate_passed", False),
+            "gate_reason": getattr(decision, "gate_reason", ""),
+            "gate_rule": getattr(decision, "gate_rule", ""),
+        },
         "pending_gate": {
             "pending_gate_reason_code": getattr(decision, "pending_gate_reason_code", ""),
             "pending_gate_reason": getattr(decision, "pending_gate_reason", ""),
@@ -133,6 +143,12 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
             "formal_gate_family_allowed": decision.formal_gate_family_allowed,
             "formal_gate_evidence_passed": decision.formal_gate_evidence_passed,
         },
+        "budget_trace": {
+            "budget_hit": getattr(decision, "budget_hit", False),
+            "budget_rule": getattr(decision, "budget_rule", ""),
+            "budget_reason": getattr(decision, "budget_reason", ""),
+            "absorbed_or_hidden_items": list(getattr(decision, "absorbed_or_hidden_items", [])),
+        },
         "trace_summary": {
             "cross_topic_merge_reason": str(extras.get("cross_topic_merge_reason", "") or ""),
             "supporting_candidate_titles": list(extras.get("problem_supporting_candidate_titles", [])),
@@ -144,9 +160,9 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
 
 
 def _is_user_visible_snapshot_item(item: dict[str, Any]) -> bool:
-    pending_gate = item.get("pending_gate", {}) if isinstance(item, dict) else {}
-    reason_code = str(pending_gate.get("pending_gate_reason_code", "")).strip() if isinstance(pending_gate, dict) else ""
-    return reason_code != "missing_user_visible_evidence"
+    user_visible_gate = item.get("user_visible_gate", {}) if isinstance(item, dict) else {}
+    gate_passed = bool(user_visible_gate.get("gate_passed", False)) if isinstance(user_visible_gate, dict) else False
+    return gate_passed
 
 
 def _build_problem_trace_summary(problems, admission) -> list[dict[str, Any]]:
@@ -269,11 +285,18 @@ def build_v2_final_snapshot(
         "excluded_risks": _collect_layer_items(admission, "excluded_risks", problem_map),
     }
     summary = _build_summary(final_risks)
+    domain_context = {}
+    if isinstance(getattr(admission, "input_summary", None), dict):
+        domain_context = dict(admission.input_summary.get("domain_context", {}) or {})
     return {
         "snapshot_version": SNAPSHOT_VERSION,
         "run_metadata": {
             "document_name": document_name,
             "generated_at": generated_at or datetime.now().isoformat(timespec="seconds"),
+            "document_domain": str(domain_context.get("document_domain", "") or ""),
+            "domain_confidence": float(domain_context.get("domain_confidence", 0.0) or 0.0),
+            "domain_policy_id": str(domain_context.get("domain_policy_id", "") or ""),
+            "domain_evidence": list(domain_context.get("domain_evidence", []) or []),
         },
         "input_metadata": {
             "subject": baseline_report.subject or document_name,

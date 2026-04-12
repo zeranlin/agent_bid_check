@@ -1,0 +1,1695 @@
+{
+  "snapshot_version": "v1",
+  "run_metadata": {
+    "document_name": "quanzhou.docx",
+    "generated_at": "2026-04-12T11:32:14",
+    "document_domain": "engineering_maintenance_construction",
+    "domain_confidence": 0.88,
+    "domain_policy_id": "domain-policy-engineering-v1",
+    "domain_evidence": [
+      "跑道",
+      "施工"
+    ]
+  },
+  "input_metadata": {
+    "subject": "操场跑道、篮球场、小操场维护项目（项目编号：[350501]QZJL[GK]2026001）",
+    "description_lines": [
+      "本审查基于你提供的招标文件文本进行。",
+      "本报告结合全文直审、结构增强与专题深审生成。",
+      "结构增强层共识别 0 个候选章节，并按模块进行召回。",
+      "对存在事实基础不足的事项，仍建议结合采购背景继续人工复核。",
+      "下述“风险判断”系合规审查意见，不等同于行政机关最终认定。"
+    ]
+  },
+  "summary": {
+    "formal_count": 2,
+    "pending_count": 4,
+    "excluded_count": 0,
+    "high_risk_titles": [],
+    "medium_risk_titles": [
+      "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+      "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+    ],
+    "manual_review_titles": [
+      "验收流程、组织方式及不合格复验程序约定不明，存在执行风险",
+      "远程开标逾期解密后果表述需进一步确认",
+      "疑似限定或倾向特定品牌/供应商",
+      "将样品要求/验收方案不当作为评审或履约门槛"
+    ],
+    "excluded_titles": [],
+    "basis_summary": [
+      "需人工复核"
+    ]
+  },
+  "final_risks": {
+    "formal_risks": [
+      {
+        "problem_id": "problem-29798aa0ab3b",
+        "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+        "severity": "中风险",
+        "review_type": "评审规则一致性 / 实质性条款标识完整性",
+        "layer": "formal_risks",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "bf36aed4c532"
+        ],
+        "rule_ids": [
+          "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
+        ],
+        "source_locations": [
+          "评审规则：内置规则库：实质性条款星标规则；技术条款：（二）、技术要求"
+        ],
+        "source_excerpts": [
+          "规则要求：评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。\n\n正文条款：（二）、技术要求 1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层 2.旧足球场面层铲除新做足球场人造草坪 3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006 3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）： 项号 项目 指标要求 1 3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 短链氯化石蜡（C10-C13）/（g/kg） ≤1.5 4 游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg） ≤10 5 挥发性有机化合物/（g/L） ≤60 6 游离甲醛/（g/kg） ≤0.50 7 苯/（g/kg） ≤0.05 8 甲苯、二甲苯和乙苯总和/（g/kg） ≤1.0 9 可溶性铅 /(mg/kg) ≤50 10 可溶性镉 /(mg/kg) ≤10 11 可溶性铬 /(mg/kg) ≤10 12 可溶性汞 /(mg/kg) ≤2 3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）： 项号 项目 指标要求 1 有害物质含量 3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 16 种多环芳烃总和/(mg/kg) ≤50 4 18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 5 苯并［a］芘/（mg/k"
+        ],
+        "source_location": "评审规则：内置规则库：实质性条款星标规则；技术条款：（二）、技术要求",
+        "source_excerpt": "规则要求：评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。\n\n正文条款：（二）、技术要求 1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层 2.旧足球场面层铲除新做足球场人造草坪 3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006 3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）： 项号 项目 指标要求 1 3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 短链氯化石蜡（C10-C13）/（g/kg） ≤1.5 4 游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg） ≤10 5 挥发性有机化合物/（g/L） ≤60 6 游离甲醛/（g/kg） ≤0.50 7 苯/（g/kg） ≤0.05 8 甲苯、二甲苯和乙苯总和/（g/kg） ≤1.0 9 可溶性铅 /(mg/kg) ≤50 10 可溶性镉 /(mg/kg) ≤10 11 可溶性铬 /(mg/kg) ≤10 12 可溶性汞 /(mg/kg) ≤2 3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）： 项号 项目 指标要求 1 有害物质含量 3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 16 种多环芳烃总和/(mg/kg) ≤50 4 18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 5 苯并［a］芘/（mg/k",
+        "risk_judgment": [
+          "评审规则已明确：含 GB（不含 GB/T）或国家强制性标准的描述，应标注 ★。",
+          "当前条款命中了 GB 非 GB/T 或国家强制性标准相关描述，但正文未见 ★ 标识。",
+          "可能导致投标人无法准确识别是否属于实质性条款。",
+          "若评审阶段按实质性条款处理，存在废标争议和评审口径不一致风险。"
+        ],
+        "legal_basis": [],
+        "rectification": [
+          "若该条款属于实质性要求，应在条款前明确加注 ★。",
+          "若不作为实质性条款，应同步修改评审规则或补充解释，保持规则与正文一致。"
+        ],
+        "topic_sources": [
+          "cross_topic"
+        ],
+        "merged_topic_sources": [
+          "cross_topic"
+        ],
+        "merged_family_keys": [
+          "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "formal_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+        "technical_layer_decision": "formal_risks",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+          "gate_rule": "formal_output_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": true,
+          "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+          "formal_gate_rule": "registry_family_hard_evidence_gate",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": true,
+          "formal_gate_evidence_passed": true
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "",
+          "supporting_candidate_titles": [],
+          "supporting_candidate_rule_ids": [],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+              "candidate_title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+              "family_key": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+              "topic_sources": [
+                "cross_topic"
+              ],
+              "source_locations": [
+                "评审规则：内置规则库：实质性条款星标规则；技术条款：（二）、技术要求"
+              ],
+              "source_excerpts": [
+                "规则要求：评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。\n\n正文条款：（二）、技术要求 1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层 2.旧足球场面层铲除新做足球场人造草坪 3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006 3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）： 项号 项目 指标要求 1 3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 短链氯化石蜡（C10-C13）/（g/kg） ≤1.5 4 游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg） ≤10 5 挥发性有机化合物/（g/L） ≤60 6 游离甲醛/（g/kg） ≤0.50 7 苯/（g/kg） ≤0.05 8 甲苯、二甲苯和乙苯总和/（g/kg） ≤1.0 9 可溶性铅 /(mg/kg) ≤50 10 可溶性镉 /(mg/kg) ≤10 11 可溶性铬 /(mg/kg) ≤10 12 可溶性汞 /(mg/kg) ≤2 3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）： 项号 项目 指标要求 1 有害物质含量 3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 16 种多环芳烃总和/(mg/kg) ≤50 4 18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 5 苯并［a］芘/（mg/k"
+              ],
+              "evidence_ids": [
+                "bf36aed4c532"
+              ]
+            }
+          ]
+        },
+        "family_key": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
+      },
+      {
+        "problem_id": "problem-e22cc3411ed6",
+        "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "severity": "中风险",
+        "review_type": "需求合规性 / 验收费用边界审查",
+        "layer": "formal_risks",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "f1c6b1624b29"
+        ],
+        "rule_ids": [
+          "compare::acceptance_testing_cost"
+        ],
+        "source_locations": [
+          "规则条款：内置规则库：需求合规性；需求条款：9、验收标准要求：；6.合同履行"
+        ],
+        "source_excerpts": [
+          "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9、验收标准要求： （1）中标人应提供产品的技术规范、制造标准及验收标准等有关资料，上述资料应符合产品制造厂商的出厂标准、相应的中华人民共和国标准；；（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。；验收合格后，双方共同签署检验合格证书；"
+        ],
+        "source_location": "规则条款：内置规则库：需求合规性；需求条款：9、验收标准要求：；6.合同履行",
+        "source_excerpt": "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9、验收标准要求： （1）中标人应提供产品的技术规范、制造标准及验收标准等有关资料，上述资料应符合产品制造厂商的出厂标准、相应的中华人民共和国标准；；（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。；验收合格后，双方共同签署检验合格证书；",
+        "risk_judgment": [
+          "规则已明确，不得要求中标人承担验收产生的检测费用。",
+          "当前条款将检测、相关部门验收等费用笼统纳入投标总价，但未区分履约自检、试运行成本与验收阶段第三方/法定检测费用。",
+          "若其中包含项目验收所需专项检测、第三方检测或法定检测事项，则存在将验收检测费用转嫁给中标人的潜在风险。",
+          "该类写法首先表现为费用承担边界不清，其次才可能演化为实际费用转嫁争议。"
+        ],
+        "legal_basis": [],
+        "rectification": [
+          "将安装调试、自检、试运行等正常履约成本，与采购验收阶段可能发生的专项检测或法定检测费用区分开。",
+          "如项目确需检测，应明确检测类型、承担主体和合规依据，避免仅以“投标总价包括检测、相关部门验收等费用”笼统表述。",
+          "对“相关部门验收”涉及的具体部门、流程及费用承担方式作进一步说明。"
+        ],
+        "topic_sources": [
+          "acceptance"
+        ],
+        "merged_topic_sources": [
+          "acceptance"
+        ],
+        "merged_family_keys": [
+          "acceptance_testing_cost"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "formal_risks",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "compare::acceptance_testing_cost",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+        "technical_layer_decision": "formal_risks",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "technical_formal_and_user_visible_gate_aligned",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
+          "gate_rule": "formal_output_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": true,
+          "formal_gate_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+          "formal_gate_rule": "registry_family_hard_evidence_gate",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": true,
+          "formal_gate_evidence_passed": true
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "",
+          "supporting_candidate_titles": [],
+          "supporting_candidate_rule_ids": [],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "compare::acceptance_testing_cost",
+              "candidate_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+              "family_key": "acceptance_testing_cost",
+              "topic_sources": [
+                "acceptance"
+              ],
+              "source_locations": [
+                "规则条款：内置规则库：需求合规性；需求条款：9、验收标准要求：；6.合同履行"
+              ],
+              "source_excerpts": [
+                "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9、验收标准要求： （1）中标人应提供产品的技术规范、制造标准及验收标准等有关资料，上述资料应符合产品制造厂商的出厂标准、相应的中华人民共和国标准；；（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。；验收合格后，双方共同签署检验合格证书；"
+              ],
+              "evidence_ids": [
+                "f1c6b1624b29"
+              ]
+            }
+          ]
+        },
+        "family_key": "acceptance_testing_cost"
+      }
+    ],
+    "pending_review_items": [
+      {
+        "problem_id": "problem-bbdafeb9e653",
+        "title": "验收流程、组织方式及不合格复验程序约定不明，存在执行风险",
+        "severity": "中风险",
+        "review_type": "流程可操作性审查",
+        "layer": "pending_review_items",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "8a2447a102a1"
+        ],
+        "rule_ids": [
+          "topic::验收流程-组织方式及不合格复验程序约定不明-存在执行风险"
+        ],
+        "source_locations": [
+          "证据2 - 9、验收标准要求"
+        ],
+        "source_excerpts": [
+          "（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。验收合格后，双方共同签署检验合格证书；（3）验收时中标人代表必须到现场，验收合格后，中标人凭采购人出具的验收合格书在规定时间内办理剩余合同价款结算有关手续。"
+        ],
+        "source_location": "证据2 - 9、验收标准要求",
+        "source_excerpt": "（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。验收合格后，双方共同签署检验合格证书；（3）验收时中标人代表必须到现场，验收合格后，中标人凭采购人出具的验收合格书在规定时间内办理剩余合同价款结算有关手续。",
+        "risk_judgment": [
+          "验收条款仅规定‘按照...标准进行验收’，未明确验收的组织方式（如是否成立验收小组、小组成员构成）、验收的具体时点（如完工后多少日内启动）及试运行安排。",
+          "缺乏具体的验收流程描述，如‘初验’、‘试运行’、‘终验’的环节划分，可能导致验收过程随意性大，缺乏客观执行依据。",
+          "对于不合格处理，仅规定‘无条件返工’，未明确复验的次数、复验费用的承担（若复验仍不合格是否再次检测）及最终无法合格时的具体退出机制，存在争议隐患。"
+        ],
+        "legal_basis": [
+          "《政府采购法》第四十一条：采购人或者其委托的采购代理机构应当组织对供应商履约的验收。",
+          "《政府采购需求管理办法》（财库〔2021〕22号）第二十一条：履约验收方案应当包括验收主体、验收方式、验收标准、验收程序等内容。"
+        ],
+        "rectification": [
+          "补充验收组织方式：明确验收小组的组成（如采购人代表、专家、第三方机构等）及职责。",
+          "细化验收流程：明确验收启动条件、试运行期限（如有）、验收步骤（自检、初验、终验）及具体时点。",
+          "完善不合格处理机制：明确复验流程、复验费用承担原则及多次复验不合格后的合同解除或违约责任细则。"
+        ],
+        "topic_sources": [
+          "acceptance"
+        ],
+        "merged_topic_sources": [
+          "acceptance"
+        ],
+        "merged_family_keys": [
+          "验收流程-组织方式及不合格复验程序约定不明-存在执行风险"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "pending_review_items",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::验收流程-组织方式及不合格复验程序约定不明-存在执行风险",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "technical_layer_decision": "pending_review_items",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题涉及履约执行和验收争议风险，具备明确复核价值，保留为用户可见待补证项。",
+          "gate_rule": "pending_material_issue_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": false,
+          "formal_gate_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+          "formal_gate_rule": "downgrade_missing_type",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": false,
+          "formal_gate_evidence_passed": false
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "",
+          "supporting_candidate_titles": [],
+          "supporting_candidate_rule_ids": [],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::验收流程-组织方式及不合格复验程序约定不明-存在执行风险",
+              "candidate_title": "验收流程、组织方式及不合格复验程序约定不明，存在执行风险",
+              "family_key": "验收流程-组织方式及不合格复验程序约定不明-存在执行风险",
+              "topic_sources": [
+                "acceptance"
+              ],
+              "source_locations": [
+                "证据2 - 9、验收标准要求"
+              ],
+              "source_excerpts": [
+                "（2）按照出厂标准、国家相关的技术规范及验收的标准、行业相关标准以及招标文件的要求及规定进行验收。验收合格后，双方共同签署检验合格证书；（3）验收时中标人代表必须到现场，验收合格后，中标人凭采购人出具的验收合格书在规定时间内办理剩余合同价款结算有关手续。"
+              ],
+              "evidence_ids": [
+                "8a2447a102a1"
+              ]
+            }
+          ]
+        },
+        "family_key": "验收流程-组织方式及不合格复验程序约定不明-存在执行风险"
+      },
+      {
+        "problem_id": "problem-44f25861929e",
+        "title": "远程开标逾期解密后果表述需进一步确认",
+        "severity": "低风险",
+        "review_type": "程序条款审查",
+        "layer": "pending_review_items",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "fce949193a06"
+        ],
+        "rule_ids": [
+          "topic::远程开标逾期解密后果表述需进一步确认"
+        ],
+        "source_locations": [
+          "证据1，第 364 行，11.4(1)"
+        ],
+        "source_excerpts": [
+          "通过远程参与开标流程的投标人须在系统远程解密开启后，在代理机构规定时间内使用CA数字证书进行电子投标文件的解密操作，逾期未解密的视为放弃投标。"
+        ],
+        "source_location": "证据1，第 364 行，11.4(1)",
+        "source_excerpt": "通过远程参与开标流程的投标人须在系统远程解密开启后，在代理机构规定时间内使用CA数字证书进行电子投标文件的解密操作，逾期未解密的视为放弃投标。",
+        "risk_judgment": [
+          "条款明确了远程解密时限及逾期后果，符合电子招投标的一般规则。",
+          "但'代理机构规定时间'的具体时长未在片段中明确，若时间过短可能增加投标人操作风险。",
+          "需确认该时间设定是否合理，是否给予投标人足够的操作缓冲期。"
+        ],
+        "legal_basis": [
+          "《政府采购货物和服务招标投标管理办法》（财政部令第87号）第四十条：投标人未参加开标的，视同认可开标结果。",
+          "《电子招标投标办法》第三十一条：投标人应当在投标截止时间前完成投标文件的传输递交，并可以补充、修改或者撤回投标文件。"
+        ],
+        "rectification": [
+          "建议在招标文件中明确'代理机构规定时间'的具体时长（如10分钟或15分钟），确保投标人有合理时间进行操作。",
+          "在远程开标操作手册中再次强调解密时限及后果，提醒投标人注意。"
+        ],
+        "topic_sources": [
+          "procedure"
+        ],
+        "merged_topic_sources": [
+          "procedure"
+        ],
+        "merged_family_keys": [
+          "远程开标逾期解密后果表述需进一步确认"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "pending_review_items",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::远程开标逾期解密后果表述需进一步确认",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。",
+        "technical_layer_decision": "pending_review_items",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。",
+          "gate_rule": "pending_material_issue_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": false,
+          "formal_gate_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。",
+          "formal_gate_rule": "downgrade_remote_decrypt_routine",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": false,
+          "formal_gate_evidence_passed": false
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "",
+          "supporting_candidate_titles": [],
+          "supporting_candidate_rule_ids": [],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::远程开标逾期解密后果表述需进一步确认",
+              "candidate_title": "远程开标逾期解密后果表述需进一步确认",
+              "family_key": "远程开标逾期解密后果表述需进一步确认",
+              "topic_sources": [
+                "procedure"
+              ],
+              "source_locations": [
+                "证据1，第 364 行，11.4(1)"
+              ],
+              "source_excerpts": [
+                "通过远程参与开标流程的投标人须在系统远程解密开启后，在代理机构规定时间内使用CA数字证书进行电子投标文件的解密操作，逾期未解密的视为放弃投标。"
+              ],
+              "evidence_ids": [
+                "fce949193a06"
+              ]
+            }
+          ]
+        },
+        "family_key": "远程开标逾期解密后果表述需进一步确认"
+      },
+      {
+        "problem_id": "problem-13b821ea6190",
+        "title": "疑似限定或倾向特定品牌/供应商",
+        "severity": "高风险",
+        "review_type": "技术参数倾向性",
+        "layer": "pending_review_items",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "acf92c3063ac",
+          "2ec6e3827417"
+        ],
+        "rule_ids": [
+          "topic::技术参数中指定特定品牌-具有明显排他性",
+          "topic::样品要求中指定品牌-可能隐含排他性检测标准",
+          "topic::样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+          "topic::样品要求中指定特定品牌-涉嫌排斥潜在投标人"
+        ],
+        "source_locations": [
+          "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 1．供应商需提供以下样品 -> ⑤",
+          "证据 3，第 1269-1285 行",
+          "证据6，第 1269 - 1285 行，（四）、样品要求，第 1 条第 ⑤ 款",
+          "证据 4，第 1269 - 1285 行，（四）、样品要求，第 1 条第 5 点"
+        ],
+        "source_excerpts": [
+          "`⑤品牌:Aokang`",
+          "⑤品牌:Aokang"
+        ],
+        "source_location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 1．供应商需提供以下样品 -> ⑤",
+        "source_excerpt": "`⑤品牌:Aokang`",
+        "risk_judgment": [
+          "招标文件在样品要求中直接指定了具体品牌\"Aokang\"，未说明该品牌为示例或允许提供同等档次其他品牌。",
+          "该要求直接指向特定供应商或特定产品，排斥了其他符合国家标准（GB 36246-2018）的合格供应商，严重违反公平竞争原则。",
+          "即使该项目为专门面向中小企业采购，也不得在技术参数中指定特定品牌。",
+          "样品要求中明确指定品牌'Aokang'，直接违反政府采购法关于不得指定品牌的规定。",
+          "虽然此问题主要属于品牌倾向，但在'技术标准与检测'专题下，需警惕该指定品牌是否隐含了特定的检测标准、认证体系或材料配方，从而排斥其他符合国家标准但品牌不同的供应商。",
+          "指定品牌可能导致只有该品牌产品能通过特定的检测或验收，构成变相的排他性条款。",
+          "招标文件在样品要求中直接指定了具体品牌'Aokang'，违反了政府采购法关于不得指定特定品牌、不得以不合理的条件对供应商实行差别待遇或歧视待遇的规定。",
+          "指定品牌将导致其他品牌供应商无法参与竞争，严重限制了市场竞争，具有明显的倾向性。",
+          "即使该项目采用最低评标价法，样品作为评审依据之一，指定品牌也构成了对潜在投标人的实质性限制。",
+          "招标文件在样品要求中直接指定了具体品牌（Aokang），这构成了对特定供应商的指向性。",
+          "根据政府采购法律法规，除特殊情形外，不得在招标文件中指定特定品牌、型号或供应商，否则将限制竞争，导致其他潜在投标人无法参与。",
+          "该要求直接导致非 Aokang 品牌产品的投标人无法通过样品评审，形成不合理门槛。"
+        ],
+        "legal_basis": [
+          "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构有下列情形之一的，属于以不合理的条件对供应商实行差别待遇或者歧视待遇：……（三）采购需求中的技术、服务等要求指向特定供应商、特定产品；",
+          "《政府采购货物和服务招标投标管理办法》（财政部令第87号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。",
+          "《中华人民共和国政府采购法》第二十二条：采购人可以根据采购项目的特殊要求，规定供应商的特定条件，但不得以不合理的条件对供应商实行差别待遇或者歧视待遇。",
+          "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。",
+          "《中华人民共和国政府采购法》第二十二条：采购人不得以不合理的条件对供应商实行差别待遇或者歧视待遇。",
+          "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构有下列情形之一的，属于以不合理的条件对供应商实行差别待遇或者歧视待遇：（三）采购需求中的技术、服务等要求指向特定供应商、特定产品；（四）以特定行政区域或者特定行业的业绩、奖项作为加分条件或者中标、成交条件。",
+          "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构有下列情形之一的，属于以不合理的条件对供应商实行差别待遇或者歧视待遇：（三）采购需求中的技术、服务等要求指向特定供应商、特定产品。"
+        ],
+        "rectification": [
+          "删除样品要求中“品牌:Aokang\"的指定内容。",
+          "修改为“样品需符合招标文件规定的技术参数及国家标准，品牌不限”或“提供符合要求的样品，品牌由投标人自定”。",
+          "删除样品要求中的品牌指定'Aokang'，改为描述样品的技术参数、规格、材质等通用要求。",
+          "确保样品评审标准仅基于技术参数和性能指标，而非品牌。",
+          "删除样品要求中指定的品牌'Aokang'。",
+          "修改为‘样品需符合招标文件规定的技术参数和性能要求，品牌不限’或类似表述，确保所有符合技术要求的品牌均可参与投标。",
+          "重新审视样品在评标中的定位，确保其作为评审依据的公平性。",
+          "删除样品要求中指定的品牌名称（Aokang）。",
+          "将品牌要求修改为“满足国家相关标准及招标文件技术参数要求的品牌”，或明确“接受同等档次及以上品牌”。",
+          "确保样品评审标准仅基于技术参数、质量、工艺等客观指标，而非品牌归属。"
+        ],
+        "topic_sources": [
+          "baseline",
+          "technical_standard",
+          "scoring",
+          "samples_demo"
+        ],
+        "merged_topic_sources": [
+          "baseline",
+          "technical_standard",
+          "scoring",
+          "samples_demo"
+        ],
+        "merged_family_keys": [
+          "技术参数中指定特定品牌-具有明显排他性",
+          "样品要求中指定品牌-可能隐含排他性检测标准",
+          "样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+          "样品要求中指定特定品牌-涉嫌排斥潜在投标人",
+          "brand_bias"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "pending_review_items",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::技术参数中指定特定品牌-具有明显排他性",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "technical_layer_decision": "pending_review_items",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题属于稳定的待补证家族，具备持续对外复核价值。",
+          "gate_rule": "pending_material_issue_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": false,
+          "formal_gate_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+          "formal_gate_rule": "downgrade_reminder",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": false,
+          "formal_gate_evidence_passed": false
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "同一品牌指定/品牌倾向问题被多个专题重复外显，问题层按白名单 family 仅保留一个主问题并吸收附属标题。",
+          "supporting_candidate_titles": [
+            "样品要求中指定品牌，可能隐含排他性检测标准",
+            "样品要求中指定特定品牌，存在限定特定供应商和倾向性评分风险",
+            "样品要求中指定特定品牌，涉嫌排斥潜在投标人"
+          ],
+          "supporting_candidate_rule_ids": [
+            "topic::样品要求中指定品牌-可能隐含排他性检测标准",
+            "topic::样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+            "topic::样品要求中指定特定品牌-涉嫌排斥潜在投标人"
+          ],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::技术参数中指定特定品牌-具有明显排他性",
+              "candidate_title": "技术参数中指定特定品牌，具有明显排他性",
+              "family_key": "技术参数中指定特定品牌-具有明显排他性",
+              "topic_sources": [
+                "baseline"
+              ],
+              "source_locations": [
+                "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 1．供应商需提供以下样品 -> ⑤"
+              ],
+              "source_excerpts": [
+                "`⑤品牌:Aokang`"
+              ],
+              "evidence_ids": [
+                "acf92c3063ac"
+              ]
+            },
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品要求中指定品牌-可能隐含排他性检测标准",
+              "candidate_title": "样品要求中指定品牌，可能隐含排他性检测标准",
+              "family_key": "样品要求中指定品牌-可能隐含排他性检测标准",
+              "topic_sources": [
+                "technical_standard"
+              ],
+              "source_locations": [
+                "证据 3，第 1269-1285 行"
+              ],
+              "source_excerpts": [
+                "⑤品牌:Aokang"
+              ],
+              "evidence_ids": [
+                "2ec6e3827417"
+              ]
+            },
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+              "candidate_title": "样品要求中指定特定品牌，存在限定特定供应商和倾向性评分风险",
+              "family_key": "样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+              "topic_sources": [
+                "scoring"
+              ],
+              "source_locations": [
+                "证据6，第 1269 - 1285 行，（四）、样品要求，第 1 条第 ⑤ 款"
+              ],
+              "source_excerpts": [
+                "⑤品牌:Aokang"
+              ],
+              "evidence_ids": [
+                "2ec6e3827417"
+              ]
+            },
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品要求中指定特定品牌-涉嫌排斥潜在投标人",
+              "candidate_title": "样品要求中指定特定品牌，涉嫌排斥潜在投标人",
+              "family_key": "样品要求中指定特定品牌-涉嫌排斥潜在投标人",
+              "topic_sources": [
+                "samples_demo"
+              ],
+              "source_locations": [
+                "证据 4，第 1269 - 1285 行，（四）、样品要求，第 1 条第 5 点"
+              ],
+              "source_excerpts": [
+                "⑤品牌:Aokang"
+              ],
+              "evidence_ids": [
+                "2ec6e3827417"
+              ]
+            }
+          ]
+        },
+        "family_key": "brand_bias"
+      },
+      {
+        "problem_id": "problem-b5fde8587ecd",
+        "title": "将样品要求/验收方案不当作为评审或履约门槛",
+        "severity": "中风险",
+        "review_type": "评审标准不合理",
+        "layer": "pending_review_items",
+        "problem_kind": "standard",
+        "conflict_type": "",
+        "evidence_ids": [
+          "bd9b1a4f18e0",
+          "7556f79a95e4",
+          "3bc64cf25109"
+        ],
+        "rule_ids": [
+          "topic::样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+          "topic::样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+          "topic::样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突"
+        ],
+        "source_locations": [
+          "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 2.2 及 5",
+          "证据6，第 1269 - 1285 行，（四）、样品要求，第 2.1 条及第 5 条；证据4，第 616 - 681 行，7.1 条"
+        ],
+        "source_excerpts": [
+          "`2.2所有样品不得体现供应商公司信息，否则按响应无效处理。` `5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。`",
+          "2.1...未提供样品、样品提供不全的样品评审不得分。...5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。...7.1评标方法：采购包1：最低评标价法"
+        ],
+        "source_location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 2.2 及 5",
+        "source_excerpt": "`2.2所有样品不得体现供应商公司信息，否则按响应无效处理。` `5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。`",
+        "risk_judgment": [
+          "虽然样品评审是常见做法，但将“样品不全”或“样品经评委认定为未实质性响应”直接作为“无效投标”（即废标）的条件，可能过于严苛。",
+          "若样品仅作为评分项（加分项），未提供或样品一般应扣减相应分数，而非直接导致投标无效，除非招标文件明确样品为实质性响应条件且与核心功能直接相关。",
+          "本项目采用“最低评标价法”，样品通常用于验证技术参数响应情况。若样品仅用于验证，未提供样品应视为未响应技术参数，但需明确是否属于“实质性要求”。",
+          "原文中“样品不全”即无效，若仅缺少非关键样品（如减震垫颜色不符但性能达标），直接废标可能限制竞争。",
+          "项目采用最低评标价法，通常意味着价格是唯一决定因素，技术和服务要求应作为符合性审查（通过/不通过）。",
+          "样品要求中提及‘样品评审不得分’，暗示样品可能作为评分项，这与最低评标价法的原则（价格最低者中标，前提是满足实质性要求）存在逻辑冲突。",
+          "若样品作为符合性审查项，‘未实质性响应...为无效投标’是合理的；但若作为评分项，则与最低评标价法矛盾。需明确样品在评标中的具体定位（是符合性审查还是评分项）。",
+          "若样品作为评分项，则评标方法应改为综合评分法，否则存在评标方法适用错误风险。"
+        ],
+        "legal_basis": [
+          "《政府采购货物和服务招标投标管理办法》（财政部令第87号）第五十五条：评审因素应当细化和量化，且与相应的商务条件和采购需求对应。",
+          "《政府采购法实施条例》第二十条：不得设定与采购项目的具体特点和实际需要不相适应或者与合同履行无关的资格、技术、商务条件。",
+          "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第五十五条：综合评分法，是指投标文件满足招标文件全部实质性要求，且按照评审因素的量化指标评审得分最高的投标人为中标候选人的评标方法。",
+          "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第五十四条：最低评标价法，是指投标文件满足招标文件全部实质性要求且投标报价最低的投标人为中标候选人的评标方法。"
+        ],
+        "rectification": [
+          "明确样品在评标中的具体作用。若样品仅用于验证技术参数，建议将“未提供样品”或“样品不达标”作为技术部分不得分或扣分处理，而非直接作为无效投标条件，除非该样品是核心产品且无法通过其他方式验证。",
+          "若必须作为实质性要求，需在技术参数中明确说明样品是验证核心性能的唯一方式，并细化“样品不全”的具体情形。",
+          "明确样品在评标中的具体作用：若作为符合性审查，应删除‘样品评审不得分’等评分相关表述，明确‘样品不符合要求视为未实质性响应，作无效投标处理’。",
+          "若样品需作为评分项，则应将评标方法由‘最低评标价法’改为‘综合评分法’，并制定详细的样品评分标准。",
+          "确保评标方法与评审规则的一致性，避免逻辑冲突。"
+        ],
+        "topic_sources": [
+          "baseline",
+          "scoring"
+        ],
+        "merged_topic_sources": [
+          "baseline",
+          "scoring"
+        ],
+        "merged_family_keys": [
+          "样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+          "样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+          "样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突",
+          "sample_acceptance_gate"
+        ],
+        "final_problem_resolution": {
+          "target_layer": "pending_review_items",
+          "winner_input_bucket": "formal_risks",
+          "winner_rule_id": "topic::样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+          "winner_basis": "problem_conflict_resolution_priority",
+          "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+          "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。"
+        },
+        "left_side": {},
+        "right_side": {},
+        "conflict_reason": {},
+        "conflict_evidence_links": [],
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+        "technical_layer_decision": "pending_review_items",
+        "evidence_sufficiency": "sufficient",
+        "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
+        "user_visible_gate": {
+          "gate_passed": true,
+          "gate_reason": "当前问题属于稳定的待补证家族，具备持续对外复核价值。",
+          "gate_rule": "pending_material_issue_allowed"
+        },
+        "pending_gate": {
+          "pending_gate_reason_code": "",
+          "pending_gate_reason": ""
+        },
+        "formal_gate": {
+          "formal_gate_passed": false,
+          "formal_gate_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+          "formal_gate_rule": "registry_mapping_missing_block",
+          "formal_gate_exception_whitelist_hit": false,
+          "formal_gate_family_allowed": false,
+          "formal_gate_evidence_passed": true
+        },
+        "budget_trace": {
+          "budget_hit": false,
+          "budget_rule": "",
+          "budget_reason": "",
+          "absorbed_or_hidden_items": []
+        },
+        "trace_summary": {
+          "cross_topic_merge_reason": "样品要求、样品评审和验收衔接问题属于同一家族，对外保留一个核心门槛问题，其余解释下沉。",
+          "supporting_candidate_titles": [
+            "样品评审规则与最低评标价法逻辑可能存在冲突，需核实样品在评标中的具体作用"
+          ],
+          "supporting_candidate_rule_ids": [
+            "topic::样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用"
+          ],
+          "layer_conflict_inputs": [
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+              "candidate_title": "样品评审规则设置不当，存在“未提供即无效”的过度严苛情形",
+              "family_key": "样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+              "topic_sources": [
+                "baseline"
+              ],
+              "source_locations": [
+                "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 2.2 及 5"
+              ],
+              "source_excerpts": [
+                "`2.2所有样品不得体现供应商公司信息，否则按响应无效处理。` `5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。`"
+              ],
+              "evidence_ids": [
+                "bd9b1a4f18e0"
+              ]
+            },
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+              "candidate_title": "样品评审规则与最低评标价法逻辑可能存在冲突，需核实样品在评标中的具体作用",
+              "family_key": "样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+              "topic_sources": [
+                "scoring"
+              ],
+              "source_locations": [
+                "证据6，第 1269 - 1285 行，（四）、样品要求，第 2.1 条及第 5 条；证据4，第 616 - 681 行，7.1 条"
+              ],
+              "source_excerpts": [
+                "2.1...未提供样品、样品提供不全的样品评审不得分。...5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。...7.1评标方法：采购包1：最低评标价法"
+              ],
+              "evidence_ids": [
+                "7556f79a95e4"
+              ]
+            },
+            {
+              "source_bucket": "formal_risks",
+              "candidate_rule_id": "topic::样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突",
+              "candidate_title": "样品要求中“不得体现供应商公司信息”与“样品作为验收样本”存在逻辑冲突",
+              "family_key": "样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突",
+              "topic_sources": [
+                "baseline"
+              ],
+              "source_locations": [
+                "第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 2.2 及 3"
+              ],
+              "source_excerpts": [
+                "`2.2所有样品不得体现供应商公司信息，否则按响应无效处理。` `3.定标后，成交候选人的样品由采购人封存保留作为验收样本。`"
+              ],
+              "evidence_ids": [
+                "3bc64cf25109"
+              ]
+            }
+          ]
+        },
+        "family_key": "sample_acceptance_gate"
+      }
+    ],
+    "excluded_risks": []
+  },
+  "problem_trace_summary": [
+    {
+      "problem_id": "problem-29798aa0ab3b",
+      "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+      "family_key": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "cross_topic"
+      ],
+      "merged_topic_sources": [
+        "cross_topic"
+      ],
+      "merged_family_keys": [
+        "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
+      ],
+      "rule_ids": [
+        "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
+      ],
+      "evidence_ids": [
+        "bf36aed4c532"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "formal_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "compare::强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "formal_risks",
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+        "formal_gate_rule": "registry_family_hard_evidence_gate"
+      }
+    },
+    {
+      "problem_id": "problem-f9b7ffcffcbc",
+      "title": "合同支付比例逻辑错误，总额超过100%",
+      "family_key": "合同支付比例逻辑错误-总额超过100",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "contract_payment"
+      ],
+      "merged_topic_sources": [
+        "contract_payment"
+      ],
+      "merged_family_keys": [
+        "合同支付比例逻辑错误-总额超过100"
+      ],
+      "rule_ids": [
+        "topic::合同支付比例逻辑错误-总额超过100"
+      ],
+      "evidence_ids": [
+        "c1093e11bb2d"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::合同支付比例逻辑错误-总额超过100",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-1c028adb0eec",
+      "title": "引用标准已废止且未明确替代版本",
+      "family_key": "引用标准已废止且未明确替代版本",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "technical_standard"
+      ],
+      "merged_topic_sources": [
+        "technical_standard"
+      ],
+      "merged_family_keys": [
+        "引用标准已废止且未明确替代版本"
+      ],
+      "rule_ids": [
+        "topic::引用标准已废止且未明确替代版本"
+      ],
+      "evidence_ids": [
+        "57259d9b14a7"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::引用标准已废止且未明确替代版本",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-39b0bbdb63bd",
+      "title": "验收检测费用承担约定模糊，存在将法定检测费用转嫁中标人的合规风险",
+      "family_key": "验收检测费用承担约定模糊-存在将法定检测费用转嫁中标人的合规风险",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "acceptance"
+      ],
+      "merged_topic_sources": [
+        "acceptance"
+      ],
+      "merged_family_keys": [
+        "验收检测费用承担约定模糊-存在将法定检测费用转嫁中标人的合规风险"
+      ],
+      "rule_ids": [
+        "topic::验收检测费用承担约定模糊-存在将法定检测费用转嫁中标人的合规风险"
+      ],
+      "evidence_ids": [
+        "0507cad74b0d"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::验收检测费用承担约定模糊-存在将法定检测费用转嫁中标人的合规风险",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-2e55ce99481e",
+      "title": "唱标内容表述存在模糊性，可能引发程序争议",
+      "family_key": "唱标内容表述存在模糊性-可能引发程序争议",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "procedure"
+      ],
+      "merged_topic_sources": [
+        "procedure"
+      ],
+      "merged_family_keys": [
+        "唱标内容表述存在模糊性-可能引发程序争议"
+      ],
+      "rule_ids": [
+        "topic::唱标内容表述存在模糊性-可能引发程序争议"
+      ],
+      "evidence_ids": [
+        "9fa85660e717"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::唱标内容表述存在模糊性-可能引发程序争议",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-371295154533",
+      "title": "投标保证金退还时限存在排除自身原因的免责条款",
+      "family_key": "投标保证金退还时限存在排除自身原因的免责条款",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "contract_payment"
+      ],
+      "merged_topic_sources": [
+        "contract_payment"
+      ],
+      "merged_family_keys": [
+        "投标保证金退还时限存在排除自身原因的免责条款"
+      ],
+      "rule_ids": [
+        "topic::投标保证金退还时限存在排除自身原因的免责条款"
+      ],
+      "evidence_ids": [
+        "9105788340a2"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::投标保证金退还时限存在排除自身原因的免责条款",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-64bfbea32d7c",
+      "title": "招标文件解释权归属条款违规",
+      "family_key": "招标文件解释权归属条款违规",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "baseline"
+      ],
+      "merged_topic_sources": [
+        "baseline"
+      ],
+      "merged_family_keys": [
+        "招标文件解释权归属条款违规"
+      ],
+      "rule_ids": [
+        "topic::招标文件解释权归属条款违规"
+      ],
+      "evidence_ids": [
+        "7bd57aed45fc"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::招标文件解释权归属条款违规",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+        "formal_gate_rule": "registry_mapping_missing_block"
+      }
+    },
+    {
+      "problem_id": "problem-5d11550bf7a8",
+      "title": "政策条款引用不完整，关键依据缺失",
+      "family_key": "政策条款引用不完整-关键依据缺失",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "policy"
+      ],
+      "merged_topic_sources": [
+        "policy"
+      ],
+      "merged_family_keys": [
+        "政策条款引用不完整-关键依据缺失"
+      ],
+      "rule_ids": [
+        "topic::政策条款引用不完整-关键依据缺失"
+      ],
+      "evidence_ids": [
+        "5b731b740372"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::政策条款引用不完整-关键依据缺失",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-9df021790a88",
+      "title": "标准指标引用不完整，存在执行依据缺失风险",
+      "family_key": "标准指标引用不完整-存在执行依据缺失风险",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "technical_standard"
+      ],
+      "merged_topic_sources": [
+        "technical_standard"
+      ],
+      "merged_family_keys": [
+        "标准指标引用不完整-存在执行依据缺失风险"
+      ],
+      "rule_ids": [
+        "topic::标准指标引用不完整-存在执行依据缺失风险"
+      ],
+      "evidence_ids": [
+        "2f8e56bfabc0"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::标准指标引用不完整-存在执行依据缺失风险",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-ff4d05fed58d",
+      "title": "样品规格及结构要求需确保与采购标的直接相关且无排他性",
+      "family_key": "样品规格及结构要求需确保与采购标的直接相关且无排他性",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "samples_demo"
+      ],
+      "merged_topic_sources": [
+        "samples_demo"
+      ],
+      "merged_family_keys": [
+        "样品规格及结构要求需确保与采购标的直接相关且无排他性"
+      ],
+      "rule_ids": [
+        "topic::样品规格及结构要求需确保与采购标的直接相关且无排他性"
+      ],
+      "evidence_ids": [
+        "6b169c79f992"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::样品规格及结构要求需确保与采购标的直接相关且无排他性",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-31d010ef4217",
+      "title": "检测报告资质要求表述模糊且可能构成排他",
+      "family_key": "检测报告资质要求表述模糊且可能构成排他",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "technical_standard"
+      ],
+      "merged_topic_sources": [
+        "technical_standard"
+      ],
+      "merged_family_keys": [
+        "检测报告资质要求表述模糊且可能构成排他"
+      ],
+      "rule_ids": [
+        "topic::检测报告资质要求表述模糊且可能构成排他"
+      ],
+      "evidence_ids": [
+        "8afd1573eb66"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::检测报告资质要求表述模糊且可能构成排他",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+        "formal_gate_rule": "registry_mapping_missing_block"
+      }
+    },
+    {
+      "problem_id": "problem-7fea2bd1afd7",
+      "title": "质疑受理条件设置额外门槛，限制供应商救济权利",
+      "family_key": "质疑受理条件设置额外门槛-限制供应商救济权利",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "baseline"
+      ],
+      "merged_topic_sources": [
+        "baseline"
+      ],
+      "merged_family_keys": [
+        "质疑受理条件设置额外门槛-限制供应商救济权利"
+      ],
+      "rule_ids": [
+        "topic::质疑受理条件设置额外门槛-限制供应商救济权利"
+      ],
+      "evidence_ids": [
+        "61b5d5d65c74"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::质疑受理条件设置额外门槛-限制供应商救济权利",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+        "formal_gate_rule": "registry_mapping_missing_block"
+      }
+    },
+    {
+      "problem_id": "problem-bbdafeb9e653",
+      "title": "验收流程、组织方式及不合格复验程序约定不明，存在执行风险",
+      "family_key": "验收流程-组织方式及不合格复验程序约定不明-存在执行风险",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "acceptance"
+      ],
+      "merged_topic_sources": [
+        "acceptance"
+      ],
+      "merged_family_keys": [
+        "验收流程-组织方式及不合格复验程序约定不明-存在执行风险"
+      ],
+      "rule_ids": [
+        "topic::验收流程-组织方式及不合格复验程序约定不明-存在执行风险"
+      ],
+      "evidence_ids": [
+        "8a2447a102a1"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "pending_review_items",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::验收流程-组织方式及不合格复验程序约定不明-存在执行风险",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "pending_review_items",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-1d7ff63556d1",
+      "title": "专门面向中小企业采购的证明材料要求表述需核实",
+      "family_key": "专门面向中小企业采购的证明材料要求表述需核实",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "policy"
+      ],
+      "merged_topic_sources": [
+        "policy"
+      ],
+      "merged_family_keys": [
+        "专门面向中小企业采购的证明材料要求表述需核实"
+      ],
+      "rule_ids": [
+        "topic::专门面向中小企业采购的证明材料要求表述需核实"
+      ],
+      "evidence_ids": [
+        "38f707725f3f"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "pending_review_items",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::专门面向中小企业采购的证明材料要求表述需核实",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-44ad82dba31e",
+      "title": "履约保证金退还时限表述存在歧义，可能损害供应商权益",
+      "family_key": "履约保证金退还时限表述存在歧义-可能损害供应商权益",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "baseline"
+      ],
+      "merged_topic_sources": [
+        "baseline"
+      ],
+      "merged_family_keys": [
+        "履约保证金退还时限表述存在歧义-可能损害供应商权益"
+      ],
+      "rule_ids": [
+        "topic::履约保证金退还时限表述存在歧义-可能损害供应商权益"
+      ],
+      "evidence_ids": [
+        "a7c727b2c529"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::履约保证金退还时限表述存在歧义-可能损害供应商权益",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到缺失型或未见型判断表达，当前核心结论依赖未覆盖证据或待确认章节，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_missing_type"
+      }
+    },
+    {
+      "problem_id": "problem-5df7567cc966",
+      "title": "质疑材料要求中身份证明材料表述需进一步核实",
+      "family_key": "质疑材料要求中身份证明材料表述需进一步核实",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "procedure"
+      ],
+      "merged_topic_sources": [
+        "procedure"
+      ],
+      "merged_family_keys": [
+        "质疑材料要求中身份证明材料表述需进一步核实"
+      ],
+      "rule_ids": [
+        "topic::质疑材料要求中身份证明材料表述需进一步核实"
+      ],
+      "evidence_ids": [
+        "de351db25ebd"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::质疑材料要求中身份证明材料表述需进一步核实",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-44f25861929e",
+      "title": "远程开标逾期解密后果表述需进一步确认",
+      "family_key": "远程开标逾期解密后果表述需进一步确认",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "procedure"
+      ],
+      "merged_topic_sources": [
+        "procedure"
+      ],
+      "merged_family_keys": [
+        "远程开标逾期解密后果表述需进一步确认"
+      ],
+      "rule_ids": [
+        "topic::远程开标逾期解密后果表述需进一步确认"
+      ],
+      "evidence_ids": [
+        "fce949193a06"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "pending_review_items",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::远程开标逾期解密后果表述需进一步确认",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "pending_review_items",
+        "admission_reason": "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。",
+        "formal_gate_rule": "downgrade_remote_decrypt_routine"
+      }
+    },
+    {
+      "problem_id": "problem-a254da727f5e",
+      "title": "关键履约与责任条款缺失，风险不可控",
+      "family_key": "关键履约与责任条款缺失-风险不可控",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "contract_payment"
+      ],
+      "merged_topic_sources": [
+        "contract_payment"
+      ],
+      "merged_family_keys": [
+        "关键履约与责任条款缺失-风险不可控"
+      ],
+      "rule_ids": [
+        "topic::关键履约与责任条款缺失-风险不可控"
+      ],
+      "evidence_ids": [
+        "2e2e823848e5"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::关键履约与责任条款缺失-风险不可控",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_evidence_insufficient"
+      }
+    },
+    {
+      "problem_id": "problem-5a1cd8bb4467",
+      "title": "核心资格条件证据缺失，无法进行实质性合规审查",
+      "family_key": "核心资格条件证据缺失-无法进行实质性合规审查",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "qualification"
+      ],
+      "merged_topic_sources": [
+        "qualification"
+      ],
+      "merged_family_keys": [
+        "核心资格条件证据缺失-无法进行实质性合规审查"
+      ],
+      "rule_ids": [
+        "topic::核心资格条件证据缺失-无法进行实质性合规审查"
+      ],
+      "evidence_ids": [
+        "eb4fe886c298"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "excluded_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::核心资格条件证据缺失-无法进行实质性合规审查",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "excluded_risks",
+        "admission_reason": "检测到证据不足或适用性待核实表达，当前不足以直接进入正式风险，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_evidence_insufficient"
+      }
+    },
+    {
+      "problem_id": "problem-e22cc3411ed6",
+      "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+      "family_key": "acceptance_testing_cost",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "acceptance"
+      ],
+      "merged_topic_sources": [
+        "acceptance"
+      ],
+      "merged_family_keys": [
+        "acceptance_testing_cost"
+      ],
+      "rule_ids": [
+        "compare::acceptance_testing_cost"
+      ],
+      "evidence_ids": [
+        "f1c6b1624b29"
+      ],
+      "cross_topic_merge_reason": "",
+      "final_problem_resolution": {
+        "target_layer": "formal_risks",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "compare::acceptance_testing_cost",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "formal_risks",
+        "admission_reason": "命中 formal registry/治理单源配置，且具备正文硬证据，可进入正式风险。",
+        "formal_gate_rule": "registry_family_hard_evidence_gate"
+      }
+    },
+    {
+      "problem_id": "problem-13b821ea6190",
+      "title": "疑似限定或倾向特定品牌/供应商",
+      "family_key": "brand_bias",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "baseline",
+        "technical_standard",
+        "scoring",
+        "samples_demo"
+      ],
+      "merged_topic_sources": [
+        "baseline",
+        "technical_standard",
+        "scoring",
+        "samples_demo"
+      ],
+      "merged_family_keys": [
+        "技术参数中指定特定品牌-具有明显排他性",
+        "样品要求中指定品牌-可能隐含排他性检测标准",
+        "样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+        "样品要求中指定特定品牌-涉嫌排斥潜在投标人",
+        "brand_bias"
+      ],
+      "rule_ids": [
+        "topic::技术参数中指定特定品牌-具有明显排他性",
+        "topic::样品要求中指定品牌-可能隐含排他性检测标准",
+        "topic::样品要求中指定特定品牌-存在限定特定供应商和倾向性评分风险",
+        "topic::样品要求中指定特定品牌-涉嫌排斥潜在投标人"
+      ],
+      "evidence_ids": [
+        "acf92c3063ac",
+        "2ec6e3827417"
+      ],
+      "cross_topic_merge_reason": "同一品牌指定/品牌倾向问题被多个专题重复外显，问题层按白名单 family 仅保留一个主问题并吸收附属标题。",
+      "final_problem_resolution": {
+        "target_layer": "pending_review_items",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::技术参数中指定特定品牌-具有明显排他性",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "pending_review_items",
+        "admission_reason": "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。",
+        "formal_gate_rule": "downgrade_reminder"
+      }
+    },
+    {
+      "problem_id": "problem-b5fde8587ecd",
+      "title": "将样品要求/验收方案不当作为评审或履约门槛",
+      "family_key": "sample_acceptance_gate",
+      "problem_kind": "standard",
+      "topic_sources": [
+        "baseline",
+        "scoring"
+      ],
+      "merged_topic_sources": [
+        "baseline",
+        "scoring"
+      ],
+      "merged_family_keys": [
+        "样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+        "样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+        "样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突",
+        "sample_acceptance_gate"
+      ],
+      "rule_ids": [
+        "topic::样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+        "topic::样品评审规则与最低评标价法逻辑可能存在冲突-需核实样品在评标中的具体作用",
+        "topic::样品要求中-不得体现供应商公司信息-与-样品作为验收样本-存在逻辑冲突"
+      ],
+      "evidence_ids": [
+        "bd9b1a4f18e0",
+        "7556f79a95e4",
+        "3bc64cf25109"
+      ],
+      "cross_topic_merge_reason": "样品要求、样品评审和验收衔接问题属于同一家族，对外保留一个核心门槛问题，其余解释下沉。",
+      "final_problem_resolution": {
+        "target_layer": "pending_review_items",
+        "winner_input_bucket": "formal_risks",
+        "winner_rule_id": "topic::样品评审规则设置不当-存在-未提供即无效-的过度严苛情形",
+        "winner_basis": "problem_conflict_resolution_priority",
+        "conflict_reason": "同一问题的多来源输入已在 admission 前按 formal > pending > excluded 的优先顺序统一选择输入层，并再由 admission 规则完成最终裁决。",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。"
+      },
+      "conflict_type": "",
+      "decision": {
+        "target_layer": "pending_review_items",
+        "admission_reason": "未找到 family_key / rule_id / 标题对应的 formal registry 配置。",
+        "formal_gate_rule": "registry_mapping_missing_block"
+      }
+    }
+  ],
+  "source_trace_summary": {
+    "structure_section_count": 0,
+    "evidence_bundle_count": 0,
+    "evidence_object_count": 0,
+    "topics": []
+  }
+}

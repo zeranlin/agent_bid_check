@@ -80,9 +80,7 @@
           "family_key": "acceptance_template_placeholder"
         },
         "expected_layer": "not_reported",
-        "actual_layers": [
-          "excluded_risks"
-        ],
+        "actual_layers": [],
         "matched": true
       },
       {
@@ -92,9 +90,7 @@
           "title": "电子投标文件容量限制可能增加投标负担"
         },
         "expected_layer": "not_reported",
-        "actual_layers": [
-          "excluded_risks"
-        ],
+        "actual_layers": [],
         "matched": true
       }
     ]

@@ -87,9 +87,7 @@
           "title": "开标记录签字确认的默认认可条款"
         },
         "expected_layer": "not_reported",
-        "actual_layers": [
-          "excluded_risks"
-        ],
+        "actual_layers": [],
         "matched": true
       },
       {
@@ -99,9 +97,7 @@
           "title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性"
         },
         "expected_layer": "not_reported",
-        "actual_layers": [
-          "excluded_risks"
-        ],
+        "actual_layers": [],
         "matched": true
       }
     ]

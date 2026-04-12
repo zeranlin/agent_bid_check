@@ -169,6 +169,11 @@ def test_build_v2_final_snapshot_keeps_standard_and_conflict_problem_fields() ->
     assert standard_item["source_locations"]
     assert standard_item["source_excerpts"]
     assert isinstance(standard_item["final_problem_resolution"], dict)
+    assert standard_item["technical_layer_decision"] == "formal_risks"
+    assert standard_item["user_visible_gate"]["gate_passed"] is True
+    assert standard_item["user_visible_gate"]["gate_rule"]
+    assert standard_item["evidence_sufficiency"]
+    assert standard_item["user_visible_decision_basis"]
 
     conflict_item = conflict_snapshot["final_risks"]["formal_risks"][0]
     assert conflict_item["problem_kind"] == "conflict"
@@ -177,6 +182,29 @@ def test_build_v2_final_snapshot_keeps_standard_and_conflict_problem_fields() ->
     assert conflict_item["right_side"]["problem_id"]
     assert conflict_item["conflict_reason"]["why_conflict"]
     assert len(conflict_item["conflict_evidence_links"]) == 2
+
+
+def test_build_v2_final_snapshot_includes_domain_context_from_admission() -> None:
+    baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts(
+        "goods.docx",
+        _build_standard_comparison(),
+    )
+    snapshot = build_v2_final_snapshot(
+        "goods.docx",
+        baseline,
+        structure,
+        topics,
+        comparison=_build_standard_comparison(),
+        governance=governance,
+        problems=problems,
+        admission=admission,
+        generated_at="2026-04-12T20:00:00",
+    )
+
+    assert snapshot["run_metadata"]["document_domain"]
+    assert snapshot["run_metadata"]["domain_confidence"] > 0
+    assert snapshot["run_metadata"]["domain_policy_id"]
+    assert snapshot["run_metadata"]["domain_evidence"]
 
 
 def test_project_final_output_from_snapshot_blocks_legacy_bypass_fields() -> None:
@@ -227,6 +255,42 @@ def test_render_v2_markdown_from_snapshot_uses_snapshot_as_single_source() -> No
     assert "## 风险点1：将项目验收方案纳入评审因素，违反评审规则合规性要求" in markdown
     assert "旧专题标题" not in markdown
     assert "## 主要依据汇总" in markdown
+
+
+def test_build_v2_final_snapshot_hides_non_user_visible_gated_items() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="missing-visible-evidence",
+                title="违约责任及质保期条款缺失",
+                severity="中风险",
+                review_type="商务条款审查",
+                source_locations=["未在当前证据片段中找到"],
+                source_excerpts=["无"],
+                risk_judgment=["当前仅能推测章节可能缺失。"],
+                legal_basis=["需结合完整合同条款继续核实。"],
+                rectification=["补充违约责任及质保期条款。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            )
+        ]
+    )
+    baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts("standard.docx", comparison)
+    snapshot = build_v2_final_snapshot(
+        "standard.docx",
+        baseline,
+        structure,
+        topics,
+        comparison=comparison,
+        governance=governance,
+        problems=problems,
+        admission=admission,
+        generated_at="2026-04-12T11:00:00",
+    )
+
+    assert snapshot["final_risks"]["pending_review_items"] == []
+    assert snapshot["final_risks"]["excluded_risks"] == []
+    assert snapshot["summary"]["pending_count"] == 0
 
 
 def test_render_v2_markdown_from_snapshot_renders_excluded_summary_without_promoting_to_main_list() -> None:
