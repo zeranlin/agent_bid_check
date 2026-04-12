@@ -1,6 +1,7 @@
 {
   "document_id": "DOC-FUZHOU-DORM-BASELINE",
   "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
+  "document_domain": "goods_procurement",
   "baseline_assertions": {
     "should_report": [
       {

@@ -1,0 +1,442 @@
+{
+  "topic": "technical_standard",
+  "summary": "招标文件在标准引用、检测认证要求及样品要求方面存在多处风险。主要问题包括：1. 关键标准 GB/T 20033-2006 已废止，且文件未明确替代标准，存在标准滞后风险；2. 对 GB 36246-2018 的检测报告要求表述存在逻辑矛盾，将‘有资质’与‘CMA 且 CNAS 标志’并列，可能构成排他性条款或表述不清；3. 样品要求中明确指定品牌'Aokang'，虽属品牌倾向问题，但结合技术模块审查，该指定可能隐含对特定检测标准或认证体系的排他性指向，需警惕；4. 部分检测指标（如多环芳烃）引用不完整，存在标准执行依据缺失风险。",
+  "risk_points": [
+    {
+      "title": "引用标准已废止且未明确替代版本",
+      "severity": "高风险",
+      "review_type": "标准有效性审查",
+      "source_location": "证据 1，第 943-945 行",
+      "source_excerpt": "场地的设计及验收符合以下已实施的国家标准：人工材料体育场地使用要求及检验方法（GB/T20033-2006）",
+      "risk_judgment": [
+        "GB/T 20033-2006《人工材料体育场地使用要求及检验方法》已被 GB/T 20033-2017 替代，且 2017 版可能已被更新版本替代或废止，引用 2006 版属于引用失效标准。",
+        "虽然文件提到'若相关标准有不一致时，以最新标准为准'，但直接引用已废止标准编号作为验收依据，易引发履约争议和验收标准不明确。",
+        "该标准涉及场地设计及验收的核心要求，标准失效直接影响项目合规性。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国标准化法》第二十七条：国家实行标准实施信息反馈和评估机制。",
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。（引申：引用失效标准可能导致对未掌握最新标准的投标人不公）"
+      ],
+      "rectification": [
+        "核实 GB/T 20033 系列标准的最新有效版本，将招标文件中的标准编号更新为现行有效版本。",
+        "删除'已实施的国家标准'中已废止的标准编号，或明确注明'以现行有效版本为准'并列出具体现行标准号。"
+      ]
+    },
+    {
+      "title": "检测报告资质要求表述模糊且可能构成排他",
+      "severity": "中风险",
+      "review_type": "检测认证要求审查",
+      "source_location": "证据 2，第 946-1268 行",
+      "source_excerpt": "须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）",
+      "risk_judgment": [
+        "表述'有资质的检测机构出具的具有CMA且CNAS标志检测报告'存在逻辑冗余和歧义。CMA（中国计量认证）是检测机构出具具有法律效力报告的法定资质，CNAS（中国合格评定国家认可委员会）是自愿性认可。",
+        "强制要求同时具备 CMA 和 CNAS 标志，可能将仅具备 CMA 资质但符合法律要求的检测机构排除在外，构成以不合理的条件限制或排斥潜在投标人。",
+        "对于 GB 36246-2018 这类强制性国家标准，通常要求检测机构具备 CMA 资质即可，强制要求 CNAS 可能属于过严要求。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法实施条例》第二十条：采购人或者采购代理机构有下列情形之一的，属于以不合理的条件对供应商实行差别待遇或者歧视待遇：……（三）采购需求中的技术、服务等要求指向特定供应商、特定产品……",
+        "《检验检测机构资质认定管理办法》：检验检测机构从事向社会出具具有证明作用的检验检测数据、结果的，应当取得资质认定（CMA）。"
+      ],
+      "rectification": [
+        "修改为'提供具有 CMA 资质的检测机构出具的检测报告'，删除对 CNAS 标志的强制性要求，除非项目有特殊技术需求且能证明必要性。",
+        "明确检测报告需符合 GB 36246-2018 的具体检测项目，避免模糊表述。"
+      ]
+    },
+    {
+      "title": "标准指标引用不完整，存在执行依据缺失风险",
+      "severity": "中风险",
+      "review_type": "标准内容一致性审查",
+      "source_location": "证据 2，第 946-1268 行",
+      "source_excerpt": "18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 ... 苯并［a］芘/（mg/k",
+      "risk_judgment": [
+        "证据片段显示 GB 36246-2018 的指标列表在'苯并［a］芘'处截断，未显示完整指标及限值。",
+        "若招标文件未完整列出所有强制性指标，可能导致验收时标准执行依据不足，或投标人无法准确响应所有技术要求。",
+        "需确认招标文件正文中是否完整列出了 GB 36246-2018 的所有有害物质限量指标。"
+      ],
+      "legal_basis": [
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十一条：采购需求应当完整、明确。"
+      ],
+      "rectification": [
+        "核对 GB 36246-2018 标准全文，确保招标文件中列出的所有有害物质限量指标完整、准确。",
+        "补充缺失的指标项及限值，确保验收标准清晰明确。"
+      ]
+    },
+    {
+      "title": "样品要求中指定品牌，可能隐含排他性检测标准",
+      "severity": "高风险",
+      "review_type": "技术规格与品牌倾向审查",
+      "source_location": "证据 3，第 1269-1285 行",
+      "source_excerpt": "⑤品牌:Aokang",
+      "risk_judgment": [
+        "样品要求中明确指定品牌'Aokang'，直接违反政府采购法关于不得指定品牌的规定。",
+        "虽然此问题主要属于品牌倾向，但在'技术标准与检测'专题下，需警惕该指定品牌是否隐含了特定的检测标准、认证体系或材料配方，从而排斥其他符合国家标准但品牌不同的供应商。",
+        "指定品牌可能导致只有该品牌产品能通过特定的检测或验收，构成变相的排他性条款。"
+      ],
+      "legal_basis": [
+        "《中华人民共和国政府采购法》第二十二条：采购人可以根据采购项目的特殊要求，规定供应商的特定条件，但不得以不合理的条件对供应商实行差别待遇或者歧视待遇。",
+        "《政府采购货物和服务招标投标管理办法》（财政部令第 87 号）第十七条：采购人、采购代理机构不得将投标人的注册资本、资产总额、营业收入、从业人员、利润、纳税额等规模条件作为资格要求或者评审因素，也不得通过将除进口货物以外的生产厂家授权、承诺、证明、背书等作为资格要求，对投标人实行差别待遇或者歧视待遇。"
+      ],
+      "rectification": [
+        "删除样品要求中的品牌指定'Aokang'，改为描述样品的技术参数、规格、材质等通用要求。",
+        "确保样品评审标准仅基于技术参数和性能指标，而非品牌。"
+      ]
+    }
+  ],
+  "need_manual_review": false,
+  "coverage_note": "本专题基于召回的 3 个证据片段进行审查，覆盖技术标准引用、检测报告资质要求及样品要求。由于证据片段中标准列表未完全展示（如 GB 36246-2018 指标列表截断），且未包含完整的验收章节，建议人工复核是否存在其他标准引用错误或检测要求矛盾。",
+  "metadata": {
+    "topic_label": "技术标准与检测",
+    "topic_priority": "high",
+    "topic_mode": "mature",
+    "topic_execution_plan": {
+      "mode": "mature",
+      "requested_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "samples_demo",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "procedure",
+        "policy"
+      ],
+      "selected_keys": [
+        "qualification",
+        "performance_staff",
+        "scoring",
+        "technical_bias",
+        "technical_standard",
+        "contract_payment",
+        "acceptance",
+        "samples_demo",
+        "procedure",
+        "policy"
+      ],
+      "skipped_keys": [],
+      "max_topic_calls": 10,
+      "per_topic_timeout": 150,
+      "per_topic_max_tokens": 3200,
+      "allow_degrade_on_error": true,
+      "reason": "full_budget"
+    },
+    "selected_sections": [
+      {
+        "title": "（一）、项目说明",
+        "start_line": 943,
+        "end_line": 945,
+        "module": "technical"
+      },
+      {
+        "title": "（二）、技术要求",
+        "start_line": 946,
+        "end_line": 1268,
+        "module": "technical"
+      },
+      {
+        "title": "（四）、样品要求",
+        "start_line": 1269,
+        "end_line": 1285,
+        "module": "technical"
+      }
+    ],
+    "selected_evidence_ids": [],
+    "missing_evidence": [
+      "未发现"
+    ],
+    "failure_reasons": [],
+    "failure_reason_labels": [],
+    "evidence_bundle": {
+      "topic": "technical_standard",
+      "sections": [
+        {
+          "title": "（一）、项目说明",
+          "start_line": 943,
+          "end_line": 945,
+          "body": "（一）、项目说明\n场地建设符合场地实际状况及条件，使用频率、训练、比赛相结合的特点。\n整个运动场地符合室内装修环保健康标准；场地的设计及验收符合以下已实施的国家标准：人工材料体育场地使用要求及检验方法（GB/T20033-2006）；场地所用材料符合国家环境测评标准。若相关标准有不一致时，以最新标准为准。本《采购文件》技术要求中的指标为基本要求，场地完工后有涉及各不同专业使用功能场地的产品在验收时还需符合各不同专业使用功能场地的相关国家验收标准。",
+          "excerpt": "（一）、项目说明\n场地建设符合场地实际状况及条件，使用频率、训练、比赛相结合的特点。\n整个运动场地符合室内装修环保健康标准；场地的设计及验收符合以下已实施的国家标准：人工材料体育场地使用要求及检验方法（GB/T20033-2006）；场地所用材料符合国家环境测评标准。若相关标准有不一致时，以最新标准为准。本《采购文件》技术要求中的指标为基本要求，场地完工后有涉及各不同专业使用功能场地的产品在验收时还需符合各不同专业使用功能场地的相关国家验收标准。",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 1,
+            "contract": 0,
+            "acceptance": 5,
+            "technical": 11,
+            "procedure": 0,
+            "policy": 1
+          },
+          "confidence": 11,
+          "keywords": [
+            "技术",
+            "标准"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（二）、技术要求",
+          "start_line": 946,
+          "end_line": 1268,
+          "body": "（二）、技术要求\n1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层\n2.旧足球场面层铲除新做足球场人造草坪\n3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006\n3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）：\n项号\n项目\n指标要求\n1\n3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n短链氯化石蜡（C10-C13）/（g/kg）\n≤1.5\n4\n游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg）\n≤10\n5\n挥发性有机化合物/（g/L）\n≤60\n6\n游离甲醛/（g/kg）\n≤0.50\n7\n苯/（g/kg）\n≤0.05\n8\n甲苯、二甲苯和乙苯总和/（g/kg）\n≤1.0\n9\n可溶性铅 /(mg/kg)\n≤50\n10\n可溶性镉 /(mg/kg)\n≤10\n11\n可溶性铬 /(mg/kg)\n≤10\n12\n可溶性汞 /(mg/kg)\n≤2\n3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）：\n项号\n项目\n指标要求\n1\n有害物质含量\n3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n\n3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n\n16 种多环芳烃总和/(mg/kg)\n≤50\n4\n\n18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试)\n≤20\n5\n\n苯并［a］芘/（mg/kg）\n≤1.0\n6\n\n短链氯化石蜡（C10-C13）/（g/kg）\n≤1.5\n7\n\n4,4′－二氨基一 3,3′－二氯二苯甲烷（MOCA）/（g/kg）\n≤1.0\n8\n\n游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg）\n≤0.2\n9\n\n游离二苯基甲烷二异氰酸酯（MDI）/（g/kg）\n≤1.0\n10\n\n可溶性铅 /(mg/kg)\n≤50\n11\n\n可溶性镉 /(mg/kg)\n≤20\n12\n\n可溶性铬/ (mg/kg)\n≤10\n13\n\n可溶性汞/ (mg/kg)\n≤2\n14\n有害物质释放量\n总挥发性有机化合物（TVOC）/（mg/（m2•h））\n≤5.0\n15\n\n甲醛/（mg/（m2•h））\n≤0.4\n16\n\n苯/（mg/（m2•h））\n≤0.1\n17\n\n甲苯、二甲苯和乙苯总和/（mg/（m2•h））\n≤1.0\n18\n\n二硫化碳/（mg/（m2•h））\n≤7.0\n19\n\n气味等级/（级）\n≤3\n20\n无机填料含量\n无机填料含量/（%）\n≤65\n3.3全塑型塑胶跑道成品物理要求：\n项号\n项目\n指标要求\n21\n冲击吸收，%\n35~50\n22\n垂直变形，mm\n0.6~3.0\n23\n抗滑值（BPN，20℃）\n≥47（湿测）\n24\n拉伸强度，MPa\n≥0.5\n25\n拉断伸长率，%\n≥40\n26\n阻燃，级\nI级\n4.硅pu球场要求\n4.1 硅pu球场材料有害物质限量要求（提供有资质的检测机构出具的具有CMA或CNAS标志检测报告复印件为考评依据）。\n项号\n项目\n指标要求\n1\n3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n短链氯化石蜡（C10-C13）/（g/kg）\n≤1.5\n4\n游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg）\n≤10\n5\n挥发性有机化合物/（g/L）\n≤50\n6\n游离甲醛/（g/kg）\n≤0.50\n7\n苯/（g/kg）\n≤0.05\n8\n甲苯、二甲苯和乙苯总和/（g/kg）\n≤1.0\n9\n可溶性铅 /(mg/kg)\n≤50\n10\n可溶性镉 /(mg/kg)\n≤10\n11\n可溶性铬 /(mg/kg)\n≤10\n12\n可溶性汞 /(mg/kg)\n≤2\n4.2硅PU塑胶球场成品中有害物质限量、气味及无机填料含量要求，须符合中小学篮球场合成材料面层运动场地（GB 36246-2018）：\n项号\n项目\n指标要求\n1\n有害物质含量\n3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n\n3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n\n18 种多环芳烃总和/(mg/kg)\n≤50\n4\n\n18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试)\n≤20\n5\n\n苯并［a］芘/（mg/kg）\n≤1.0\n6\n\n短链氯化石蜡（C10-C13）/（g/kg）\n≤1.5\n7\n\n4,4′－二氨基一 3,3′－二氯二苯甲烷（MOCA）/（g/kg）\n≤1.0\n8\n\n游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg）\n≤0.2\n9\n\n游离二苯基甲烷二异氰酸酯（MDI）/（g/kg）\n≤1.0\n10\n\n可溶性铅 /(mg/kg)\n≤50\n11\n\n可溶性镉 /(mg/kg)\n≤10\n12\n\n可溶性铬/ (mg/kg)\n≤10\n13\n\n可溶性汞/ (mg/kg)\n≤2\n14\n有害物质释放量\n总挥发性有机化合物（TVOC）/（mg/（m2•h））\n≤5.0\n15\n\n甲醛/（mg/（m2•h））\n≤0.4\n16\n\n苯/（mg/（m2•h））\n≤0.1\n17\n\n甲苯、二甲苯和乙苯总和/（mg/（m2•h））\n≤1.0\n18\n\n二硫化碳/（mg/（m2•h））\n≤7.0\n19\n\n气味等级/（级）\n≤3\n20\n无机填料含量\n无机填料含量/（%）\n≤65\n4.3 硅pu塑胶球场成品物理要求，要求提供有资质的检测机构出具的具有CMA或CNAS标志检测报告复印件为考评依据，同时能够在全国认证认可信息公共服务平台网站可查询到，或提供截图：\n项号\n项目\n指标要求\n21\n冲击吸收，%\n20~50\n22\n垂直变形，mm\n0.6~3.0\n23\n抗滑值（BPN，20℃）\n80~110（干测）\n24\n拉伸强度，MPa\n≥0.5\n25\n拉断伸长率，%\n≥40\n26\n阻燃，级\nI级\n5.人造草坪及减震垫技术参数要求（提供SGS检测报告复印件为考评依据）：\n免填充人造草坪\n纤维组成\n双开槽形直曲混织草\n纤维丹尼数\n17000Dtex\n纤维草高度\n30±2mm\n纤维簇数\n34000/㎡\n颜色\n深绿或果绿\n基础底布\n黑色PP+绒+特种网格三层加强\n次层披覆\n专业丁苯乳胶背胶工艺\n编织法\n一字型编织\n总重量\n≥2800g/㎡\n弹性垫\n材质XPE，颜色：白色或蓝色，厚度：≥10MM，宽幅≥1.6米卷材，克重/平方≥300g ，结构：正面5mm宽横向槽口（垂直于卷材收放卷方向的槽），底面5mm宽竖向槽（平行于卷材收放卷方向的槽），槽深5-6mm,正反面槽口交会处有5mm*5mm的排水排气孔。槽与槽之间宽度9-10cm.\n理化性能\n满足人造草GB36246-2018标准\n(三）、关于本项目的其他要求：\n拟参加投标的单位须自行到现场勘查，并承诺项目施工中铲除外运二次转运搬运货物运输过程中不增加此类费用，承诺函格式自拟，否则按无效标处理；请自行联系采购人到现场勘查。",
+          "excerpt": "（二）、技术要求\n1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层\n2.旧足球场面层铲除新做足球场人造草坪\n3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006\n3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）：\n项号\n项目\n指标要求\n1\n3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n短链氯化石蜡（C10-C13）/（g/kg）\n≤1.5\n4\n游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg）\n≤10\n5\n挥发性有机化合物/（g/L）\n≤60\n6\n游离甲醛/（g/kg）\n≤0.50\n7\n苯/（g/kg）\n≤0.05\n8\n甲苯、二甲苯和乙苯总和/（g/kg）\n≤1.0\n9\n可溶性铅 /(mg/kg)\n≤50\n10\n可溶性镉 /(mg/kg)\n≤10\n11\n可溶性铬 /(mg/kg)\n≤10\n12\n可溶性汞 /(mg/kg)\n≤2\n3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）：\n项号\n项目\n指标要求\n1\n有害物质含量\n3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg）\n≤1.0\n2\n\n3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg）\n≤1.0\n3\n\n16 种多环芳烃总和/(mg/kg)\n≤50\n4\n\n18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试)\n≤20\n5\n\n苯并［a］芘/（mg/k",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 3,
+            "scoring": 0,
+            "contract": 0,
+            "acceptance": 7,
+            "technical": 30,
+            "procedure": 1,
+            "policy": 0
+          },
+          "confidence": 30,
+          "keywords": [
+            "技术",
+            "参数",
+            "标准",
+            "检测报告",
+            "CMA",
+            "CNAS"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        },
+        {
+          "title": "（四）、样品要求",
+          "start_line": 1269,
+          "end_line": 1285,
+          "body": "（四）、样品要求\n1．供应商需提供以下样品：\n① 全塑型自结纹塑胶跑道样品（成品）一块，规格30cm*40cm（±2CM）。\n塑胶跑道样品需体现施工分层截面结构：沥青封底层1道-PU底层2道-界面剂层1道-自结纹面层2道。\n② 硅pu球场面层样品（成品）一块，规格30cm*40cm（±2CM）。\n硅PU球场样品需体现施工分层截面结构：沥青封底层1道-硅pu弹性层2道-界面剂1道-水性面漆2道\n③人造草坪样品（成品）一块，规格30cm*30cm（±2CM）深绿和果绿双色。\n④减震垫样品（成品）一块，规格160cm*160cm（±2CM）白色或蓝色\n⑤品牌:Aokang\n2.样品提供注意事项：\n2.1样品需在响应文件递交截止时间前送达开标地点并进行样品签到手续，未提供样品、样品提供不全的样品评审不得分。\n2.2所有样品不得体现供应商公司信息，否则按响应无效处理。\n2.3专家评审过程中如需对样品进行检验测试或破坏性测试，由此可能造成的损坏由供应商自行承担。\n3.定标后，成交候选人的样品由采购人封存保留作为验收样本。其余供应商样品在评审结束后由投标代表或法人授权代表持身份证办理退回手续，逾期办理的视为放弃样品。\n4. 供应商提供的样品仅作为本次评审依据，若本项目采购需复议，谈判小组对样品不作再次评审。\n5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。\n★备注：上述的技术和服务要求为最低要求不允许负偏离，否则视为无效投标。",
+          "excerpt": "（四）、样品要求\n1．供应商需提供以下样品：\n① 全塑型自结纹塑胶跑道样品（成品）一块，规格30cm*40cm（±2CM）。\n塑胶跑道样品需体现施工分层截面结构：沥青封底层1道-PU底层2道-界面剂层1道-自结纹面层2道。\n② 硅pu球场面层样品（成品）一块，规格30cm*40cm（±2CM）。\n硅PU球场样品需体现施工分层截面结构：沥青封底层1道-硅pu弹性层2道-界面剂1道-水性面漆2道\n③人造草坪样品（成品）一块，规格30cm*30cm（±2CM）深绿和果绿双色。\n④减震垫样品（成品）一块，规格160cm*160cm（±2CM）白色或蓝色\n⑤品牌:Aokang\n2.样品提供注意事项：\n2.1样品需在响应文件递交截止时间前送达开标地点并进行样品签到手续，未提供样品、样品提供不全的样品评审不得分。\n2.2所有样品不得体现供应商公司信息，否则按响应无效处理。\n2.3专家评审过程中如需对样品进行检验测试或破坏性测试，由此可能造成的损坏由供应商自行承担。\n3.定标后，成交候选人的样品由采购人封存保留作为验收样本。其余供应商样品在评审结束后由投标代表或法人授权代表持身份证办理退回手续，逾期办理的视为放弃样品。\n4. 供应商提供的样品仅作为本次评审依据，若本项目采购需复议，谈判小组对样品不作再次评审。\n5.投标人未按时提交样品，或样品不全，或样品经评委认定为未实质性响应招标文件要求的，为无效投标。\n★备注：上述的技术和服务要求为最低要求不允许负偏离，否则视为无效投标。",
+          "module": "technical",
+          "module_scores": {
+            "qualification": 0,
+            "scoring": 11,
+            "contract": 0,
+            "acceptance": 1,
+            "technical": 31,
+            "procedure": 8,
+            "policy": 0
+          },
+          "confidence": 31,
+          "keywords": [
+            "技术",
+            "样品",
+            "品牌",
+            "施工"
+          ],
+          "heading_level": 3,
+          "source": "rule_split"
+        }
+      ],
+      "primary_section_ids": [
+        "946-1268"
+      ],
+      "secondary_section_ids": [
+        "943-945",
+        "1269-1285"
+      ],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "recall_query": "模块=technical,acceptance；关键词=标准,规范,GB,GB/T,检测,CMA,CNAS,认证,报告；策略=模块+标题+正文+相邻上下文",
+      "metadata": {
+        "topic_label": "技术标准与检测",
+        "topic_aliases": [
+          "标准引用",
+          "检测认证"
+        ],
+        "priority": "high",
+        "boundary": {
+          "in_scope": [
+            "标准引用",
+            "标准名称编号一致性",
+            "标准有效性",
+            "检测报告",
+            "认证要求"
+          ],
+          "out_of_scope": [
+            "品牌型号倾向",
+            "纯评分规则",
+            "付款节点"
+          ],
+          "primary_modules": [
+            "technical",
+            "acceptance"
+          ],
+          "secondary_modules": [],
+          "ownership_rule": "只处理标准、规范、检测认证及其有效性问题，不处理品牌型号倾向或评分分值。",
+          "merge_hints": [
+            "若标准要求直接形成验收门槛，仍由 technical_standard 主归属，acceptance 只看验收机制。"
+          ]
+        },
+        "module_hits": [
+          {
+            "module": "technical",
+            "score": 30.0,
+            "source": "evidence_recall",
+            "reason": "专题证据召回命中该模块的高分片段。",
+            "evidence_keywords": [
+              "标准",
+              "GB",
+              "GB/T",
+              "检测",
+              "CMA",
+              "CNAS",
+              "认证",
+              "报告"
+            ]
+          }
+        ],
+        "primary_scores": [
+          {
+            "section_id": "946-1268",
+            "score": 216,
+            "reasons": [
+              "主模块命中 technical",
+              "正文命中 34 次关键词",
+              "标题层级 3",
+              "专题特殊加权 52",
+              "国标命中 1 处",
+              "技术参数标题优先"
+            ],
+            "keywords": [
+              "标准",
+              "GB",
+              "GB/T",
+              "检测",
+              "CMA",
+              "CNAS",
+              "认证",
+              "报告"
+            ]
+          }
+        ],
+        "recall_strategy": "rule_recall"
+      }
+    },
+    "topic_coverage": {
+      "topic": "technical_standard",
+      "covered_modules": [
+        "technical",
+        "acceptance"
+      ],
+      "covered_section_ids": [
+        "946-1268",
+        "943-945",
+        "1269-1285"
+      ],
+      "missing_modules": [],
+      "missing_hints": [
+        "当前仅召回 1 个核心证据片段，建议人工复核是否存在遗漏章节。"
+      ],
+      "need_manual_review": false,
+      "confidence": 1.0
+    },
+    "structured_signals": {
+      "compliance_proof_present": false,
+      "compliance_proof_sections": [],
+      "compliance_proof_sentences": [],
+      "foreign_component_requirement_present": false,
+      "foreign_component_sections": [],
+      "foreign_component_sentences": [],
+      "foreign_standard_refs": [],
+      "cn_standard_refs": [
+        "GB/T20033-2006",
+        "GB 36246-2018"
+      ],
+      "has_equivalent_standard_clause": false,
+      "standard_system_mix": "cn_only",
+      "foreign_standard_has_version": false,
+      "foreign_standard_sections": [],
+      "foreign_standard_sentences": [],
+      "cn_standard_sections": [
+        {
+          "section_id": "943-945",
+          "title": "（一）、项目说明",
+          "start_line": 943,
+          "end_line": 945,
+          "module": "technical"
+        },
+        {
+          "section_id": "946-1268",
+          "title": "（二）、技术要求",
+          "start_line": 946,
+          "end_line": 1268,
+          "module": "technical"
+        }
+      ],
+      "cn_standard_sentences": [
+        "符合以下已实施的国家标准"
+      ],
+      "equivalent_standard_sections": [],
+      "equivalent_standard_sentences": [],
+      "contains_gb_non_t": true,
+      "contains_gbt": true,
+      "contains_mandatory_standard": false,
+      "gb_non_t_sections": [
+        {
+          "section_id": "946-1268",
+          "title": "（二）、技术要求",
+          "start_line": 946,
+          "end_line": 1268,
+          "module": "technical"
+        }
+      ],
+      "gb_non_t_sentences": [
+        "（二）、技术要求 1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层 2.旧足球场面层铲除新做足球场人造草坪 3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006 3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）： 项号 项目 指标要求 1 3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 短链氯化石蜡（C10-C13）/（g/kg） ≤1.5 4 游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg） ≤10 5 挥发性有机化合物/（g/L） ≤60 6 游离甲醛/（g/kg） ≤0.50 7 苯/（g/kg） ≤0.05 8 甲苯、二甲苯和乙苯总和/（g/kg） ≤1.0 9 可溶性铅 /(mg/kg) ≤50 10 可溶性镉 /(mg/kg) ≤10 11 可溶性铬 /(mg/kg) ≤10 12 可溶性汞 /(mg/kg) ≤2 3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）： 项号 项目 指标要求 1 有害物质含量 3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 16 种多环芳烃总和/(mg/kg) ≤50 4 18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 5 苯并［a］芘/（mg/k"
+      ],
+      "gbt_sections": [
+        {
+          "section_id": "943-945",
+          "title": "（一）、项目说明",
+          "start_line": 943,
+          "end_line": 945,
+          "module": "technical"
+        }
+      ],
+      "gbt_sentences": [
+        "场地的设计及验收符合以下已实施的国家标准：人工材料体育场地使用要求及检验方法（GB/T20033-2006）；场地所用材料符合国家环境测评标准。若相关标准有不一致时，以最新标准为准"
+      ],
+      "mandatory_standard_sections": [],
+      "mandatory_standard_sentences": [],
+      "has_star_marker": false,
+      "standard_clause_flags": [
+        {
+          "section_id": "943-945",
+          "title": "（一）、项目说明",
+          "start_line": 943,
+          "end_line": 945,
+          "clause_text": "场地的设计及验收符合以下已实施的国家标准：人工材料体育场地使用要求及检验方法（GB/T20033-2006）；场地所用材料符合国家环境测评标准。若相关标准有不一致时，以最新标准为准",
+          "contains_gb_non_t": false,
+          "contains_gbt": true,
+          "contains_mandatory_standard": false,
+          "has_star_marker": false
+        },
+        {
+          "section_id": "946-1268",
+          "title": "（二）、技术要求",
+          "start_line": 946,
+          "end_line": 1268,
+          "clause_text": "（二）、技术要求 1.旧塑胶跑道面层铲除新做硅pu球场及塑胶面层 2.旧足球场面层铲除新做足球场人造草坪 3.全塑型塑胶跑道要求，需满足塑料拉伸性能的测定 第2部分：模塑和挤塑塑料的试验条件GB/T 1040.2-2006 3.1全塑型塑胶跑道材料有害物质限量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）（提供有资质的检测机构出具的具有CMA且CNAS标志检测报告复印件为考评依据）： 项号 项目 指标要求 1 3种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 短链氯化石蜡（C10-C13）/（g/kg） ≤1.5 4 游离甲苯二异氰酸酯（TDI）和游离六亚甲基二异氰酸酯（HDI）总和/（g/kg） ≤10 5 挥发性有机化合物/（g/L） ≤60 6 游离甲醛/（g/kg） ≤0.50 7 苯/（g/kg） ≤0.05 8 甲苯、二甲苯和乙苯总和/（g/kg） ≤1.0 9 可溶性铅 /(mg/kg) ≤50 10 可溶性镉 /(mg/kg) ≤10 11 可溶性铬 /(mg/kg) ≤10 12 可溶性汞 /(mg/kg) ≤2 3.2全塑型塑胶跑道面层成品中有害物质限量、气味及无机填料含量要求，须符合中小学合成材料面层运动场地（GB 36246-2018）： 项号 项目 指标要求 1 有害物质含量 3 种邻苯二甲酸酯类（DBP、BBP、DEHP）总和/（g/kg） ≤1.0 2 3 种邻苯二甲酸酯类（DNOP、DINP、DIDP）总和/（g/kg） ≤1.0 3 16 种多环芳烃总和/(mg/kg) ≤50 4 18 种多环芳烃总和/(mg/kg)(取合成材料面层上表面5mm 以内部分测试) ≤20 5 苯并［a］芘/（mg/k",
+          "contains_gb_non_t": true,
+          "contains_gbt": false,
+          "contains_mandatory_standard": false,
+          "has_star_marker": false
+        }
+      ],
+      "announcement_reference_present": false,
+      "announcement_reference_sections": [],
+      "announcement_reference_sentences": [],
+      "electronic_procurement_present": false,
+      "electronic_procurement_sections": [],
+      "electronic_procurement_sentences": [],
+      "contract_template_present": false,
+      "contract_template_sections": [],
+      "brand_disclosure_only_present": false,
+      "brand_disclosure_sections": [],
+      "parameter_tolerance_present": false,
+      "parameter_tolerance_sections": []
+    }
+  }
+}

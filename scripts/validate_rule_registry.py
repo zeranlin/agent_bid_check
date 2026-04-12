@@ -14,6 +14,7 @@ from app.governance.rule_registry import (
     ValidationResult,
     collect_formal_admission_signals,
     load_registry_rules,
+    validate_ax_governance_files,
     validate_candidate_directory,
     validate_formal_admission_sources,
     validate_rule_directory,
@@ -47,6 +48,7 @@ def main() -> int:
     signals: list[str] = []
     if args.candidate_root:
         results.append(validate_candidate_directory(args.candidate_root))
+    results.extend(validate_ax_governance_files())
 
     for raw_path in target_paths:
         path = Path(raw_path)

@@ -130,6 +130,7 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
             "gate_passed": getattr(decision, "gate_passed", False),
             "gate_reason": getattr(decision, "gate_reason", ""),
             "gate_rule": getattr(decision, "gate_rule", ""),
+            "stable_pending_config_id": getattr(decision, "stable_pending_config_id", ""),
         },
         "pending_gate": {
             "pending_gate_reason_code": getattr(decision, "pending_gate_reason_code", ""),
@@ -147,6 +148,7 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
             "budget_hit": getattr(decision, "budget_hit", False),
             "budget_rule": getattr(decision, "budget_rule", ""),
             "budget_reason": getattr(decision, "budget_reason", ""),
+            "budget_policy_id": getattr(decision, "budget_policy_id", ""),
             "absorbed_or_hidden_items": list(getattr(decision, "absorbed_or_hidden_items", [])),
         },
         "trace_summary": {
@@ -154,6 +156,7 @@ def _build_snapshot_risk_item(candidate, decision, layer: str, problem_map: dict
             "supporting_candidate_titles": list(extras.get("problem_supporting_candidate_titles", [])),
             "supporting_candidate_rule_ids": list(extras.get("problem_supporting_candidate_rule_ids", [])),
             "layer_conflict_inputs": list(extras.get("layer_conflict_inputs", [])),
+            "family_governance_config_id": str(extras.get("problem_trace", {}).get("family_governance_config_id", "") or ""),
         },
         "family_key": getattr(problem, "family_key", candidate.risk_family),
     }
@@ -226,6 +229,194 @@ def _build_source_trace_summary(structure, topics) -> dict[str, Any]:
     }
 
 
+def _hidden_reason_label(reason_code: str) -> str:
+    mapping = {
+        "same_family_absorbed_by_formal_primary": "同一家族已有 formal 主问题保留，当前项吸收到主问题 trace。",
+        "supporting_hidden_under_family_primary": "当前项属于 family 附属问题，已吸收到主问题 supporting trace。",
+        "internal_trace_only_under_family_primary": "当前项仅保留内部 trace，不再直接进入用户可见结果。",
+        "weak_signal_no_rule_support": "当前仅为弱提示项，缺少稳定规则支撑，先不进入用户可见层。",
+        "weak_signal_no_material_consequence": "当前仅为弱提示项，缺少明确合规后果，先不进入用户可见层。",
+        "missing_user_visible_evidence": "当前缺少可对外展示的有效定位或摘录，仅保留内部 trace。",
+        "family_repeat_budget": "同一家族在当前场景下已保留主问题，其余附属项下沉为内部 trace。",
+        "low_value_signal_budget": "当前项属于低价值弱提示，在当前场景下不再进入用户可见结果。",
+        "pending_count_budget": "当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题。",
+    }
+    normalized = str(reason_code or "").strip()
+    return mapping.get(normalized, normalized)
+
+
+def _build_evidence_anchor(*, locations: list[str] | None = None, excerpts: list[str] | None = None) -> dict[str, str]:
+    normalized_locations = [str(item).strip() for item in locations or [] if str(item).strip()]
+    normalized_excerpts = [str(item).strip() for item in excerpts or [] if str(item).strip()]
+    return {
+        "location": _first_text(normalized_locations, "未发现"),
+        "excerpt": _first_text(normalized_excerpts, "未发现"),
+    }
+
+
+def _build_candidate_lookup(problem) -> dict[str, Any]:
+    candidates = [problem.primary_candidate, *list(getattr(problem, "supporting_candidates", []))]
+    lookup: dict[str, Any] = {}
+    for item in candidates:
+        title = str(getattr(item.decision, "canonical_title", "") or "").strip()
+        if title and title not in lookup:
+            lookup[title] = item
+    return lookup
+
+
+def _build_visible_ops_entry(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "title": str(item.get("title", "")).strip() or "未命名问题",
+        "family_key": str(item.get("family_key", "")).strip(),
+        "originally_detected": True,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": str(item.get("user_visible_decision_basis", "")).strip()
+        or str(item.get("admission_reason", "")).strip()
+        or "该问题已保留在用户可见结果中。",
+        "absorbed_by": "",
+        "kept_item": {"title": str(item.get("title", "")).strip() or "未命名问题"},
+        "source_layer": str(item.get("layer", "")).strip() or "未发现",
+        "evidence_anchor": {
+            "location": str(item.get("source_location", "")).strip() or "未发现",
+            "excerpt": str(item.get("source_excerpt", "")).strip() or "未发现",
+        },
+    }
+
+
+def _build_family_hidden_entries(problem) -> list[dict[str, Any]]:
+    trace = dict(getattr(problem, "trace", {}) or {})
+    family_key = str(getattr(problem, "family_key", "") or "").strip()
+    config_id = str(trace.get("family_governance_config_id", "") or "").strip()
+    candidate_lookup = _build_candidate_lookup(problem)
+    entries: list[dict[str, Any]] = []
+    for section_name in ("absorbed_user_visible_items", "internal_trace_only_items"):
+        for item in trace.get(section_name, []) or []:
+            if not isinstance(item, dict):
+                continue
+            title = str(item.get("title", "")).strip()
+            if not title:
+                continue
+            matched = candidate_lookup.get(title)
+            entries.append(
+                {
+                    "title": title,
+                    "family_key": family_key,
+                    "originally_detected": True,
+                    "visible_or_hidden": "hidden",
+                    "hidden_by": "family_absorption",
+                    "hidden_reason": _hidden_reason_label(str(item.get("hidden_reason", "")).strip())
+                    or f"已吸收到主问题《{problem.canonical_title}》的 trace 中。",
+                    "reason_code": str(item.get("hidden_reason", "")).strip(),
+                    "config_id": config_id,
+                    "gate_rule": "",
+                    "policy_id": "",
+                    "absorbed_by": str(item.get("absorbed_by", "")).strip() or problem.canonical_title,
+                    "kept_item": {
+                        "title": str(item.get("absorbed_by", "")).strip() or problem.canonical_title,
+                        "problem_id": str(item.get("absorbed_by_problem_id", "")).strip() or problem.problem_id,
+                    },
+                    "source_layer": str(item.get("source_bucket", "")).strip()
+                    or str(item.get("prior_bucket", "")).strip()
+                    or "problem_layer",
+                    "source_layer_detail": "problem_layer",
+                    "evidence_anchor": _build_evidence_anchor(
+                        locations=list(getattr(matched, "source_locations", []) or []),
+                        excerpts=list(getattr(matched, "source_excerpts", []) or []),
+                    ),
+                }
+            )
+    return entries
+
+
+def _build_hidden_ops_entries(admission) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for candidate in getattr(admission, "excluded_risks", []):
+        decision = admission.decisions.get(candidate.rule_id)
+        if decision is None:
+            continue
+        if str(getattr(decision, "pending_gate_reason_code", "")).strip() == "missing_user_visible_evidence":
+            continue
+        hidden_by = ""
+        if getattr(decision, "budget_hit", False):
+            hidden_by = "result_budget"
+        elif not getattr(decision, "user_visible_gate_passed", False):
+            hidden_by = "user_visible_gate"
+        if not hidden_by:
+            continue
+        linkage = dict((getattr(decision, "absorbed_or_hidden_items", []) or [{}])[0])
+        entries.append(
+            {
+                "title": str(candidate.title).strip() or "未命名问题",
+                "family_key": str(candidate.risk_family).strip(),
+                "originally_detected": True,
+                "visible_or_hidden": "hidden",
+                "hidden_by": hidden_by,
+                "hidden_reason": str(
+                    getattr(decision, "budget_reason", "")
+                    if hidden_by == "result_budget"
+                    else getattr(decision, "user_visible_gate_reason", "")
+                ).strip()
+                or str(getattr(decision, "admission_reason", "")).strip()
+                or _hidden_reason_label(
+                    getattr(decision, "budget_rule", "") if hidden_by == "result_budget" else getattr(decision, "pending_gate_reason_code", "")
+                ),
+                "reason_code": str(
+                    getattr(decision, "budget_rule", "")
+                    if hidden_by == "result_budget"
+                    else getattr(decision, "pending_gate_reason_code", "")
+                ).strip(),
+                "config_id": str(getattr(decision, "stable_pending_config_id", "")).strip(),
+                "gate_rule": str(getattr(decision, "user_visible_gate_rule", "")).strip() or str(getattr(decision, "gate_rule", "")).strip(),
+                "policy_id": str(getattr(decision, "budget_policy_id", "")).strip(),
+                "absorbed_by": str(linkage.get("kept_title", "")).strip(),
+                "kept_item": (
+                    {
+                        "title": str(linkage.get("kept_title", "")).strip(),
+                        "rule_id": str(linkage.get("kept_rule_id", "")).strip(),
+                        "family_key": str(linkage.get("kept_family_key", "")).strip(),
+                    }
+                    if str(linkage.get("kept_title", "")).strip()
+                    else {}
+                ),
+                "source_layer": str(getattr(decision, "technical_layer_decision", "")).strip() or "excluded_risks",
+                "source_layer_detail": "risk_admission",
+                "evidence_anchor": _build_evidence_anchor(
+                    locations=list(getattr(candidate, "source_locations", []) or []),
+                    excerpts=list(getattr(candidate, "source_excerpts", []) or []),
+                ),
+            }
+        )
+    return entries
+
+
+def _build_ops_explanation_summary(problems, admission, final_risks: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    visible_items = [
+        _build_visible_ops_entry(item)
+        for layer_name in ("formal_risks", "pending_review_items")
+        for item in final_risks.get(layer_name, [])
+        if isinstance(item, dict)
+    ]
+    family_hidden = [entry for problem in getattr(problems, "problems", []) for entry in _build_family_hidden_entries(problem)]
+    decision_hidden = _build_hidden_ops_entries(admission)
+    hidden_items = [*family_hidden, *decision_hidden]
+    hidden_by_gate_count = sum(1 for item in hidden_items if item.get("hidden_by") == "user_visible_gate")
+    hidden_by_budget_count = sum(1 for item in hidden_items if item.get("hidden_by") == "result_budget")
+    absorbed_by_family_count = sum(1 for item in hidden_items if item.get("hidden_by") == "family_absorption")
+    excluded_internal_count = len(getattr(admission, "excluded_risks", []) or [])
+    return {
+        "stats": {
+            "hidden_by_gate_count": hidden_by_gate_count,
+            "hidden_by_budget_count": hidden_by_budget_count,
+            "absorbed_by_family_count": absorbed_by_family_count,
+            "excluded_internal_count": excluded_internal_count,
+        },
+        "visible_items": visible_items,
+        "hidden_items": hidden_items,
+        "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。",
+    }
+
+
 def _collect_layer_items(admission, layer_name: str, problem_map: dict[str, Any]) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for candidate in getattr(admission, layer_name):
@@ -285,6 +476,7 @@ def build_v2_final_snapshot(
         "excluded_risks": _collect_layer_items(admission, "excluded_risks", problem_map),
     }
     summary = _build_summary(final_risks)
+    ops_explanation_summary = _build_ops_explanation_summary(problems, admission, final_risks)
     domain_context = {}
     if isinstance(getattr(admission, "input_summary", None), dict):
         domain_context = dict(admission.input_summary.get("domain_context", {}) or {})
@@ -304,6 +496,7 @@ def build_v2_final_snapshot(
         },
         "summary": summary,
         "final_risks": final_risks,
+        "ops_explanation_summary": ops_explanation_summary,
         "problem_trace_summary": _build_problem_trace_summary(problems, admission),
         "source_trace_summary": _build_source_trace_summary(structure, topics),
     }
@@ -338,6 +531,7 @@ def render_v2_markdown_from_snapshot(snapshot: dict[str, Any]) -> str:
     input_metadata = snapshot.get("input_metadata", {}) if isinstance(snapshot, dict) else {}
     final_risks = snapshot.get("final_risks", {}) if isinstance(snapshot, dict) else {}
     summary = snapshot.get("summary", {}) if isinstance(snapshot, dict) else {}
+    ops_summary = snapshot.get("ops_explanation_summary", {}) if isinstance(snapshot, dict) else {}
     lines = [
         "# 招标文件合规审查结果",
         "",
@@ -377,6 +571,27 @@ def render_v2_markdown_from_snapshot(snapshot: dict[str, Any]) -> str:
             title = str(item.get("title", "")).strip() or "已排除项"
             reason = str(item.get("admission_reason", "")).strip() or "已按准入规则排除。"
             lines.append(f"- {title}：{reason}")
+
+    if isinstance(ops_summary, dict) and (ops_summary.get("hidden_items") or ops_summary.get("visible_items")):
+        stats = ops_summary.get("stats", {}) if isinstance(ops_summary.get("stats", {}), dict) else {}
+        hidden_items = [item for item in (ops_summary.get("hidden_items", []) or []) if isinstance(item, dict)]
+        lines.extend(["---", "", "## 运维解释摘要", ""])
+        lines.append(f"- gate 拦截：{int(stats.get('hidden_by_gate_count', 0) or 0)}")
+        lines.append(f"- budget 压缩：{int(stats.get('hidden_by_budget_count', 0) or 0)}")
+        lines.append(f"- family 吸收：{int(stats.get('absorbed_by_family_count', 0) or 0)}")
+        lines.append(f"- excluded/internal：{int(stats.get('excluded_internal_count', 0) or 0)}")
+        detection_note = str(ops_summary.get("detection_note", "")).strip()
+        if detection_note:
+            lines.append(f"- 说明：{detection_note}")
+        for item in hidden_items:
+            title = str(item.get("title", "")).strip() or "未命名问题"
+            hidden_by = str(item.get("hidden_by", "")).strip() or "unknown"
+            reason = str(item.get("hidden_reason", "")).strip() or "未发现"
+            kept_title = str((item.get("kept_item", {}) or {}).get("title", "")).strip()
+            line = f"- {title}：由 {hidden_by} 压下；原因：{reason}"
+            if kept_title:
+                line += f"；保留主项：{kept_title}"
+            lines.append(line)
 
     lines.extend(["---", "", "## 综合判断", ""])
     lines.append("- 高风险问题：")
@@ -427,6 +642,7 @@ def project_final_output_from_snapshot(snapshot: dict[str, Any], governance=None
             "manual_review_titles": list(summary.get("manual_review_titles", []) or []),
         },
         "basis_summary": list(summary.get("basis_summary", []) or []),
+        "ops_explanation_summary": dict(snapshot.get("ops_explanation_summary", {}) or {}),
         "snapshot_version": snapshot.get("snapshot_version", SNAPSHOT_VERSION),
     }
     if governance is not None:

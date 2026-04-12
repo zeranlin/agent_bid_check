@@ -7,7 +7,7 @@ from app.pipelines.v2.problem_layer.models import ProblemLayerResult
 
 from .decision_engine import admit_governed_risk, admit_problem
 from .domain_classifier import classify_document_domain
-from .domain_policy import get_domain_result_policy
+from .domain_policy import get_budget_policy, get_domain_result_policy
 from .result_budget import apply_result_budget
 from .schemas import AdmissionInput, AdmissionResult
 
@@ -88,13 +88,16 @@ def admit_problem_result(
             result.excluded_risks.append(candidate)
     domain_context = classify_document_domain(document_name, comparison, problems)
     domain_policy = get_domain_result_policy(domain_context.document_domain)
+    budget_policy = get_budget_policy(domain_policy.budget_policy_id)
     for decision in result.decisions.values():
         decision.document_domain = domain_context.document_domain
         decision.domain_confidence = domain_context.domain_confidence
         decision.domain_evidence = list(domain_context.domain_evidence)
         decision.domain_policy_id = domain_context.domain_policy_id
+        decision.budget_policy_id = budget_policy.policy_id
     result.input_summary["domain_context"] = domain_context.to_dict()
     result.input_summary["domain_policy"] = domain_policy.to_dict()
-    result.input_summary["budget_summary"] = apply_result_budget(result, domain_policy)
+    result.input_summary["budget_policy"] = budget_policy.to_dict()
+    result.input_summary["budget_summary"] = apply_result_budget(result, budget_policy)
     validate_admitted_result(result)
     return result

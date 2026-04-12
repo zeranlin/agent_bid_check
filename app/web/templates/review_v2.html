@@ -1024,6 +1024,50 @@
           </div>
         </div>
         {% endif %}
+
+        {% if result.review_view.ops_explanation_summary %}
+        <div class="panel">
+          <div class="panel-body">
+            <h2>运维解释摘要</h2>
+            <div class="summary-grid" style="margin-bottom: 12px;">
+              <div class="metric manual">
+                <div class="metric-label">gate 拦截</div>
+                <div class="metric-value">{{ result.review_view.ops_explanation_summary.stats.hidden_by_gate_count }}</div>
+              </div>
+              <div class="metric low">
+                <div class="metric-label">budget 压缩</div>
+                <div class="metric-value">{{ result.review_view.ops_explanation_summary.stats.hidden_by_budget_count }}</div>
+              </div>
+              <div class="metric medium">
+                <div class="metric-label">family 吸收</div>
+                <div class="metric-value">{{ result.review_view.ops_explanation_summary.stats.absorbed_by_family_count }}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">excluded/internal</div>
+                <div class="metric-value">{{ result.review_view.ops_explanation_summary.stats.excluded_internal_count }}</div>
+              </div>
+            </div>
+            {% if result.review_view.ops_explanation_summary.detection_note %}
+            <div class="compare-subtle" style="margin-bottom: 12px;">{{ result.review_view.ops_explanation_summary.detection_note|inline_md }}</div>
+            {% endif %}
+            <div class="compare-list">
+              {% for item in result.review_view.ops_explanation_summary.hidden_items %}
+              <div class="compare-item">
+                <div class="compare-item-title">{{ item.title|inline_md }}</div>
+                <div class="compare-subtle">来源：{{ item.hidden_by }} ｜ 原因：{{ item.hidden_reason|inline_md }}</div>
+                {% if item.kept_item and item.kept_item.title %}
+                <div class="compare-subtle">保留主项：{{ item.kept_item.title|inline_md }}</div>
+                {% endif %}
+              </div>
+              {% else %}
+              <div class="compare-item">
+                <div class="compare-subtle">当前无已识别但未展示的条目。</div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

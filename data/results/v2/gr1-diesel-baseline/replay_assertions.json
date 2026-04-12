@@ -1,6 +1,7 @@
 {
   "document_id": "DOC-DIESEL-0330-BASELINE",
   "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "document_domain": "goods_procurement",
   "baseline_assertions": {
     "should_report": [
       {

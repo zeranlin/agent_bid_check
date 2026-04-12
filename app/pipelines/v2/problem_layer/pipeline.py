@@ -3,6 +3,7 @@ from __future__ import annotations
 from hashlib import md5
 from typing import Iterable
 
+from app.governance.ax_governance import load_ax_governance_index
 from app.pipelines.v2.output_governance.schemas import GovernedResult, GovernedRisk
 
 from .models import Problem, ProblemLayerResult
@@ -55,6 +56,11 @@ CONFLICT_RULES: list[dict[str, object]] = [
         "family_key": "payment_scoring_conflict",
     },
 ]
+
+
+def _family_product_rules() -> dict[str, dict[str, object]]:
+    index = load_ax_governance_index()
+    return {family_key: config.to_problem_rule() for family_key, config in index.family_governance.items()}
 
 
 def _stable_problem_id(candidate: GovernedRisk) -> tuple[str, str]:
@@ -369,6 +375,226 @@ def _pick_primary_problem(left: Problem, right: Problem) -> Problem:
     return sorted([left, right], key=_problem_sort_key, reverse=True)[0]
 
 
+def _problem_source_bucket(problem: Problem) -> str:
+    if problem.layer_conflict_inputs:
+        ordered = sorted(
+            problem.layer_conflict_inputs,
+            key=lambda item: (-LAYER_PRIORITY.get(str(item.get("source_bucket", "")), 0), str(item.get("candidate_title", ""))),
+        )
+        bucket = str(ordered[0].get("source_bucket", "")).strip()
+        if bucket:
+            return bucket
+    return "formal_risks"
+
+
+def _problem_matches_family_rule(problem: Problem, rule: dict[str, object]) -> bool:
+    family_keys = {str(item) for item in rule.get("match_family_keys", ()) if str(item).strip()}
+    if family_keys:
+        return problem.family_key in family_keys
+
+    title_patterns = tuple(str(item) for item in rule.get("match_title_patterns", ()) if str(item).strip())
+    require_patterns = tuple(str(item) for item in rule.get("require_any_title_patterns", ()) if str(item).strip())
+    blob = "\n".join(
+        [
+            problem.canonical_title,
+            problem.primary_candidate.decision.proposed_title,
+            *problem.primary_candidate.source_excerpts,
+            *problem.primary_candidate.source_locations,
+        ]
+    )
+    if title_patterns and not any(pattern in blob for pattern in title_patterns):
+        return False
+    if require_patterns and not any(pattern in blob for pattern in require_patterns):
+        return False
+    return bool(title_patterns or family_keys or require_patterns)
+
+
+def _family_problem_sort_key(problem: Problem, rule: dict[str, object]) -> tuple[int, int, int, int, int, str]:
+    title_patterns = tuple(str(item) for item in rule.get("primary_title_patterns", ()) if str(item).strip())
+    preferred_topics = tuple(str(item) for item in rule.get("preferred_topics", ()) if str(item).strip())
+    proposed_title = problem.primary_candidate.decision.proposed_title
+    title_preference = 1 if any(pattern in proposed_title or pattern in problem.canonical_title for pattern in title_patterns) else 0
+    topic_hits = max((len(preferred_topics) - preferred_topics.index(topic) for topic in problem.merged_topic_sources if topic in preferred_topics), default=0)
+    severity_rank = SEVERITY_RANK.get(problem.primary_candidate.severity, -1)
+    evidence_rank = len(problem.evidence_ids)
+    support_rank = len(problem.supporting_candidates)
+    return (title_preference, topic_hits, severity_rank, evidence_rank, support_rank, problem.canonical_title)
+
+
+def _classify_family_problem(problem: Problem, rule: dict[str, object], primary_problem_id: str) -> str:
+    if problem.problem_id == primary_problem_id:
+        return "primary"
+    internal_patterns = tuple(str(item) for item in rule.get("internal_title_patterns", ()) if str(item).strip())
+    blob = "\n".join([problem.canonical_title, problem.primary_candidate.decision.proposed_title, *problem.primary_candidate.source_excerpts])
+    if internal_patterns and any(pattern in blob for pattern in internal_patterns):
+        return "internal"
+    return "supporting"
+
+
+def _visible_absorption_record(problem: Problem, primary: Problem, visibility: str, absorber_title: str) -> dict[str, object]:
+    source_bucket = _problem_source_bucket(problem)
+    hidden_reason = "supporting_hidden_under_family_primary" if visibility == "supporting" else "internal_trace_only_under_family_primary"
+    return {
+        "problem_id": problem.problem_id,
+        "title": problem.canonical_title,
+        "source_bucket": source_bucket,
+        "prior_bucket": source_bucket,
+        "absorbed_by": absorber_title,
+        "absorbed_by_problem_id": primary.problem_id,
+        "hidden_reason": hidden_reason,
+        "visibility": visibility,
+    }
+
+
+def _family_trace(
+    *,
+    family_key: str,
+    rule: dict[str, object],
+    primary: Problem,
+    source_problems: list[Problem],
+    supporting_problems: list[Problem],
+    internal_problems: list[Problem],
+) -> dict[str, object]:
+    absorbed = [item for item in source_problems if item.problem_id != primary.problem_id]
+    visible_title = str(rule.get("canonical_title", primary.canonical_title))
+    trace = dict(primary.trace)
+    trace["family_key"] = family_key
+    trace["canonical_title"] = visible_title
+    trace["primary_visible_problem_id"] = primary.problem_id
+    trace["supporting_problem_ids"] = [item.problem_id for item in supporting_problems]
+    trace["internal_trace_only_problem_ids"] = [item.problem_id for item in internal_problems]
+    trace["absorbed_problem_ids"] = [item.problem_id for item in absorbed]
+    trace["family_visible_output_absorbed_by_primary"] = bool(absorbed)
+    trace["supporting_visible_problem_limit"] = int(rule.get("supporting_visible_problem_limit", 0))
+    trace["primary_selection_reason"] = str(
+        rule.get(
+            "primary_selection_reason",
+            "优先保留规则归属最清晰、业务表达最稳定、客户最容易理解的主问题，其余家族问题下沉为 trace。",
+        )
+    )
+    trace["family_governance_config_id"] = str(rule.get("config_id", ""))
+    trace["family_product_rule_key"] = family_key
+    trace["family_merge_reason"] = str(rule.get("merge_reason", "问题层已按 family 白名单收敛用户可见输出。"))
+    trace["absorbed_user_visible_items"] = [
+        _visible_absorption_record(problem, primary, "supporting", visible_title) for problem in supporting_problems
+    ]
+    trace["internal_trace_only_items"] = [
+        _visible_absorption_record(problem, primary, "internal_trace_only", visible_title) for problem in internal_problems
+    ]
+    trace["user_visible_dedupe_reason"] = "family_visible_output_absorbed_by_primary" if absorbed else trace.get("user_visible_dedupe_reason", "")
+    return trace
+
+
+def _apply_family_product_governance(problems: list[Problem]) -> tuple[list[Problem], int]:
+    family_rules = _family_product_rules()
+    grouped: dict[str, list[Problem]] = {}
+    passthrough: list[Problem] = []
+    for problem in problems:
+        matched_key = next(
+            (family_key for family_key, rule in family_rules.items() if _problem_matches_family_rule(problem, rule)),
+            "",
+        )
+        if matched_key:
+            grouped.setdefault(matched_key, []).append(problem)
+        else:
+            passthrough.append(problem)
+
+    governed: list[Problem] = []
+    absorbed_problem_count = 0
+    for family_key, family_problems in grouped.items():
+        rule = family_rules[family_key]
+        if len(family_problems) == 1 and family_key not in {"certification_scoring_bundle", "import_consistency", "acceptance_testing_cost"}:
+            governed.extend(family_problems)
+            continue
+
+        primary = sorted(family_problems, key=lambda item: _family_problem_sort_key(item, rule), reverse=True)[0]
+        if len(family_problems) == 1:
+            primary.trace = {
+                **primary.trace,
+                "family_governance_config_id": str(rule.get("config_id", "")),
+                "family_key": family_key,
+                "canonical_title": str(rule.get("canonical_title", primary.canonical_title)),
+                "primary_visible_problem_id": primary.problem_id,
+                "supporting_problem_ids": list(primary.trace.get("supporting_problem_ids", [])),
+                "internal_trace_only_problem_ids": list(primary.trace.get("internal_trace_only_problem_ids", [])),
+                "absorbed_problem_ids": list(primary.trace.get("absorbed_problem_ids", [])),
+                "family_visible_output_absorbed_by_primary": bool(primary.supporting_candidates)
+                or bool(primary.trace.get("family_visible_output_absorbed_by_primary")),
+                "supporting_visible_problem_limit": int(rule.get("supporting_visible_problem_limit", 0)),
+                "primary_selection_reason": str(
+                    rule.get(
+                        "primary_selection_reason",
+                        "优先保留规则归属最清晰、业务表达最稳定、客户最容易理解的主问题，其余家族问题下沉为 trace。",
+                    )
+                ),
+                "family_product_rule_key": family_key,
+                "family_merge_reason": str(rule.get("merge_reason", "问题层已按 family 白名单收敛用户可见输出。")),
+            }
+            primary.family_key = family_key
+            primary.canonical_title = str(rule.get("canonical_title", primary.canonical_title))
+            governed.append(primary)
+            continue
+
+        supporting_problems = [
+            item for item in family_problems if _classify_family_problem(item, rule, primary.problem_id) == "supporting"
+        ]
+        internal_problems = [
+            item for item in family_problems if _classify_family_problem(item, rule, primary.problem_id) == "internal"
+        ]
+        absorbed_problem_count += len(supporting_problems) + len(internal_problems)
+
+        merged_source_problems = [primary, *supporting_problems, *internal_problems]
+        merged_supporting_candidates = _dedupe_governed_candidates(
+            [
+                candidate
+                for problem in supporting_problems
+                for candidate in _problem_supporting_candidates(problem)
+            ]
+        )
+        merged_candidates_for_trace = _dedupe_governed_candidates(
+            [
+                candidate
+                for problem in merged_source_problems
+                for candidate in _problem_supporting_candidates(problem)
+            ]
+        )
+        evidence_ids = _unique_strings(evidence_id for problem in merged_source_problems for evidence_id in problem.evidence_ids)
+        topic_sources = _unique_strings(topic for problem in merged_source_problems for topic in problem.merged_topic_sources)
+        rule_ids = _unique_strings(rule_id for problem in merged_source_problems for rule_id in problem.rule_ids)
+        merged_family_keys = _unique_strings(
+            [*primary.merged_family_keys, *[item.family_key for item in merged_source_problems], family_key]
+        )
+        layer_conflict_inputs = []
+        for problem in merged_source_problems:
+            for item in problem.layer_conflict_inputs:
+                if item not in layer_conflict_inputs:
+                    layer_conflict_inputs.append(item)
+
+        primary.trace = _family_trace(
+            family_key=family_key,
+            rule=rule,
+            primary=primary,
+            source_problems=merged_source_problems,
+            supporting_problems=supporting_problems,
+            internal_problems=internal_problems,
+        )
+        primary.family_key = family_key
+        primary.canonical_title = str(rule.get("canonical_title", primary.canonical_title))
+        primary.supporting_candidates = merged_supporting_candidates
+        primary.evidence_ids = evidence_ids
+        primary.topic_sources = topic_sources
+        primary.rule_ids = rule_ids
+        primary.merged_topic_sources = topic_sources
+        primary.merged_family_keys = merged_family_keys
+        primary.layer_conflict_inputs = layer_conflict_inputs
+        primary.cross_topic_merge_reason = primary.cross_topic_merge_reason or str(
+            rule.get("merge_reason", primary.cross_topic_merge_reason)
+        )
+        governed.append(primary)
+
+    return [*passthrough, *governed], absorbed_problem_count
+
+
 def _build_side_payload(problem: Problem, preferred_topic: str) -> dict[str, object]:
     topic = preferred_topic if preferred_topic in problem.merged_topic_sources else (problem.merged_topic_sources[0] if problem.merged_topic_sources else "")
     return {
@@ -588,16 +814,22 @@ def _apply_conflict_rules(problems: list[Problem]) -> tuple[list[Problem], int]:
 
 def build_problem_layer(document_name: str, governance: GovernedResult, *, enable_conflicts: bool = True) -> ProblemLayerResult:
     base_problems = _build_base_problem_layer(governance)
-    problems = list(base_problems)
+    family_governed_problems, family_absorbed_problem_count = _apply_family_product_governance(base_problems)
+    problems = list(family_governed_problems)
     conflict_problem_count = 0
     if enable_conflicts:
-        problems, conflict_problem_count = _apply_conflict_rules(base_problems)
-    absorbed_candidate_count = sum(max(len({_problem_group_key(item) for item in [problem.primary_candidate, *problem.supporting_candidates]}) - 1, 0) for problem in base_problems)
+        problems, conflict_problem_count = _apply_conflict_rules(family_governed_problems)
+    absorbed_candidate_count = sum(
+        max(len({_problem_group_key(item) for item in [problem.primary_candidate, *problem.supporting_candidates]}) - 1, 0)
+        for problem in base_problems
+    )
     return ProblemLayerResult(
         document_name=document_name,
         input_summary={
             "governed_candidate_count": len(governance.governed_candidates),
             "base_problem_count": len(base_problems),
+            "family_governed_problem_count": len(family_governed_problems),
+            "family_absorbed_problem_count": family_absorbed_problem_count,
             "problem_count": len(problems),
             "absorbed_candidate_count": absorbed_candidate_count,
             "cross_topic_problem_count": sum(1 for item in problems if len(item.merged_topic_sources) > 1),

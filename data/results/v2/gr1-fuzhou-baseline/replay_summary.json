@@ -10,9 +10,20 @@
   "passed": true,
   "document_id": "DOC-FUZHOU-DORM-BASELINE",
   "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
+  "document_domain": "goods_procurement",
+  "expected_document_domain": "goods_procurement",
+  "domain_drift": false,
+  "domain_policy_id": "domain-policy-goods-v1",
+  "budget_policy_id": "budget-policy-goods-v1",
+  "excluded_internal_count": 16,
+  "diff_summary": {
+    "missing_should_report_titles": [],
+    "unexpected_reported_titles": [],
+    "missing_should_pending_titles": [],
+    "unexpected_pending_titles": []
+  },
   "notes": [
-    "福州一中基线重点保护样品门槛、厂家验收标准、商务失衡、履约监督失衡、技术参数过细等正式风险。",
-    "“无犯罪证明”误映射标题、模板留白、开标签字默认认可等条目不应再进入 formal。",
+    "福州一中属于货物采购域，重点保护样品门槛、厂家验收标准、商务失衡、履约监督失衡、技术参数过细等正式风险。",
     "远程开标解密时限、缺乏预付款安排等边界项应继续停留在 pending。"
   ],
   "result_dir": "/Users/linzeran/code/2026-zn/test_getst/data/results/v2/gr1-fuzhou-baseline"

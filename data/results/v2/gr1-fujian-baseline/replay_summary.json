@@ -10,10 +10,21 @@
   "passed": true,
   "document_id": "DOC-FUJIAN-PROPERTY-BASELINE",
   "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
+  "document_domain": "service_procurement",
+  "expected_document_domain": "service_procurement",
+  "domain_drift": false,
+  "domain_policy_id": "domain-policy-service-v1",
+  "budget_policy_id": "budget-policy-service-v1",
+  "excluded_internal_count": 17,
+  "diff_summary": {
+    "missing_should_report_titles": [],
+    "unexpected_reported_titles": [],
+    "missing_should_pending_titles": [],
+    "unexpected_pending_titles": []
+  },
   "notes": [
-    "福建物业基线当前采用 w013 稳定 seed，重点保护正文硬风险，同时阻断模板/后续合同确定类误报。",
-    "该文件的提醒项、证据不足项应继续停留在 pending，不得直接抬入 formal。",
-    "后续若福建链路继续收紧，可在不打坏正文硬风险前提下迭代 seed run。"
+    "福建物业属于服务采购域，重点保护正文硬风险，同时阻断模板/后续合同确定类误报。",
+    "服务采购域下低价值提醒应优先压到 internal/excluded。"
   ],
   "result_dir": "/Users/linzeran/code/2026-zn/test_getst/data/results/v2/gr1-fujian-baseline"
 }

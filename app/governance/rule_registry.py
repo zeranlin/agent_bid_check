@@ -5,6 +5,13 @@ from pathlib import Path
 
 import yaml
 
+from .ax_governance import (
+    AX_GOVERNANCE_PATHS,
+    clear_ax_governance_cache,
+    load_ax_governance_sources,
+    validate_ax_governance_sources as _validate_ax_governance_sources,
+)
+
 
 RULE_STATUSES = [
     "draft",
@@ -196,6 +203,28 @@ def validate_rule_file(path: str | Path) -> ValidationResult:
 def validate_rule_directory(path: str | Path) -> list[ValidationResult]:
     root = Path(path)
     return [validate_rule_file(item) for item in _iter_registry_yaml_files(root, include_example=True)]
+
+
+def validate_ax_governance_sources(payloads: dict[str, dict] | None = None) -> list[str]:
+    return _validate_ax_governance_sources(payloads)
+
+
+def validate_ax_governance_files() -> list[ValidationResult]:
+    clear_ax_governance_cache()
+    payloads = load_ax_governance_sources()
+    errors = validate_ax_governance_sources(payloads)
+    grouped: dict[Path, list[str]] = {path: [] for path in AX_GOVERNANCE_PATHS.values()}
+    for error in errors:
+        target = AX_GOVERNANCE_PATHS["stable_pending"]
+        lowered = error.lower()
+        if "domain" in lowered and "budget policy" not in lowered:
+            target = AX_GOVERNANCE_PATHS["domain_policy"]
+        if "budget" in lowered:
+            target = AX_GOVERNANCE_PATHS["budget_policy"]
+        if "family" in lowered and "stable_pending" not in lowered:
+            target = AX_GOVERNANCE_PATHS["family_governance"]
+        grouped[target].append(error)
+    return [ValidationResult(path=path, errors=grouped[path]) for path in AX_GOVERNANCE_PATHS.values()]
 
 
 def validate_candidate_directory(path: str | Path) -> ValidationResult:

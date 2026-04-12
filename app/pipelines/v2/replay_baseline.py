@@ -35,6 +35,14 @@ def load_real_replay_baseline_suite(config_path: str | Path) -> dict[str, Any]:
     return normalized
 
 
+def load_real_replay_matrix_suite(config_path: str | Path) -> dict[str, Any]:
+    suite = load_real_replay_baseline_suite(config_path)
+    for document in suite["documents"]:
+        if not str(document.get("document_domain", "")).strip():
+            raise ValueError(f"replay matrix document missing document_domain: {document.get('document_id', '<unknown>')}")
+    return suite
+
+
 def _resolve_path(raw_path: str, config_path: str | None = None) -> Path:
     path = Path(raw_path).expanduser()
     if path.is_absolute():
@@ -178,6 +186,38 @@ def evaluate_replay_assertions(snapshot: dict[str, Any], assertions: dict[str, A
     return assertion_payload, summary
 
 
+def _titles_from_assertion_records(records: list[dict[str, Any]], predicate) -> list[str]:
+    titles: list[str] = []
+    for record in records:
+        if predicate(record):
+            title = str(record.get("assertion", {}).get("title", "")).strip()
+            if title:
+                titles.append(title)
+    return titles
+
+
+def _build_matrix_diff_summary(assertion_payload: dict[str, Any], summary: dict[str, Any]) -> dict[str, Any]:
+    del summary
+    return {
+        "missing_should_report_titles": _titles_from_assertion_records(
+            assertion_payload.get("should_report", []),
+            lambda item: not any(layer in {"formal_risks", "pending_review_items"} for layer in item.get("actual_layers", [])),
+        ),
+        "unexpected_reported_titles": _titles_from_assertion_records(
+            assertion_payload.get("should_not_report", []),
+            lambda item: "formal_risks" in item.get("actual_layers", []),
+        ),
+        "missing_should_pending_titles": _titles_from_assertion_records(
+            assertion_payload.get("should_pending", []),
+            lambda item: "pending_review_items" not in item.get("actual_layers", []),
+        ),
+        "unexpected_pending_titles": _titles_from_assertion_records(
+            assertion_payload.get("should_not_report", []),
+            lambda item: "pending_review_items" in item.get("actual_layers", []),
+        ),
+    }
+
+
 def _resolve_output_dir(
     document_config: dict[str, Any],
     output_root: str | Path | None = None,
@@ -277,3 +317,62 @@ def run_real_replay_baseline_batch(
         run_real_replay_baseline(suite, document_id=document_id, output_root=output_root)
         for document_id in target_ids
     ]
+
+
+def run_real_replay_matrix(
+    suite: dict[str, Any],
+    *,
+    document_id: str,
+    output_root: str | Path | None = None,
+) -> dict[str, Any]:
+    document_config = next(item for item in suite["documents"] if item["document_id"] == document_id)
+    output_dir = _resolve_output_dir(document_config, output_root, config_path=suite.get("_config_path"))
+    artifacts, snapshot, _, admission = _build_replay_artifacts(document_config, suite)
+    save_review_artifacts_v2(artifacts, output_dir)
+    assertion_payload, summary = evaluate_replay_assertions(snapshot, document_config.get("baseline_assertions", {}))
+    input_summary = admission.get("input_summary", {}) if isinstance(admission, dict) else {}
+    domain_context = input_summary.get("domain_context", {}) if isinstance(input_summary, dict) else {}
+    domain_policy = input_summary.get("domain_policy", {}) if isinstance(input_summary, dict) else {}
+    budget_policy = input_summary.get("budget_policy", {}) if isinstance(input_summary, dict) else {}
+    summary.update(
+        {
+            "document_id": document_id,
+            "document_name": document_config.get("document_name", ""),
+            "document_domain": domain_context.get("document_domain", ""),
+            "expected_document_domain": document_config.get("document_domain", ""),
+            "domain_drift": str(domain_context.get("document_domain", "")).strip()
+            != str(document_config.get("document_domain", "")).strip(),
+            "domain_policy_id": domain_policy.get("policy_id", ""),
+            "budget_policy_id": budget_policy.get("policy_id", ""),
+            "excluded_internal_count": len(admission.get("excluded_risks", [])) if isinstance(admission, dict) else 0,
+            "diff_summary": _build_matrix_diff_summary(assertion_payload, summary),
+            "notes": list(document_config.get("notes", []) or []),
+            "result_dir": str(output_dir),
+        }
+    )
+    summary["passed"] = bool(summary["passed"]) and not summary["domain_drift"]
+    (output_dir / "replay_assertions.json").write_text(
+        json.dumps(
+            {
+                "document_id": document_id,
+                "document_name": document_config.get("document_name", ""),
+                "document_domain": document_config.get("document_domain", ""),
+                "baseline_assertions": assertion_payload,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (output_dir / "replay_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    return summary
+
+
+def run_real_replay_matrix_batch(
+    suite: dict[str, Any],
+    *,
+    document_ids: list[str] | None = None,
+    output_root: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    target_ids = document_ids or [item["document_id"] for item in suite["documents"]]
+    return [run_real_replay_matrix(suite, document_id=document_id, output_root=output_root) for document_id in target_ids]

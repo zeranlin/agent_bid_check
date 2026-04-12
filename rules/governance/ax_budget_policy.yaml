@@ -1,0 +1,90 @@
+version: 1
+entries:
+  - id: budget-policy-engineering-v1
+    status: active
+    scope:
+      document_domain: engineering_maintenance_construction
+    condition:
+      document_domain: engineering_maintenance_construction
+    rule:
+      formal_count_budget: 8
+      pending_count_budget: 4
+      family_repeat_budget: 1
+      low_value_signal_budget: 0
+      priority_title_patterns:
+        - 品牌
+        - 样品
+        - 验收
+        - 解密
+        - 费用
+        - 施工
+        - 维护
+      low_value_title_patterns:
+        - 中小企业
+        - 证明材料
+        - 政策
+        - 引用不完整
+        - 解释权
+        - 唱标
+        - 保证金
+        - 质疑材料
+    reason: 工程维护施工类文件优先压缩低价值程序提示，聚焦高价值竞争、履约和费用风险。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: budget-policy-goods-v1
+    status: active
+    scope:
+      document_domain: goods_procurement
+    condition:
+      document_domain: goods_procurement
+    rule:
+      formal_count_budget: 8
+      pending_count_budget: 6
+      family_repeat_budget: 1
+      low_value_signal_budget: 0
+      priority_title_patterns:
+        - 品牌
+        - 样品
+        - 验收
+        - 检测
+        - 认证
+        - 付款
+        - 技术人员
+        - 原厂工程师
+      low_value_title_patterns:
+        - 节能环保政策
+        - 政策条款缺失
+        - 提醒
+    reason: 货物采购类应压缩弱提示，但保留品牌、样品、检测认证和商务边界类高价值待补证问题。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: budget-policy-service-v1
+    status: active
+    scope:
+      document_domain: service_procurement
+    condition:
+      document_domain: service_procurement
+    rule:
+      formal_count_budget: 8
+      pending_count_budget: 8
+      family_repeat_budget: 1
+      low_value_signal_budget: 0
+      priority_title_patterns:
+        - 服务
+        - 物业
+        - 验收
+        - 品牌
+        - 中小企业
+      low_value_title_patterns:
+        - 无犯罪证明
+        - 信息化软件服务能力
+        - 人员配置数量及证书要求
+    reason: 服务采购类对模板提醒和低价值提示更严格，但仍保留服务履约与评分边界类问题。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12

@@ -1,0 +1,30 @@
+{
+  "missing_should_report": [],
+  "unexpected_reported": [],
+  "missing_should_pending": [],
+  "unexpected_pending": [],
+  "mismatched_layers": [],
+  "formal_count": 2,
+  "pending_count": 4,
+  "excluded_count": 0,
+  "passed": true,
+  "document_id": "DOC-QUANZHOU-PLAYGROUND-BASELINE",
+  "document_name": "泉州操场跑道、篮球场、小操场维护项目",
+  "document_domain": "engineering_maintenance_construction",
+  "expected_document_domain": "engineering_maintenance_construction",
+  "domain_drift": false,
+  "domain_policy_id": "domain-policy-engineering-v1",
+  "budget_policy_id": "budget-policy-engineering-v1",
+  "excluded_internal_count": 16,
+  "diff_summary": {
+    "missing_should_report_titles": [],
+    "unexpected_reported_titles": [],
+    "missing_should_pending_titles": [],
+    "unexpected_pending_titles": []
+  },
+  "notes": [
+    "泉州文件属于工程维护/施工采购域，应优先聚焦品牌、样品、验收、费用、解密等高价值问题。",
+    "低价值程序/政策证明材料提示项不应继续外显。"
+  ],
+  "result_dir": "/Users/linzeran/code/2026-zn/test_getst/data/results/v2/20260412-axg1-quanzhou-governance-source"
+}

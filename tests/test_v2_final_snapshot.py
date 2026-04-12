@@ -257,6 +257,214 @@ def test_render_v2_markdown_from_snapshot_uses_snapshot_as_single_source() -> No
     assert "## 主要依据汇总" in markdown
 
 
+def test_build_v2_final_snapshot_includes_ops_explanation_summary_for_hidden_items() -> None:
+    baseline, structure, topics, governance, problems, admission = _build_pipeline_artifacts(
+        "fuzhou-school-dorm.docx",
+        _build_standard_comparison(),
+    )
+    primary = problems.problems[0]
+    primary.trace.update(
+        {
+            "absorbed_user_visible_items": [
+                {
+                    "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+                    "source_bucket": "pending_review_items",
+                    "absorbed_by": primary.canonical_title,
+                    "absorbed_by_problem_id": primary.problem_id,
+                    "hidden_reason": "same_family_absorbed_by_formal_primary",
+                }
+            ],
+            "internal_trace_only_items": [
+                {
+                    "title": "样品要求中“不得体现供应商公司信息”与“样品作为验收样本”存在逻辑冲突",
+                    "source_bucket": "formal_risks",
+                    "absorbed_by": primary.canonical_title,
+                    "absorbed_by_problem_id": primary.problem_id,
+                    "hidden_reason": "internal_trace_only_under_family_primary",
+                    "visibility": "internal_trace_only",
+                }
+            ],
+            "family_governance_config_id": "family-governance-sample-v1",
+        }
+    )
+    visible_candidate = admission.formal_risks[0]
+    visible_candidate.extras["problem_trace"] = dict(primary.trace)
+    visible_decision = admission.decisions[visible_candidate.rule_id]
+    visible_decision.technical_layer_decision = "formal_risks"
+    visible_decision.gate_passed = True
+    visible_decision.gate_reason = "正式硬风险保留为用户可见结果。"
+    visible_decision.gate_rule = "formal_visible"
+    visible_decision.user_visible_gate_passed = True
+    visible_decision.user_visible_gate_reason = "正式硬风险保留为用户可见结果。"
+    visible_decision.user_visible_gate_rule = "formal_visible"
+
+    gate_candidate = visible_candidate.__class__(
+        rule_id="gate-hidden-1",
+        risk_family="policy_reminder",
+        title="政策依据引用不完整，存在表述截断风险",
+        review_type="政策条款审查",
+        severity="中风险",
+        evidence_kind=visible_candidate.evidence_kind,
+        source_type=visible_candidate.source_type,
+        governance_reason="gate 测试",
+        source_locations=["政策章节"],
+        source_excerpts=["上述政策依据后续内容未完整展示，需进一步确认。"],
+        source_rules=["topic"],
+        extras={"problem_id": "problem-gate-1"},
+    )
+    gate_decision = visible_decision.__class__(
+        target_layer="excluded_risks",
+        admission_reason="当前仅为弱提示型政策提醒，先不进入用户可见待补证。",
+        evidence_kind=gate_candidate.evidence_kind,
+        source_type=gate_candidate.source_type,
+        technical_layer_decision="pending_review_items",
+        gate_passed=False,
+        gate_reason="当前仅为弱提示型政策提醒，先不进入用户可见待补证。",
+        gate_rule="weak_signal_no_material_consequence",
+        user_visible_gate_passed=False,
+        user_visible_gate_reason="当前仅为弱提示型政策提醒，先不进入用户可见待补证。",
+        user_visible_gate_rule="weak_signal_no_material_consequence",
+        stable_pending_config_id="stable-pending-policy-reminder-v1",
+        evidence_sufficiency="insufficient",
+        user_visible_decision_basis="缺少明确合规后果",
+        pending_gate_reason_code="weak_signal_no_material_consequence",
+        pending_gate_reason="无明确合规后果",
+        document_domain="goods_procurement",
+        domain_confidence=0.92,
+        domain_evidence=["家具、样品、验收"],
+        domain_policy_id="domain-policy-goods-v1",
+        budget_policy_id="budget-policy-goods-v1",
+    )
+    admission.excluded_risks.append(gate_candidate)
+    admission.decisions[gate_candidate.rule_id] = gate_decision
+
+    budget_candidate = gate_candidate.__class__(
+        rule_id="budget-hidden-1",
+        risk_family="policy_reminder",
+        title="节能环保政策具体适用要求缺失",
+        review_type="政策条款审查",
+        severity="中风险",
+        evidence_kind=gate_candidate.evidence_kind,
+        source_type=gate_candidate.source_type,
+        governance_reason="预算压缩测试",
+        source_locations=["政策章节"],
+        source_excerpts=["节能环保政策条款未写明具体适用要求。"],
+        source_rules=["topic"],
+        extras={"problem_id": "problem-budget-1"},
+    )
+    budget_decision = gate_decision.__class__(
+        target_layer="excluded_risks",
+        admission_reason="当前文档场景下 pending 结果预算已命中。",
+        evidence_kind=budget_candidate.evidence_kind,
+        source_type=budget_candidate.source_type,
+        technical_layer_decision="pending_review_items",
+        gate_passed=False,
+        gate_reason="当前文档场景下 pending 结果预算已命中。",
+        gate_rule="pending_count_budget",
+        user_visible_gate_passed=False,
+        user_visible_gate_reason="当前文档场景下 pending 结果预算已命中。",
+        user_visible_gate_rule="pending_count_budget",
+        evidence_sufficiency="sufficient",
+        user_visible_decision_basis="预算后保留更高价值待补证项",
+        document_domain="goods_procurement",
+        domain_confidence=0.92,
+        domain_evidence=["家具、样品、验收"],
+        domain_policy_id="domain-policy-goods-v1",
+        budget_policy_id="budget-policy-goods-v1",
+        budget_hit=True,
+        budget_rule="pending_count_budget",
+        budget_reason="当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。",
+        absorbed_or_hidden_items=[
+            {
+                "rule_id": "budget-hidden-1",
+                "title": "节能环保政策具体适用要求缺失",
+                "family_key": "policy_reminder",
+                "hidden_reason": "pending_count_budget",
+                "budget_reason": "当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。",
+                "kept_rule_id": visible_candidate.rule_id,
+                "kept_title": visible_candidate.title,
+                "kept_family_key": visible_candidate.risk_family,
+            }
+        ],
+    )
+    admission.excluded_risks.append(budget_candidate)
+    admission.decisions[budget_candidate.rule_id] = budget_decision
+
+    snapshot = build_v2_final_snapshot(
+        "fuzhou-school-dorm.docx",
+        baseline,
+        structure,
+        topics,
+        comparison=_build_standard_comparison(),
+        governance=governance,
+        problems=problems,
+        admission=admission,
+        generated_at="2026-04-12T23:00:00",
+    )
+
+    ops_summary = snapshot["ops_explanation_summary"]
+    assert ops_summary["stats"] == {
+        "hidden_by_gate_count": 1,
+        "hidden_by_budget_count": 1,
+        "absorbed_by_family_count": 2,
+        "excluded_internal_count": 2,
+    }
+    hidden_map = {item["title"]: item for item in ops_summary["hidden_items"]}
+    assert hidden_map["将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"]["hidden_by"] == "family_absorption"
+    assert hidden_map["将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险"]["config_id"] == "family-governance-sample-v1"
+    assert hidden_map["政策依据引用不完整，存在表述截断风险"]["hidden_by"] == "user_visible_gate"
+    assert hidden_map["政策依据引用不完整，存在表述截断风险"]["config_id"] == "stable-pending-policy-reminder-v1"
+    assert hidden_map["节能环保政策具体适用要求缺失"]["hidden_by"] == "result_budget"
+    assert hidden_map["节能环保政策具体适用要求缺失"]["policy_id"] == "budget-policy-goods-v1"
+    assert hidden_map["节能环保政策具体适用要求缺失"]["kept_item"]["title"] == visible_candidate.title
+    assert ops_summary["visible_items"][0]["visible_or_hidden"] == "visible"
+    assert ops_summary["detection_note"] == "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。"
+
+
+def test_render_v2_markdown_from_snapshot_includes_ops_explanation_section() -> None:
+    snapshot = {
+        "input_metadata": {"subject": "sample.docx", "description_lines": ["说明1"]},
+        "final_risks": {"formal_risks": [], "pending_review_items": [], "excluded_risks": []},
+        "summary": {
+            "high_risk_titles": [],
+            "medium_risk_titles": [],
+            "manual_review_titles": [],
+            "basis_summary": ["需人工复核"],
+        },
+        "ops_explanation_summary": {
+            "stats": {
+                "hidden_by_gate_count": 1,
+                "hidden_by_budget_count": 1,
+                "absorbed_by_family_count": 1,
+                "excluded_internal_count": 3,
+            },
+            "hidden_items": [
+                {
+                    "title": "节能环保政策具体适用要求缺失",
+                    "visible_or_hidden": "hidden",
+                    "hidden_by": "result_budget",
+                    "hidden_reason": "当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。",
+                    "policy_id": "budget-policy-goods-v1",
+                    "kept_item": {"title": "样品要求过细且评审规则失衡，存在样品门槛风险"},
+                    "source_layer": "pending_review_items",
+                    "evidence_anchor": {"location": "政策章节", "excerpt": "节能环保政策条款未写明具体适用要求。"},
+                }
+            ],
+            "visible_items": [],
+            "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。",
+        },
+    }
+
+    markdown = render_v2_markdown_from_snapshot(snapshot)
+
+    assert "## 运维解释摘要" in markdown
+    assert "- gate 拦截：1" in markdown
+    assert "- budget 压缩：1" in markdown
+    assert "- family 吸收：1" in markdown
+    assert "- excluded/internal：3" in markdown
+    assert "- 节能环保政策具体适用要求缺失：由 result_budget 压下；原因：当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。；保留主项：样品要求过细且评审规则失衡，存在样品门槛风险" in markdown
+
+
 def test_build_v2_final_snapshot_hides_non_user_visible_gated_items() -> None:
     comparison = ComparisonArtifact(
         clusters=[

@@ -63,6 +63,7 @@ def build_admission_decision(
             user_visible_gate_passed=user_gate.passed,
             user_visible_gate_reason=user_gate.reason,
             user_visible_gate_rule=user_gate.rule,
+            stable_pending_config_id=user_gate.stable_pending_config_id,
             evidence_sufficiency=user_gate.evidence_sufficiency,
             user_visible_decision_basis=user_gate.decision_basis,
             pending_gate_reason_code="",
@@ -143,6 +144,7 @@ def build_admission_decision(
         decision.user_visible_gate_passed = user_gate.passed
         decision.user_visible_gate_reason = user_gate.reason
         decision.user_visible_gate_rule = user_gate.rule
+        decision.stable_pending_config_id = user_gate.stable_pending_config_id
         decision.evidence_sufficiency = user_gate.evidence_sufficiency
         decision.user_visible_decision_basis = user_gate.decision_basis
         return decision
@@ -212,6 +214,7 @@ def build_admission_decision(
     decision.user_visible_gate_passed = user_gate.passed
     decision.user_visible_gate_reason = user_gate.reason
     decision.user_visible_gate_rule = user_gate.rule
+    decision.stable_pending_config_id = user_gate.stable_pending_config_id
     decision.evidence_sufficiency = user_gate.evidence_sufficiency
     decision.user_visible_decision_basis = user_gate.decision_basis
     return decision

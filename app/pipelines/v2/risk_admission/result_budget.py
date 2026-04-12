@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from .domain_policy import DomainResultPolicy
+from app.governance.ax_governance import BudgetPolicy, load_ax_governance_index
+
 from .schemas import AdmissionCandidate, AdmissionDecision, AdmissionResult
-from .user_visible_gate import STABLE_PENDING_FAMILIES
 
 
 PRIORITY_CONSEQUENCE_MARKERS = ("限制竞争", "排斥", "验收", "样品", "品牌", "费用", "解密", "评分", "履约")
@@ -31,11 +31,11 @@ def _build_family_bucket(candidate: AdmissionCandidate) -> str:
     return f"title::{candidate.title}"
 
 
-def _score_pending_entry(candidate: AdmissionCandidate, decision: AdmissionDecision, policy: DomainResultPolicy) -> _BudgetEntry:
+def _score_pending_entry(candidate: AdmissionCandidate, decision: AdmissionDecision, policy: BudgetPolicy) -> _BudgetEntry:
     title = str(candidate.title).strip()
     family_bucket = _build_family_bucket(candidate)
     score = 100
-    if family_bucket in STABLE_PENDING_FAMILIES:
+    if family_bucket in load_ax_governance_index().stable_pending_families:
         score += 40
     if _matches_any(title, policy.priority_title_patterns):
         score += 35
@@ -104,7 +104,7 @@ def _mark_hidden(
         decision.absorbed_or_hidden_items = [hidden_payload]
 
 
-def apply_result_budget(result: AdmissionResult, policy: DomainResultPolicy) -> dict[str, Any]:
+def apply_result_budget(result: AdmissionResult, policy: BudgetPolicy) -> dict[str, Any]:
     original_pending = list(result.pending_review_items)
     pending_entries = [_score_pending_entry(item, result.decisions[item.rule_id], policy) for item in original_pending]
     visible_entries = list(pending_entries)

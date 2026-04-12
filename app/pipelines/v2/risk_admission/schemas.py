@@ -63,12 +63,14 @@ class AdmissionDecision:
     user_visible_gate_passed: bool = False
     user_visible_gate_reason: str = ""
     user_visible_gate_rule: str = ""
+    stable_pending_config_id: str = ""
     evidence_sufficiency: str = ""
     user_visible_decision_basis: str = ""
     document_domain: str = ""
     domain_confidence: float = 0.0
     domain_evidence: list[str] = field(default_factory=list)
     domain_policy_id: str = ""
+    budget_policy_id: str = ""
     budget_hit: bool = False
     budget_rule: str = ""
     budget_reason: str = ""

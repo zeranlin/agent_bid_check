@@ -60,6 +60,427 @@
   "basis_summary": [
     "需人工复核"
   ],
+  "ops_explanation_summary": {
+    "stats": {
+      "hidden_by_gate_count": 14,
+      "hidden_by_budget_count": 3,
+      "absorbed_by_family_count": 0,
+      "excluded_internal_count": 17
+    },
+    "visible_items": [
+      {
+        "title": "评分标准中设置特定品牌倾向性条款",
+        "family_key": "评分标准中设置特定品牌倾向性条款",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "评分标准中设置特定品牌倾向性条款"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "第四章 资格审查与评标 -> 7.2 评标标准 -> 加分项（F4×A4）",
+          "excerpt": "“设备配置如果有华为小米等相关国产品牌优先。”"
+        }
+      },
+      {
+        "title": "验收流程与考核机制表述笼统，缺乏可操作性",
+        "family_key": "验收流程与考核机制表述笼统-缺乏可操作性",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "验收流程与考核机制表述笼统，缺乏可操作性"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据 1（第 2621-2624 行）、证据 2（第 2720-2721 行）",
+          "excerpt": "试用期每月考核，试用期后每季度考核。第 12、24、36 月进行年度评价考核。甲方...按次组织对乙方所提供服务进行验收，或定期进行服务考核..."
+        }
+      },
+      {
+        "title": "专门面向中小企业采购的评审细节需确认",
+        "family_key": "专门面向中小企业采购的评审细节需确认",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "专门面向中小企业采购的评审细节需确认"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据 1，第 32-92 行",
+          "excerpt": "本采购包属于专门面向中小企业采购。本采购包为专门面向中小企业采购，投标人须提供中小企业声明函。"
+        }
+      },
+      {
+        "title": "技术参数中关于“实验服清洗服务”的设备品牌指定风险",
+        "family_key": "技术参数中关于-实验服清洗服务-的设备品牌指定风险",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "技术参数中关于“实验服清洗服务”的设备品牌指定风险"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> H.其他服务 -> 2.实验服清洗服务",
+          "excerpt": "“由中标人提供8台全新滚筒洗衣机（容积大于等于10公斤、洗烘一体，如：美的、海尔、小天鹅同品质品牌）供检验科所使用……\""
+        }
+      }
+    ],
+    "hidden_items": [
+      {
+        "title": "验收标准模糊且依赖后续合同确定，存在需求条款合规风险",
+        "family_key": "验收标准模糊且依赖后续合同确定-存在需求条款合规风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 1（第 2621-2624 行）、证据 3（第 3111-3133 行）",
+          "excerpt": "1、期次 1，说明：按招标文件及合同约定的服务要求执行验收... 分包合同标的... 质量要求和标准，验收... 待甲方中标（成交）后，根据甲方与采购人签订的总包合同确定具体的内容。"
+        }
+      },
+      {
+        "title": "人员年龄限制可能构成就业歧视",
+        "family_key": "人员年龄限制可能构成就业歧视",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 995 - 1054 行",
+          "excerpt": "工程技术人员（含水电工、维修/电梯工、弱电工、运行工）25-55 周岁... 环境领班 25-45 周岁... 实验室洗涤人员 20-55 周岁... 动物房饲养员 20-55 周岁... 其他保洁人员 20-55 周岁"
+        }
+      },
+      {
+        "title": "唱标内容表述模糊，存在程序随意性风险",
+        "family_key": "唱标内容表述模糊-存在程序随意性风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1，第 354-368 行，11.4(2)",
+          "excerpt": "唱标时，唱标人将依次宣布……和招标文件规定的需要宣布的其他内容（包括但不限于：开标一览表中的内容、唱标人认为需要宣布的内容等）。"
+        }
+      },
+      {
+        "title": "商务条款中关于“人员工资”的报价要求可能引发低价恶性竞争或履约风险",
+        "family_key": "商务条款中关于-人员工资-的报价要求可能引发低价恶性竞争或履约风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 三、商务要求 -> 其他商务要求 -> (1)项目报价要求 -> 1)员工工资方面",
+          "excerpt": "“投标人须承诺拟派往本项目的服务人员薪资不低于福州市现行最低工资标准……投标人须针对员工薪资及五险一金要求事项单独提供承诺函……投标人在分项报价表中所报的‘人员工资’和‘人员五险一金’经测算低于福州市规定最低标准的，按无效投标处理。”"
+        }
+      },
+      {
+        "title": "将企业荣誉作为评分项，与履约能力关联度不足，存在倾向性风险",
+        "family_key": "将企业荣誉作为评分项-与履约能力关联度不足-存在倾向性风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据6，第722-772行，商务项第1点",
+          "excerpt": "1.企业荣誉 3.00 投标人2020年1月1日以来（以获奖时间为准）获得过地市级（含）以上人民政府或行政机关颁发的与物业服务或企业诚信经营有关的荣誉或表彰的，每提供1份得1分，满分3分。"
+        }
+      },
+      {
+        "title": "政策依据文件号表述不完整",
+        "family_key": "政策依据文件号表述不完整",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_rule_support",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_rule_support",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 452 行附近",
+          "excerpt": "符合财政部、民政部、中国残联文件（财库[2017]14"
+        }
+      },
+      {
+        "title": "评分标准中人员配置要求存在重复计分及过度限制风险",
+        "family_key": "评分标准中人员配置要求存在重复计分及过度限制风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "internal_governance_signal",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第四章 资格审查与评标 -> 7.2 评标标准 -> 技术项（F2×A2）-> 17-24项（项目经理至绿化工配置情况）",
+          "excerpt": "“第17-24评分项提供的人员不得重复，提供重复人员不得分。”"
+        }
+      },
+      {
+        "title": "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
+        "family_key": "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "internal_governance_signal",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第四章 资格审查与评标 -> 7.2 评标标准 -> 商务项（F3×A3）-> 1.企业荣誉、8.项目荣誉",
+          "excerpt": "- “1.企业荣誉：投标人2020年1月1日以来……获得过地市级（含）以上人民政府或行政机关颁发的与物业服务或企业诚信经营有关的荣誉或表彰的，每提供1份得1分，满分3分。”\n- “8.项目荣誉：投标人已完成或正在履约的物业管理服务项目……获得国家部委组织的‘节约型公共机构示范单位’或‘节约型机关’创建工作荣誉的得0.5分……获得地市级（含）以上人民政府或行政机关授予‘城区生活垃圾分类工作先进单位’荣誉的得0.5分……获得地市级（含）以上人民政府或行政机关授予‘绿化或园林式单位’荣誉的得0.5分。”"
+        }
+      },
+      {
+        "title": "人员证书评分项设置需警惕变相指定特定资质或人员",
+        "family_key": "人员证书评分项设置需警惕变相指定特定资质或人员",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据5，第716-721行，23.工程技术人员配置情况",
+          "excerpt": "至少有1人具有市场监督管理部门颁发的特种设备安全管理和作业人员证（项目代码：A)或特种设备安全管理人员证(项目代码:A1或A4))的得1分；该人员同时持有有效的应急管理部门或安全监督管理部门颁发的高压电工作业证的得1分...低压电工作业证的得1分"
+        }
+      },
+      {
+        "title": "评分标准中“项目业绩”要求“非住宅类”且时间跨度较长，可能限制中小企业",
+        "family_key": "评分标准中-项目业绩-要求-非住宅类-且时间跨度较长-可能限制中小企业",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "internal_governance_signal",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第四章 资格审查与评标 -> 7.2 评标标准 -> 商务项（F3×A3）-> 3.项目业绩、4.履约经验、5.服务满意度",
+          "excerpt": "“根据投标人提供的自2019年1月1日（含）至本项目投标截止时间止（以验收日期为准）已完成的同类（非住宅类）政府采购项目业绩情况进行评分……”"
+        }
+      },
+      {
+        "title": "关键业绩与奖项要求证据缺失，需人工复核",
+        "family_key": "关键业绩与奖项要求证据缺失-需人工复核",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据片段未覆盖",
+          "excerpt": "（无相关原文摘录，证据召回说明提示仅召回 1 个核心证据片段）"
+        }
+      },
+      {
+        "title": "关键合同条款缺失，无法评估付款与履约风险",
+        "family_key": "关键合同条款缺失-无法评估付款与履约风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据片段 1-3",
+          "excerpt": "证据 3 仅提及'固定单价合同'或'固定总价合同'，未列明具体付款节点；证据 1-2 仅涉及投标保证金，未涉及履约保证金及违约责任。"
+        }
+      },
+      {
+        "title": "节能环保产品政策适用性需进一步核实",
+        "family_key": "节能环保产品政策适用性需进一步核实",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 420-452 行",
+          "excerpt": "17.2 政府采购节能产品、环境标志产品实施品目清单管理...采购人拟采购的产品属于品目清单范围的..."
+        }
+      },
+      {
+        "title": "质疑证明材料要求证据缺失，需人工复核是否存在不合理门槛",
+        "family_key": "质疑证明材料要求证据缺失-需人工复核是否存在不合理门槛",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第 386-419 行，15.1(3)⑤b",
+          "excerpt": "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+        }
+      },
+      {
+        "title": "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争",
+        "family_key": "software_copyright_competition",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "result_budget",
+        "hidden_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
+        "reason_code": "low_value_signal_budget",
+        "config_id": "ax-sp-family-software-copyright-001",
+        "gate_rule": "low_value_signal_budget",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第四章 资格审查与评标 -> 7.2 评标标准 -> 商务项（F3×A3）-> 6.信息化软件服务能力",
+          "excerpt": "“投标人拥有与物业服务相关信息化管理软件或系统，并承诺在服务期内该软件或系统会投入本项目使用的，每提供1项得1分，满分3分。投标人须提供承诺函和著作权人为投标人的《计算机软件著作权登记证书》……\""
+        }
+      },
+      {
+        "title": "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险",
+        "family_key": "no_crime_submission_timing",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "result_budget",
+        "hidden_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
+        "reason_code": "low_value_signal_budget",
+        "config_id": "ax-sp-family-no-crime-001",
+        "gate_rule": "low_value_signal_budget",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> （二）物业管理团队人员配备情况及要求 -> 2)",
+          "excerpt": "“投标人须单独提供承诺函（格式自拟），承诺在合同签订后的三个月内提供无犯罪证明，未提供的按无效投标处理。”"
+        }
+      },
+      {
+        "title": "人员配置数量及证书要求需结合项目规模评估",
+        "family_key": "人员配置数量及证书要求需结合项目规模评估",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "result_budget",
+        "hidden_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
+        "reason_code": "low_value_signal_budget",
+        "config_id": "ax-sp-title-personnel-001",
+        "gate_rule": "low_value_signal_budget",
+        "policy_id": "budget-policy-service-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 995 - 1054 行",
+          "excerpt": "投标人根据采购需求自行制定拟投入本项目的人员配置，但总人数不得低于 65 人（其中杨廷路院区人数不得低于 35 人、通湖路院区人数不得低于 30 人）... 须持有高压电工作业证或低压电工作业证"
+        }
+      }
+    ],
+    "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。"
+  },
   "snapshot_version": "v1",
   "governance": {
     "document_name": "（埋点）福建省食品药品质量检验研究院2023年物业管理服务采购.docx",
@@ -2900,11 +3321,22 @@
       },
       "domain_policy": {
         "policy_id": "domain-policy-service-v1",
+        "document_domain": "service_procurement",
         "formal_output_strategy": "protect_formal_hard_risks",
         "pending_output_strategy": "prioritize_service_delivery_and_scoring_boundary_issues",
         "family_repeat_tolerance": 1,
         "weak_signal_threshold": "strict",
         "internal_signal_visibility": "hidden_from_user",
+        "budget_policy_id": "budget-policy-service-v1",
+        "reason": "服务采购类应优先保留服务履约、评分边界和商务失衡问题，并压缩模板提醒类输出。",
+        "source": "AX3",
+        "version": 1,
+        "owner": "T",
+        "last_updated_at": "2026-04-12"
+      },
+      "budget_policy": {
+        "policy_id": "budget-policy-service-v1",
+        "document_domain": "service_procurement",
         "formal_count_budget": 8,
         "pending_count_budget": 8,
         "family_repeat_budget": 1,
@@ -2920,10 +3352,15 @@
           "无犯罪证明",
           "信息化软件服务能力",
           "人员配置数量及证书要求"
-        ]
+        ],
+        "reason": "服务采购类对模板提醒和低价值提示更严格，但仍保留服务履约与评分边界类问题。",
+        "source": "AX3",
+        "version": 1,
+        "owner": "T",
+        "last_updated_at": "2026-04-12"
       },
       "budget_summary": {
-        "policy_id": "domain-policy-service-v1",
+        "policy_id": "budget-policy-service-v1",
         "before_counts": {
           "formal_risks": 0,
           "pending_review_items": 7,
@@ -6158,6 +6595,7 @@
         "user_visible_gate_passed": true,
         "user_visible_gate_reason": "当前问题涉及潜在品牌倾向或品牌指定，具备明确复核价值，保留为用户可见待补证项。",
         "user_visible_gate_rule": "pending_material_issue_allowed",
+        "stable_pending_config_id": "ax-sp-title-brand-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6170,6 +6608,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6199,6 +6638,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
         "user_visible_gate_rule": "technical_layer_excluded",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "technical_layer_excluded",
         "document_domain": "service_procurement",
@@ -6211,6 +6651,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6240,6 +6681,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6252,6 +6694,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6281,6 +6724,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6293,6 +6737,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6322,6 +6767,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6334,6 +6780,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6363,6 +6810,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
         "user_visible_gate_rule": "low_value_signal_budget",
+        "stable_pending_config_id": "ax-sp-family-no-crime-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6375,6 +6823,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": true,
         "budget_rule": "low_value_signal_budget",
         "budget_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
@@ -6412,6 +6861,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6424,6 +6874,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6453,6 +6904,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
         "user_visible_gate_rule": "weak_signal_no_rule_support",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "insufficient",
         "user_visible_decision_basis": "pending_gate_blocked_before_user_visible_output",
         "document_domain": "service_procurement",
@@ -6465,6 +6917,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6494,6 +6947,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
         "user_visible_gate_rule": "low_value_signal_budget",
+        "stable_pending_config_id": "ax-sp-family-software-copyright-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6506,6 +6960,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": true,
         "budget_rule": "low_value_signal_budget",
         "budget_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
@@ -6543,6 +6998,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
         "user_visible_gate_rule": "internal_governance_signal",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "unstable_registry_identity_should_not_be_user_visible",
         "document_domain": "service_procurement",
@@ -6555,6 +7011,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6584,6 +7041,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
         "user_visible_gate_rule": "internal_governance_signal",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "unstable_registry_identity_should_not_be_user_visible",
         "document_domain": "service_procurement",
@@ -6596,6 +7054,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6625,6 +7084,7 @@
         "user_visible_gate_passed": true,
         "user_visible_gate_reason": "当前问题涉及履约执行和验收争议风险，具备明确复核价值，保留为用户可见待补证项。",
         "user_visible_gate_rule": "pending_material_issue_allowed",
+        "stable_pending_config_id": "ax-sp-title-acceptance-procedure-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6637,6 +7097,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6666,6 +7127,7 @@
         "user_visible_gate_passed": true,
         "user_visible_gate_reason": "当前问题涉及采购政策适用边界，具备明确复核价值，保留为用户可见待补证项。",
         "user_visible_gate_rule": "pending_material_issue_allowed",
+        "stable_pending_config_id": "ax-sp-title-sme-proof-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6678,6 +7140,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6707,6 +7170,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6719,6 +7183,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6748,6 +7213,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
         "user_visible_gate_rule": "low_value_signal_budget",
+        "stable_pending_config_id": "ax-sp-title-personnel-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6760,6 +7226,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": true,
         "budget_rule": "low_value_signal_budget",
         "budget_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
@@ -6797,6 +7264,7 @@
         "user_visible_gate_passed": true,
         "user_visible_gate_reason": "当前问题涉及潜在品牌倾向或品牌指定，具备明确复核价值，保留为用户可见待补证项。",
         "user_visible_gate_rule": "pending_material_issue_allowed",
+        "stable_pending_config_id": "ax-sp-title-brand-001",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "stable_pending_family_or_title_with_material_review_value",
         "document_domain": "service_procurement",
@@ -6809,6 +7277,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6838,6 +7307,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
         "user_visible_gate_rule": "internal_governance_signal",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "unstable_registry_identity_should_not_be_user_visible",
         "document_domain": "service_procurement",
@@ -6850,6 +7320,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6879,6 +7350,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6891,6 +7363,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6920,6 +7393,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6932,6 +7406,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -6961,6 +7436,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -6973,6 +7449,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",
@@ -7002,6 +7479,7 @@
         "user_visible_gate_passed": false,
         "user_visible_gate_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
         "user_visible_gate_rule": "unstable_pending_identity_block",
+        "stable_pending_config_id": "",
         "evidence_sufficiency": "sufficient",
         "user_visible_decision_basis": "topic_only_pending_without_stable_registry_or_allowlist",
         "document_domain": "service_procurement",
@@ -7014,6 +7492,7 @@
           "管理服务"
         ],
         "domain_policy_id": "domain-policy-service-v1",
+        "budget_policy_id": "budget-policy-service-v1",
         "budget_hit": false,
         "budget_rule": "",
         "budget_reason": "",

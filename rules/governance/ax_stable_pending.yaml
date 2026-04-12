@@ -1,0 +1,191 @@
+version: 1
+entries:
+  - id: ax-sp-family-missing-detection-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: missing_detection_or_cert_requirement
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题属于稳定的待补证家族，具备持续对外复核价值。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-scoring-clarity-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: scoring_clarity
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题属于稳定的待补证家族，具备持续对外复核价值。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-energy-policy-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: energy_policy_missing
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题属于稳定的待补证家族，具备持续对外复核价值。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-software-copyright-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: software_copyright_competition
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题属于稳定的待补证家族，具备持续对外复核价值。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-no-crime-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: no_crime_submission_timing
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题属于稳定的待补证家族，具备持续对外复核价值。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-brand-bias-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: brand_bias
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及潜在品牌倾向或品牌指定，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-family-sample-acceptance-001
+    status: active
+    scope:
+      kind: stable_pending_family
+    condition:
+      family_key: sample_acceptance_gate
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及样品要求与验收门槛，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-prepayment-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (缺乏预付款安排|资金压力较大)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题虽未达 formal 条件，但具备明确商务影响和原文证据，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-remote-opening-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (远程开标解密时限及后果条款的合理性审查|远程开标逾期解密后果表述需进一步确认)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-acceptance-procedure-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (验收流程与考核机制表述笼统|验收流程、组织方式及不合格复验程序约定不明)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及履约执行和验收争议风险，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-sme-proof-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (专门面向中小企业采购的评审细节需确认|专门面向中小企业采购的证明材料要求表述需核实)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及采购政策适用边界，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-brand-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (评分标准中设置特定品牌倾向性条款|设备品牌指定风险|疑似限定或倾向特定品牌/供应商)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及潜在品牌倾向或品牌指定，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-personnel-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (人员配置数量及证书要求需结合项目规模评估|要求现场技术人员必须为制造商原厂工程师)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题涉及资格条件与竞争边界，具备明确复核价值，保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-sp-title-competition-procedure-001
+    status: active
+    scope:
+      kind: stable_pending_title_rule
+    pattern: (信息化软件服务能力.*著作权人为投标人|无犯罪证明.*提交时限|远程开标解密时限及后果条款显失公平)
+    condition:
+      match_target: title
+    rule:
+      user_visible_gate_rule: pending_material_issue_allowed
+    reason: 当前问题具备明确竞争或程序后果，虽未进入 formal，但应保留为用户可见待补证项。
+    source: AX2
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12

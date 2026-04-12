@@ -2,7 +2,7 @@
   "snapshot_version": "v1",
   "run_metadata": {
     "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
-    "generated_at": "2026-04-12T11:33:31",
+    "generated_at": "2026-04-12T13:08:08",
     "document_domain": "goods_procurement",
     "domain_confidence": 0.93,
     "domain_policy_id": "domain-policy-goods-v1",
@@ -124,7 +124,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -142,6 +143,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -167,7 +169,8 @@
                 "fe1a8d0575d6"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清"
       },
@@ -233,7 +236,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -251,6 +255,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -276,7 +281,8 @@
                 "044af10a3b64"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "acceptance_scheme_scoring"
       },
@@ -356,7 +362,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -374,6 +381,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -403,7 +411,8 @@
                 "85c7e767a903"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "regional_performance"
       },
@@ -467,7 +476,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -485,6 +495,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -510,7 +521,8 @@
                 "b7adf1a1ed24"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "personnel_scoring"
       },
@@ -597,7 +609,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -615,6 +628,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -647,7 +661,8 @@
                 "38e8f621016d"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": "ax-family-import-consistency-v1"
         },
         "family_key": "import_consistency"
       },
@@ -760,7 +775,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -778,6 +794,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -818,7 +835,8 @@
                 "0b50a40bc915"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": "ax-family-certification-scoring-v1"
         },
         "family_key": "certification_scoring_bundle"
       },
@@ -895,7 +913,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -913,6 +932,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -941,7 +961,8 @@
                 "9cf7c136c1a8"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": "ax-family-acceptance-cost-v1"
         },
         "family_key": "acceptance_testing_cost"
       }
@@ -1029,7 +1050,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题属于稳定的待补证家族，具备持续对外复核价值。",
-          "gate_rule": "pending_material_issue_allowed"
+          "gate_rule": "pending_material_issue_allowed",
+          "stable_pending_config_id": "ax-sp-family-scoring-clarity-001"
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -1047,6 +1069,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -1079,7 +1102,8 @@
                 "2541bc86bfa3"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "scoring_clarity"
       },
@@ -1148,7 +1172,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题属于稳定的待补证家族，具备持续对外复核价值。",
-          "gate_rule": "pending_material_issue_allowed"
+          "gate_rule": "pending_material_issue_allowed",
+          "stable_pending_config_id": "ax-sp-family-missing-detection-001"
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -1166,6 +1191,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -1191,7 +1217,8 @@
                 "2f48ead8b18a"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "missing_detection_or_cert_requirement"
       },
@@ -1260,7 +1287,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题涉及资格条件与竞争边界，具备明确复核价值，保留为用户可见待补证项。",
-          "gate_rule": "pending_material_issue_allowed"
+          "gate_rule": "pending_material_issue_allowed",
+          "stable_pending_config_id": "ax-sp-title-personnel-001"
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -1278,6 +1306,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -1303,12 +1332,576 @@
                 "d3822ed3c2cc"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "要求现场技术人员必须为制造商原厂工程师-存在排斥代理商风险"
       }
     ],
     "excluded_risks": []
+  },
+  "ops_explanation_summary": {
+    "stats": {
+      "hidden_by_gate_count": 18,
+      "hidden_by_budget_count": 1,
+      "absorbed_by_family_count": 0,
+      "excluded_internal_count": 19
+    },
+    "visible_items": [
+      {
+        "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清",
+        "family_key": "强制性标准条款未按评审规则标注-可能导致实质性响应边界不清",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "强制性标准条款未按评审规则标注★，可能导致实质性响应边界不清"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "评审规则：内置规则库：实质性条款星标规则；技术条款：（5） ▲排量： ≥50L",
+          "excerpt": "规则要求：评审规则合理性-含有GB（不含GB/T）或国家强制性标准的描述中需含有★号。\n\n正文条款：（5） ▲排量： ≥50L （6）起动方式： 24V 蓄电池自动启动。 （7）燃油标准， 采用 0 号轻柴油，符合 GB252 或 BS2869 标准。 （8）调速器系统，采用电子式调速器"
+        }
+      },
+      {
+        "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        "family_key": "acceptance_scheme_scoring",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "评审规则：内置规则库：评分因素合规性；评分条款：二、评审标准：",
+          "excerpt": "规则要求：评审规则合规性-不得将项目验收方案作为评审因素。\n\n评分内容：二、评审标准： 方案每体现 1 点加 10 分， 最高得 40 分， 再此基础上 1.安装、检测、验收、培训计划条理清晰， 脉络分明， 操作性强， 人性化，能体现以人为本、服务至上的售后理念， 评价为优得 60 分； 2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念， 评价为良得 30 分； 3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念， 评价为中得 10 分； 4、安装、检测、验收、培训计划条理模糊， 脉络不分明，操作性差， 不能能体现以人为本、服务至上的售后理念，评价为差， 不得分"
+        }
+      },
+      {
+        "title": "业绩评分限定特定行政区域，存在地域排斥风险",
+        "family_key": "regional_performance",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "业绩评分限定特定行政区域，存在地域排斥风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "评标信息 -> 综合实力部分 -> 3. 供应商同类项目业绩情况 -> （一）评分内容",
+          "excerpt": "“提供投标人 2022 年 4 月 1 日至投标截止日（以合同签订日期为准）在深圳市政府机关的柴油发电机组供货或安装业绩……\""
+        }
+      },
+      {
+        "title": "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
+        "family_key": "personnel_scoring",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "证据1，第 261 - 276 行",
+          "excerpt": "3.具有PMP项目经理证书的，得15分，具有柴油发电机组同类项目经验的，得 15 分，本小项最高得 30 分。"
+        }
+      },
+      {
+        "title": "拒绝进口 vs 外标/国外部件引用矛盾风险",
+        "family_key": "import_consistency",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "拒绝进口 vs 外标/国外部件引用矛盾风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "政策条款：二、申请人的资格要求；技术条款：1.规格及技术参数；部件/验收条款：设备验收",
+          "excerpt": "政策口径：不接受投标人选用进口产品\n\n外标引用：1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准\n\n国标/行标：1.14 电磁影响： 符合 BS EN 61000 GB/T 17626 及 EN55011 标准\n\n国外部件要求：4. 国外生产的部件必须有合法的进货渠道证明及原产地证明。"
+        }
+      },
+      {
+        "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险",
+        "family_key": "certification_scoring_bundle",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "评审规则：内置规则库：评分因素公平竞争；评分条款：（一） 评分内容：",
+          "excerpt": "规则要求：评审规则合理性-不得限定或者指定特定的专利、商标、品牌或者供应商。\n\n评分内容：（一） 评分内容： 柴油发电机组制造商的投标的柴油发电机组，具备以下认证的： 1.具备有效期内省级标准协会颁发的省级采用国际标准产品确认证书和采用国际标准产品标志证书的， 每具备一项得 40 分， 具备两项得 80 分， 本小项最高得 80 分。 2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分；2.具备 CNAS 中国认可产品标志证书的， 得 20 分，本小项最高得 20 分。 以上累计最高得分为 100 分。"
+        }
+      },
+      {
+        "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "family_key": "acceptance_testing_cost",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "规则条款：内置规则库：需求合规性；需求条款：（二）其他商务要求",
+          "excerpt": "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：2 基本要求 ★1.本项目为交钥匙项目：投标人的投标总价包括货物设计、生产（采购）、包装、运输至指定位置、装卸、安装 （排风、供油、尾气喷淋系统、接地、排烟管、电缆安装等）、检测、调试、试运行、培训、相关部门验收、验收合格之前及质保期内的首次维护保养 （含更换机油及耗材） 及整机质量保修三年或累计运行 1000 小时（时间先到之一终止） 、备品备件、专用工具等所有含税费用， 同时投标人应自行计入系统正常、合法、安全运行及使用所必需的所有设备、版权、专利等一切费用。"
+        }
+      },
+      {
+        "title": "评分描述量化口径不足，存在评审一致性风险",
+        "family_key": "scoring_clarity",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "评分描述量化口径不足，存在评审一致性风险"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据 1，第 200 - 215 行",
+          "excerpt": "1.安装、检测、验收、培训计划条理清晰，脉络分明，操作性强，人性化，能体现以人为本、服务至上的售后理念，评价为优得 60 分；2.安装、检测、验收、培训计划条理较清晰，脉络较分明，操作性较强，能体现以人为本、服务至上的售后理念，评价为良得 30 分；3.安装、检测、验收、培训计划条理模糊，脉络较分明，操作性较强，不能能体现以人为本、服务至上的售后理念，评价为中得 10 分；4、安装、检测、验收、培训计划条理模糊，脉络不分明，操作性差，不能能体现以人为本、服务至上的售后理念，评价为差，不得分。"
+        }
+      },
+      {
+        "title": "检测报告及认证资质要求缺失或表述不明",
+        "family_key": "missing_detection_or_cert_requirement",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "检测报告及认证资质要求缺失或表述不明"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据 1、2、3（全文未明确提及检测报告要求）",
+          "excerpt": "（证据片段中仅列出技术参数，未见对检测报告、CMA/CNAS 资质或 CCC 认证的具体要求）"
+        }
+      },
+      {
+        "title": "要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险",
+        "family_key": "要求现场技术人员必须为制造商原厂工程师-存在排斥代理商风险",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据1/证据3 - 设备安装要求 - 第2条",
+          "excerpt": "该技术人员必须为柴油发电机制造商厂的专业工程师，有指导安装、调试同类设备 5 年以上工作经验。"
+        }
+      }
+    ],
+    "hidden_items": [
+      {
+        "title": "中小企业扶持政策落实条款缺失（价格扣除比例未明确）",
+        "family_key": "中小企业扶持政策落实条款缺失-价格扣除比例未明确",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2（第 1590-1652 行）及证据 3（第 3368-3421 行）",
+          "excerpt": "证据 2 提到：'满足多项优惠政策的投标人，不重复享受多项价格扣除政策。'；证据 3 末尾显示：'6．政策导向 6.'后无具体内容。"
+        }
+      },
+      {
+        "title": "履约保证金比例严重超标",
+        "family_key": "guarantee_ratio",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 781 - 810 行，第 21 条",
+          "excerpt": "乙方应在签订本合同之日，向甲方或甲方指定的机构提交履约保证金为合同金额的 12%"
+        }
+      },
+      {
+        "title": "技术参数中指定具体生产日期，具有明显排他性和倾向性",
+        "family_key": "技术参数中指定具体生产日期-具有明显排他性和倾向性",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "internal_governance_signal",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第三章 用户需求书 -> 四、具体技术要求 -> 3.1 柴油机 (2) 及 3.2 发电机 (1)",
+          "excerpt": "“（2）★产品应选用原装产品，生产日期必须是 2025 年。”、“（1）▲投标产品应选用原装产品，生产日期必须是 2025 年。”"
+        }
+      },
+      {
+        "title": "验收时点约定缺失，导致验收流程不可操作",
+        "family_key": "acceptance_template_placeholder",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 3 - 第五条 交货和验收 - 第 4 款",
+          "excerpt": "甲方应当在到货后的              个工作日内对货物进行验收；需要乙方对货物或系统进行安装调试的，甲方应在货物安装调试完毕后的              个工作日内进行质量验收。"
+        }
+      },
+      {
+        "title": "付款节点设置滞后且尾款支付条件苛刻",
+        "family_key": "付款节点设置滞后且尾款支付条件苛刻",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 3，第 2919 - 2954 行，第 3 条",
+          "excerpt": "工程全部安装调试完成经采购人现场验收合格设备正常运行三个月后收到中标人合规发票 15 个工作日支付合同总价的 20% 给中标人。"
+        }
+      },
+      {
+        "title": "制造商资质证书要求表述模糊，存在设置不合理门槛风险",
+        "family_key": "制造商资质证书要求表述模糊-存在设置不合理门槛风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第 1752 - 1753 行",
+          "excerpt": "九、制造商发电机组资质证书 （格式自拟）投标人自行按照本项目评标信息对应评审项内容进行提供资料。"
+        }
+      },
+      {
+        "title": "残疾人福利性单位及监狱企业政策表述不完整",
+        "family_key": "残疾人福利性单位及监狱企业政策表述不完整",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2（第 1590-1652 行）",
+          "excerpt": "证据 2 提到：'满足多项优惠政策的投标人，不重复享受多项价格扣除政策。'但未明确残疾人福利性单位和监狱企业的具体优惠方式。"
+        }
+      },
+      {
+        "title": "踏勘现场作为资格性审查条件，违反规定",
+        "family_key": "踏勘现场作为资格性审查条件-违反规定",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前仅命中内部治理信号，未形成可直接对外展示的用户结果。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "internal_governance_signal",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第二章 对通用条款的补充内容及其他关键信息 -> 一、对通用条款的补充内容 -> 序号 9",
+          "excerpt": "“投标人必须参与现场踏勘并提供现场踏勘确认函，未参与踏勘现场的将否定投标人资格”"
+        }
+      },
+      {
+        "title": "采购文件澄清截止时间未明确填写",
+        "family_key": "采购文件澄清截止时间未明确填写",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1，第 720-758 行，第 5 点",
+          "excerpt": "5.采购文件澄清/修改事项： 2025 年**月**日**:** （北京时间） （具体时间详见深圳政府采购智慧平台招标公告）前..."
+        }
+      },
+      {
+        "title": "项目负责人学历与职称要求过高，可能构成不合理门槛",
+        "family_key": "项目负责人学历与职称要求过高-可能构成不合理门槛",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1，第 261 - 276 行",
+          "excerpt": "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分... 2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。"
+        }
+      },
+      {
+        "title": "项目负责人评分项分值设置畸高且标准简单累加，缺乏与项目履约能力的直接关联",
+        "family_key": "项目负责人评分项分值设置畸高且标准简单累加-缺乏与项目履约能力的直接关联",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 261 - 276 行",
+          "excerpt": "1.具备全日制本科或以上学历的，得 30 分，具备专科学历的，得 10 分，其他情况不得分，本小项最高得 30 分。2.具有高级工程师职称的，得 40 分，具备中级工程师职称的，得 20 分。3.具有 PMP 项目经理证书的，得 15 分，具有柴油发电机组同类项目经验的，得 15 分，本小项最高得 30 分。以上得分可以累计，最高得分 100 分。"
+        }
+      },
+      {
+        "title": "验收标准表述模糊，存在单方裁量空间过大风险",
+        "family_key": "验收标准表述模糊-存在单方裁量空间过大风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2 - 设备验收 - 第 1、2 款",
+          "excerpt": "1. 中标人应给出项目详细的验收方案，包括验收项目、验收标准，验收实施办法等。2.符合国家以及所投发电机组安装、调试规范要求。"
+        }
+      },
+      {
+        "title": "电子投标文件容量限制可能增加投标负担",
+        "family_key": "电子投标文件容量限制可能增加投标负担",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1，第 720-758 行，第 4 点",
+          "excerpt": "本项目电子投标文件最大容量为 100MB，超过此容量的文件将被拒绝。"
+        }
+      },
+      {
+        "title": "项目负责人社保要求存在例外条款，可能导致评审不公",
+        "family_key": "项目负责人社保要求存在例外条款-可能导致评审不公",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "评标信息 -> 技术部分 -> 5. 拟安排的项目负责人情况 -> 二、评审依据 1",
+          "excerpt": "“若供应商成立不足三个月的，需提供成立情况说明函（格式自拟），无需提供相关人员社保，亦可得分；若为退休返聘人员，需提供说明函（格式自拟），无需提供相关人员社保，亦可得分。”"
+        }
+      },
+      {
+        "title": "验收主体及流程描述不完整，缺乏不合格处理机制",
+        "family_key": "验收主体及流程描述不完整-缺乏不合格处理机制",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2 - 设备验收 - 第 5、6 款",
+          "excerpt": "5.验收由采购人、中标人及相关人员依国家有关标准/合同及有关的附件要求进行。6.验收完毕由采购人及中标人在验收报告上签名确认。"
+        }
+      },
+      {
+        "title": "关键履约与责任条款缺失",
+        "family_key": "关键履约与责任条款缺失",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据片段整体",
+          "excerpt": "当前证据片段未包含违约责任、质量保证金比例、履约期限等核心条款。"
+        }
+      },
+      {
+        "title": "具体资格条款缺失，无法判断是否存在排斥性条件",
+        "family_key": "具体资格条款缺失-无法判断是否存在排斥性条件",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第 3368 - 3421 行",
+          "excerpt": "5.2 投标人资格要求 参加本项目的投标人应具备的资格条件详见本项目招标公告中“投标人资格要求”（即申请人的资格要求）的内容。"
+        }
+      },
+      {
+        "title": "质疑处理流程及答复时限证据缺失",
+        "family_key": "质疑处理流程及答复时限证据缺失",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据3，第 3756-3808 行，第 52.4 点及后续",
+          "excerpt": "供应商可以委..."
+        }
+      },
+      {
+        "title": "节能环保产品政策条款缺失",
+        "family_key": "energy_policy_missing",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "result_budget",
+        "hidden_reason": "当前问题属于低价值弱提示项，在该文档场景下不再进入用户可见结果，仅保留内部 trace。",
+        "reason_code": "low_value_signal_budget",
+        "config_id": "ax-sp-family-energy-policy-001",
+        "gate_rule": "low_value_signal_budget",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 1、2、3",
+          "excerpt": "所有证据片段中均未提及'节能产品'、'环境标志产品'、'强制采购'或'优先采购'等关键词。"
+        }
+      }
+    ],
+    "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。"
   },
   "problem_trace_summary": [
     {

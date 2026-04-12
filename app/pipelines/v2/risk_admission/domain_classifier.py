@@ -3,14 +3,15 @@ from __future__ import annotations
 import re
 from collections import Counter
 
+from app.governance.ax_governance import VALID_DOCUMENT_DOMAINS
 from app.pipelines.v2.problem_layer.models import ProblemLayerResult
 
+from .domain_policy import get_domain_result_policy
 from .schemas import DocumentDomain, DomainClassification
 
 
 DOMAIN_RULES: dict[DocumentDomain, dict[str, object]] = {
     "engineering_maintenance_construction": {
-        "policy_id": "domain-policy-engineering-v1",
         "patterns": (
             r"操场",
             r"跑道",
@@ -27,7 +28,6 @@ DOMAIN_RULES: dict[DocumentDomain, dict[str, object]] = {
         ),
     },
     "goods_procurement": {
-        "policy_id": "domain-policy-goods-v1",
         "patterns": (
             r"货物类",
             r"家具采购",
@@ -40,7 +40,6 @@ DOMAIN_RULES: dict[DocumentDomain, dict[str, object]] = {
         ),
     },
     "service_procurement": {
-        "policy_id": "domain-policy-service-v1",
         "patterns": (
             r"物业",
             r"服务采购",
@@ -78,11 +77,12 @@ def classify_document_domain(document_name: str, comparison, problems: ProblemLa
                 evidence[domain].append(pattern)
 
     if not scores:
+        default_policy = get_domain_result_policy("goods_procurement")
         return DomainClassification(
             document_domain="goods_procurement",
             domain_confidence=0.4,
             domain_evidence=["default_fallback:goods_procurement"],
-            domain_policy_id=str(DOMAIN_RULES["goods_procurement"]["policy_id"]),
+            domain_policy_id=default_policy.policy_id,
         )
 
     ranked = scores.most_common()
@@ -94,9 +94,12 @@ def classify_document_domain(document_name: str, comparison, problems: ProblemLa
     if primary_score >= 4:
         confidence = max(confidence, 0.93)
 
+    if primary not in VALID_DOCUMENT_DOMAINS:
+        raise ValueError(f"invalid classified domain: {primary}")
+    policy = get_domain_result_policy(primary)
     return DomainClassification(
         document_domain=primary,  # type: ignore[arg-type]
         domain_confidence=confidence,
         domain_evidence=evidence[primary][:5],
-        domain_policy_id=str(DOMAIN_RULES[primary]["policy_id"]),
+        domain_policy_id=policy.policy_id,
     )

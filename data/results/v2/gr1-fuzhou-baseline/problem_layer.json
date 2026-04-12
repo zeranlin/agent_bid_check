@@ -4951,6 +4951,7 @@
         "replaced_problem_ids": [],
         "problem_id_seed": "acceptance_testing_cost|验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险|acceptance_testing_cost,将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|compare::acceptance_testing_cost,topic::将验收产生的检测费用计入投标人承担范围-存在需求条款合规风险|017e45310d0e,f7231648849f",
         "primary_selection_reason": "优先保留规则归属最清晰、合规后果最明确的检测费用主问题，附属需求表述下沉为 supporting trace。",
+        "family_governance_config_id": "ax-family-acceptance-cost-v1",
         "family_key": "acceptance_testing_cost",
         "canonical_title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
         "primary_visible_problem_id": "problem-b63f1df5ccd0",

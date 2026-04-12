@@ -446,6 +446,56 @@
           </div>
         </section>
         {% endif %}
+
+        {% if result.review_view.ops_explanation_summary %}
+        <section class="panel panel--result panel--result-subsection">
+          <div class="panel__head">
+            <div>
+              <p class="kicker">Ops</p>
+              <h2>运维解释摘要</h2>
+            </div>
+          </div>
+          <div class="compare-compact-summary">
+            <div class="compare-compact-stat">
+              <span>gate 拦截</span>
+              <strong>{{ result.review_view.ops_explanation_summary.stats.hidden_by_gate_count }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>budget 压缩</span>
+              <strong>{{ result.review_view.ops_explanation_summary.stats.hidden_by_budget_count }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>family 吸收</span>
+              <strong>{{ result.review_view.ops_explanation_summary.stats.absorbed_by_family_count }}</strong>
+            </div>
+            <div class="compare-compact-stat">
+              <span>excluded/internal</span>
+              <strong>{{ result.review_view.ops_explanation_summary.stats.excluded_internal_count }}</strong>
+            </div>
+          </div>
+          {% if result.review_view.ops_explanation_summary.detection_note %}
+          <div class="compare-compact-item is-empty" style="margin-bottom: 12px;">
+            <p>{{ result.review_view.ops_explanation_summary.detection_note|inline_md }}</p>
+          </div>
+          {% endif %}
+          <div class="compare-compact-grid">
+            <article class="compare-compact-card">
+              <h3>已识别但未展示</h3>
+              {% for item in result.review_view.ops_explanation_summary.hidden_items %}
+              <div class="compare-compact-item">
+                <strong>{{ item.title|inline_md }}</strong>
+                <p>{{ item.hidden_by }} / {{ item.hidden_reason|inline_md }}</p>
+                {% if item.kept_item and item.kept_item.title %}
+                <p>保留主项：{{ item.kept_item.title|inline_md }}</p>
+                {% endif %}
+              </div>
+              {% else %}
+              <div class="compare-compact-item is-empty"><p>当前无已识别但未展示的条目。</p></div>
+              {% endfor %}
+            </article>
+          </div>
+        </section>
+        {% endif %}
         {% else %}
         <div class="empty-state">
           <p>上传文件后，系统会直接使用 V2 流程发起审查。</p>

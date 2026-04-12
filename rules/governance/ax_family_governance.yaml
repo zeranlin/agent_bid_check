@@ -1,0 +1,137 @@
+version: 1
+entries:
+  - id: ax-family-brand-bias-v1
+    status: active
+    scope:
+      family_key: brand_bias
+    condition:
+      match_title_patterns:
+        - 指定特定品牌
+        - 指定品牌
+        - 倾向特定供应商
+        - Aokang
+        - 品牌
+      require_any_title_patterns:
+        - 指定特定品牌
+        - 指定品牌
+        - Aokang
+    rule:
+      canonical_title: 疑似限定或倾向特定品牌/供应商
+      preferred_topics:
+        - baseline
+        - technical
+        - technical_standard
+        - scoring
+        - samples_demo
+      primary_title_patterns:
+        - 技术参数中指定特定品牌
+      merge_reason: 同一品牌指定或品牌倾向问题被多个专题重复外显，问题层按白名单 family 仅保留一个主问题并吸收附属标题。
+      primary_selection_reason: 优先保留正文或基线侧最能代表用户风险认知的品牌倾向主问题，其余专题命中作为附属或旁证下沉。
+      supporting_visible_problem_limit: 0
+    reason: 品牌倾向类问题应在 problem layer 完成用户可见层产品化收敛。
+    source: AX1
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-family-acceptance-cost-v1
+    status: active
+    scope:
+      family_key: acceptance_testing_cost
+    condition:
+      match_family_keys:
+        - acceptance_testing_cost
+    rule:
+      canonical_title: 验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险
+      preferred_topics:
+        - contract_payment
+        - acceptance
+        - baseline
+      primary_title_patterns:
+        - 验收检测及相关部门验收费用表述笼统
+      merge_reason: 验收检测费用转嫁与费用边界不清属于同一费用承担家族，问题层统一保留一个用户可见主问题。
+      primary_selection_reason: 优先保留规则归属最清晰、合规后果最明确的检测费用主问题，附属需求表述下沉为 supporting trace。
+      supporting_visible_problem_limit: 0
+    reason: 检测费用承担类问题不得在 formal 与 pending 双轨外显。
+    source: AX1
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-family-certification-scoring-v1
+    status: active
+    scope:
+      family_key: certification_scoring_bundle
+    condition:
+      match_family_keys:
+        - certification_scoring_bundle
+    rule:
+      canonical_title: 以特定认证及特定发证机构作为评分条件，存在倾向性评分和限制竞争风险
+      preferred_topics:
+        - scoring
+        - baseline
+      primary_title_patterns:
+        - 以特定认证及特定发证机构作为评分条件
+      merge_reason: 证书评分捆绑类问题对外只保留一个主问题，认证权重和证书细项作为 supporting trace 下沉。
+      primary_selection_reason: 优先保留最能代表客户风险认知的证书评分捆绑主问题，分值和附属证书说明进入 trace。
+      supporting_visible_problem_limit: 0
+    reason: 证书评分捆绑问题应在 family 层统一产品化表达。
+    source: AX1
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-family-import-consistency-v1
+    status: active
+    scope:
+      family_key: import_consistency
+    condition:
+      match_family_keys:
+        - import_consistency
+    rule:
+      canonical_title: 拒绝进口 vs 外标/国外部件引用矛盾风险
+      preferred_topics:
+        - policy
+        - technical_standard
+        - technical
+      primary_title_patterns:
+        - 拒绝进口
+        - 非进口项目
+      merge_reason: 进口限制与外标引用属于同一一致性家族，问题层保持单一主问题并为 conflict 收口预留统一入口。
+      primary_selection_reason: 优先保留政策口径与外标引用冲突表达最完整的主问题，其余标准编号和部件说明留在 supporting trace。
+      supporting_visible_problem_limit: 0
+    reason: 进口限制与外标引用一致性问题必须单一主问题外显。
+    source: AX1
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: ax-family-sample-acceptance-v1
+    status: active
+    scope:
+      family_key: sample_acceptance_gate
+    condition:
+      match_title_patterns:
+        - 样品
+      require_any_title_patterns:
+        - 样品评审规则
+        - 样品作为验收样本
+        - 样品在评标
+        - 未提供即无效
+    rule:
+      canonical_title: 将样品要求/验收方案不当作为评审或履约门槛
+      preferred_topics:
+        - baseline
+        - scoring
+        - acceptance
+        - samples_demo
+      primary_title_patterns:
+        - 样品评审规则设置不当
+        - 样品要求过细且评审规则失衡
+      internal_title_patterns:
+        - 样品作为验收样本
+        - 不得体现供应商公司信息
+      merge_reason: 样品要求、样品评审和验收衔接问题属于同一家族，对外保留一个核心门槛问题，其余解释下沉。
+      primary_selection_reason: 优先保留业务后果最明确、客户最容易理解的样品门槛主问题；逻辑衔接和说明性条款仅保留在 trace。
+      supporting_visible_problem_limit: 0
+    reason: 样品/验收关联类问题需防止用户可见层并列膨胀。
+    source: AX1
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12

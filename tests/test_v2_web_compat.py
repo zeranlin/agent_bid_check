@@ -297,7 +297,24 @@ def test_build_review_view_from_final_output_prefers_single_source_titles() -> N
                 "legal_basis": ["正式依据"],
                 "rectification": ["正式建议"],
             }
-        ]
+        ],
+        "ops_explanation_summary": {
+            "stats": {
+                "hidden_by_gate_count": 1,
+                "hidden_by_budget_count": 0,
+                "absorbed_by_family_count": 0,
+                "excluded_internal_count": 1,
+            },
+            "hidden_items": [
+                {
+                    "title": "政策依据引用不完整，存在表述截断风险",
+                    "hidden_by": "user_visible_gate",
+                    "hidden_reason": "当前仅为弱提示型政策提醒，先不进入用户可见待补证。",
+                }
+            ],
+            "visible_items": [],
+            "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。",
+        },
     }
     comparison = {
         "clusters": [
@@ -316,6 +333,7 @@ def test_build_review_view_from_final_output_prefers_single_source_titles() -> N
     assert view["all_cards"][0]["title"] == "正式风险标题"
     assert view["all_cards"][0]["is_standard_compare"] is True
     assert view["summary_counts"]["高风险"] == 1
+    assert view["ops_explanation_summary"]["stats"]["hidden_by_gate_count"] == 1
 
 
 def test_build_review_view_from_final_output_clears_manual_placeholder_for_deterministic_standard_rule() -> None:
@@ -549,6 +567,181 @@ def test_build_review_view_from_final_snapshot_hides_missing_visible_evidence_ex
     view = build_review_view_from_final_snapshot(snapshot)
 
     assert view["excluded_summary"] == {"count": 0, "items": []}
+
+
+def test_build_review_view_from_final_snapshot_exposes_ops_explanation_summary() -> None:
+    snapshot = {
+        "final_risks": {
+            "formal_risks": [
+                {
+                    "title": "正式风险标题",
+                    "severity": "高风险",
+                    "review_type": "正式类型",
+                    "source_location": "正式位置",
+                    "source_excerpt": "正式摘录",
+                    "risk_judgment": ["正式判断"],
+                    "legal_basis": ["正式依据"],
+                    "rectification": ["正式建议"],
+                    "rule_ids": ["compare::formal-risk"],
+                    "topic_sources": ["policy"],
+                    "problem_id": "problem-1",
+                    "problem_kind": "standard",
+                    "conflict_type": "",
+                }
+            ],
+            "pending_review_items": [],
+            "excluded_risks": [],
+        },
+        "summary": {
+            "formal_count": 1,
+            "pending_count": 0,
+            "excluded_count": 0,
+            "high_risk_titles": ["正式风险标题"],
+            "medium_risk_titles": [],
+            "manual_review_titles": [],
+            "excluded_titles": [],
+        },
+        "ops_explanation_summary": {
+            "stats": {
+                "hidden_by_gate_count": 1,
+                "hidden_by_budget_count": 1,
+                "absorbed_by_family_count": 2,
+                "excluded_internal_count": 4,
+            },
+            "hidden_items": [
+                {
+                    "title": "政策依据引用不完整，存在表述截断风险",
+                    "originally_detected": True,
+                    "visible_or_hidden": "hidden",
+                    "hidden_by": "user_visible_gate",
+                    "hidden_reason": "当前仅为弱提示型政策提醒，先不进入用户可见待补证。",
+                    "reason_code": "weak_signal_no_rule_support",
+                    "config_id": "stable-pending-policy-reminder-v1",
+                    "gate_rule": "weak_signal_no_rule_support",
+                    "source_layer": "pending_review_items",
+                    "evidence_anchor": {
+                        "location": "政策章节",
+                        "excerpt": "上述政策依据后续内容未完整展示，需进一步确认。",
+                    },
+                },
+                {
+                    "title": "节能环保政策具体适用要求缺失",
+                    "originally_detected": True,
+                    "visible_or_hidden": "hidden",
+                    "hidden_by": "result_budget",
+                    "hidden_reason": "当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。",
+                    "policy_id": "budget-policy-goods-v1",
+                    "budget_rule": "pending_count_budget",
+                    "kept_item": {"title": "正式风险标题"},
+                    "source_layer": "pending_review_items",
+                    "evidence_anchor": {
+                        "location": "政策章节",
+                        "excerpt": "节能环保政策条款未写明具体适用要求。",
+                    },
+                },
+            ],
+            "visible_items": [
+                {
+                    "title": "正式风险标题",
+                    "originally_detected": True,
+                    "visible_or_hidden": "visible",
+                    "hidden_by": "",
+                    "hidden_reason": "正式硬风险保留为用户可见结果。",
+                    "source_layer": "formal_risks",
+                    "evidence_anchor": {"location": "正式位置", "excerpt": "正式摘录"},
+                }
+            ],
+            "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。",
+        },
+    }
+
+    view = build_review_view_from_final_snapshot(snapshot)
+
+    assert view["ops_explanation_summary"]["stats"]["hidden_by_gate_count"] == 1
+    assert view["ops_explanation_summary"]["stats"]["hidden_by_budget_count"] == 1
+    hidden_map = {item["title"]: item for item in view["ops_explanation_summary"]["hidden_items"]}
+    assert hidden_map["政策依据引用不完整，存在表述截断风险"]["hidden_by"] == "user_visible_gate"
+    assert hidden_map["节能环保政策具体适用要求缺失"]["hidden_by"] == "result_budget"
+    assert hidden_map["节能环保政策具体适用要求缺失"]["kept_item"]["title"] == "正式风险标题"
+    assert view["ops_explanation_summary"]["visible_items"][0]["title"] == "正式风险标题"
+
+
+def test_review_plus_history_renders_ops_explanation_summary_from_final_snapshot(tmp_path: Path, monkeypatch) -> None:
+    run_dir = tmp_path / "ops-run"
+    run_dir.mkdir()
+    snapshot = {
+        "snapshot_version": "v1",
+        "run_metadata": {"document_name": "sample.docx"},
+        "input_metadata": {"subject": "sample.docx", "description_lines": ["说明"]},
+        "final_risks": {
+            "formal_risks": [
+                {
+                    "title": "正式风险标题",
+                    "severity": "高风险",
+                    "review_type": "正式类型",
+                    "source_location": "正式位置",
+                    "source_excerpt": "正式摘录",
+                    "risk_judgment": ["正式判断"],
+                    "legal_basis": ["正式依据"],
+                    "rectification": ["正式建议"],
+                    "rule_ids": ["compare::formal-risk"],
+                    "topic_sources": ["policy"],
+                    "problem_id": "problem-1",
+                    "problem_kind": "standard",
+                    "conflict_type": "",
+                }
+            ],
+            "pending_review_items": [],
+            "excluded_risks": [],
+        },
+        "summary": {
+            "formal_count": 1,
+            "pending_count": 0,
+            "excluded_count": 0,
+            "high_risk_titles": ["正式风险标题"],
+            "medium_risk_titles": [],
+            "manual_review_titles": [],
+            "excluded_titles": [],
+            "basis_summary": ["正式依据"],
+        },
+        "ops_explanation_summary": {
+            "stats": {
+                "hidden_by_gate_count": 1,
+                "hidden_by_budget_count": 1,
+                "absorbed_by_family_count": 1,
+                "excluded_internal_count": 3,
+            },
+            "hidden_items": [
+                {
+                    "title": "节能环保政策具体适用要求缺失",
+                    "hidden_by": "result_budget",
+                    "hidden_reason": "当前文档场景下 pending 结果预算已命中，系统优先保留高价值且可解释的问题，其余下沉为内部 trace。",
+                    "kept_item": {"title": "正式风险标题"},
+                }
+            ],
+            "visible_items": [],
+            "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。",
+        },
+        "problem_trace_summary": [],
+        "source_trace_summary": {},
+    }
+    (run_dir / "final_snapshot.json").write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
+    (run_dir / "final_review.md").write_text("# 招标文件合规审查结果\n", encoding="utf-8")
+    (run_dir / "v2_overview.json").write_text(json.dumps({}, ensure_ascii=False), encoding="utf-8")
+
+    monkeypatch.setattr("app.web.v2_app.find_run_dir", lambda run_id: run_dir if run_id == "ops-run" else None)
+    monkeypatch.setattr("app.web.v2_app.list_recent_runs", lambda limit=12: [])
+
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/review-plus/history/ops-run")
+
+    body = response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert "运维解释摘要" in body
+    assert "节能环保政策具体适用要求缺失" in body
+    assert "pending 结果预算已命中" in body
 
 
 def test_load_result_by_run_id_falls_back_to_markdown_for_ungoverned_output(tmp_path: Path, monkeypatch) -> None:

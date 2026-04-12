@@ -8,8 +8,11 @@ import yaml
 from app.pipelines.v2.replay_baseline import (
     evaluate_replay_assertions,
     load_real_replay_baseline_suite,
+    load_real_replay_matrix_suite,
     run_real_replay_baseline,
     run_real_replay_baseline_batch,
+    run_real_replay_matrix,
+    run_real_replay_matrix_batch,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +71,37 @@ def _write_config(config_path: Path, source_file: Path, seed_dir: Path) -> None:
                             "title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性",
                         }
                     ],
+                    "should_pending": [],
+                },
+            }
+        ],
+    }
+    config_path.write_text(yaml.safe_dump(payload, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+
+def _write_matrix_config(config_path: Path, source_file: Path, seed_dir: Path) -> None:
+    payload = {
+        "suite_id": "REAL-REPLAY-MATRIX-TEST",
+        "single_source": "docs/trackers",
+        "documents": [
+            {
+                "document_id": "DOC-TEST-001",
+                "document_name": "sample.txt",
+                "file_path": str(source_file),
+                "document_domain": "goods_procurement",
+                "topic_mode": "mature",
+                "seed_result_dir": str(seed_dir),
+                "result_dir": "data/results/v2/axg2-test-sample",
+                "notes": ["测试说明"],
+                "baseline_assertions": {
+                    "should_report": [
+                        {
+                            "id": "acceptance-score-formal",
+                            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                            "family_key": "acceptance_scheme_scoring",
+                        }
+                    ],
+                    "should_not_report": [],
                     "should_pending": [],
                 },
             }
@@ -249,3 +283,120 @@ def test_tracker_replay_baseline_config_contains_three_real_documents_and_notes(
         assert "should_report" in assertions
         assert "should_not_report" in assertions
         assert "should_pending" in assertions
+
+
+def test_load_real_replay_matrix_suite_requires_document_domain(tmp_path: Path) -> None:
+    source_file = tmp_path / "sample.txt"
+    source_file.write_text("示例正文", encoding="utf-8")
+    seed_dir = tmp_path / "seed-run"
+    _write_seed_run(seed_dir, "将项目验收方案纳入评审因素，违反评审规则合规性要求")
+    config_path = tmp_path / "replay-matrix.yaml"
+    _write_matrix_config(config_path, source_file, seed_dir)
+
+    suite = load_real_replay_matrix_suite(config_path)
+
+    assert suite["documents"][0]["document_domain"] == "goods_procurement"
+
+
+def test_run_real_replay_matrix_reports_domain_and_diff_summary(tmp_path: Path) -> None:
+    source_file = tmp_path / "sample.txt"
+    source_file.write_text("示例正文", encoding="utf-8")
+    seed_dir = tmp_path / "seed-run"
+    _write_seed_run(seed_dir, "将项目验收方案纳入评审因素，违反评审规则合规性要求")
+    config_path = tmp_path / "replay-matrix.yaml"
+    _write_matrix_config(config_path, source_file, seed_dir)
+    suite = load_real_replay_matrix_suite(config_path)
+
+    result = run_real_replay_matrix(suite, document_id="DOC-TEST-001", output_root=tmp_path / "outputs")
+    summary = json.loads((Path(result["result_dir"]) / "replay_summary.json").read_text(encoding="utf-8"))
+
+    assert summary["document_domain"] == "goods_procurement"
+    assert summary["domain_policy_id"]
+    assert summary["budget_policy_id"]
+    assert "excluded_internal_count" in summary
+    assert "diff_summary" in summary
+    assert summary["domain_drift"] is False
+
+
+def test_run_real_replay_matrix_reports_domain_drift_and_title_diffs(tmp_path: Path) -> None:
+    source_file = tmp_path / "sample.txt"
+    source_file.write_text("示例正文", encoding="utf-8")
+    seed_dir = tmp_path / "seed-run"
+    _write_seed_run(seed_dir, "将项目验收方案纳入评审因素，违反评审规则合规性要求")
+    config_path = tmp_path / "replay-matrix.yaml"
+    _write_matrix_config(config_path, source_file, seed_dir)
+    suite = load_real_replay_matrix_suite(config_path)
+    suite["documents"][0]["document_domain"] = "service_procurement"
+    suite["documents"][0]["baseline_assertions"]["should_report"] = []
+    suite["documents"][0]["baseline_assertions"]["should_not_report"] = [
+        {
+            "id": "should-not-formal",
+            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+        }
+    ]
+
+    result = run_real_replay_matrix(suite, document_id="DOC-TEST-001", output_root=tmp_path / "outputs")
+    summary = json.loads((Path(result["result_dir"]) / "replay_summary.json").read_text(encoding="utf-8"))
+
+    assert summary["domain_drift"] is True
+    assert summary["diff_summary"]["unexpected_reported_titles"] == ["将项目验收方案纳入评审因素，违反评审规则合规性要求"]
+
+
+def test_run_real_replay_matrix_batch_supports_four_documents(tmp_path: Path) -> None:
+    documents = []
+    domains = ["goods_procurement", "service_procurement", "goods_procurement", "engineering_maintenance_construction"]
+    for index in range(1, 5):
+        source_file = tmp_path / f"sample-{index}.txt"
+        source_file.write_text(f"示例正文-{index}", encoding="utf-8")
+        seed_dir = tmp_path / f"seed-run-{index}"
+        _write_seed_run(seed_dir, "将项目验收方案纳入评审因素，违反评审规则合规性要求")
+        documents.append(
+            {
+                "document_id": f"DOC-TEST-00{index}",
+                "document_name": f"sample-{index}.txt",
+                "file_path": str(source_file),
+                "document_domain": domains[index - 1],
+                "topic_mode": "mature",
+                "seed_result_dir": str(seed_dir),
+                "result_dir": f"data/results/v2/axg2-test-sample-{index}",
+                "notes": [f"测试说明-{index}"],
+                "baseline_assertions": {
+                    "should_report": [
+                        {
+                            "id": f"report-{index}",
+                            "title": "将项目验收方案纳入评审因素，违反评审规则合规性要求",
+                            "family_key": "acceptance_scheme_scoring",
+                        }
+                    ],
+                    "should_not_report": [],
+                    "should_pending": [],
+                },
+            }
+        )
+    suite = {
+        "suite_id": "REAL-REPLAY-MATRIX-TEST",
+        "single_source": "docs/trackers",
+        "documents": documents,
+    }
+
+    results = run_real_replay_matrix_batch(suite, output_root=tmp_path / "outputs")
+
+    assert len(results) == 4
+    assert all("document_domain" in item for item in results)
+
+
+def test_tracker_replay_matrix_config_contains_four_real_documents_and_domains() -> None:
+    config_path = ROOT / "docs" / "trackers" / "v2-real-replay-matrix.yaml"
+    suite = load_real_replay_matrix_suite(config_path)
+
+    assert [item["document_id"] for item in suite["documents"]] == [
+        "DOC-DIESEL-0330-BASELINE",
+        "DOC-FUZHOU-DORM-BASELINE",
+        "DOC-FUJIAN-PROPERTY-BASELINE",
+        "DOC-QUANZHOU-PLAYGROUND-BASELINE",
+    ]
+    assert {item["document_domain"] for item in suite["documents"]} == {
+        "goods_procurement",
+        "service_procurement",
+        "engineering_maintenance_construction",
+    }

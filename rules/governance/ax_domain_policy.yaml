@@ -1,0 +1,56 @@
+version: 1
+entries:
+  - id: domain-policy-engineering-v1
+    status: active
+    scope:
+      document_domain: engineering_maintenance_construction
+    condition:
+      document_domain: engineering_maintenance_construction
+    rule:
+      formal_output_strategy: protect_formal_hard_risks
+      pending_output_strategy: focus_on_high_value_execution_and_competition_issues
+      family_repeat_tolerance: 1
+      weak_signal_threshold: strict
+      internal_signal_visibility: hidden_from_user
+      budget_policy_id: budget-policy-engineering-v1
+    reason: 工程维护施工类文件对程序性弱提示更敏感，应优先聚焦高价值履约、竞争、公平和费用转嫁问题。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: domain-policy-goods-v1
+    status: active
+    scope:
+      document_domain: goods_procurement
+    condition:
+      document_domain: goods_procurement
+    rule:
+      formal_output_strategy: protect_formal_hard_risks
+      pending_output_strategy: keep_goods_specific_quality_and_competition_issues
+      family_repeat_tolerance: 1
+      weak_signal_threshold: moderate
+      internal_signal_visibility: hidden_from_user
+      budget_policy_id: budget-policy-goods-v1
+    reason: 货物采购类应保留品牌、样品、验收、检测、认证和商务失衡类高价值待补证问题。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12
+  - id: domain-policy-service-v1
+    status: active
+    scope:
+      document_domain: service_procurement
+    condition:
+      document_domain: service_procurement
+    rule:
+      formal_output_strategy: protect_formal_hard_risks
+      pending_output_strategy: prioritize_service_delivery_and_scoring_boundary_issues
+      family_repeat_tolerance: 1
+      weak_signal_threshold: strict
+      internal_signal_visibility: hidden_from_user
+      budget_policy_id: budget-policy-service-v1
+    reason: 服务采购类应优先保留服务履约、评分边界和商务失衡问题，并压缩模板提醒类输出。
+    source: AX3
+    version: 1
+    owner: T
+    last_updated_at: 2026-04-12

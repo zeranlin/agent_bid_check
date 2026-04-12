@@ -1439,3 +1439,20 @@ def test_domain_budget_marks_hidden_pending_items_as_internal_trace_only() -> No
     assert all(decision.user_visible_gate_passed is False for decision in hidden_decisions)
     assert all(decision.budget_rule for decision in hidden_decisions)
     assert all(decision.budget_reason for decision in hidden_decisions)
+
+
+def test_ax_governance_trace_is_attached_to_user_visible_gate_and_budget() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    visible_brand = next(item for item in admission.pending_review_items if item.title == "疑似限定或倾向特定品牌/供应商")
+    visible_brand_decision = admission.decisions[visible_brand.rule_id]
+    hidden_policy = next(item for item in admission.excluded_risks if item.title == "专门面向中小企业采购的证明材料要求表述需核实")
+    hidden_policy_decision = admission.decisions[hidden_policy.rule_id]
+
+    assert visible_brand_decision.stable_pending_config_id
+    assert visible_brand_decision.domain_policy_id
+    assert hidden_policy_decision.budget_policy_id
+    assert hidden_policy_decision.budget_hit is True

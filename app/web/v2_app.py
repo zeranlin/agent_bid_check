@@ -552,6 +552,9 @@ def build_review_view_from_final_output(final_output: dict, comparison: dict | N
             "count": len(excluded_items),
             "items": excluded_items,
         },
+        "ops_explanation_summary": dict(final_output.get("ops_explanation_summary", {}) or {})
+        if isinstance(final_output.get("ops_explanation_summary", {}), dict)
+        else {},
     }
 
 
@@ -625,6 +628,7 @@ def build_review_view_from_final_snapshot(snapshot: dict) -> dict:
                 "reason": str(item.get("admission_reason", "")).strip() or "已按准入规则排除。",
             }
         )
+    ops_explanation_summary = snapshot.get("ops_explanation_summary", {}) if isinstance(snapshot, dict) else {}
     return {
         "summary_counts": summary_counts,
         "type_items": sorted(type_counts.items(), key=lambda item: (-item[1], item[0])),
@@ -635,6 +639,7 @@ def build_review_view_from_final_snapshot(snapshot: dict) -> dict:
             "count": len(excluded_items),
             "items": excluded_items,
         },
+        "ops_explanation_summary": dict(ops_explanation_summary) if isinstance(ops_explanation_summary, dict) else {},
     }
 
 

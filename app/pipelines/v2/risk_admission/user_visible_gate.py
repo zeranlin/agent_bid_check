@@ -3,57 +3,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from app.governance.ax_governance import load_ax_governance_index
+
 from .pending_gate import PLACEHOLDER_EXCERPT_RE, PLACEHOLDER_LOCATION_RE
 from .schemas import AdmissionLayer, AdmissionSourceType
-
-
-STABLE_PENDING_FAMILIES: set[str] = {
-    "missing_detection_or_cert_requirement",
-    "scoring_clarity",
-    "energy_policy_missing",
-    "software_copyright_competition",
-    "no_crime_submission_timing",
-    "brand_bias",
-    "sample_acceptance_gate",
-}
-
-STABLE_PENDING_TITLE_RULES: list[tuple[str, re.Pattern[str], str]] = [
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(缺乏预付款安排|资金压力较大)"),
-        "当前问题虽未达 formal 条件，但具备明确商务影响和原文证据，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(远程开标解密时限及后果条款的合理性审查|远程开标逾期解密后果表述需进一步确认)"),
-        "当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(验收流程与考核机制表述笼统|验收流程、组织方式及不合格复验程序约定不明)"),
-        "当前问题涉及履约执行和验收争议风险，具备明确复核价值，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(专门面向中小企业采购的评审细节需确认|专门面向中小企业采购的证明材料要求表述需核实)"),
-        "当前问题涉及采购政策适用边界，具备明确复核价值，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(评分标准中设置特定品牌倾向性条款|设备品牌指定风险|疑似限定或倾向特定品牌/供应商)"),
-        "当前问题涉及潜在品牌倾向或品牌指定，具备明确复核价值，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(人员配置数量及证书要求需结合项目规模评估|要求现场技术人员必须为制造商原厂工程师)"),
-        "当前问题涉及资格条件与竞争边界，具备明确复核价值，保留为用户可见待补证项。",
-    ),
-    (
-        "pending_material_issue_allowed",
-        re.compile(r"(信息化软件服务能力.*著作权人为投标人|无犯罪证明.*提交时限|远程开标解密时限及后果条款显失公平)"),
-        "当前问题具备明确竞争或程序后果，虽未进入 formal，但应保留为用户可见待补证项。",
-    ),
-]
 
 
 @dataclass(frozen=True)
@@ -64,6 +17,7 @@ class UserVisibleGateResult:
     rule: str
     evidence_sufficiency: str
     decision_basis: str
+    stable_pending_config_id: str = ""
 
 
 def _has_user_visible_evidence(source_locations: list[str], source_excerpts: list[str]) -> tuple[bool, str]:
@@ -78,13 +32,15 @@ def _has_user_visible_evidence(source_locations: list[str], source_excerpts: lis
     return True, "sufficient"
 
 
-def _is_stable_pending_issue(*, family_key: str, title: str) -> tuple[bool, str]:
-    if family_key in STABLE_PENDING_FAMILIES:
-        return True, "当前问题属于稳定的待补证家族，具备持续对外复核价值。"
-    for _, pattern, reason in STABLE_PENDING_TITLE_RULES:
-        if pattern.search(title):
-            return True, reason
-    return False, ""
+def _match_stable_pending_config(*, family_key: str, title: str) -> tuple[str, str, str]:
+    index = load_ax_governance_index()
+    family = index.stable_pending_families.get(family_key)
+    if family is not None:
+        return family.config_id, family.reason, family.gate_rule
+    for item in index.stable_pending_patterns:
+        if re.search(item.pattern, title):
+            return item.config_id, item.reason, item.gate_rule
+    return "", "", ""
 
 
 def evaluate_user_visible_gate(
@@ -145,15 +101,16 @@ def evaluate_user_visible_gate(
             decision_basis="pending_gate_blocked_before_user_visible_output",
         )
 
-    stable_pending, stable_reason = _is_stable_pending_issue(family_key=family_key, title=title)
-    if stable_pending:
+    stable_config_id, stable_reason, stable_rule = _match_stable_pending_config(family_key=family_key, title=title)
+    if stable_config_id:
         return UserVisibleGateResult(
             target_layer="pending_review_items",
             passed=True,
             reason=stable_reason,
-            rule="pending_material_issue_allowed",
+            rule=stable_rule,
             evidence_sufficiency=evidence_sufficiency,
             decision_basis="stable_pending_family_or_title_with_material_review_value",
+            stable_pending_config_id=stable_config_id,
         )
 
     if formal_gate_rule in {"registry_mapping_missing_block", "registry_mapping_mismatch_block"} and source_type != "topic_inference":

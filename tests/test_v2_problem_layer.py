@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from app.pipelines.v2.output_governance import govern_comparison_artifact
 from app.pipelines.v2.problem_layer import build_problem_layer
 from app.pipelines.v2.problem_layer.models import Problem
@@ -7,6 +10,23 @@ from app.pipelines.v2.risk_admission import admit_problem_result
 from app.pipelines.v2.schemas import ComparisonArtifact, MergedRiskCluster
 
 from tests.test_v2_risk_admission import _build_sample_comparison
+
+
+def _load_comparison_artifact(path: str | Path) -> ComparisonArtifact:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return ComparisonArtifact(
+        signatures=[],
+        clusters=[MergedRiskCluster(**item) for item in payload.get("clusters", [])],
+        conflicts=list(payload.get("conflicts", [])),
+        coverage_summary=dict(payload.get("coverage_summary", {})),
+        comparison_summary=dict(payload.get("comparison_summary", {})),
+        baseline_only_risks=list(payload.get("baseline_only_risks", [])),
+        topic_only_risks=list(payload.get("topic_only_risks", [])),
+        missing_topic_coverage=list(payload.get("missing_topic_coverage", [])),
+        manual_review_items=list(payload.get("manual_review_items", [])),
+        coverage_gaps=list(payload.get("coverage_gaps", [])),
+        metadata=dict(payload.get("metadata", {})),
+    )
 
 
 def _build_pb2_certification_bundle_comparison() -> ComparisonArtifact:
@@ -146,6 +166,111 @@ def _build_pb3_cross_topic_family_merge_comparison() -> ComparisonArtifact:
                 rectification=["统一进口政策与技术标准口径。"],
                 topics=["policy"],
                 source_rules=["topic"],
+            ),
+        ]
+    )
+
+
+def _build_ax1_brand_bias_comparison() -> ComparisonArtifact:
+    return ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="ax1-brand-base",
+                title="技术参数中指定特定品牌，具有明显排他性",
+                severity="高风险",
+                review_type="技术参数倾向性",
+                source_locations=["样品要求 ⑤品牌"],
+                source_excerpts=["⑤品牌:Aokang"],
+                risk_judgment=["同一证据直接点名品牌。"],
+                legal_basis=["不得指定特定品牌。"],
+                rectification=["删除品牌指定。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
+            ),
+            MergedRiskCluster(
+                cluster_id="ax1-brand-tech",
+                title="样品要求中指定品牌，可能隐含排他性检测标准",
+                severity="高风险",
+                review_type="技术规格与品牌倾向审查",
+                source_locations=["样品要求 ⑤品牌"],
+                source_excerpts=["⑤品牌:Aokang"],
+                risk_judgment=["品牌指定与技术标准侧相邻命中。"],
+                legal_basis=["不得隐含排他性品牌要求。"],
+                rectification=["删除品牌指向。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="ax1-brand-score",
+                title="样品要求中指定特定品牌，存在限定特定供应商和倾向性评分风险",
+                severity="高风险",
+                review_type="合规性审查",
+                source_locations=["样品要求 ⑤品牌"],
+                source_excerpts=["⑤品牌:Aokang"],
+                risk_judgment=["同一品牌问题在评分专题再次命中。"],
+                legal_basis=["不得限定特定供应商。"],
+                rectification=["删除品牌限定。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="ax1-brand-sample",
+                title="样品要求中指定特定品牌，涉嫌排斥潜在投标人",
+                severity="高风险",
+                review_type="合规性审查",
+                source_locations=["样品要求 ⑤品牌"],
+                source_excerpts=["⑤品牌:Aokang"],
+                risk_judgment=["同一品牌问题在样品专题再次命中。"],
+                legal_basis=["不得形成样品门槛。"],
+                rectification=["删除品牌要求。"],
+                topics=["samples_demo"],
+                source_rules=["topic"],
+            ),
+        ]
+    )
+
+
+def _build_ax1_sample_acceptance_comparison() -> ComparisonArtifact:
+    return ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="ax1-sample-primary",
+                title="样品评审规则设置不当，存在“未提供即无效”的过度严苛情形",
+                severity="中风险",
+                review_type="评审标准不合理",
+                source_locations=["样品评审规则"],
+                source_excerpts=["未按时提交样品或样品不全的，为无效投标。"],
+                risk_judgment=["主问题应保留。"],
+                legal_basis=["样品规则不得设置过度门槛。"],
+                rectification=["改为扣分或符合性校验。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
+            ),
+            MergedRiskCluster(
+                cluster_id="ax1-sample-support",
+                title="样品评审规则与最低评标价法逻辑可能存在冲突，需核实样品在评标中的具体作用",
+                severity="中风险",
+                review_type="逻辑一致性审查",
+                source_locations=["样品评审规则"],
+                source_excerpts=["评标方法为最低评标价法，但样品未提供可判无效。"],
+                risk_judgment=["属于主问题的附属解释。"],
+                legal_basis=["评审逻辑应一致。"],
+                rectification=["明确样品在评标中的作用。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="ax1-sample-internal",
+                title="样品要求中“不得体现供应商公司信息”与“样品作为验收样本”存在逻辑冲突",
+                severity="低风险",
+                review_type="技术参数/验收条款",
+                source_locations=["样品与验收条款"],
+                source_excerpts=["样品不得体现供应商信息；成交候选人的样品作为验收样本。"],
+                risk_judgment=["更适合进入 internal trace。"],
+                legal_basis=["样品与验收衔接需一致。"],
+                rectification=["统一样品留存与验收说明。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
             ),
         ]
     )
@@ -477,6 +602,79 @@ def test_problem_layer_dedupes_acceptance_testing_cost_user_visible_outputs_with
             "hidden_reason": "same_family_absorbed_by_formal_primary",
         }
     ]
+
+
+def test_problem_layer_governs_brand_bias_family_into_single_primary_visible_problem() -> None:
+    comparison = _build_ax1_brand_bias_comparison()
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+
+    problem_result = build_problem_layer("quanzhou.docx", governance)
+
+    assert len(problem_result.problems) == 1
+    first = problem_result.problems[0]
+    assert first.family_key == "brand_bias"
+    assert first.canonical_title == "疑似限定或倾向特定品牌/供应商"
+    assert len(first.supporting_candidates) == 3
+    assert len(first.trace["supporting_problem_ids"]) == 3
+    assert first.trace["primary_visible_problem_id"]
+    assert first.trace["family_visible_output_absorbed_by_primary"] is True
+    assert first.trace["primary_selection_reason"]
+    assert len(first.trace["absorbed_problem_ids"]) == 3
+    absorbed_titles = [item["title"] for item in first.trace["absorbed_user_visible_items"]]
+    assert absorbed_titles == [
+        "样品要求中指定品牌，可能隐含排他性检测标准",
+        "样品要求中指定特定品牌，存在限定特定供应商和倾向性评分风险",
+        "样品要求中指定特定品牌，涉嫌排斥潜在投标人",
+    ]
+    assert all(item["hidden_reason"] == "supporting_hidden_under_family_primary" for item in first.trace["absorbed_user_visible_items"])
+    assert all(item["source_bucket"] == "formal_risks" for item in first.trace["absorbed_user_visible_items"])
+
+
+def test_problem_layer_governs_sample_acceptance_family_with_supporting_and_internal_trace() -> None:
+    comparison = _build_ax1_sample_acceptance_comparison()
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+
+    problem_result = build_problem_layer("quanzhou.docx", governance)
+
+    assert len(problem_result.problems) == 1
+    first = problem_result.problems[0]
+    assert first.family_key == "sample_acceptance_gate"
+    assert first.canonical_title == "将样品要求/验收方案不当作为评审或履约门槛"
+    assert [item.decision.canonical_title for item in first.supporting_candidates] == [
+        "样品评审规则与最低评标价法逻辑可能存在冲突，需核实样品在评标中的具体作用"
+    ]
+    assert first.trace["primary_visible_problem_id"]
+    assert len(first.trace["supporting_problem_ids"]) == 1
+    assert len(first.trace["internal_trace_only_problem_ids"]) == 1
+    assert len(first.trace["absorbed_problem_ids"]) == 2
+    assert first.trace["family_visible_output_absorbed_by_primary"] is True
+    assert first.trace["internal_trace_only_items"] == [
+        {
+            "problem_id": first.trace["internal_trace_only_problem_ids"][0],
+            "title": "样品要求中“不得体现供应商公司信息”与“样品作为验收样本”存在逻辑冲突",
+            "source_bucket": "formal_risks",
+            "prior_bucket": "formal_risks",
+            "absorbed_by": "将样品要求/验收方案不当作为评审或履约门槛",
+            "absorbed_by_problem_id": first.problem_id,
+            "hidden_reason": "internal_trace_only_under_family_primary",
+            "visibility": "internal_trace_only",
+        }
+    ]
+
+
+def test_problem_layer_replay_gate_collapses_quanzhou_brand_bias_user_visible_outputs() -> None:
+    comparison_path = Path("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    comparison = _load_comparison_artifact(comparison_path)
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+
+    problem_result = build_problem_layer("quanzhou.docx", governance)
+
+    brand_problems = [item for item in problem_result.problems if item.family_key == "brand_bias"]
+    assert len(brand_problems) == 1
+    brand_problem = brand_problems[0]
+    assert brand_problem.canonical_title == "疑似限定或倾向特定品牌/供应商"
+    assert len(brand_problem.supporting_candidates) >= 1
+    assert brand_problem.trace["family_governance_config_id"]
 
 
 def test_problem_layer_builds_import_consistency_conflict_problem() -> None:

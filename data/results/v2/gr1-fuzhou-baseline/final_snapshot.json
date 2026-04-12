@@ -2,7 +2,7 @@
   "snapshot_version": "v1",
   "run_metadata": {
     "document_name": "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx",
-    "generated_at": "2026-04-12T11:33:33",
+    "generated_at": "2026-04-12T13:08:09",
     "document_domain": "goods_procurement",
     "domain_confidence": 0.88,
     "domain_policy_id": "domain-policy-goods-v1",
@@ -124,7 +124,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -142,6 +143,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -167,7 +169,8 @@
                 "335037d9b2cf"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "abnormal_standard_reference"
       },
@@ -233,7 +236,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -251,6 +255,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -276,7 +281,8 @@
                 "335037d9b2cf"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "regional_detection_agency_limit"
       },
@@ -358,7 +364,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -376,6 +383,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -405,7 +413,8 @@
                 "a005c7717b57"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "sample_gate"
       },
@@ -473,7 +482,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -491,6 +501,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -516,7 +527,8 @@
                 "fa50487b2aec"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "contract_change_imbalance"
       },
@@ -581,7 +593,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -599,6 +612,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -624,7 +638,8 @@
                 "0ea5c5fad471"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "technical_over_specific"
       },
@@ -691,7 +706,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -709,6 +725,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -734,7 +751,8 @@
                 "ff818b519384"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "supervision_termination_imbalance"
       },
@@ -803,7 +821,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -821,6 +840,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -846,7 +866,8 @@
                 "b1bae8832ab3"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "acceptance_vendor_standard"
       },
@@ -927,7 +948,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题已通过技术层 formal 准入，且具备稳定证据，可进入用户可见正式风险层。",
-          "gate_rule": "formal_output_allowed"
+          "gate_rule": "formal_output_allowed",
+          "stable_pending_config_id": ""
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -945,6 +967,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -992,7 +1015,8 @@
                 "017e45310d0e"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": "ax-family-acceptance-cost-v1"
         },
         "family_key": "acceptance_testing_cost"
       }
@@ -1061,7 +1085,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题虽未达 formal 条件，但具备明确商务影响和原文证据，保留为用户可见待补证项。",
-          "gate_rule": "pending_material_issue_allowed"
+          "gate_rule": "pending_material_issue_allowed",
+          "stable_pending_config_id": "ax-sp-title-prepayment-001"
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -1079,6 +1104,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -1104,7 +1130,8 @@
                 "0c901896b86a"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "缺乏预付款安排-资金压力较大"
       },
@@ -1171,7 +1198,8 @@
         "user_visible_gate": {
           "gate_passed": true,
           "gate_reason": "当前问题涉及投标有效性或程序后果，具备明确复核价值，保留为用户可见待补证项。",
-          "gate_rule": "pending_material_issue_allowed"
+          "gate_rule": "pending_material_issue_allowed",
+          "stable_pending_config_id": "ax-sp-title-remote-opening-001"
         },
         "pending_gate": {
           "pending_gate_reason_code": "",
@@ -1189,6 +1217,7 @@
           "budget_hit": false,
           "budget_rule": "",
           "budget_reason": "",
+          "budget_policy_id": "budget-policy-goods-v1",
           "absorbed_or_hidden_items": []
         },
         "trace_summary": {
@@ -1214,12 +1243,519 @@
                 "fce949193a06"
               ]
             }
-          ]
+          ],
+          "family_governance_config_id": ""
         },
         "family_key": "远程开标解密时限及后果条款的合理性审查"
       }
     ],
     "excluded_risks": []
+  },
+  "ops_explanation_summary": {
+    "stats": {
+      "hidden_by_gate_count": 15,
+      "hidden_by_budget_count": 0,
+      "absorbed_by_family_count": 1,
+      "excluded_internal_count": 16
+    },
+    "visible_items": [
+      {
+        "title": "技术参数存在错误或异常标准引用，可能导致技术要求失真",
+        "family_key": "abnormal_standard_reference",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "技术参数存在错误或异常标准引用，可能导致技术要求失真"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> 序号1：组合柜 -> 第8点；序号2：学生宿舍座椅 -> 第8点；序号3：楼梯踏板 -> 第4点",
+          "excerpt": "- 组合柜第8点：“家具中甲醛、苯、二甲苯和TVOC的释放量以及家具中可迁移有害元素限量需要符合GB 28481-2012《家具中有害物质限量》标准以及GB 48001-2026《汽车车门把手安全技术要求》标准中的要求。”\n- 座椅第8点：“家具中甲醛、苯、二甲苯和TVOC的释放量，家具中可迁移有害元素限量，以及领苯二甲酸脂、多环芳烃限量需要符合GB18584-2024《家具中有的害物质限量测量》标准中的要求。”\n- 楼梯踏板第4点：“家具中可迁移有害元素限量，以及领苯二甲酸脂、多环芳烃限量需要符合GB18584-2024《家具中有害物质限量》标准中的要求并提供福建省检测机构出具的检测报告。”"
+        }
+      },
+      {
+        "title": "检测报告限定福建省检测机构，存在检测机构地域限制风险",
+        "family_key": "regional_detection_agency_limit",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "检测报告限定福建省检测机构，存在检测机构地域限制风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> 序号1：组合柜 -> 第8点；序号2：学生宿舍座椅 -> 第8点；序号3：楼梯踏板 -> 第4点",
+          "excerpt": "- 组合柜第8点：“家具中甲醛、苯、二甲苯和TVOC的释放量以及家具中可迁移有害元素限量需要符合GB 28481-2012《家具中有害物质限量》标准以及GB 48001-2026《汽车车门把手安全技术要求》标准中的要求。”\n- 座椅第8点：“家具中甲醛、苯、二甲苯和TVOC的释放量，家具中可迁移有害元素限量，以及领苯二甲酸脂、多环芳烃限量需要符合GB18584-2024《家具中有的害物质限量测量》标准中的要求。”\n- 楼梯踏板第4点：“家具中可迁移有害元素限量，以及领苯二甲酸脂、多环芳烃限量需要符合GB18584-2024《家具中有害物质限量》标准中的要求并提供福建省检测机构出具的检测报告。”"
+        }
+      },
+      {
+        "title": "样品要求过细且评审规则失衡，存在样品门槛风险",
+        "family_key": "sample_gate",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "样品要求过细且评审规则失衡，存在样品门槛风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> （二）样品要求 -> 第3点、第4点",
+          "excerpt": "- 第3点：“投标人应采用可去除的安全材料隐去投标人名称及其他可能泄露投标人信息的标志、符号等；同时，在投标文件中，也不得出现样品图样，标识等可能泄露投标人样品的任何信息，否则按无效投标处理。”\n- 第4点：“投标人必须将以上样品成品提前组装好，并于开标当日投标截止时间前一次性送达投标现场，按要求摆放好样品。必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。”"
+        }
+      },
+      {
+        "title": "商务条款中采购人单方变更权过大且结算方式不明",
+        "family_key": "contract_change_imbalance",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "商务条款中采购人单方变更权过大且结算方式不明"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 三、商务要求 -> 其他商务要求 -> 8.3、13.3",
+          "excerpt": "- 8.3：“签订合同后，采购单位有权根据实际需要对本次采购文件中未明确或未规定的事项作出规定或细微调整，及对各种货物的款式进行细微调整（允许偏离±5%），最终以采购人实际为准，中标人的最终报价不变，如遇采购人特殊需求特殊制作与招标尺寸有较大差异的货物，偏离超过5%，结算单价按调整后面积比例相应换算。”\n- 13.3：“①本项目中标后，采购人有权对家具的颜色、款式、尺寸等作出细微调整，中标价不变，中标人不得因此增加任何费用或持有任何异议。②...采购人根据现场的实际情况，有权对所有货物的数量、尺寸和款式进行增加、减少或调整，最终以采购人实际的安装数量为准，变化部分的单价与投标报价对应的单价一致...\""
+        }
+      },
+      {
+        "title": "技术参数过细且特征化，存在指向性风险",
+        "family_key": "technical_over_specific",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "技术参数过细且特征化，存在指向性风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 二、技术和服务要求 -> 序号1：组合柜 -> 第1点、第7点",
+          "excerpt": "- 第1点：“档条底部需要跟桌面采用三合一连接件固定，背面需要跟装饰板采用螺丝固定，不能出现松动和异响。”\n- 第7点：“抽屉盒底部具有≥63个镂空条形孔，条形孔的宽度＜5mm，避免笔等物品掉落。”"
+        }
+      },
+      {
+        "title": "履约监督与解除条件失衡",
+        "family_key": "supervision_termination_imbalance",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "履约监督与解除条件失衡"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 三、商务要求 -> 其他商务要求 -> 10.4",
+          "excerpt": "- 10.4：“投标人须承诺：若中标，在生产本次采购家具的过程中，采购人可对产品从进料、开胚、酸洗磷化、喷涂、成型等一系列生产程序进行驻厂检查、监督；如果采购人在检查监督过程中发现中标人未按照相关工艺要求进行生产，采购人有权终止合同，并按照国家相关法律法规的规定提请有关政府监管部门对其进行处理。”"
+        }
+      },
+      {
+        "title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险",
+        "family_key": "acceptance_vendor_standard",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "验收标准引用“厂家验收标准”及“样品”，存在模糊表述和单方裁量风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "证据1，第 9.1 条",
+          "excerpt": "9.1验收标准：...所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。"
+        }
+      },
+      {
+        "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "family_key": "acceptance_testing_cost",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "technical_formal_and_user_visible_gate_aligned",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险"
+        },
+        "source_layer": "formal_risks",
+        "evidence_anchor": {
+          "location": "规则条款：内置规则库：需求合规性；需求条款：9验收标准及要求：；6.合同履行",
+          "excerpt": "规则要求：需求合规性-不得要求中标人承担验收产生的检测费用。\n\n条款内容：9验收标准及要求： 9.1验收标准：中标人所提供的货物必须是制造厂家生产的崭新的未开箱的原包装货物。；所有货物按厂家验收标准（符合国家或行业或地方标准）、招标文件、投标文件及中标人在投标文件中所提供的样品要求等有关内容进行验收。；中标人如有以少充多，以劣充优，以假充真的，采购人有权利不予验收，造成的一切后果由中标人自行承担。"
+        }
+      },
+      {
+        "title": "缺乏预付款安排，资金压力较大",
+        "family_key": "缺乏预付款安排-资金压力较大",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "缺乏预付款安排，资金压力较大"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据3，第 862 - 867 行",
+          "excerpt": "1、第一批次货物到场后，完成安装，按照合同要求最终验收合格，中标人须在申请付款时出具全额发票，达到付款条件起14日内，支付合同总金额的50.00% 2、第二批次货物到场后，完成安装，按照合同要求最终验收合格，中标人须在申请付款时出具全额发票，达到付款条件起14日内，支付合同总金额的50.00%"
+        }
+      },
+      {
+        "title": "远程开标解密时限及后果条款的合理性审查",
+        "family_key": "远程开标解密时限及后果条款的合理性审查",
+        "originally_detected": true,
+        "visible_or_hidden": "visible",
+        "hidden_by": "",
+        "hidden_reason": "stable_pending_family_or_title_with_material_review_value",
+        "absorbed_by": "",
+        "kept_item": {
+          "title": "远程开标解密时限及后果条款的合理性审查"
+        },
+        "source_layer": "pending_review_items",
+        "evidence_anchor": {
+          "location": "证据1 - 五、开标 - 11.4（1）",
+          "excerpt": "通过远程参与开标流程的投标人须在系统远程解密开启后，在代理机构规定时间内使用CA数字证书进行电子投标文件的解密操作，逾期未解密的视为放弃投标。"
+        }
+      }
+    ],
+    "hidden_items": [
+      {
+        "title": "将验收产生的检测费用计入投标人承担范围，存在需求条款合规风险",
+        "family_key": "acceptance_testing_cost",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "family_absorption",
+        "hidden_reason": "同一家族已有 formal 主问题保留，当前项吸收到主问题 trace。",
+        "reason_code": "same_family_absorbed_by_formal_primary",
+        "config_id": "ax-family-acceptance-cost-v1",
+        "gate_rule": "",
+        "policy_id": "",
+        "absorbed_by": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+        "kept_item": {
+          "title": "验收检测及相关部门验收费用表述笼统，存在费用边界不清和潜在转嫁风险",
+          "problem_id": "problem-b63f1df5ccd0"
+        },
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "problem_layer",
+        "evidence_anchor": {
+          "location": "证据1，第 9.2 条",
+          "excerpt": "9.2如有必要采购人将随机抽取家具成品送相关检测部门按国家相关规定项目及招标文件的所有要求进行检测。抽样检测货物如果遭遇破坏，由中标人补齐。检测结果如出现不合格的产品，检测费用由中标人支付，采购人有权拒收所有货物，扣除全部履约保证金，并有权终止合同。"
+        }
+      },
+      {
+        "title": "家具产品执行标准引用不明确，仅使用'国家标准'泛称",
+        "family_key": "家具产品执行标准引用不明确-仅使用-国家标准-泛称",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_rule_support",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_rule_support",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 760-791 行，多处提及'国家标准冷轧钢板'",
+          "excerpt": "均采用基材≥0.8mm 国家标准冷轧钢板。"
+        }
+      },
+      {
+        "title": "强制性产品认证（CCC）要求表述模糊，未明确证书或报告要求",
+        "family_key": "强制性产品认证-ccc-要求表述模糊-未明确证书或报告要求",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_rule_support",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_rule_support",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 760-791 行，组合柜技术参数第 1 点",
+          "excerpt": "插座需要达到国家 3C 认证标准。"
+        }
+      },
+      {
+        "title": "政策依据引用不完整，存在表述截断风险",
+        "family_key": "政策依据引用不完整-存在表述截断风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_rule_support",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_rule_support",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第 473 - 505 行，八、政府采购政策，17.3 条款末尾",
+          "excerpt": "符合财政部、民政部、中国残联文件（财库[2017]14"
+        }
+      },
+      {
+        "title": "样品评审标准不明确，存在主观裁量风险",
+        "family_key": "样品评审标准不明确-存在主观裁量风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第792-832行，样品要求第4条",
+          "excerpt": "必要时评标现场评委可对所有样品进行测试，若出现复核情况时，评标委员会对样品不作再次评审，样品评审结果不作更改。"
+        }
+      },
+      {
+        "title": "验收时间条款留白，导致履约验收时点不明确，缺乏可操作性",
+        "family_key": "验收时间条款留白-导致履约验收时点不明确-缺乏可操作性",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第 1049 行",
+          "excerpt": "（2）履约验收时间：计划于何时验收/供应商提出验收申请之日起_______日内组织验收"
+        }
+      },
+      {
+        "title": "履约保证金退还时限与法律规定不一致",
+        "family_key": "履约保证金退还时限与法律规定不一致",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "第五章 招标内容及要求 -> 三、商务要求 -> 6.★合同支付方式 -> 7.★履约保证金",
+          "excerpt": "- “该履约保证金将在验收合格后且中标人无违约的前提下10个工作日内无息退还（转账方式提交的）或解除担保（保函形式提交的）。”"
+        }
+      },
+      {
+        "title": "开标记录签字确认的默认认可条款",
+        "family_key": "开标记录签字确认的默认认可条款",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1 - 五、开标 - 11.4（4）",
+          "excerpt": "投标人代表未按规定提出疑义又拒绝对开标记录签字或通过系统远程签章确认的，视为投标人对开标过程和开标记录予以认可。"
+        }
+      },
+      {
+        "title": "样品退样流程存在风险，可能增加投标人负担",
+        "family_key": "样品退样流程存在风险-可能增加投标人负担",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第792-832行，样品要求第6条",
+          "excerpt": "未中标的投标人提供的样品在采购结果公告发布后的三个工作日之内办理退回手续，投标人未在规定时间内至中心办理退回手续的，若样品发生丢失则后果自负。"
+        }
+      },
+      {
+        "title": "节能环保政策具体适用要求缺失",
+        "family_key": "节能环保政策具体适用要求缺失",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_material_consequence",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_material_consequence",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据2，第 473 - 505 行，八、政府采购政策，17.2 条款",
+          "excerpt": "政府采购节能产品、环境标志产品实施品目清单管理...依据品目清单和认证证书实施政府优先采购或强制采购。"
+        }
+      },
+      {
+        "title": "专门面向中小企业采购的评分优惠落实情况不明",
+        "family_key": "专门面向中小企业采购的评分优惠落实情况不明",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1（资格承诺函）及证据2（政策概述）",
+          "excerpt": "本采购包属于专门面向中小企业采购。...符合财政部、工信部文件（财库〔2020〕46号）规定的小型、微型企业可享受扶持政策（如：预留采购份额、价格评审优惠、优先采购）。"
+        }
+      },
+      {
+        "title": "关键资格条件证据缺失，无法完成实质性审查",
+        "family_key": "关键资格条件证据缺失-无法完成实质性审查",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据1 第 263-277 行",
+          "excerpt": "（2）投标人的资格要求：详见招标文件第一章。"
+        }
+      },
+      {
+        "title": "履约保证金条款缺失关键信息",
+        "family_key": "履约保证金条款缺失关键信息",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据3，第 867 行",
+          "excerpt": "★ 履约保证金"
+        }
+      },
+      {
+        "title": "环保及检测方法标准缺失，E1 级未明确对应标准",
+        "family_key": "环保及检测方法标准缺失-e1-级未明确对应标准",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题尚未形成稳定规则归属或用户可理解的待补证价值，先收回内部治理层。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "unstable_pending_identity_block",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据 2，第 760-791 行，组合柜技术参数第 1 点",
+          "excerpt": "档条基材采用厚度≥25mm 的 E1 级实木多层板"
+        }
+      },
+      {
+        "title": "联合体商务部分评标主体约定不明确",
+        "family_key": "联合体商务部分评标主体约定不明确",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题已在技术层被排除，仅保留内部 trace 供排障复核。",
+        "reason_code": "",
+        "config_id": "",
+        "gate_rule": "technical_layer_excluded",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "excluded_risks",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据6，第 1609 - 1635 行",
+          "excerpt": "3、若本项目采用综合评分法，则联合体只能确定由其中一方的条件参与商务部分的评标。因此，联合体各方约定以（应填写“其中一方的全称”...）的条件参与商务部分的评标。"
+        }
+      },
+      {
+        "title": "质疑投诉章节内容不完整，存在潜在限制风险",
+        "family_key": "质疑投诉章节内容不完整-存在潜在限制风险",
+        "originally_detected": true,
+        "visible_or_hidden": "hidden",
+        "hidden_by": "user_visible_gate",
+        "hidden_reason": "当前问题仅形成弱提示或证据不足提示，不再进入用户可见待补证层。",
+        "reason_code": "weak_signal_no_rule_support",
+        "config_id": "",
+        "gate_rule": "weak_signal_no_rule_support",
+        "policy_id": "budget-policy-goods-v1",
+        "absorbed_by": "",
+        "kept_item": {},
+        "source_layer": "pending_review_items",
+        "source_layer_detail": "risk_admission",
+        "evidence_anchor": {
+          "location": "证据3 - 七、询问、质疑与投诉 - 15.1（3）⑤b",
+          "excerpt": "b.其他证明材料（即事实依据和必要的法律依据）包括但不限于下列材料：b1所质疑的"
+        }
+      }
+    ],
+    "detection_note": "若某标题未出现在 visible_items 或 hidden_items 中，表示本次运行未识别到对应问题。"
   },
   "problem_trace_summary": [
     {

@@ -10,10 +10,21 @@
   "passed": true,
   "document_id": "DOC-DIESEL-0330-BASELINE",
   "document_name": "[SZDL2025000495-A-0330]柴油发电机组及相关配套机电设备采购及安装项目.docx",
+  "document_domain": "goods_procurement",
+  "expected_document_domain": "goods_procurement",
+  "domain_drift": false,
+  "domain_policy_id": "domain-policy-goods-v1",
+  "budget_policy_id": "budget-policy-goods-v1",
+  "excluded_internal_count": 19,
+  "diff_summary": {
+    "missing_should_report_titles": [],
+    "unexpected_reported_titles": [],
+    "missing_should_pending_titles": [],
+    "unexpected_pending_titles": []
+  },
   "notes": [
-    "当前柴油基线以 q7 稳定回放为 seed，重点保护 import conflict、认证主风险和检测费用主风险。",
-    "“赠送与采购无关物资风险”当前未纳入此份柴油 0330 文件正式基线，后续若正式纳管再补 should_report。",
-    "模板留白与程序边界项应继续停留在 excluded 或不进入 formal。"
+    "柴油文件属于货物/机电设备采购域，重点保护 import conflict、认证主风险和检测费用主风险。",
+    "模板留白与程序边界项不应进入用户可见 formal。"
   ],
   "result_dir": "/Users/linzeran/code/2026-zn/test_getst/data/results/v2/gr1-diesel-baseline"
 }
