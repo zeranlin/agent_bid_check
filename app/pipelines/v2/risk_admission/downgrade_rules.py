@@ -99,6 +99,10 @@ REMOTE_DECRYPT_ABNORMAL_RE = re.compile(
 TEMPLATE_BLANK_RE = re.compile(
     r"(验收时间条款留白|履约验收时点不明确|_{3,}|【专用条款】|专用条款约定|_______日内)"
 )
+FORMAL_TITLE_DOWNGRADE_BYPASS = {
+    "合同支付条款存在严重逻辑矛盾，付款比例总和超过100%",
+    "引用已废止标准且未明确替代版本",
+}
 
 
 def _build_text_blob(title: str, *extra_parts: str) -> str:
@@ -137,6 +141,10 @@ def apply_downgrade_rules(
     registry_family_allowed: bool = False,
 ) -> tuple[AdmissionLayer, str, str] | None:
     source_blob = _build_text_blob(title, *source_excerpts, *risk_judgment)
+    title_excerpt_blob = _build_text_blob(title, *source_excerpts)
+
+    if registry_family_allowed and title in FORMAL_TITLE_DOWNGRADE_BYPASS:
+        return None
 
     if evidence_kind in TEMPLATE_EVIDENCE_KINDS or evidence_kind in BOUNDARY_EVIDENCE_KINDS:
         layer, reason = _template_gate_decision(evidence_kind=evidence_kind, source_type=source_type)
@@ -170,8 +178,8 @@ def apply_downgrade_rules(
             "downgrade_sign_default",
         )
     if (
-        REMOTE_DECRYPT_RE.search(source_blob)
-        and not REMOTE_DECRYPT_ABNORMAL_RE.search(source_blob)
+        REMOTE_DECRYPT_RE.search(title_excerpt_blob)
+        and not REMOTE_DECRYPT_ABNORMAL_RE.search(title_excerpt_blob)
         and "显失公平" not in title
     ):
         return (

@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-payment_ratio_over_100
+status: active
+canonical_title: 合同支付条款存在严重逻辑矛盾，付款比例总和超过100%
+family_key: 合同支付条款存在严重逻辑矛盾-付款比例总和超过100
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_migration
+  origin_desc: 从泉州 live 真实文件最小补强中迁入 formal 治理主源，收口付款比例总和超过 100% 的确定性硬风险。
+rationale:
+  migration_reason: 原文付款比例可直接计算得出逻辑错误，已具备直接 formal 认定条件，不应继续停留在 pending。
+migration_status:
+  state: registry_primary
+  previous_location: rules/governance/formal_admission_registry.yaml
+  note: 治理型主源条目，非正式 R-xxx 规则。

@@ -1398,6 +1398,7 @@ def test_domain_budget_compresses_quanzhou_pending_and_preserves_trace() -> None
     admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
 
     pending_titles = {item.title for item in admission.pending_review_items}
+    formal_titles = {item.title for item in admission.formal_risks}
     hidden_titles = {
         candidate.title
         for candidate in admission.iter_all()
@@ -1406,8 +1407,8 @@ def test_domain_budget_compresses_quanzhou_pending_and_preserves_trace() -> None
 
     assert admission.input_summary["domain_context"]["document_domain"] == "engineering_maintenance_construction"
     assert len(admission.pending_review_items) <= 4
-    assert "疑似限定或倾向特定品牌/供应商" in pending_titles
-    assert "将样品要求/验收方案不当作为评审或履约门槛" in pending_titles
+    assert "疑似限定或倾向特定品牌/供应商" in formal_titles
+    assert "将样品要求/验收方案不当作为评审或履约门槛" in formal_titles
     assert "专门面向中小企业采购的证明材料要求表述需核实" not in pending_titles
     assert any(
         title in hidden_titles
@@ -1424,6 +1425,271 @@ def test_domain_budget_compresses_quanzhou_pending_and_preserves_trace() -> None
         and decision.absorbed_or_hidden_items
         for decision in admission.decisions.values()
     )
+
+
+def test_quanzhou_brand_bias_is_not_long_term_downgraded_to_pending() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    formal = next(item for item in admission.formal_risks if item.title == "疑似限定或倾向特定品牌/供应商")
+    decision = admission.decisions[formal.rule_id]
+
+    assert decision.target_layer == "formal_risks"
+    assert decision.technical_layer_decision == "formal_risks"
+    assert decision.formal_gate_passed is True
+    assert decision.user_visible_gate_passed is True
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+
+
+def test_quanzhou_sample_acceptance_gate_is_not_long_term_downgraded_to_pending() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    formal = next(item for item in admission.formal_risks if item.title == "将样品要求/验收方案不当作为评审或履约门槛")
+    decision = admission.decisions[formal.rule_id]
+
+    assert decision.target_layer == "formal_risks"
+    assert decision.technical_layer_decision == "formal_risks"
+    assert decision.formal_gate_passed is True
+    assert decision.user_visible_gate_passed is True
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+
+
+def test_quanzhou_payment_ratio_logic_error_recovers_to_user_visible_layer() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    pending = next(item for item in admission.pending_review_items if item.title == "合同支付比例逻辑错误，总额超过100%")
+    decision = admission.decisions[pending.rule_id]
+
+    assert decision.target_layer == "pending_review_items"
+    assert decision.user_visible_gate_passed is True
+    assert decision.user_visible_gate_rule == "pending_material_issue_allowed"
+    assert decision.evidence_sufficiency == "sufficient"
+
+
+def test_quanzhou_obsolete_standard_reference_recovers_to_user_visible_layer() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-092839-quanzhou-runreview/comparison.json")
+    governance = govern_comparison_artifact("quanzhou.docx", comparison)
+    problems = build_problem_layer("quanzhou.docx", governance)
+    admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
+
+    pending = next(item for item in admission.pending_review_items if item.title == "引用标准已废止且未明确替代版本")
+    decision = admission.decisions[pending.rule_id]
+
+    assert decision.target_layer == "pending_review_items"
+    assert decision.user_visible_gate_passed is True
+    assert decision.user_visible_gate_rule == "pending_material_issue_allowed"
+    assert decision.evidence_sufficiency == "sufficient"
+
+
+def test_quanzhou_live_title_variants_follow_min_002_layering() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="qz-live-payment-ratio",
+                title="合同支付条款存在严重逻辑矛盾，付款比例总和超过100%",
+                severity="中风险",
+                review_type="条款合规性审查",
+                source_locations=["合同付款条款"],
+                source_excerpts=["签约后支付50%，验收后支付50%，审计后再支付50%。"],
+                risk_judgment=["付款比例累计超过100%，存在明确逻辑错误。"],
+                legal_basis=["付款安排应具备可执行性与数学一致性。"],
+                rectification=["重写付款节点与比例。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-obsolete-standard",
+                title="引用已废止标准且未明确替代版本",
+                severity="中风险",
+                review_type="标准有效性审查",
+                source_locations=["技术标准条款"],
+                source_excerpts=["人工材料体育场地使用要求及检验方法（GB/T20033-2006）。"],
+                risk_judgment=["引用标准已废止，但未明确替代版本。"],
+                legal_basis=["技术标准应保持现行有效。"],
+                rectification=["改为现行有效标准并明确版本。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-acceptance-procedure",
+                title="验收流程、主体及不合格处理机制表述模糊，缺乏可操作性",
+                severity="中风险",
+                review_type="流程可操作性审查",
+                source_locations=["验收条款"],
+                source_excerpts=["由采购人组织验收，未通过的另行处理。"],
+                risk_judgment=["验收主体、流程和不合格处理机制均不明确。"],
+                legal_basis=["履约验收条款应具备可操作性。"],
+                rectification=["补充验收主体、流程与复验机制。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-remote-opening",
+                title="远程开标逾期解密后果表述需进一步确认",
+                severity="中风险",
+                review_type="程序条款审查",
+                source_locations=["远程开标须知"],
+                source_excerpts=["投标人未在规定时间内完成解密的，后果自负。"],
+                risk_judgment=["逾期解密后果表述较重，需结合时限和补救机制进一步核实。"],
+                legal_basis=["开标程序条款应合理明确。"],
+                rectification=["明确解密时限、补救机制与后果边界。"],
+                topics=["procedure"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("quanzhou-live.docx", comparison)
+    problems = build_problem_layer("quanzhou-live.docx", governance)
+    admission = admit_problem_result("quanzhou-live.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+
+    assert "合同支付条款存在严重逻辑矛盾，付款比例总和超过100%" in formal_titles
+    assert "引用已废止标准且未明确替代版本" in formal_titles
+    assert "验收流程、主体及不合格处理机制表述模糊，缺乏可操作性" in pending_titles
+    assert "远程开标逾期解密后果表述需进一步确认" in pending_titles
+
+
+def test_user_visible_gate_allows_current_quanzhou_live_title_drift_variants() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="qz-live-payment-ratio-current",
+                title="合同支付比例逻辑错误，导致付款总额超过合同金额",
+                severity="中风险",
+                review_type="条款合规性审查",
+                source_locations=["证据3，第 1314 - 1319 行"],
+                source_excerpts=["支付合同金额的50%作为预付款，施工完毕验收后支付50%。"],
+                risk_judgment=["付款比例累计超过100%，存在明确逻辑错误。"],
+                legal_basis=["付款安排应具备可执行性与数学一致性。"],
+                rectification=["重写付款节点与比例。"],
+                topics=["contract_payment"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-obsolete-standard-current",
+                title="标准名称与编号不一致及版本滞后风险",
+                severity="中风险",
+                review_type="标准有效性审查",
+                source_locations=["证据 1，第 943-945 行"],
+                source_excerpts=["人工材料体育场地使用要求及检验方法（GB/T20033-2006）。"],
+                risk_judgment=["引用标准版本滞后，存在执行依据偏差。"],
+                legal_basis=["技术标准应保持现行有效。"],
+                rectification=["改为现行有效标准并明确版本。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-acceptance-procedure-current",
+                title="验收流程、主体及不合格复验程序约定模糊，存在单方裁量空间过大风险",
+                severity="中风险",
+                review_type="流程可操作性审查",
+                source_locations=["证据2 - 9、验收标准要求"],
+                source_excerpts=["验收合格后双方共同签署检验合格证书。"],
+                risk_judgment=["验收主体、流程和复验机制均不明确。"],
+                legal_basis=["履约验收条款应具备可操作性。"],
+                rectification=["补充验收主体、流程与复验机制。"],
+                topics=["acceptance"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="qz-live-remote-opening-current",
+                title="远程开标逾期解密后果明确但需关注系统稳定性",
+                severity="中风险",
+                review_type="程序条款审查",
+                source_locations=["证据1，第 364 行，11.4(1)"],
+                source_excerpts=["逾期未解密的视为放弃投标。"],
+                risk_judgment=["逾期解密后果较重，仍需结合时限和系统补救机制进一步核实。"],
+                legal_basis=["开标程序条款应合理明确。"],
+                rectification=["明确解密时限、补救机制与后果边界。"],
+                topics=["procedure"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("quanzhou-live.docx", comparison)
+    problems = build_problem_layer("quanzhou-live.docx", governance)
+    admission = admit_problem_result("quanzhou-live.docx", comparison, problems, governance)
+
+    pending_titles = {item.title for item in admission.pending_review_items}
+    assert {
+        "合同支付比例逻辑错误，导致付款总额超过合同金额",
+        "标准名称与编号不一致及版本滞后风险",
+        "验收流程、主体及不合格复验程序约定模糊，存在单方裁量空间过大风险",
+        "远程开标逾期解密后果明确但需关注系统稳定性",
+    } <= pending_titles
+
+
+def test_quanzhou_min_002_promotes_payment_and_obsolete_standard_to_formal_only() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260412-qz-min-001-live-rerun3/comparison.json")
+    governance = govern_comparison_artifact("quanzhou-live.docx", comparison)
+    problems = build_problem_layer("quanzhou-live.docx", governance)
+    admission = admit_problem_result("quanzhou-live.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+
+    assert "合同支付条款存在严重逻辑矛盾，付款比例总和超过100%" in formal_titles
+    assert "引用已废止标准且未明确替代版本" in formal_titles
+    assert "远程开标逾期解密后果表述需进一步确认" in pending_titles
+    assert "验收流程、主体及不合格处理机制表述模糊，缺乏可操作性" in pending_titles
+
+    payment = next(item for item in admission.formal_risks if item.title == "合同支付条款存在严重逻辑矛盾，付款比例总和超过100%")
+    obsolete = next(item for item in admission.formal_risks if item.title == "引用已废止标准且未明确替代版本")
+    payment_decision = admission.decisions[payment.rule_id]
+    obsolete_decision = admission.decisions[obsolete.rule_id]
+
+    assert payment_decision.target_layer == "formal_risks"
+    assert payment_decision.formal_gate_passed is True
+    assert payment_decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+    assert obsolete_decision.target_layer == "formal_risks"
+    assert obsolete_decision.formal_gate_passed is True
+    assert obsolete_decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+
+
+def test_singleton_sample_family_variant_is_not_misclassified_as_remote_opening_routine() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="qz-live-sample-current",
+                title="样品评审规则设置不当，存在排斥潜在供应商风险",
+                severity="中风险",
+                review_type="评审标准/样品要求",
+                source_locations=["第五章 招标内容及要求 -> 二、技术和服务要求 -> （四）、样品要求 -> 2.1"],
+                source_excerpts=["样品需在响应文件递交截止时间前送达开标地点并进行样品签到手续，未提供样品、样品提供不全的样品评审不得分。"],
+                risk_judgment=[
+                    "样品评审不得分与最低评标价法存在冲突。",
+                    "本项目采用远程不见面开标，但仍要求样品开标前送达，可能导致样品要求被误作门槛。",
+                ],
+                legal_basis=["样品要求不得构成不当门槛。"],
+                rectification=["明确样品是否为实质性响应条件，并与开标方式保持一致。"],
+                topics=["baseline"],
+                source_rules=["baseline"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("quanzhou-live.docx", comparison)
+    problems = build_problem_layer("quanzhou-live.docx", governance)
+    admission = admit_problem_result("quanzhou-live.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+
+    assert "将样品要求/验收方案不当作为评审或履约门槛" in formal_titles
 
 
 def test_domain_budget_marks_hidden_pending_items_as_internal_trace_only() -> None:
@@ -1447,12 +1713,12 @@ def test_ax_governance_trace_is_attached_to_user_visible_gate_and_budget() -> No
     problems = build_problem_layer("quanzhou.docx", governance)
     admission = admit_problem_result("quanzhou.docx", comparison, problems, governance)
 
-    visible_brand = next(item for item in admission.pending_review_items if item.title == "疑似限定或倾向特定品牌/供应商")
+    visible_brand = next(item for item in admission.formal_risks if item.title == "疑似限定或倾向特定品牌/供应商")
     visible_brand_decision = admission.decisions[visible_brand.rule_id]
     hidden_policy = next(item for item in admission.excluded_risks if item.title == "专门面向中小企业采购的证明材料要求表述需核实")
     hidden_policy_decision = admission.decisions[hidden_policy.rule_id]
 
-    assert visible_brand_decision.stable_pending_config_id
+    assert visible_brand_decision.formal_gate_passed is True
     assert visible_brand_decision.domain_policy_id
     assert hidden_policy_decision.budget_policy_id
     assert hidden_policy_decision.budget_hit is True
