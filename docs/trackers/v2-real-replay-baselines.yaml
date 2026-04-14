@@ -49,23 +49,37 @@ documents:
     seed_result_dir: "../../data/results/v2/20260409-w013-fujian"
     result_dir: "../../data/results/v2/gr1-fujian-baseline"
     notes:
-      - 福建物业基线当前采用 w013 稳定 seed，重点保护正文硬风险，同时阻断模板/后续合同确定类误报。
-      - 该文件的提醒项、证据不足项应继续停留在 pending，不得直接抬入 formal。
-      - 后续若福建链路继续收紧，可在不打坏正文硬风险前提下迭代 seed run。
+      - 福建物业基线当前以 2026-04-14 复核后口径为准，重点保护 6 条正文硬风险，其中新增收回人员性别/年龄歧视条款。
+      - 该文件当前仅保留“远程开标”和“人员配置重复计分及特定证书倾向性”两条待补证项，人员/证书近义碎片不再分散外显。
+      - 模板/后续合同确定类误报、政策完整性提醒和中小企业细节确认继续下沉到 excluded 或内部层。
     baseline_assertions:
       should_report:
         - id: fujian-brand-bias
           title: "评分标准中设置特定品牌倾向性条款"
+        - id: fujian-personnel-discrimination-formal
+          title: "技术参数中人员配置要求存在性别、年龄等歧视性条款"
+        - id: fujian-no-crime-formal
+          title: "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险"
+        - id: fujian-honor-formal
+          title: "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分"
+        - id: fujian-software-copyright-formal
+          title: "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争"
         - id: fujian-tech-brand
           title: "技术参数中关于“实验服清洗服务”的设备品牌指定风险"
       should_not_report:
         - id: fujian-template-acceptance
           title: "验收标准模糊且依赖后续合同确定，存在需求条款合规风险"
-      should_pending:
-        - id: fujian-acceptance-pending
-          title: "验收流程与考核机制表述笼统，缺乏可操作性"
         - id: fujian-policy-reminder
+          title: "政策依据文件号表述不完整"
+        - id: fujian-acceptance-reminder
+          title: "验收流程与考核机制表述笼统，缺乏可操作性"
+        - id: fujian-sme-reminder
           title: "专门面向中小企业采购的评审细节需确认"
+      should_pending:
+        - id: fujian-remote-opening-pending
+          title: "远程开标逾期解密后果表述需进一步确认"
+        - id: fujian-personnel-scoring-pending
+          title: "评分标准中人员配置要求存在重复计分及特定证书倾向性"
 
   - document_id: DOC-FUZHOU-DORM-BASELINE
     document_name: "（埋点）福州一中高中部12号及13号楼学生宿舍家具采购.docx"

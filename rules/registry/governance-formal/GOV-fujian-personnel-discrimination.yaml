@@ -1,0 +1,16 @@
+entry_type: governance_formal
+rule_id: GOV-fujian_personnel_discrimination
+status: active
+canonical_title: 技术参数中人员配置要求存在性别、年龄等歧视性条款
+family_key: fujian_personnel_discrimination
+allow_formal: true
+requires_hard_evidence: true
+source:
+  origin_type: governance_patch
+  origin_desc: 福建物业复核后最小整改单，将正文已明确的性别/年龄歧视性人员配置条款恢复为正式风险承接项。
+rationale:
+  migration_reason: 正文已直接出现“需为男性”“女性，身体健康，仪表端庄”等岗位限定，且年龄限制与岗位必要性未见充分论证，具备正式风险认定条件。
+migration_status:
+  state: registry_primary
+  previous_location: none
+  note: 最小补强条目，避免该条继续仅因 registry 缺口被压入 excluded。

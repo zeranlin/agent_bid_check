@@ -511,8 +511,8 @@ def test_risk_admission_is_unique_three_layer_exit() -> None:
     validate_admitted_result(admission)
 
     assert len(admission.formal_risks) == 1
-    assert len(admission.pending_review_items) == 1
-    assert admission.excluded_risks == []
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["节能环保产品政策条款缺失"]
     assert admission.decisions
     assert all(
         key in {"formal_risks", "pending_review_items", "excluded_risks"}
@@ -551,13 +551,13 @@ def test_body_clause_hard_risk_is_not_misclassified_as_template() -> None:
 
     formal_titles = {item.title for item in admission.formal_risks}
     pending_titles = {item.title for item in admission.pending_review_items}
-    body_item = next(item for item in admission.pending_review_items if item.title == "评分标准中设置特定品牌倾向性条款")
+    body_item = next(item for item in admission.formal_risks if item.title == "评分标准中设置特定品牌倾向性条款")
     body_decision = admission.decisions[body_item.rule_id]
 
-    assert "评分标准中设置特定品牌倾向性条款" not in formal_titles
-    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
+    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" not in pending_titles
     assert body_item.evidence_kind == "scoring_clause"
-    assert body_decision.formal_gate_rule == "registry_mapping_missing_block"
+    assert body_decision.formal_gate_rule == "registry_family_hard_evidence_gate"
 
 
 def test_reminder_items_are_downgraded_to_pending_review() -> None:
@@ -568,10 +568,10 @@ def test_reminder_items_are_downgraded_to_pending_review() -> None:
     pending_titles = {item.title for item in admission.pending_review_items}
     formal_titles = {item.title for item in admission.formal_risks}
 
-    assert "专门面向中小企业采购的评审细节需确认" in pending_titles
     assert "人员配置数量及证书要求需结合项目规模评估" in pending_titles
-    assert "评分标准中设置特定品牌倾向性条款" not in formal_titles
-    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
+    assert "专门面向中小企业采购的评审细节需确认" in {item.title for item in admission.excluded_risks}
+    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置特定品牌倾向性条款" not in pending_titles
 
 
 def test_fujian_template_misreport_is_blocked_by_current_admission_rules() -> None:
@@ -591,17 +591,9 @@ def test_fujian_template_misreport_is_blocked_by_current_admission_rules() -> No
 
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" in excluded_titles
     assert "验收标准模糊且依赖后续合同确定，存在需求条款合规风险" not in formal_titles
-    assert "评分标准中设置特定品牌倾向性条款" in pending_titles
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in formal_titles
-    assert (
-        "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
-        or "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in excluded_titles
-    )
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in formal_titles
-    assert (
-        "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
-        or "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in excluded_titles
-    )
+    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in formal_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_titles
 
 
 def test_missing_type_risk_is_downgraded_from_formal() -> None:
@@ -688,14 +680,11 @@ def test_formal_gate_no_longer_uses_whitelist_as_runtime_source_for_software_cop
 
     decision = admission.decisions["topic::software_copyright_competition"]
 
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in {
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in {
         item.title for item in admission.formal_risks
     }
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in {
-        item.title for item in admission.pending_review_items
-    }
-    assert decision.formal_gate_passed is False
-    assert decision.formal_gate_rule == "registry_mapping_missing_block"
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
     assert decision.formal_gate_exception_whitelist_hit is False
 
 
@@ -727,7 +716,7 @@ def test_formal_gate_blocks_absorbed_supporting_item_before_formal_admission() -
     assert decision.formal_gate_rule == "absorbed_supporting_item_block"
 
 
-def test_formal_gate_demotes_unstable_family_even_with_body_evidence() -> None:
+def test_formal_gate_allows_original_engineer_requirement_with_body_evidence() -> None:
     comparison = ComparisonArtifact(
         clusters=[
             MergedRiskCluster(
@@ -751,13 +740,48 @@ def test_formal_gate_demotes_unstable_family_even_with_body_evidence() -> None:
     admission = admit_governance_result("diesel.docx", comparison, governance)
     decision = next(iter(admission.decisions.values()))
 
-    assert admission.formal_risks == []
-    assert [item.title for item in admission.pending_review_items] == ["要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险"]
-    assert decision.formal_gate_passed is False
-    assert decision.formal_gate_family_allowed is False
+    assert [item.title for item in admission.formal_risks] == ["要求现场技术人员必须为制造商原厂工程师，存在排斥代理商风险"]
+    assert admission.pending_review_items == []
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_family_allowed is True
     assert decision.formal_gate_evidence_passed is True
-    assert decision.formal_gate_rule == "registry_mapping_missing_block"
-    assert decision.formal_gate_registry_resolution == "missing"
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+    assert decision.formal_gate_registry_resolution == "matched"
+    assert decision.formal_gate_registry_rule_id
+
+
+def test_formal_gate_allows_production_date_limit_with_body_evidence() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="production-date-hard-evidence",
+                title="技术参数中指定特定生产日期，具有明显排他性和倾向性",
+                severity="高风险",
+                review_type="技术参数审查",
+                source_locations=["技术条款：3.2 发电机"],
+                source_excerpts=["投标产品应选用原装产品，生产日期必须是 2025 年。"],
+                risk_judgment=["直接限定生产日期会明显压缩可竞争产品范围。"],
+                legal_basis=["技术参数应与履约必要性相匹配，不得形成明显排他性。"],
+                rectification=["删除特定生产日期限制，改为与质量保证期相衔接的合理要求。"],
+                topics=["technical_standard"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    admission = admit_governance_result("diesel.docx", comparison, governance)
+    decision = next(iter(admission.decisions.values()))
+
+    assert [item.title for item in admission.formal_risks] == ["技术参数中指定特定生产日期，具有明显排他性和倾向性"]
+    assert admission.pending_review_items == []
+    assert admission.excluded_risks == []
+    assert decision.formal_gate_passed is True
+    assert decision.formal_gate_family_allowed is True
+    assert decision.formal_gate_evidence_passed is True
+    assert decision.formal_gate_rule == "registry_family_hard_evidence_gate"
+    assert decision.formal_gate_registry_resolution == "matched"
 
 
 def test_formal_gate_allows_stable_family_with_body_evidence() -> None:
@@ -1120,6 +1144,38 @@ def test_user_visible_gate_keeps_material_pending_with_trace() -> None:
     assert decision.user_visible_decision_basis
 
 
+def test_pending_gate_hides_low_value_energy_policy_missing_signal() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="energy-policy-missing",
+                title="节能环保产品政策条款缺失",
+                severity="中风险",
+                review_type="政策条款复核",
+                source_locations=["政策章节"],
+                source_excerpts=["未见明确节能环保政策落实条款。"],
+                risk_judgment=["当前仅体现政策完整性提醒，尚未形成明确合规后果。"],
+                legal_basis=["需进一步核实。"],
+                rectification=["补充节能环保产品政策落实条款。"],
+                topics=["policy"],
+                source_rules=["topic"],
+            )
+        ],
+        metadata={},
+    )
+    governance = govern_comparison_artifact("diesel.docx", comparison)
+    problems = build_problem_layer("diesel.docx", governance)
+
+    admission = admit_problem_result("diesel.docx", comparison, problems, governance)
+
+    assert admission.pending_review_items == []
+    assert [item.title for item in admission.excluded_risks] == ["节能环保产品政策条款缺失"]
+    decision = next(iter(admission.decisions.values()))
+    assert decision.pending_gate_reason_code == "weak_signal_no_material_consequence"
+    assert decision.user_visible_gate_passed is False
+    assert decision.user_visible_gate_rule == "weak_signal_no_material_consequence"
+
+
 def test_formal_gate_whitelist_can_survive_weak_source_downgrade_rules() -> None:
     comparison = ComparisonArtifact(
         clusters=[
@@ -1196,11 +1252,11 @@ def test_fujian_titles_and_severity_are_stabilized() -> None:
 
     formal_by_title = {item["title"]: item for item in final_output["formal_risks"]}
 
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in formal_by_title
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in formal_by_title
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in formal_by_title
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_by_title
     pending_titles = {item["title"] for item in final_output["pending_review_items"]}
-    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in pending_titles
-    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in pending_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" not in pending_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" not in pending_titles
 
 
 def test_assembler_consumes_risk_admission_output_only() -> None:
@@ -1240,7 +1296,7 @@ def test_assembler_consumes_risk_admission_output_only() -> None:
     )
 
     assert final_output["formal_risks"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
-    assert final_output["pending_review_items"][0]["title"] == "节能环保产品政策条款缺失"
+    assert final_output["pending_review_items"] == []
     assert final_output["risk_admission"]["formal_risks"][0]["title"] == "将项目验收方案纳入评审因素，违反评审规则合规性要求"
     assert "governed_candidates" in final_output["governance"]
     assert "formal_risks" not in final_output["governance"]
@@ -1722,3 +1778,291 @@ def test_ax_governance_trace_is_attached_to_user_visible_gate_and_budget() -> No
     assert visible_brand_decision.domain_policy_id
     assert hidden_policy_decision.budget_policy_id
     assert hidden_policy_decision.budget_hit is True
+
+
+def test_fujian_regression_replay_restores_core_visible_items_and_normalizes_formal_severity() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-101119-4f320237/comparison.json")
+    governance = govern_comparison_artifact("fujian-property.docx", comparison)
+    problems = build_problem_layer("fujian-property.docx", governance)
+    admission = admit_problem_result("fujian-property.docx", comparison, problems, governance)
+
+    formal_severities = {item.severity for item in admission.formal_risks}
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert "需人工复核" not in formal_severities
+    assert "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分" in formal_titles
+    assert {
+        "人员配置设置年龄限制，涉嫌就业歧视",
+        "政府采购政策条款引用不完整及内容截断",
+        "验收标准与流程模糊，存在单方裁量空间过大风险",
+        "商务项中保险赔付额度评分标准存在倾向性风险",
+        "评分标准中人员配置要求存在重复计分及特定证书倾向",
+    } <= pending_titles
+    assert "验收标准与流程模糊，存在单方裁量空间过大风险" not in excluded_titles
+
+
+def test_fujian_live_replay_title_drift_still_restores_core_pending_items() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-fujian-property-v2-live-check/comparison.json")
+    governance = govern_comparison_artifact("fujian-property-live.docx", comparison)
+    problems = build_problem_layer("fujian-property-live.docx", governance)
+    admission = admit_problem_result("fujian-property-live.docx", comparison, problems, governance)
+
+    pending_titles = {item.title for item in admission.pending_review_items}
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分" in formal_titles
+    assert "远程开标逾期解密后果表述需进一步确认" in pending_titles
+    assert "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争" in formal_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_titles
+    assert "技术参数中关于“实验服清洗服务”的设备品牌指定风险" in formal_titles
+    assert "人员年龄限制可能构成不合理门槛" in excluded_titles
+    assert len(pending_titles) >= 1
+
+
+def test_fujian_live_replay_restores_formal_scoring_risks_with_legal_severity() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-fujian-property-min-fix-live2/comparison.json")
+    governance = govern_comparison_artifact("fujian-property-live2.docx", comparison)
+    problems = build_problem_layer("fujian-property-live2.docx", governance)
+    admission = admit_problem_result("fujian-property-live2.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    formal_severities = {item.severity for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+
+    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分" in formal_titles
+    assert "商务评分项中'员工保险保障'评分标准存在履约风险及倾向性隐患" in pending_titles
+    assert formal_severities <= {"高风险", "中风险", "低风险"}
+
+
+def test_fujian_live_f1_restores_brand_and_honor_scoring_to_formal() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-fujian-property-min-fix-f1/comparison.json")
+    governance = govern_comparison_artifact("fujian-property-f1.docx", comparison)
+    problems = build_problem_layer("fujian-property-f1.docx", governance)
+    admission = admit_problem_result("fujian-property-f1.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+
+    assert "评分标准中设置特定品牌倾向性条款" in formal_titles
+    assert "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分" in formal_titles
+    assert "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险" in formal_titles
+
+
+def test_fujian_min_002_rebalances_formal_pending_and_excluded_layers() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-114813-fujian-property-rerun-review/comparison.json")
+    governance = govern_comparison_artifact("fujian-property-min-002.docx", comparison)
+    problems = build_problem_layer("fujian-property-min-002.docx", governance)
+    admission = admit_problem_result("fujian-property-min-002.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    pending_titles = {item.title for item in admission.pending_review_items}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert {
+        "评分标准中设置特定品牌倾向性条款",
+        "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
+        "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险",
+        "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争",
+        "技术参数中关于“实验服清洗服务”的设备品牌指定风险",
+    } <= formal_titles
+    assert pending_titles == {
+        "远程开标逾期解密后果表述需进一步确认",
+        "评分标准中人员配置要求存在重复计分及特定证书倾向性",
+    }
+    assert {
+        "政策依据文件号表述不完整",
+        "验收流程与考核机制表述笼统，缺乏可操作性",
+        "专门面向中小企业采购的评审细节需确认",
+    } <= excluded_titles
+
+
+def test_fujian_min_002_keeps_specific_pending_reasons_explainable() -> None:
+    comparison = _load_comparison_artifact("data/results/v2/20260413-114813-fujian-property-rerun-review/comparison.json")
+    governance = govern_comparison_artifact("fujian-property-min-002.docx", comparison)
+    problems = build_problem_layer("fujian-property-min-002.docx", governance)
+    admission = admit_problem_result("fujian-property-min-002.docx", comparison, problems, governance)
+
+    all_items = [*admission.formal_risks, *admission.pending_review_items, *admission.excluded_risks]
+    remote = next(item for item in all_items if item.title == "远程开标逾期解密后果表述需进一步确认")
+    personnel = next(item for item in all_items if item.title == "评分标准中人员配置要求存在重复计分及特定证书倾向性")
+
+    remote_decision = admission.decisions[remote.rule_id]
+    personnel_decision = admission.decisions[personnel.rule_id]
+
+    assert remote_decision.target_layer == "pending_review_items"
+    assert remote_decision.admission_reason == "当前仅见一般性远程开标解密时限及后果安排，未出现异常偏短时长或明显过重后果，先转待补证复核。"
+    assert personnel_decision.target_layer == "pending_review_items"
+    assert personnel_decision.admission_reason == "检测到提醒项或边界提示表达，且当前缺少标准规则级硬支撑，已下沉为待补证复核项。"
+
+
+def test_fujian_min_002_hides_employee_insurance_signal_from_visible_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="fujian-insurance",
+                title="商务评分项中'员工保险保障'评分标准存在履约风险及倾向性隐患",
+                severity="中风险",
+                review_type="评分因素相关性审查",
+                source_locations=["商务项 -> 员工保险保障"],
+                source_excerpts=["为本项目员工购买补充商业保险的得分。"],
+                risk_judgment=["评分标准更偏向一般商务保障提示，当前不足以稳定支撑用户可见待补证外显。"],
+                legal_basis=["评分因素应与履约能力保持直接关联。"],
+                rectification=["如需考察保障能力，应转为合同履约要求而非评分项。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="fujian-personnel",
+                title="人员配置数量及证书要求需结合项目规模评估",
+                severity="中风险",
+                review_type="人员配置审查",
+                source_locations=["商务项 -> 人员配置"],
+                source_excerpts=["项目经理和服务人员要经过物业管理专业培训，并取得相关技术证书和必备的上岗证书。"],
+                risk_judgment=["人员数量和证书要求需要结合项目规模继续判断合理性。"],
+                legal_basis=["人员配置要求应与项目规模、服务面积和履约边界匹配。"],
+                rectification=["补充项目规模和最低履约配置基准。"],
+                topics=["performance_staff"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fujian-property-min-002.docx", comparison)
+    problems = build_problem_layer("fujian-property-min-002.docx", governance)
+    admission = admit_problem_result("fujian-property-min-002.docx", comparison, problems, governance)
+
+    pending_titles = {item.title for item in admission.pending_review_items}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert pending_titles == {"评分标准中人员配置要求存在重复计分及特定证书倾向性"}
+    assert "人员配置数量及证书要求需结合项目规模评估" not in pending_titles
+    assert "商务评分项中'员工保险保障'评分标准存在履约风险及倾向性隐患" not in pending_titles
+    assert "商务评分项中'员工保险保障'评分标准存在履约风险及倾向性隐患" in excluded_titles
+
+
+def test_fujian_post_acceptance_promotes_gender_age_discrimination_to_formal() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="fujian-gender-age-main",
+                title="技术参数中人员配置要求存在性别、年龄等歧视性条款",
+                severity="高风险",
+                review_type="人员配置合规性审查",
+                source_locations=["人员配备情况"],
+                source_excerpts=[
+                    "安防组人员需为男性；门岗需为男性；会务组行政专员女性，身体健康，仪表端庄。"
+                ],
+                risk_judgment=["正文直接对岗位人员设置性别条件，存在明显就业歧视风险。"],
+                legal_basis=["采购需求不得设置与岗位必要性无关的歧视性条件。"],
+                rectification=["删除与履约必要性无关的性别限制表达。"],
+                topics=["baseline"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="fujian-gender-age-support",
+                title="人员年龄限制可能构成就业歧视",
+                severity="中风险",
+                review_type="人员配置合规性审查",
+                source_locations=["人员配备情况"],
+                source_excerpts=["工程技术人员25-55周岁，环境领班25-45周岁。"],
+                risk_judgment=["年龄区间限制需要与岗位必要性和劳动法规继续核对。"],
+                legal_basis=["人员年龄限制应具备充分岗位必要性。"],
+                rectification=["删除缺乏必要性的年龄条件。"],
+                topics=["performance_staff"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fujian-property-post-acceptance.docx", comparison)
+    problems = build_problem_layer("fujian-property-post-acceptance.docx", governance)
+    admission = admit_problem_result("fujian-property-post-acceptance.docx", comparison, problems, governance)
+
+    formal_titles = {item.title for item in admission.formal_risks}
+    excluded_titles = {item.title for item in admission.excluded_risks}
+
+    assert "技术参数中人员配置要求存在性别、年龄等歧视性条款" in formal_titles
+    assert "人员年龄限制可能构成就业歧视" not in excluded_titles
+
+
+def test_fujian_post_acceptance_collapses_personnel_certificate_fragments_to_single_visible_pending() -> None:
+    comparison = ComparisonArtifact(
+        clusters=[
+            MergedRiskCluster(
+                cluster_id="fujian-personnel-dup-score",
+                title="评分标准中人员配置要求存在重复计分及特定证书倾向性",
+                severity="中风险",
+                review_type="评分因素相关性审查",
+                source_locations=["评标标准 17-24 项"],
+                source_excerpts=["项目经理、工程主管、工程技术人员分别按学历、证书重复加分。"],
+                risk_judgment=["同一组人员配置和证书要求被拆分多项计分，存在重复评价和证书倾向性。"],
+                legal_basis=["评分因素应与履约能力直接相关且避免重复评价。"],
+                rectification=["合并同类人员要求并删除过度细碎的证书加分。"],
+                topics=["baseline"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="fujian-personnel-scale",
+                title="人员配置数量及证书要求需结合项目规模评估",
+                severity="低风险",
+                review_type="人员配置审查",
+                source_locations=["人员配备要求"],
+                source_excerpts=["总人数不得低于65人，并要求相关岗位持证上岗。"],
+                risk_judgment=["人员数量和证书要求仍需结合项目规模继续核实。"],
+                legal_basis=["人员配置要求应与项目规模匹配。"],
+                rectification=["结合服务面积和院区工作量重新评估最低配置。"],
+                topics=["performance_staff"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="fujian-personnel-cert-warning",
+                title="人员证书评分项设置需警惕变相指定特定资质或人员",
+                severity="低风险",
+                review_type="评分因素相关性审查",
+                source_locations=["评标标准 23 项"],
+                source_excerpts=["要求高压电工作业证、特种设备安全管理和作业人员证等。"],
+                risk_judgment=["多个特定证书叠加评分，存在变相指定特定人员资质的倾向。"],
+                legal_basis=["评分标准不得通过特定证书组合形成不合理门槛。"],
+                rectification=["删除与履约能力关联度不足的特定证书加分。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+            MergedRiskCluster(
+                cluster_id="fujian-personnel-repeat-limit",
+                title="评分标准中人员配置要求存在重复计分及过度限制风险",
+                severity="低风险",
+                review_type="评分因素相关性审查",
+                source_locations=["评标标准 17-24 项"],
+                source_excerpts=["多个岗位分别按学历、证书和持证人数叠加计分。"],
+                risk_judgment=["同一批人员配置要求存在重复计分和限制叠加。"],
+                legal_basis=["评分标准应避免对同类人员能力反复计分。"],
+                rectification=["压缩重复计分项并删除过度限制条件。"],
+                topics=["scoring"],
+                source_rules=["topic"],
+            ),
+        ],
+        metadata={},
+    )
+
+    governance = govern_comparison_artifact("fujian-property-post-acceptance.docx", comparison)
+    problems = build_problem_layer("fujian-property-post-acceptance.docx", governance)
+    admission = admit_problem_result("fujian-property-post-acceptance.docx", comparison, problems, governance)
+
+    pending_titles = {item.title for item in admission.pending_review_items}
+    all_titles = {
+        *(item.title for item in admission.formal_risks),
+        *(item.title for item in admission.pending_review_items),
+        *(item.title for item in admission.excluded_risks),
+    }
+
+    assert pending_titles == {"评分标准中人员配置要求存在重复计分及特定证书倾向性"}
+    assert "人员配置数量及证书要求需结合项目规模评估" not in all_titles
+    assert "人员证书评分项设置需警惕变相指定特定资质或人员" not in all_titles
+    assert "评分标准中人员配置要求存在重复计分及过度限制风险" not in all_titles

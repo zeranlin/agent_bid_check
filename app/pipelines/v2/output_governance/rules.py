@@ -43,7 +43,7 @@ FAMILY_RULES: list[tuple[str, re.Pattern[str], str]] = [
             r"(项目负责人学历及职称要求过高|项目负责人评分中学历、职称、证书要求设置过高且累计分值不合理|"
             r"项目负责人评分项分值畸高且设置不合理|项目负责人评分项设置过高且累计分值不合理|将PMP证书作为评分项)"
         ),
-        "项目负责人评分项设置过高且累计分值不合理，存在重复评价和倾向性风险",
+        "项目负责人评分设置存在形式歧视、职称分值偏高及重复评价风险",
     ),
     (
         "scoring_clarity",
@@ -84,6 +84,31 @@ FAMILY_RULES: list[tuple[str, re.Pattern[str], str]] = [
         "software_copyright_competition",
         re.compile(r"(信息化软件服务能力|软件著作权登记证书|著作权人为投标人)"),
         "评分标准中“信息化软件服务能力”要求著作权人为投标人，可能限制竞争",
+    ),
+    (
+        "fujian_honor_scoring",
+        re.compile(
+            r"(企业荣誉.+履约能力关联度不足|特定行业荣誉作为加分项|企业荣誉及特定荣誉加分|"
+            r"特定荣誉及认证，存在指向性风险)"
+        ),
+        "评分标准中设置与履约能力关联度不高的企业荣誉及特定荣誉加分",
+    ),
+    (
+        "fujian_personnel_certificate_scale",
+        re.compile(
+            r"(评分标准中人员配置要求存在重复计分及特定证书倾向性|人员配置数量及证书要求需结合项目规模评估|"
+            r"与履约能力无关的特定证书要求|人员证书评分项设置需关注是否构成变相限制|"
+            r"人员证书评分项设置需警惕变相指定特定资质或人员|评分标准中人员配置要求存在重复计分及过度限制风险)"
+        ),
+        "评分标准中人员配置要求存在重复计分及特定证书倾向性",
+    ),
+    (
+        "fujian_personnel_discrimination",
+        re.compile(
+            r"(技术参数中人员配置要求存在性别、年龄等歧视性条款|人员年龄限制可能构成就业歧视|"
+            r"需为男性|女性，身体健康|身体健康，仪表端庄)"
+        ),
+        "技术参数中人员配置要求存在性别、年龄等歧视性条款",
     ),
     (
         "sample_gate",
@@ -131,6 +156,16 @@ FAMILY_RULES: list[tuple[str, re.Pattern[str], str]] = [
         re.compile(r"(无犯罪证明|合同签订后的三个月内提供)"),
         "商务条款中关于“无犯罪证明”的提交时限及无效投标处理存在法律风险",
     ),
+    (
+        "fujian_acceptance_clarity",
+        re.compile(r"(验收条款中未明确验收标准与考核结果的挂钩机制|验收标准表述模糊，存在循环引用及单方裁量风险|验收流程与考核机制表述笼统)"),
+        "验收流程与考核机制表述笼统，缺乏可操作性",
+    ),
+    (
+        "fujian_sme_review_detail",
+        re.compile(r"(专门面向中小企业采购的评审优惠条款缺失|专门面向中小企业采购的评审细节需确认)"),
+        "专门面向中小企业采购的评审细节需确认",
+    ),
 ]
 
 SEVERITY_FLOORS: dict[str, str] = {
@@ -162,6 +197,8 @@ def merge_reason_for_family(family_key: str) -> str:
         "acceptance_testing_cost": "同一风险家族同时出现费用转嫁与投标总价打包表达，治理层统一归并为一个主风险。",
         "guarantee_ratio": "履约保证金超过法定上限时，治理层优先保留“严重超标”主标题。",
         "personnel_scoring": "项目负责人学历、职称、证书与分值结构属于同一评分风险家族，治理层统一合并。",
+        "fujian_personnel_certificate_scale": "福建物业文件中的人员数量、证书要求与重复计分问题属于同一人员配置评分簇，治理层仅保留一个主表达。",
+        "fujian_personnel_discrimination": "性别限制与年龄限制属于同一人员配置歧视风险簇，治理层统一收口为一个主风险。",
         "certification_scoring_bundle": "同一组评分证据同时涉及特定认证证书、特定发证机构、认证组合门槛与分值权重，治理层统一收口为一个主风险。",
         "sample_gate": "样品制作、匿名展示与误映射标题属于同一样品门槛风险簇，治理层统一归并为一个主风险。",
         "technical_over_specific": "尺寸、公差、工艺和连接件描述属于同一技术参数特征化风险簇，治理层统一归并为一个主风险。",
@@ -177,7 +214,7 @@ def infer_absorption_kind(family_key: str, title: str, canonical_title: str) -> 
         return "supporting_evidence_item"
     if family_key == "certification_scoring_bundle":
         return "supporting_item"
-    if family_key in {"acceptance_testing_cost", "sample_gate", "technical_over_specific", "personnel_scoring"}:
+    if family_key in {"acceptance_testing_cost", "sample_gate", "technical_over_specific", "personnel_scoring", "fujian_personnel_certificate_scale", "fujian_personnel_discrimination"}:
         return "supporting_item"
     if normalized != canonical_title:
         return "legacy_title"
